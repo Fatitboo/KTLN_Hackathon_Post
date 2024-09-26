@@ -1,0 +1,42 @@
+[
+  {
+    "name": "First online hackathon",
+    "description": "Earned by submitting an eligible project to an online hackathon",
+    "has_levels": false,
+    "next_level": 1,
+    "photos": {
+      "medium": "https://d112y698adiu2z.cloudfront.net/photos/production/achievement_photos/000/905/551/datas/ceffdfce970ff3dfa4435ebc5fc7f33a_medium.png",
+      "large": "https://d112y698adiu2z.cloudfront.net/photos/production/achievement_photos/000/905/551/datas/ceffdfce970ff3dfa4435ebc5fc7f33a_large.png"
+    }
+  },
+  {
+    "name": "X Hackathons",
+    "description": "Earned by submitting separate eligible projects to separate hackathons",
+    "has_levels": true,
+    "next_level": 1,
+    "photos": {
+      "medium": "https://d112y698adiu2z.cloudfront.net/photos/production/achievement_photos/000/905/552/datas/c1387e1971cd2d0e67200d956b460c07_medium_bronze.png",
+      "large": "https://d112y698adiu2z.cloudfront.net/photos/production/achievement_photos/000/905/552/datas/c1387e1971cd2d0e67200d956b460c07_large_bronze.png"
+    }
+  },
+  {
+    "name": "Hackathon Winner",
+    "description": "Earned by winning a hackathon prize",
+    "has_levels": true,
+    "next_level": 1,
+    "photos": {
+      "medium": "https://d112y698adiu2z.cloudfront.net/photos/production/achievement_photos/000/930/137/datas/fe7da55a06691d0a0fa2fb2f32d9d352_medium_bronze.png",
+      "large": "https://d112y698adiu2z.cloudfront.net/photos/production/achievement_photos/000/930/137/datas/fe7da55a06691d0a0fa2fb2f32d9d352_large_bronze.png"
+    }
+  },
+  {
+    "name": "Generalist",
+    "description": "Earned by submitting to 3 hackathons with different themes",
+    "has_levels": false,
+    "next_level": 1,
+    "photos": {
+      "medium": "https://d112y698adiu2z.cloudfront.net/photos/production/achievement_photos/001/087/222/datas/2a2cd5de90e8e74016c5e23d387b74e0_medium.png",
+      "large": "https://d112y698adiu2z.cloudfront.net/photos/production/achievement_photos/001/087/222/datas/2a2cd5de90e8e74016c5e23d387b74e0_large.png"
+    }
+  }
+]

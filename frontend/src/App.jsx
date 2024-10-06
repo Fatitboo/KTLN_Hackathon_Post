@@ -1,35 +1,94 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Outlet, Navigate, Route, Routes, useLocation } from 'react-router-dom'
+import { publicRoutes, AdminRoutes, seekerRoutes, corRoutes } from './routes/index.js'
+import { useSelector } from 'react-redux';
+
+
+
+function Layout({ user , role}) {
+  const location = useLocation();
+  if (!user) return <Navigate to='/user-auth/login' state={{ from: location }} replace />
+  else {
+    if(user?.userType === role ){
+      return <Outlet />
+    }
+    else{
+      return <Navigate to='/user-auth/unauthozied' state={{ from: location }} replace />
+    }
+  }
+  // return user ? (<Outlet />) : (<Navigate to='/user-auth/login' state={{ from: location }} replace />);
+}
 
 function App() {
-  const [count, setCount] = useState(0)
+  const storeData = useSelector(store => store.users)
 
+  const user = storeData?.userAuth?.user
+
+  
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <main>
+      <Routes>
+        <Route element={<Layout user={user} role={'seeker'} />}>
+          {seekerRoutes.map((route, index) => {
+            const Layout = route.layout;
+            const Page = route.component
+            return (
+              <Route key={index}
+                path={route.path}
+                element={
+                  <Layout user={user}>
+                    <Page />
+                  </Layout>
+                } />
+            )
+          })}
+        </Route>
+        <Route element={<Layout user={user} role={'organizer'} />}>
+          {corRoutes.map((route, index) => {
+            const Layout = route.layout;
+            const Page = route.component
+            return (
+              <Route key={index}
+                path={route.path}
+                element={
+                  <Layout user={user}>
+                    <Page />
+                  </Layout>
+                } />
+            )
+          })}
+        </Route>
+        <Route element={<Layout user={user} role={'admin'}/>}>
+          {AdminRoutes.map((route, index) => {
+            const Layout = route.layout;
+            const Page = route.component
+            return (
+              <Route key={index}
+                path={route.path}
+                element={
+                  <Layout user={user}>
+                    <Page />
+                  </Layout>
+                } />
+            )
+          })}
+        </Route>
+        {publicRoutes.map((route, index) => {
+          const Layout = route.layout;
+          const Page = route.component
+          return (
+            <Route key={index}
+              path={route.path}
+              element={
+                <Layout user={user}>
+                  <Page />
+                </Layout>}
+            />
+          )
+        })}
+      </Routes>
+    </main>
+  );
 }
 
 export default App

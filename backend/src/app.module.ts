@@ -6,6 +6,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { ExceptionsModule } from './shared/infrastructure/exceptions/exceptions.module';
 import { LoggerModule } from './shared/infrastructure/logger/logger.module';
 import { UserModule } from './user/user.module';
+import { HackathonModule } from './hackathon/hackathon.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { UserModule } from './user/user.module';
       },
     ]),
     UserModule,
+    HackathonModule,
   ],
   controllers: [],
   providers: [

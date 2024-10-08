@@ -1,0 +1,40 @@
+@keyframes hero-thumb-animation {
+    0%{
+        transform: translateY(-20px);
+    }
+    100%{
+        transform: translateY(0);
+    }
+}
+
+@keyframes hero-thumb-animation_style_2 {
+    0% {
+        transform: translateY(-20px) translateX(50px);
+    }
+    100% {
+        transform: translateY(-20px) translateX(0);
+    }
+}
+
+@keyframes hero-thumb-animation_style_3 {
+    0%{
+        transform: translateY(-50px);
+    }
+    100%{
+        transform: translateY(0);
+    }
+}
+
+.hero-thumb-animation_1{
+    animation: hero-thumb-animation 2s linear infinite alternate;
+}
+
+.hero-thumb-animation_2{
+    animation: hero-thumb-animation_style_2 4s linear infinite alternate;
+}
+
+.hero-thumb-animation_3{
+    animation: hero-thumb-animation_style_3 4s linear infinite alternate;
+}
+
+

@@ -1,4 +1,8 @@
 import React from 'react'
+import { BgLetter, NewsLetterLeft, NewsLetterRight } from '../../../assets/images'
+import { CustomButton } from '../../../components'
+import { TickIcon } from '../../../assets/icons'
+import { MdOutlineMailOutline } from 'react-icons/md'
 
 export const Contact = () => {
     return (
@@ -143,7 +147,7 @@ export const Contact = () => {
                 </div>
                 </div>
             </section>
-
+ 
         </div>
     )
 }

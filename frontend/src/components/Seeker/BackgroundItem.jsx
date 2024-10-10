@@ -3,7 +3,7 @@ import { BiPencil } from "react-icons/bi";
 import { v4 as uuidv4 } from 'uuid';
 import { BsTrash3 } from "react-icons/bs";
 import { DegreesCbb } from "../../utils/data";
-import AddEducation from "../../pages/Seeker/Setting/MyResume/AddEducation";
+// import AddEducation from "../../pages/Seeker/Setting/MyResume/AddEducation";
 import { useDispatch, useSelector } from "react-redux";
 import { updateUserResumeAction } from "../../redux/slices/users/usersSlices";
 import AddAward from "../../pages/Seeker/Setting/MyResume/AddAward";

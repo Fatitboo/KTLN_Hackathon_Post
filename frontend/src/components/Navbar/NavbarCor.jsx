@@ -9,6 +9,7 @@ import CustomButton from "../CustomButton";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUserAction } from "../../redux/slices/users/usersSlices";
 import LoadingComponent from "../Loading";
+import { LogoImage } from "../../assets/images";
 function MenuList({ user, onClick }) {
     const dispatch = useDispatch()
     const handlerLogOut = () => {
@@ -107,11 +108,11 @@ function NavbarCor({ user }) {
     return (
         <>
             {loading && <LoadingComponent />}
-            <div className='fixed top-0 l-0 r-0 t-0 w-full bg-[#f7fdfd] z-50 shadow'>
-                <nav className='container mx-auto flex items-center justify-between p-5'>
+            <div className='fixed top-0 l-0 r-0 t-0 w-full bg-[#fff] z-50 shadow'>
+                <nav className='container mx-auto flex items-center justify-between py-4 px-40'>
                     <div>
                         <Link to='/Organizer/dashboard' className="text-blue-600 font-bold text-xl">
-                            Project<span className="text-[#1677cccb]">Finder</span>
+                        <img src={LogoImage} alt="" className="" />
                         </Link>
                     </div>
 

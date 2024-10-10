@@ -1,4 +1,5 @@
 import React from 'react'
+import { ControlCard, Corporation_2, Statictical } from '../../../assets/images'
 
 export const AboutUs = () => {
     return (
@@ -274,6 +275,63 @@ export const AboutUs = () => {
                     </div>
                 </div>
             </section>
+             {/* Statistic Overview About App */}
+        <></>
+            <div className='grid grid-cols-2 gap-4 mx-40 mb-28 mt-20'>
+                <div className='flex items-center justify-center'>
+                    <div>
+                        <div className='relative'>
+                            <img className='absolute -z-10 -top-[70px] -left-[185px]' src={Statictical} alt="" />
+                            <img className='absolute -z-10 -bottom-[170px] -right-[170px]' src={ControlCard} alt="" />
+                            <img src={Corporation_2} className='rounded-[32px] w-[520px] h-[470px]' alt="" />
+                        </div>
+                    </div>
+                </div>
+                <div className='py-[40px] pl-[60px] pr-[40px]'>
+                    <span className='text-[32px] leading-10 font-bold text-[#a0abb8]'>Millions Of Projects</span>
+                    <h1 className='text-5xl font-bold leading-[60px] w-[103%]'>Find The One That&apos;s<span className='relative text-[#3c65f5] ml-2'><br/>Right<span className='absolute left-0 -bottom-[6px] opacity-10 bg-[#3c65f5] h-[25px] w-full'></span>
+                        </span> For You
+                    </h1>
+                    <div className='mt-[40px] pr-[50px]'><p className='text-[#4f5e64]'>
+                        Search all the open positions on the web. Get your own personalized salary estimate. Read reviews on over 600,000 companies worldwide. The right job is out there.
+                    </p></div>
+                    <div className='mt-12'>
+                        <a href="#" className='bg-[#3c65f5] rounded-[8px] text-[#FFF] hover:bg-[#05264e] py-[15px] px-[25px]'>Search Projects</a>
+                        <a href="#" className='underline underline-offset-1 hover:text-[#3c65f5] ml-7 text-[#4f5e64]'>Learn more</a>
+                    </div>
+                </div>
+            </div>
+            <div className='grid grid-cols-4 gap-8 mx-40 mt-16'>
+                <div>
+                    <h1 className='text-[#3c65f5] text-6xl font-bold text-center'>25 K+</h1>
+                    <h2 className='text-[#05264e] text-2xl font-bold text-center'>Completed Cases</h2>
+                    <p className='text-[#4f5e64] text-base mt-2 text-center px-8'>We always provide people a
+                                                                        complete solution upon focused of
+                                                                        any business</p>
+                </div>
+                <div>
+                    <h1 className='text-[#3c65f5] text-6xl font-bold text-center'>17 +</h1>
+                    <h2 className='text-[#05264e] text-2xl font-bold text-center'>Our Office</h2>
+                    <p className='text-[#4f5e64] text-base mt-2 text-center px-8'>We always provide people a
+                                                                        complete solution upon focused of
+                                                                        any business</p>
+                </div>
+                <div>
+                    <h1 className='text-[#3c65f5] text-6xl font-bold text-center'>86 +</h1>
+                    <h2 className='text-[#05264e] text-2xl font-bold text-center'>Skilled People</h2>
+                    <p className='text-[#4f5e64] text-base mt-2 text-center px-8'>We always provide people a
+                                                                        complete solution upon focused of
+                                                                        any business</p>
+                </div>
+                <div>
+                    <h1 className='text-[#3c65f5] text-6xl font-bold text-center'>28 +</h1>
+                    <h2 className='text-[#05264e] text-2xl font-bold text-center'>CHappy Clients</h2>
+                    <p className='text-[#4f5e64] text-base mt-2 text-center px-8'>We always provide people a
+                                                                        complete solution upon focused of
+                                                                        any business</p>
+                </div>
+            </div>
+        <></>
             <section className="flex items-center bg-white xl:h-screen font-poppins dark:bg-gray-800 ">
                 <div className="justify-center flex-1 px-4 py-6 mx-auto max-w-7xl lg:py-4 md:px-6">
                 <div className="max-w-4xl mx-auto text-center">

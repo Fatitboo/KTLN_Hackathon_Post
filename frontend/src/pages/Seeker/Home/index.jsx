@@ -99,7 +99,7 @@ function Home() {
             className=" grid grid-cols-12 gap-3 w-full h-full bg-no-repeat bg-cover pt-5 pb-20"
             style={{ backgroundImage: `url(${backgroundSearch})` }}
           >
-            <div className="col-span-7 pt-12 pl-60 pr-20 pb-20 relative">
+            <div className="col-span-7 pt-12 pl-60 max-md:pl-4 pr-20 pb-20 relative">
               {/* Introduce */}
               <h1 className="text-5xl font-bold leading-[60px]">
                 The home for
@@ -167,7 +167,7 @@ function Home() {
       ) : (
         <>
           <div>
-            <div className="flex justify-between items-center py-5 px-60  bg-[#F1F8FA]">
+            <div className="max-md:block flex justify-between items-center py-5 px-60 max-md:px-4 bg-[#F1F8FA]">
               <div className="flex items-center">
                 <h4 className="font-semibold mr-4">YOUR HACKATHON</h4>
                 {1} opens
@@ -177,13 +177,13 @@ function Home() {
                 containerStyles="bg-blue-600 w-fit font-medium text-white py-2 px-5 focus:outline-none hover:bg-blue-500 rounded-sm text-base border border-blue-600"
               />
             </div>
-            <div className="px-60">
+            <div className="px-60 max-md:px-4">
               <h4 className="font-semibold mr-4 my-5">Submissions opens</h4>
-              <div className="grid grid-cols-2 gap-5">
+              <div className="grid grid-cols-2 max-md:grid-cols-1 max-md:gap-0 gap-5">
                 {(hackathons.filter((item,index)=> index%2==0) || []).map((hackathon, index) => {
                   return (
                     <>
-                      <div className="mx-3 my-2">
+                      <div className="max-md:my-[1px] mx-3 my-2">
                         <HackathonItem
                           id={index}
                           startDate={hackathon.start_date}
@@ -219,14 +219,14 @@ function Home() {
       {/* Popular hackthon */}
 
       {user && (
-        <div className="px-96">
+        <div className="px-96 max-md:px-4">
           <SearchInput />
         </div>
       )}
       <></>
       <div>
-        <div className="grid grid-cols-12 gap-4 mt-12 w-full h-full">
-          <div className="col-span-6 pl-60 pr-5 pb-5">
+        <div className="grid grid-cols-12 max-md:grid-cols-1 gap-4 mt-12 w-full h-full">
+          <div className="col-span-6 max-md:col-span-1 max-md:pl-4 pl-60 pr-5 pb-5">
             {/* Title */}
             <div className="flex justify-between items-end">
               <h3 className="font-semibold">Hackathons for you</h3>
@@ -263,7 +263,7 @@ function Home() {
             </div>
           </div>
 
-          <div className="col-span-6 pr-60 pl-16">
+          <div className="col-span-6 max-md:col-span-1 pr-60 max-md:pr-4 pl-16">
             <div className="flex justify-between items-end">
               <h3 className="font-semibold">Top Hackathons themes</h3>
             </div>
@@ -283,7 +283,7 @@ function Home() {
                     <th className="relative text-gray-700 font-normal text-base text-left pb-3 "></th>
                   </tr>
                 </thead>
-                <tbody className=" text-[14px]">
+                <tbody className="text-sm">
                   {data_popular.map((item, index) => {
                     return (
                       <>
@@ -328,7 +328,7 @@ function Home() {
 
       <div className="pb-10 bg-gradient-to-tl from-[#6373E0] via-[#1F78D1] to-[#23A197] mt-10 ">
         <div>
-          <div className="flex justify-between items-end px-60 py-8">
+          <div className="min-lg:flex justify-between items-end px-60 max-md:px-4 py-8">
             <h2 className="font-semibold text-white">
               Featured online hackathons
             </h2>
@@ -337,7 +337,7 @@ function Home() {
               containerStyles="text-blue-800 font-medium py-2 px-5 bg-white focus:outline-none hover:bg-gray-50 rounded-sm text-base  border border-blue-800"
             />
           </div>
-          <div className="grid grid-cols-2 gap-5 px-60">
+          <div className="grid grid-cols-2 max-md:grid-cols-1 gap-5 max-md:gap-1 max-md:px-4 px-60">
             {(hackathons || []).map((hackathon, index) => {
               return (
                 <>
@@ -364,7 +364,7 @@ function Home() {
           </div>
         </div>
         <div className="mt-6">
-          <div className="flex justify-between items-end px-60 py-8">
+          <div className="min-lg:flex justify-between items-end px-60 max-md:px-4 py-8">
             <h2 className="font-semibold text-white">
               Featured in-person hackathons
             </h2>
@@ -373,7 +373,7 @@ function Home() {
               containerStyles="text-blue-800 font-medium py-2 px-5 bg-white focus:outline-none hover:bg-gray-50 rounded-sm text-base  border border-blue-800"
             />
           </div>
-          <div className="grid grid-cols-2 gap-5 px-60">
+          <div className="grid grid-cols-2 max-md:grid-cols-1 gap-5 max-md:gap-1 max-md:px-4 px-60">
             {(hackathons || []).map((hackathon, index) => {
               return (
                 <>

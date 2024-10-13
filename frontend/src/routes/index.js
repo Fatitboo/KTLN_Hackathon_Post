@@ -1,6 +1,14 @@
 import { LayoutNoSidebar, LayoutHasSidebar } from "../components/index";
 import { Dashboard } from "../pages/Admin";
-import { Home, MyProfile } from "../pages/Seeker";
+import {
+  Home,
+  MyProfile,
+  BrowerHackathons,
+  BrowerProjects,
+  Contact,
+  AboutUs,
+  HackathonDetail,
+} from "../pages/Seeker";
 import { DashboardCompany } from "../pages/Company";
 import {
   Login,
@@ -10,10 +18,8 @@ import {
   VerifyAccount,
   ConfirmUsername,
   ChangePassword,
+  unAuthoPage,
 } from "../pages/Auth";
-import unAuthoPage from "../pages/Auth/unAuthoPage/unAuthoPage";
-import { AboutUs } from "../pages/Seeker/AboutUs/AboutUs";
-import { Contact } from "../pages/Seeker/Contact/Contact";
 
 const publicRoutes = [
   // User Layout
@@ -50,6 +56,21 @@ const publicRoutes = [
     layout: LayoutNoSidebar,
   },
   { path: "/", component: Home, layout: LayoutNoSidebar },
+  {
+    path: "/Seeker/brower-hackathons",
+    component: BrowerHackathons,
+    layout: LayoutNoSidebar,
+  },
+  {
+    path: "/Seeker/brower-projects",
+    component: BrowerProjects,
+    layout: LayoutNoSidebar,
+  },
+  {
+    path: "/Hackathon-detail/:id/:type",
+    component: HackathonDetail,
+    layout: LayoutNoSidebar,
+  },
   { path: "/Seeker/about-us", component: AboutUs, layout: LayoutNoSidebar },
   { path: "/Seeker/contact", component: Contact, layout: LayoutNoSidebar },
 ];

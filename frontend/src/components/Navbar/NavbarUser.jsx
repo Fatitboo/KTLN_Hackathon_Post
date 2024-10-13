@@ -134,19 +134,18 @@ function NavbarUser({ user }) {
         <nav className="container mx-auto flex items-center justify-between py-4 px-40">
           <div>
             <Link to="/" className="text-blue-600 font-bold text-xl">
-              {/* Project<span className="text-[#1677cccb]">Finder</span> */}
               <img src={LogoImage} alt="" className="" />
             </Link>
           </div>
           <ul className="hidden lg:flex gap-10 text-base list-none">
             <li>
-              <Link to="/Seeker/find-projects">Projects</Link>
+              <Link to="/Seeker/products">Products</Link>
             </li>
             <li>
-              <Link to="/Seeker/find-vacancies">Vacancies</Link>
+              <Link to="/Seeker/brower-hackathons">Hackathons</Link>
             </li>
             <li>
-              <Link to="/Seeker/find-organizer">Organizer</Link>
+              <Link to="/Seeker/brower-projects">Projects</Link>
             </li>
             <li>
               <Link to="/Seeker/about-us">About us</Link>

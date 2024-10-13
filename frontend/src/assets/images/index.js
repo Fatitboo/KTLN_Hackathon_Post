@@ -29,3 +29,6 @@ export { default as SuccessPostImage } from "./successPost.png";
 export { default as LogoImage } from "./Logo.png";
 export { default as GroupOrg } from "./group_og.png";
 export { default as LogoOrgExample } from "./medium_square.png";
+export { default as imgDefaultProject } from "./imgDefaultProject.gif";
+export { default as defaultAvt } from "./default-avt.png";
+export { default as tagWinner } from "./tag-winner.png";

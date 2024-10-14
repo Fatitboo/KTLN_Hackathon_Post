@@ -180,29 +180,31 @@ function Home() {
             <div className="px-60 max-md:px-4">
               <h4 className="font-semibold mr-4 my-5">Submissions opens</h4>
               <div className="grid grid-cols-2 max-md:grid-cols-1 max-md:gap-0 gap-5">
-                {(hackathons.filter((item,index)=> index%2==0) || []).map((hackathon, index) => {
-                  return (
-                    <>
-                      <div className="max-md:my-[1px] mx-3 my-2">
-                        <HackathonItem
-                          id={index}
-                          startDate={hackathon.start_date}
-                          endDate={hackathon.end_date}
-                          themes={hackathon.tags}
-                          organization={hackathon.organizer}
-                          period={hackathon.period}
-                          title={hackathon.name}
-                          isExtended={false}
-                          isFeature={false}
-                          location={hackathon.location}
-                          prizes={`${hackathon.currency} ${hackathon.price}`}
-                          participants={hackathon.participants}
-                          imageHackthon={hackathon.logo_link}
-                        />
-                      </div>
-                    </>
-                  );
-                })}
+                {(hackathons.filter((item, index) => index % 2 == 0) || []).map(
+                  (hackathon, index) => {
+                    return (
+                      <>
+                        <div className="max-md:my-[1px] mx-3 my-2">
+                          <HackathonItem
+                            id={index}
+                            startDate={hackathon.start_date}
+                            endDate={hackathon.end_date}
+                            themes={hackathon.tags}
+                            organization={hackathon.organizer}
+                            period={hackathon.period}
+                            title={hackathon.name}
+                            isExtended={false}
+                            isFeature={false}
+                            location={hackathon.location}
+                            prizes={`${hackathon.currency} ${hackathon.price}`}
+                            participants={hackathon.participants}
+                            imageHackthon={hackathon.logo_link}
+                          />
+                        </div>
+                      </>
+                    );
+                  }
+                )}
               </div>
               <div className="flex items-center justify-center mt-5">
                 <CustomButton

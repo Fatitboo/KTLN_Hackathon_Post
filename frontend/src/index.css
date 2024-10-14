@@ -217,7 +217,7 @@ body {
   }
  
   #generated-script .h2-title , #generated-script .subheader {
-    font-size: 28px;
+    font-size: 26px;
     font-weight: 500;
     margin: 36px 0 16px 0;
     text-transform: uppercase;
@@ -232,8 +232,9 @@ body {
   }
 
   #generated-script h4 {
-    font-size: 18px;
+    font-size: 26px;
     font-weight: 500;
+    margin: 16px 0 16px 0;
     text-transform: uppercase;
   }
 

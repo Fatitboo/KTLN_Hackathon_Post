@@ -1,12 +1,8 @@
-import { Fragment, useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import { AiFillExclamationCircle } from "react-icons/ai";
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
-
-export default function CustomComboBox({
+export default function ComboBox({
   label,
   require,
   description,
@@ -43,9 +39,9 @@ export default function CustomComboBox({
   const dropDownTag = useRef();
 
   return (
-    <>
+    <div>
       <p
-        className="block leading-8 text-gray-900 text-base font-semibold"
+        className="block text-gray-900 text-base font-semibold mb-[2px]"
         style={{ color: `${error ? "#a9252b" : ""}` }}
       >
         <label className="align-middle mr-1 text-[#FF4949] font-bold">
@@ -53,7 +49,7 @@ export default function CustomComboBox({
         </label>
         {label}
       </p>
-      <p className="text-xs text-[#6F6F6F] italic">{description}</p>
+      <p className="text-sm text-[#6F6F6F] italic">{description}</p>
       <div onBlur={onblur} tabIndex={0}>
         <div
           name={name}
@@ -78,7 +74,9 @@ export default function CustomComboBox({
             }}
           >
             <span>{selected?.name}</span>
-            {selected?.id === -1 ? <span>{placeHolder}</span> : null}
+            {selected?.id === -1 ? (
+              <span className="text-[#9CA3AF]">{placeHolder}</span>
+            ) : null}
             <span className="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
               <ChevronUpDownIcon
                 className="h-5 w-5 text-gray-400"
@@ -129,6 +127,6 @@ export default function CustomComboBox({
           {error}
         </span>
       )}
-    </>
+    </div>
   );
 }

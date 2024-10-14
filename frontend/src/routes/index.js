@@ -9,7 +9,11 @@ import {
   AboutUs,
   HackathonDetail,
 } from "../pages/Seeker";
-import { DashboardCompany } from "../pages/Company";
+import {
+  DashboardCompany,
+  HostHackathon,
+  ManageHackathon,
+} from "../pages/Company";
 import {
   Login,
   Register,
@@ -86,6 +90,16 @@ const corRoutes = [
     path: "/Organizer/dashboard",
     component: DashboardCompany,
     layout: LayoutHasSidebar,
+  },
+  {
+    path: "/Organizer/manage-hackathons",
+    component: ManageHackathon,
+    layout: LayoutHasSidebar,
+  },
+  {
+    path: "/Organizer/host-hackathon/:id",
+    component: HostHackathon,
+    layout: LayoutNoSidebar,
   },
 ];
 const AdminRoutes = [

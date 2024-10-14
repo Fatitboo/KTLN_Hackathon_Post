@@ -1,2 +1,4 @@
 import DashboardCompany from "./Dashboard";
-export { DashboardCompany };
+import ManageHackathon from "./ManageHackathon";
+import HostHackathon from "./HostHackathon";
+export { DashboardCompany, ManageHackathon, HostHackathon };

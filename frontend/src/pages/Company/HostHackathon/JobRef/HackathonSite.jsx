@@ -11,23 +11,28 @@ import "froala-editor/js/plugins/video.min.js";
 import "froala-editor/js/plugins/lists.min.js";
 import "froala-editor/js/plugins/paragraph_style.min.js";
 import "froala-editor/js/plugins/markdown.min.js";
+import "froala-editor/js/plugins/font_size.min.js";
 
 import FroalaEditor from "react-froala-wysiwyg";
-import { toast } from "react-toastify";
+import TextInput from "../InputField/TextInput";
 
 function JobDes({ formId, formSubmit, flag, config, content, onDoneSubmit }) {
   const editor = useRef();
   let [errors] = useState({});
-  const inputBox = useRef();
 
   function handleSubmit(e) {
+    console.log(inputValues);
     e.preventDefault();
     formSubmit();
   }
 
-  const notify = (type, message) => toast(message, { type: type });
-
-  const [value, setValue] = useState("");
+  const [inputValues, setInputValues] = useState({
+    mainDescription: `<h4 style='color: rgb(0, 0, 0); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif; font-size: medium; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;' id="isPasted"><strong><span style="font-size: 18px;">About the challenge</span></strong></h4><h4 style='color: rgb(0, 0, 0); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif; font-size: medium; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;'><strong><span style="font-size: 18px;">Get started</span></strong></h4>`,
+    videoDescription: "",
+    submissionDescription: `<h4 style='color: rgb(0, 0, 0); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif; font-size: medium; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;' id="isPasted"><strong>Introduction</strong></h4><h4 style='color: rgb(0, 0, 0); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif; font-size: medium; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;'><strong>Tools and Technologies</strong></h4><h4 style='color: rgb(0, 0, 0); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif; font-size: medium; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;'><strong>Inspiration</strong></h4><h4 style='color: rgb(0, 0, 0); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif; font-size: medium; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;'><strong>Contact Us &amp; Support Channels</strong></h4><h4 style='color: rgb(0, 0, 0); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif; font-size: medium; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;'><strong>Additional Resource links</strong></h4>`,
+    ruleDescription: `<h4 style='color: rgb(0, 0, 0); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif; font-size: medium; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;' id="isPasted"><strong><span style="font-size: 18px;">Dates</span></strong></h4><h4 style='color: rgb(0, 0, 0); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif; font-size: medium; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;'><span style="font-size: 18px;"><strong>Eligibility</strong></span></h4><h4 style='color: rgb(0, 0, 0); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif; font-size: medium; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;'><span style="font-size: 18px;"><strong>Project and Submission Requirements</strong></span></h4><h4 style='color: rgb(0, 0, 0); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif; font-size: medium; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;'><span style="font-size: 18px;"><strong>Prizes</strong></span></h4><h4 style='color: rgb(0, 0, 0); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif; font-size: medium; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;'><strong><span style="font-size: 18px;">Judging Criteria and Winner Selection</span></strong></h4>`,
+    resourceDescription: `<h4 style='color: rgb(0, 0, 0); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif; font-size: medium; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;' id="isPasted"><strong><span style="font-size: 18px;">What to Build</span></strong></h4><h4 style='color: rgb(0, 0, 0); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif; font-size: medium; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;'><strong><span style="font-size: 18px;">What to Submit</span></strong></h4>`,
+  });
 
   const TitleDescription = (title, description) => {
     return (
@@ -44,9 +49,8 @@ function JobDes({ formId, formSubmit, flag, config, content, onDoneSubmit }) {
     );
   };
 
-  function handleChange(e) {
-    console.log(e);
-    setValue(e);
+  function handleChange(e, model) {
+    setInputValues({ ...inputValues, [model]: e });
   }
 
   return (
@@ -84,9 +88,9 @@ function JobDes({ formId, formSubmit, flag, config, content, onDoneSubmit }) {
               }}
             >
               <FroalaEditor
-                model={value}
+                model={inputValues.mainDescription}
                 onModelChange={(event, editor) => {
-                  handleChange(event, editor);
+                  handleChange(event, "mainDescription");
                 }}
                 config={{
                   placeholderText:
@@ -133,9 +137,9 @@ function JobDes({ formId, formSubmit, flag, config, content, onDoneSubmit }) {
               }}
             >
               <FroalaEditor
-                model={value}
+                model={inputValues.submissionDescription}
                 onModelChange={(event, editor) => {
-                  handleChange(event, editor);
+                  handleChange(event, "submissionDescription");
                 }}
                 config={{
                   placeholderText:
@@ -167,21 +171,17 @@ function JobDes({ formId, formSubmit, flag, config, content, onDoneSubmit }) {
             </div>
           </div>
 
-          <div>
-            {TitleDescription(
-              "Video",
-              "Do you have a promotional or explainer video for your hackathon? If so, include a YouTube or Vimeo link here. Make sure embedding is enabled."
-            )}
-            <div
-              ref={editor}
-              name="jobDes"
-              className="border border-[black] rounded-md overflow-hidden h-96"
-              style={{
-                borderColor: `${errors.jobDes ? "#a9252b" : ""}`,
-                outlineColor: `${errors.jobDes ? "#a9252b" : ""}`,
-              }}
-            ></div>
-          </div>
+          <TextInput
+            label="Video"
+            description="Do you have a promotional or explainer video for your hackathon? If so, include a YouTube or Vimeo link here. Make sure embedding is enabled."
+            required
+            type="text"
+            vl={inputValues.videoDescription}
+            onChange={(e) => {
+              handleChange(e.target.value, "videoDescription");
+            }}
+            rules="requiredText"
+          />
 
           <div>
             {TitleDescription(
@@ -198,9 +198,9 @@ function JobDes({ formId, formSubmit, flag, config, content, onDoneSubmit }) {
               }}
             >
               <FroalaEditor
-                model={value}
+                model={inputValues.ruleDescription}
                 onModelChange={(event, editor) => {
-                  handleChange(event, editor);
+                  handleChange(event, "ruleDescription");
                 }}
                 config={{
                   placeholderText:
@@ -247,9 +247,9 @@ function JobDes({ formId, formSubmit, flag, config, content, onDoneSubmit }) {
               }}
             >
               <FroalaEditor
-                model={value}
+                model={inputValues.resourceDescription}
                 onModelChange={(event, editor) => {
-                  handleChange(event, editor);
+                  handleChange(event, "resourceDescription");
                 }}
                 config={{
                   placeholderText:

@@ -23,9 +23,6 @@ export default function RadioButton({
     filterValueChecked(selected);
   }, [selected]);
 
-  useEffect(() => {
-    if (selectedItem) setSelected(selectedItem);
-  }, [selectedItem]);
   return (
     <div>
       <p

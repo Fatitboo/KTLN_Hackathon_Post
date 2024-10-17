@@ -1,0 +1,292 @@
+import { useRef, useState } from "react";
+import { JobBasicImage } from "../../../../assets/images";
+import CheckBox from "../InputField/CheckBox";
+import RadioButton from "../InputField/RadioButton";
+import TextInput from "../InputField/TextInput";
+import { IoIosClose } from "react-icons/io";
+import { CustomButton } from "../../../../components";
+import ReactImagePickerEditor from "react-image-picker-editor";
+import { BsCheck } from "react-icons/bs";
+
+function HackathonJudging({ formSubmit, formId, config }) {
+  const [inputValues, setInputValues] = useState({
+    judgingType: "",
+    judgingPeriod: {
+      start: "",
+      end: "",
+    },
+    judges: [],
+  });
+
+  const onSubmitForm = (e) => {
+    e.preventDefault();
+    console.log(inputValues);
+    // formSubmit();
+  };
+
+  const judgingTypes = [
+    {
+      type: "ONLINE",
+      des: "Judges will log onto Devpost to score each project.",
+      subDes: "(This is the preferred method for online hackathons.)",
+    },
+    {
+      type: "OFFLINE",
+      des: "Judges will review projects via expo / demos / presentations.",
+      subDes: "(This method is frequently used at in-person hackathons)",
+    },
+  ];
+
+  const onChangeValueTextInput = (type, e) => {
+    setInputValues({
+      ...inputValues,
+      judgingPeriod: { ...inputValues.judgingPeriod, [type]: e.target.value },
+    });
+  };
+
+  const onChangeTextJudge = (type, id, e) => {
+    setInputValues({
+      ...inputValues,
+      judges: inputValues.judges.map((i) =>
+        i.id === id ? { ...i, [type]: e } : { ...i }
+      ),
+    });
+  };
+
+  const TitleDescription = (title, description) => {
+    return (
+      <div>
+        <p className="block leading-6 text-gray-900 text-base font-semibold">
+          <label className="align-middle mr-1 text-[#FF4949] font-bold">
+            *
+          </label>
+          {title}
+        </p>
+        <p className="text-sm text-[#6F6F6F] italic">{description}</p>
+      </div>
+    );
+  };
+
+  const config1 = {
+    borderRadius: "8px",
+    language: "en",
+    width: "224px",
+    height: "224px",
+    objectFit: "contain",
+    compressInitial: null,
+    darkMode: false,
+    rtl: false,
+  };
+
+  return (
+    <>
+      <div>
+        <div className="bg-[#faf9f8] rounded-xl grid grid-cols-5 gap-4 -mx-8">
+          <div className="col-span-2 flex items-center m-8">
+            <span className="text-[#2D2D2D] text-[28px] font-bold">
+              Essentials
+            </span>
+          </div>
+          <div className="col-span-3 flex mr-12 justify-end">
+            <img src={JobBasicImage} className="h-52 overflow-hidden" />
+          </div>
+        </div>
+        <div className="p-8">
+          <form
+            id={formId}
+            onSubmit={onSubmitForm}
+            className="flex flex-col gap-5"
+          >
+            {TitleDescription(
+              "Are you using online or offline judging?",
+              "You can edit this choice until the submission period ends"
+            )}
+
+            {judgingTypes.map((item, index) => {
+              return (
+                <li
+                  key={index}
+                  value={index}
+                  onClick={() => {
+                    setInputValues({
+                      ...inputValues,
+                      judgingType: item.type,
+                    });
+                  }}
+                  className="flex items-center justify-between py-0 px-5 focus:outline-none text-base text-gray-900 hover:font-normal hover:opacity-90"
+                >
+                  <div className="flex flex-row items-center cursor-pointer">
+                    <div>
+                      <div className="relative h-7 flex items-center">
+                        <div
+                          className="absolute bg-[#FFF] border border-[#808082] w-[18px] h-[18px] rounded-[10px]"
+                          color="#FFF"
+                        ></div>
+                        <div
+                          className={`${
+                            inputValues.judgingType === item.type
+                              ? ""
+                              : "hidden"
+                          } flex items-center justify-center absolute bg-[#1967d2] w-[18px] h-[18px] rounded-[10px]`}
+                          color="#FFF"
+                        >
+                          <BsCheck color="#FFF" />
+                        </div>
+                      </div>
+                    </div>
+                    <span className="pl-7 text-base select-none text-[#6F6F6F] flex flex-col">
+                      <div className="flex flex-row items-center">
+                        {item.type}
+                        <div className="text-[#696969] text-sm">
+                          - {item.des}
+                        </div>
+                      </div>
+                      <span className="text-sm select-none text-[#696969]">
+                        {item.subDes}
+                      </span>
+                    </span>
+                  </div>
+                </li>
+              );
+            })}
+
+            {TitleDescription(
+              "Judging Period (mm/dd/yyyy)",
+              "MM/DD/YYYY format. All times are in Eastern Time (US & Canada) (EDT)"
+            )}
+            <TextInput
+              label="Start"
+              required
+              vl={inputValues.judgingPeriod.start}
+              onChange={(value) => onChangeValueTextInput("start", value)}
+              type="datetime-local"
+            />
+
+            <TextInput
+              label="Ends"
+              required
+              vl={inputValues.judgingPeriod.end}
+              onChange={(value) => onChangeValueTextInput("end", value)}
+              type="datetime-local"
+            />
+
+            {TitleDescription(
+              "Judges",
+              "Add your judges here and their name, title, and photo will be displayed on the hackathon site. (We won't display emails.)"
+            )}
+
+            {inputValues.judges?.map((item, index) => {
+              return (
+                <div
+                  key={item.id}
+                  className="bg-[#f7f7f7] p-5 rounded-lg flex flex-col gap-2"
+                >
+                  <div className="w-2/5">
+                    <TextInput
+                      label="Full name"
+                      required
+                      vl={item.fullName}
+                      onChange={(e) =>
+                        onChangeTextJudge("fullName", item.id, e.target.value)
+                      }
+                    />
+                  </div>
+                  <div className="w-2/5">
+                    <TextInput
+                      label="Email or Hackadev username"
+                      required
+                      vl={item.email}
+                      onChange={(e) =>
+                        onChangeTextJudge("email", item.id, e.target.value)
+                      }
+                    />
+                  </div>
+                  <div className="w-2/5">
+                    <TextInput
+                      label="Title / Company"
+                      required
+                      vl={item.title}
+                      onChange={(e) =>
+                        onChangeTextJudge("title", item.id, e.target.value)
+                      }
+                    />
+                  </div>
+                  <div className="text-gray-900 font-medium">Photo</div>
+                  <div className="mt-6 w-56 h-56 bg-[#f2f2f2] flex flex-col items-center justify-center border text-sm text-[#6F6F6F] italic">
+                    <ReactImagePickerEditor
+                      config={config1}
+                      imageSrcProp={inputValues.photo}
+                      imageChanged={(newDataUri) => {
+                        setInputValues({
+                          ...inputValues,
+                          judges: inputValues.judges.map((i) =>
+                            i.id === item.id
+                              ? { ...i, photo: newDataUri }
+                              : { ...i }
+                          ),
+                        });
+                      }}
+                    />
+                  </div>
+
+                  <div
+                    className="text-[#1D4ED8] cursor-pointer mt-1 font-semibold w-14"
+                    onClick={() => {
+                      setInputValues({
+                        ...inputValues,
+                        judges: inputValues.judges.filter(
+                          (i) => i.id !== item.id
+                        ),
+                      });
+                    }}
+                  >
+                    Cancel
+                  </div>
+                </div>
+              );
+            })}
+
+            <button
+              className="bg-[#1D4ED8] text-white rounded-lg py-1 font-semibold flex items-center justify-center w-28 hover:opacity-90"
+              onClick={(e) => {
+                e.preventDefault();
+                console.log("DOO");
+                const newArr = [...inputValues.judges];
+                newArr.push({
+                  id: Date.now(),
+                  fullName: "",
+                  email: "",
+                  title: "",
+                  photo: "",
+                });
+                setInputValues({
+                  ...inputValues,
+                  judges: newArr,
+                });
+              }}
+            >
+              Add judge
+            </button>
+
+            {/* <RadioButton
+              listItem={hackathonTypes}
+              name="isRequire"
+              column={3}
+              filterValueChecked={(e) => {
+                setInputValues({
+                  ...inputValues,
+                  applyFor: e.name,
+                });
+              }}
+              label="What type of hackathon is this?"
+              require
+              description="Knowing more about the type of hackathon you're running helps us provide the best support."
+            /> */}
+          </form>
+        </div>
+      </div>
+    </>
+  );
+}
+
+export default HackathonJudging;

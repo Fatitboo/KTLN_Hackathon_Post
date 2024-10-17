@@ -14,7 +14,6 @@ export default function CheckBox({
   onBlur,
   require,
   description,
-  column,
 }) {
   const [selected, setSelected] = useState(selectedItem ? selectedItem : []);
   useEffect(() => {

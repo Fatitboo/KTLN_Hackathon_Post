@@ -1,9 +1,9 @@
 import { CustomComboBox } from "../../../../components";
 import { JobDetailImage } from "../../../../assets/images";
-import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
 
 import RadioButton from "../InputField/RadioButton";
+import CheckBox from "../InputField/CheckBox";
 
 function HackathonEligibility({ formId, formSubmit, config }) {
   const listRangeTypes = [
@@ -12,28 +12,25 @@ function HackathonEligibility({ formId, formSubmit, config }) {
     { id: 3, name: "Maximum amount" },
     { id: 4, name: "Exact amount" },
   ];
-  const { currentJobComponent } = useSelector((store) => store.vacancies);
 
   let [inputsValues, setInputValues] = useState({
-    participantAge: listRangeTypes[0],
-    teamRequirement: listRangeTypes[0],
-  });
-
-  let [errors, setErrors] = useState({});
-
-  let [visibleMax, setVisibleMax] = useState(
-    currentJobComponent ? (currentJobComponent.pay_2 ? true : false) : false
-  );
-
-  let [ErrorMessages, setErrorMessages] = useState({
-    jobTypes: "Please choose some type.",
-    showBy_1: "Please fill a fixed hours.",
-    showBy_2: "Please fill finish hour",
-    duration: "Add a duration",
+    isPublished: true,
+    participantAge: {
+      type: "",
+      min: "",
+      max: "",
+    },
+    teamRequirement: {
+      isRequire: false,
+      type: "",
+      min: "",
+      max: "",
+    },
   });
 
   function handleSubmit(e) {
     e.preventDefault();
+    console.log(inputsValues);
     formSubmit();
   }
 
@@ -56,17 +53,27 @@ function HackathonEligibility({ formId, formSubmit, config }) {
     );
   };
 
-  const filterParticipantAge = (value) => {
+  const filterValueCombobox = (type, value) => {
     setInputValues({
       ...inputsValues,
-      participantAge: value,
+      [type]: { ...inputsValues[type], type: value.name, max: "" },
     });
   };
 
-  const filterTeamRequirement = (value) => {
+  const onChangeTextInput = (type, name, e) => {
     setInputValues({
       ...inputsValues,
-      teamRequirement: value,
+      [type]: { ...inputsValues[type], [name]: e.target.value },
+    });
+  };
+
+  const canTeamRequired = (value) => {
+    setInputValues({
+      ...inputsValues,
+      teamRequirement: {
+        ...inputsValues.teamRequirement,
+        isRequire: value.length === 1,
+      },
     });
   };
 
@@ -84,7 +91,6 @@ function HackathonEligibility({ formId, formSubmit, config }) {
         return "From";
     }
   };
-
   return (
     <>
       <div>
@@ -114,7 +120,12 @@ function HackathonEligibility({ formId, formSubmit, config }) {
               listItem={communityTypes}
               name="isRequire"
               column={1}
-              filterValueChecked={(e) => {}}
+              filterValueChecked={(e) => {
+                setInputValues({
+                  ...inputsValues,
+                  isPublished: e.id === 1,
+                });
+              }}
               label="Hackathon Community"
               require
             />
@@ -130,55 +141,46 @@ function HackathonEligibility({ formId, formSubmit, config }) {
                     <CustomComboBox
                       listItem={listRangeTypes}
                       name="participantAge"
-                      filterValueSelected={filterParticipantAge}
+                      filterValueSelected={(e) =>
+                        filterValueCombobox("participantAge", e)
+                      }
                       label="Type"
                       placeHolder={"Select an options."}
                     />
                   </div>
                   <div className="w-[50%] flex flex-row gap-2 items-center">
                     <div className="w-full">
-                      <p
-                        className="block leading-8 text-gray-900 text-base font-semibold"
-                        style={{ color: `${errors.pay_1 ? "#a9252b" : ""}` }}
-                      >
+                      <p className="block leading-8 text-gray-900 text-base font-semibold">
                         {getFromText(inputsValues["participantAge"].id)}
                       </p>
                       <div>
                         <input
                           type="text"
                           name="pay_1"
-                          value={inputsValues.pay_1}
-                          style={{
-                            borderColor: `${errors.pay_1 ? "#a9252b" : ""}`,
-                            outlineColor: `${errors.pay_1 ? "#a9252b" : ""}`,
-                          }}
+                          value={inputsValues.participantAge.min}
+                          onChange={(e) =>
+                            onChangeTextInput("participantAge", "min", e)
+                          }
                           className={`w-full block bg-[#f9fbfc] focus:bg-white text-base shadow-sm rounded-md py-2 pl-5 pr-5 text-gray-900 border border-gray-300 placeholder:text-gray-400 sm:text-base sm:leading-8`}
                         />
                       </div>
                     </div>
-                    {inputsValues["participantAge"].id ===
-                    listRangeTypes[0].id ? (
+                    {inputsValues["participantAge"].type === "Range" ? (
                       <>
                         <div className="text-base mt-8 whitespace-nowrap">
                           to
                         </div>
                         <div className="w-full">
-                          <p
-                            className="block leading-8 text-gray-900 text-base font-semibold"
-                            style={{
-                              color: `${errors.pay_2 ? "#a9252b" : ""}`,
-                            }}
-                          >
+                          <p className="block leading-8 text-gray-900 text-base font-semibold">
                             Maximum
                           </p>
                           <input
                             type="text"
                             name="pay_2"
-                            value={inputsValues.pay_2}
-                            style={{
-                              borderColor: `${errors.pay_2 ? "#a9252b" : ""}`,
-                              outlineColor: `${errors.pay_2 ? "#a9252b" : ""}`,
-                            }}
+                            value={inputsValues.participantAge.max}
+                            onChange={(e) =>
+                              onChangeTextInput("participantAge", "max", e)
+                            }
                             className={`w-full bg-[#f9fbfc] focus:bg-white text-base shadow-sm rounded-md py-2 pl-5 pr-5 text-gray-900 border border-gray-300 placeholder:text-gray-400 sm:text-base sm:leading-8`}
                           />
                         </div>
@@ -190,75 +192,71 @@ function HackathonEligibility({ formId, formSubmit, config }) {
             </div>
 
             <div>
-              <RadioButton
-                listItem={[{ id: 1, name: "Team required" }]}
+              <CheckBox
+                label="Team requirements"
                 require
-                label={"Team requirements"}
-                filterValueChecked={() => {}}
+                filterValueChecked={canTeamRequired}
+                listItem={[{ id: 1, name: "Team required" }]}
               />
-              <div className="flex flex-row items-center gap-2">
-                <div className="flex flex-row items-center gap-2 w-full">
-                  <div className="w-[30%]">
-                    <CustomComboBox
-                      listItem={listRangeTypes}
-                      name="teamRequirement"
-                      filterValueSelected={filterTeamRequirement}
-                      label="Type"
-                      placeHolder={"Select an options."}
-                    />
-                  </div>
-                  <div className="w-[50%] flex flex-row gap-2 items-center">
-                    <div className="w-full">
-                      <p
-                        className="block leading-8 text-gray-900 text-base font-semibold"
-                        style={{ color: `${errors.pay_1 ? "#a9252b" : ""}` }}
-                      >
-                        {getFromText(inputsValues["teamRequirement"].id)}
-                      </p>
-                      <div>
-                        <input
-                          type="text"
-                          name="pay_1"
-                          value={inputsValues.pay_1}
-                          style={{
-                            borderColor: `${errors.pay_1 ? "#a9252b" : ""}`,
-                            outlineColor: `${errors.pay_1 ? "#a9252b" : ""}`,
-                          }}
-                          className={`w-full block bg-[#f9fbfc] focus:bg-white text-base shadow-sm rounded-md py-2 pl-5 pr-5 text-gray-900 border border-gray-300 placeholder:text-gray-400 sm:text-base sm:leading-8`}
-                        />
-                      </div>
+              {inputsValues.teamRequirement.isRequire && (
+                <div className="flex flex-row items-center gap-2">
+                  <div className="flex flex-row items-center gap-2 w-full">
+                    <div className="w-[30%]">
+                      <CustomComboBox
+                        listItem={listRangeTypes}
+                        name="teamRequirement"
+                        filterValueSelected={(e) => {
+                          filterValueCombobox("teamRequirement", e);
+                        }}
+                        label="Type"
+                        placeHolder={"Select an options."}
+                      />
                     </div>
-                    {inputsValues["teamRequirement"].id ===
-                    listRangeTypes[0].id ? (
-                      <>
-                        <div className="text-base mt-8 whitespace-nowrap">
-                          to
-                        </div>
-                        <div className="w-full">
-                          <p
-                            className="block leading-8 text-gray-900 text-base font-semibold"
-                            style={{
-                              color: `${errors.pay_2 ? "#a9252b" : ""}`,
-                            }}
-                          >
-                            Maximum
-                          </p>
+                    <div className="w-[50%] flex flex-row gap-2 items-center">
+                      <div className="w-full">
+                        <p className="block leading-8 text-gray-900 text-base font-semibold">
+                          {getFromText(inputsValues["teamRequirement"].id)}
+                        </p>
+                        <div>
                           <input
                             type="text"
-                            name="pay_2"
-                            value={inputsValues.pay_2}
-                            style={{
-                              borderColor: `${errors.pay_2 ? "#a9252b" : ""}`,
-                              outlineColor: `${errors.pay_2 ? "#a9252b" : ""}`,
-                            }}
-                            className={`w-full bg-[#f9fbfc] focus:bg-white text-base shadow-sm rounded-md py-2 pl-5 pr-5 text-gray-900 border border-gray-300 placeholder:text-gray-400 sm:text-base sm:leading-8`}
+                            name="pay_1"
+                            value={inputsValues.teamRequirement.min}
+                            onChange={(e) =>
+                              onChangeTextInput("teamRequirement", "min", e)
+                            }
+                            className={`w-full block bg-[#f9fbfc] focus:bg-white text-base shadow-sm rounded-md py-2 pl-5 pr-5 text-gray-900 border border-gray-300 placeholder:text-gray-400 sm:text-base sm:leading-8`}
                           />
                         </div>
-                      </>
-                    ) : null}
+                      </div>
+                      {inputsValues["teamRequirement"].type === "Range" ? (
+                        <>
+                          <div className="text-base mt-8 whitespace-nowrap">
+                            to
+                          </div>
+                          <div className="w-full">
+                            <p
+                              className="block leading-8 text-gray-900 text-base font-semibold"
+                              style={{}}
+                            >
+                              Maximum
+                            </p>
+                            <input
+                              type="text"
+                              name="pay_2"
+                              value={inputsValues.teamRequirement.max}
+                              onChange={(e) =>
+                                onChangeTextInput("teamRequirement", "max", e)
+                              }
+                              className={`w-full bg-[#f9fbfc] focus:bg-white text-base shadow-sm rounded-md py-2 pl-5 pr-5 text-gray-900 border border-gray-300 placeholder:text-gray-400 sm:text-base sm:leading-8`}
+                            />
+                          </div>
+                        </>
+                      ) : null}
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
           </form>
         </div>

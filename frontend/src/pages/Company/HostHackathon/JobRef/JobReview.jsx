@@ -8,11 +8,9 @@ import {
   resetComponent,
   resetSuccessAction,
   setVacancyId,
-  setValueSuccess,
 } from "../../../../redux/slices/vacancies/vacanciesSlices";
 import { Modal } from "../../../../components";
 import { IoClose } from "react-icons/io5";
-import { JobPreferences } from ".";
 
 function JobReview({ formId, formSubmit, flag }) {
   const dispatch = useDispatch();
@@ -228,34 +226,40 @@ function JobReview({ formId, formSubmit, flag }) {
           </div>
           <hr className="block h-1 w-full bg-[rgb(212, 210, 208)] mt-3" />
           <div className="max-h-[400px] w-[700px] overflow-y-auto overflow-x-hidden mb-4">
-            {children === "jobBasic" ? //     onDoneSubmit={onDoneSubmit} //     content={childName} //     config={children} //     formId={formIds[0]} //     flag={0} //   <JobBasic
-            //   />
-            null : children === "jobDetail" ? //   content={childName} //   config={children} //   formId={formIds[1]} //   flag={1} // <JobDetail
-            //   onDoneSubmit={onDoneSubmit}
-            // />
-            null : children === "jobBenefit" ? //   formId={formIds[2]} //   flag={2} // <JobBenefit
-            //   config={children}
-            //   content={childName}
-            //   onDoneSubmit={onDoneSubmit}
-            // />
-            null : children === "jobDes" ? // <JobDes
-            //   flag={3}
-            //   formId={formIds[3]}
-            //   config={children}
-            //   content={childName}
-            //   onDoneSubmit={onDoneSubmit}
-            // />
-            null : children === "jobRef" ? (
-              <JobPreferences
-                flag={4}
-                formId={formIds[4]}
-                config={children}
-                content={childName}
-                onDoneSubmit={onDoneSubmit}
-              />
-            ) : children === "jobPre" ? (
-              <JobPreferences flag={5} config={children} content={childName} />
-            ) : null}
+            {children === "jobBasic" //     onDoneSubmit={onDoneSubmit} //     content={childName} //     config={children} //     formId={formIds[0]} //     flag={0} //   <JobBasic
+              ? //   />
+                null
+              : children === "jobDetail" //   content={childName} //   config={children} //   formId={formIds[1]} //   flag={1} // <JobDetail
+              ? //   onDoneSubmit={onDoneSubmit}
+                // />
+                null
+              : children === "jobBenefit" //   formId={formIds[2]} //   flag={2} // <JobBenefit
+              ? //   config={children}
+                //   content={childName}
+                //   onDoneSubmit={onDoneSubmit}
+                // />
+                null
+              : children === "jobDes" // <JobDes
+              ? //   flag={3}
+                //   formId={formIds[3]}
+                //   config={children}
+                //   content={childName}
+                //   onDoneSubmit={onDoneSubmit}
+                // />
+                null
+              : children === "jobRef"
+              ? // <JobPreferences
+                //   flag={4}
+                //   formId={formIds[4]}
+                //   config={children}
+                //   content={childName}
+                //   onDoneSubmit={onDoneSubmit}
+                // />
+                null
+              : children === "jobPre"
+              ? // <JobPreferences flag={5} config={children} content={childName} />
+                null
+              : null}
           </div>
           <div className="flex flex-row items-center gap-2 float-right">
             <div

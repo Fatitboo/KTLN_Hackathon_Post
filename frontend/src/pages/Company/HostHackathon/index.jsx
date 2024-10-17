@@ -5,24 +5,24 @@ import {
   HackathonEligibility,
   HackathonEssential,
   HackathonDesign,
-  JobPreferences,
-  JobPreScreen,
+  HackathonStarterKit,
   JobReview,
   HackathonSite,
+  HackathonToDos,
+  HackathonSubmission,
+  HackathonJudging,
 } from "./JobRef";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getCurrentVacanciesComponent,
-  postFullVacancy,
   resetComponent,
 } from "../../../redux/slices/vacancies/vacanciesSlices";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Modal } from "../../../components";
 import { IoClose } from "react-icons/io5";
 import PreviewVacancy from "./JobRef/JobComponents/PreviewVacancy";
 import SuccessCreate from "./JobRef/SuccessCreate";
 import { ToastContainer } from "react-toastify";
-import { BsSkipForward } from "react-icons/bs";
 // Add job basic
 // 	- Job title
 // 	- number of people to hỉe
@@ -58,7 +58,10 @@ function HostHackathon() {
     "form-hackathon-eligibility",
     "form-hackathon-design",
     "form-hackathon-site",
-    "form-job-ref",
+    "form-hackathon-todos",
+    "form-hackathon-starter-kit",
+    "form-hackathon-submission",
+    "form-hackathon-judging",
     "form-job-pre",
     "form-job-rev",
   ];
@@ -87,19 +90,31 @@ function HostHackathon() {
       flag={3}
       key={3}
     />,
-    <JobPreferences
+    <HackathonToDos
       formSubmit={nextJobRef}
       formId={formId[4]}
       flag={4}
       key={4}
     />,
-    <JobPreScreen
+    <HackathonStarterKit
       formSubmit={nextJobRef}
       formId={formId[5]}
       flag={5}
       key={5}
     />,
-    <JobReview formSubmit={nextJobRef} formId={formId[6]} flag={6} key={6} />,
+    <HackathonSubmission
+      formSubmit={nextJobRef}
+      formId={formId[6]}
+      flag={6}
+      key={6}
+    />,
+    <HackathonJudging
+      formSubmit={nextJobRef}
+      formId={formId[7]}
+      flag={7}
+      key={7}
+    />,
+    <JobReview formSubmit={nextJobRef} formId={formId[8]} flag={8} key={8} />,
   ];
 
   //const currentJobComponent = useSelector((state) => state.vacancies.currentJobComponent)
@@ -185,7 +200,7 @@ function HostHackathon() {
                 </div>
               ) : null}
 
-              {jobRefKey === 7 ? null : (
+              {jobRefKey === 8 ? null : (
                 <button
                   type="submit"
                   form={formId[jobRefKey]}

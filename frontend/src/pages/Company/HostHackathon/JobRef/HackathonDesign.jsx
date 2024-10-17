@@ -1,25 +1,41 @@
 import { JobBenefitImage } from "../../../../assets/images";
 import { useState } from "react";
-
+import ReactImagePickerEditor from "react-image-picker-editor";
+import "react-image-picker-editor/dist/index.css";
 import { toast } from "react-toastify";
 
 function HackathonDesign({ formId, formSubmit, config }) {
   let [inputsValues, setInputValues] = useState({
-    showPayBy: { id: -1, name: "" },
-    pay_1: "",
-    pay_2: "",
-    rate: { id: -1, name: "" },
+    thumbnail: "",
+    headerTitleImage: "",
   });
 
-  let [errors, setErrors] = useState({});
-
-  let [ErrorMessages, setErrorMessages] = useState({});
-
   function handleSubmit(e) {
+    console.log(inputsValues);
     e.preventDefault();
     formSubmit();
   }
-  const notify = (type, message) => toast(message, { type: type });
+
+  const config1 = {
+    borderRadius: "8px",
+    language: "en",
+    width: "224px",
+    height: "224px",
+    objectFit: "contain",
+    compressInitial: null,
+    darkMode: false,
+    rtl: false,
+  };
+  const config2 = {
+    borderRadius: "8px",
+    language: "en",
+    width: "700px",
+    height: "112px",
+    objectFit: "contain",
+    compressInitial: null,
+    darkMode: false,
+    rtl: false,
+  };
 
   const TitleDescription = (title, description) => {
     return (
@@ -63,12 +79,17 @@ function HackathonDesign({ formId, formSubmit, config }) {
                 "Thumbnail image",
                 "Upload one image to be used as a square thumbnail image for your hackathon. View example. This image will be used to represent your hackathon in places such as the Devpost hackathons page. The image must be a JPG, GIF or PNG file, up to 5 MB. For best results crop to 300x300 pixels."
               )}
-              <div className="mt-1 w-56 h-56 bg-[#f2f2f2] flex flex-col items-center justify-center border text-sm text-[#6F6F6F] italic">
-                <div>5 MB - JPG, PNG, GIF</div>
-                <div>1:1 aspect ratio</div>
-                <button className="bg-[#808080] font-bold rounded-lg text-white py-1 px-3 mt-2">
-                  Select image
-                </button>
+              <div className="mt-8 w-56 h-56 bg-[#f2f2f2] flex flex-col items-center justify-center border text-sm text-[#6F6F6F] italic">
+                <ReactImagePickerEditor
+                  config={config1}
+                  imageSrcProp={inputsValues.thumbnail}
+                  imageChanged={(newDataUri) => {
+                    setInputValues({
+                      ...inputsValues,
+                      thumbnail: newDataUri,
+                    });
+                  }}
+                />
               </div>
             </div>
             <div>
@@ -76,11 +97,17 @@ function HackathonDesign({ formId, formSubmit, config }) {
                 "Thumbnail image",
                 "Upload one image to be used as a square thumbnail image for your hackathon. View example. This image will be used to represent your hackathon in places such as the Devpost hackathons page. The image must be a JPG, GIF or PNG file, up to 5 MB. For best results crop to 300x300 pixels."
               )}
-              <div className="mt-1 w-full h-28 bg-[#f2f2f2] flex flex-col items-center justify-center border text-sm text-[#6F6F6F] italic">
-                <div>5 MB - JPG, PNG, GIF</div>
-                <button className="bg-[#808080] font-bold rounded-lg text-white py-1 px-3 mt-2">
-                  Select image
-                </button>
+              <div className="mt-8 w-full h-28 bg-[#f2f2f2] flex flex-col items-center justify-center border text-sm text-[#6F6F6F] italic">
+                <ReactImagePickerEditor
+                  config={config2}
+                  imageSrcProp={inputsValues.headerTitleImage}
+                  imageChanged={(newDataUri) => {
+                    setInputValues({
+                      ...inputsValues,
+                      headerTitleImage: newDataUri,
+                    });
+                  }}
+                />
               </div>
             </div>
           </form>

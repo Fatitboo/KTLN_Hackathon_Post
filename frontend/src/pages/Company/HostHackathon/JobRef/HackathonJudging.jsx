@@ -16,12 +16,13 @@ function HackathonJudging({ formSubmit, formId, config }) {
       end: "",
     },
     judges: [],
+    criteria: [],
   });
 
   const onSubmitForm = (e) => {
     e.preventDefault();
     console.log(inputValues);
-    // formSubmit();
+    formSubmit();
   };
 
   const judgingTypes = [
@@ -44,11 +45,11 @@ function HackathonJudging({ formSubmit, formId, config }) {
     });
   };
 
-  const onChangeTextJudge = (type, id, e) => {
+  const onChangeText = (type, subtype, id, e) => {
     setInputValues({
       ...inputValues,
-      judges: inputValues.judges.map((i) =>
-        i.id === id ? { ...i, [type]: e } : { ...i }
+      [type]: inputValues[type].map((i) =>
+        i.id === id ? { ...i, [subtype]: e } : { ...i }
       ),
     });
   };
@@ -84,7 +85,7 @@ function HackathonJudging({ formSubmit, formId, config }) {
         <div className="bg-[#faf9f8] rounded-xl grid grid-cols-5 gap-4 -mx-8">
           <div className="col-span-2 flex items-center m-8">
             <span className="text-[#2D2D2D] text-[28px] font-bold">
-              Essentials
+              Judging
             </span>
           </div>
           <div className="col-span-3 flex mr-12 justify-end">
@@ -187,7 +188,12 @@ function HackathonJudging({ formSubmit, formId, config }) {
                       required
                       vl={item.fullName}
                       onChange={(e) =>
-                        onChangeTextJudge("fullName", item.id, e.target.value)
+                        onChangeText(
+                          "judges",
+                          "fullName",
+                          item.id,
+                          e.target.value
+                        )
                       }
                     />
                   </div>
@@ -197,7 +203,7 @@ function HackathonJudging({ formSubmit, formId, config }) {
                       required
                       vl={item.email}
                       onChange={(e) =>
-                        onChangeTextJudge("email", item.id, e.target.value)
+                        onChangeText("judges", "email", item.id, e.target.value)
                       }
                     />
                   </div>
@@ -207,7 +213,7 @@ function HackathonJudging({ formSubmit, formId, config }) {
                       required
                       vl={item.title}
                       onChange={(e) =>
-                        onChangeTextJudge("title", item.id, e.target.value)
+                        onChangeText("judges", "title", item.id, e.target.value)
                       }
                     />
                   </div>
@@ -250,7 +256,6 @@ function HackathonJudging({ formSubmit, formId, config }) {
               className="bg-[#1D4ED8] text-white rounded-lg py-1 font-semibold flex items-center justify-center w-28 hover:opacity-90"
               onClick={(e) => {
                 e.preventDefault();
-                console.log("DOO");
                 const newArr = [...inputValues.judges];
                 newArr.push({
                   id: Date.now(),
@@ -265,23 +270,85 @@ function HackathonJudging({ formSubmit, formId, config }) {
                 });
               }}
             >
-              Add judge
+              Add judges
             </button>
 
-            {/* <RadioButton
-              listItem={hackathonTypes}
-              name="isRequire"
-              column={3}
-              filterValueChecked={(e) => {
+            {TitleDescription(
+              "Criteria",
+              "Add criteria to help participants understand how they'll be judged."
+            )}
+
+            {inputValues.criteria?.map((item, index) => {
+              return (
+                <div
+                  key={item.id}
+                  className="bg-[#f7f7f7] p-5 rounded-lg flex flex-col gap-2"
+                >
+                  <div className="w-2/5">
+                    <TextInput
+                      label="Title"
+                      required
+                      vl={item.title}
+                      onChange={(e) =>
+                        onChangeText(
+                          "criteria",
+                          "title",
+                          item.id,
+                          e.target.value
+                        )
+                      }
+                    />
+                  </div>
+                  <div className="w-5/6">
+                    <div className="text-gray-900 font-medium">Description</div>
+                    <textarea
+                      className="w-5/6 p-2"
+                      value={item.description}
+                      onChange={(e) =>
+                        onChangeText(
+                          "criteria",
+                          "description",
+                          item.id,
+                          e.target.value
+                        )
+                      }
+                    />
+                  </div>
+                  <div
+                    className="text-[#1D4ED8] cursor-pointer mt-1 font-semibold w-14"
+                    onClick={() => {
+                      setInputValues({
+                        ...inputValues,
+                        criteria: inputValues.criteria.filter(
+                          (i) => i.id !== item.id
+                        ),
+                      });
+                    }}
+                  >
+                    Cancel
+                  </div>
+                </div>
+              );
+            })}
+
+            <button
+              className="bg-[#1D4ED8] text-white rounded-lg py-1 font-semibold flex items-center justify-center w-28 hover:opacity-90"
+              onClick={(e) => {
+                e.preventDefault();
+                const newArr = [...inputValues.criteria];
+                newArr.push({
+                  id: Date.now(),
+                  title: "",
+                  description: "",
+                });
                 setInputValues({
                   ...inputValues,
-                  applyFor: e.name,
+                  criteria: newArr,
                 });
               }}
-              label="What type of hackathon is this?"
-              require
-              description="Knowing more about the type of hackathon you're running helps us provide the best support."
-            /> */}
+            >
+              Add criteria
+            </button>
           </form>
         </div>
       </div>

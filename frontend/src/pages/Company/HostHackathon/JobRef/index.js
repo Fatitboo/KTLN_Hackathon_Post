@@ -6,6 +6,7 @@ import HackathonToDos from "./HackathonToDos";
 import HackathonStarterKit from "./HackathonStarterKit";
 import HackathonSubmission from "./HackathonSubmission";
 import HackathonJudging from "./HackathonJudging";
+import HackathonPrize from "./HackathonPrize";
 import JobReview from "./JobReview";
 export {
   HackathonEssential,
@@ -16,5 +17,6 @@ export {
   HackathonToDos,
   HackathonSubmission,
   HackathonJudging,
+  HackathonPrize,
   JobReview,
 };

@@ -11,6 +11,7 @@ import {
   HackathonToDos,
   HackathonSubmission,
   HackathonJudging,
+  HackathonPrize,
 } from "./JobRef";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -62,6 +63,7 @@ function HostHackathon() {
     "form-hackathon-starter-kit",
     "form-hackathon-submission",
     "form-hackathon-judging",
+    "form-hackathon-prize",
     "form-job-pre",
     "form-job-rev",
   ];
@@ -114,7 +116,13 @@ function HostHackathon() {
       flag={7}
       key={7}
     />,
-    <JobReview formSubmit={nextJobRef} formId={formId[8]} flag={8} key={8} />,
+    <HackathonPrize
+      formSubmit={nextJobRef}
+      formId={formId[8]}
+      flag={8}
+      key={8}
+    />,
+    <JobReview formSubmit={nextJobRef} formId={formId[9]} flag={9} key={9} />,
   ];
 
   //const currentJobComponent = useSelector((state) => state.vacancies.currentJobComponent)
@@ -173,7 +181,7 @@ function HostHackathon() {
             )}
           </div>
           <div className="flex flex-row justify-between">
-            {jobRefKey != 0 && jobRefKey !== 7 ? (
+            {jobRefKey != 0 && jobRefKey !== 9 ? (
               <div
                 className="flex items-center justify-center h-[53px] box-border bg-[white] border px-[18px] py-[8px] rounded-[8px] text-[#1967d3] hover:bg-[#eef1fe] hover:border-[#1967d3] cursor-pointer"
                 onClick={backJobRef}
@@ -200,14 +208,14 @@ function HostHackathon() {
                 </div>
               ) : null}
 
-              {jobRefKey === 8 ? null : (
+              {jobRefKey === 9 ? null : (
                 <button
                   type="submit"
                   form={formId[jobRefKey]}
                   className="flex items-center justify-center h-[53px] box-border bg-[#1967d3] px-[18px] py-[8px] rounded-[8px] text-[#fff] hover:bg-[#0146a6] cursor-pointer"
                 >
                   <span className="text-[15px] leading-none font-bold mr-2">
-                    {jobRefKey === 6 ? "Create" : "Continue"}
+                    {jobRefKey === 8 ? "Create" : "Continue"}
                   </span>
 
                   <TbArrowRight className="w-6 h-6" />

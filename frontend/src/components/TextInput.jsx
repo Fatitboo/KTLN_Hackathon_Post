@@ -38,7 +38,7 @@ const TextInput = React.forwardRef(
           {label}
         </p>
         <p className="text-xs text-[#6F6F6F] italic">{description}</p>
-        <div className="relative mt-[2px] rounded-md">
+        <div className="relative mt-[2px] rounded-sm">
           <input
             type={type}
             name={name}
@@ -50,7 +50,7 @@ const TextInput = React.forwardRef(
             ref={ref}
             value={vl}
             defaultValue={value}
-            className={`block bg-[#f9fbfc] focus:bg-white text-base outline-1 shadow-sm w-full rounded-md py-2 pl-5 pr-5 text-gray-900 border-[1px] border-gray-300 placeholder:text-gray-400 sm:text-base sm:leading-8 ${styles}`}
+            className={`block bg-white focus:bg-white text-base outline-1 shadow-sm w-full rounded-sm py-1 px-3 text-gray-900 border-[1px] border-gray-300 placeholder:text-gray-400 sm:text-base sm:leading-8 ${styles}`}
             {...register}
             style={{
               borderColor: `${error ? "#a9252b" : ""}`,

@@ -5,6 +5,8 @@ import { Contact } from "./Contact/Contact";
 import BrowerHackathons from "./BrowerHackathons";
 import BrowerProjects from "./BrowerProjects";
 import HackathonDetail from "./Hackathon";
+import UserPorfolio from "./UserPorfolio";
+import SettingHackathonRecommend from "./Setting/SettingRecommend";
 export {
   Home,
   MyProfile,
@@ -13,4 +15,6 @@ export {
   BrowerHackathons,
   BrowerProjects,
   HackathonDetail,
+  UserPorfolio,
+  SettingHackathonRecommend,
 };

@@ -30,9 +30,9 @@ function Sidebar({ user }) {
   const userAuth = storeData?.userAuth?.user;
 
   const itemStyle =
-    "!mb-2 pr-6 m-0 hover:bg-[#E9EFFB] hover:text-blue-600 rounded-lg";
+    "!mb-1 pr-6 m-0 hover:bg-[#E9EFFB] hover:text-blue-600 rounded-sm";
   const postJobStyle =
-    "!mb-2 pr-6 m-0 bg-[#1967d3] hover:bg-[#0146a6] text-[white] rounded-lg";
+    "!mb-1 pr-6 m-0 bg-[#1967d3] hover:bg-[#0146a6] text-[white] rounded-sm";
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { vacancyId, isSuccess } = useSelector((store) => store.vacancies);
@@ -54,7 +54,7 @@ function Sidebar({ user }) {
   return (
     <aside
       className="flex justify-center h-full pt-10 bg-white overflow-auto 
-                            ease-in duration-300 border-solid border border-[#ecedf2] shadow-lg shadow-gray-300 z-10"
+                            ease-in duration-300 border-solid border border-gray-300 shadow-lg shadow-gray-300 z-10"
     >
       <div className="fixed">
         {user?.userType === "admin" ? (
@@ -212,12 +212,12 @@ function Sidebar({ user }) {
               )}
             >
               <Link
-                onClick={() => dispatch(isActiveSidebarAction("Dashboard"))}
-                to="/Seeker/dashboard"
+                onClick={() => dispatch(isActiveSidebarAction("My porfolio"))}
+                to="/Seeker-detail/my-porfolio/Projects"
                 className="relative text-sm text-center p-3  flex items-center leading-7 font-normal  capitalize rounded-lg "
               >
                 <LiaHomeSolid className="relative mr-4 ml-4 text-2xl text-center " />
-                Dashboard
+                My porfolio
               </Link>
             </div>
             <div
@@ -243,11 +243,11 @@ function Sidebar({ user }) {
             >
               <Link
                 onClick={() => dispatch(isActiveSidebarAction("My Resume"))}
-                to="/Seeker/my-resume"
+                to="/Seeker/setting-recommend"
                 className="relative text-sm text-center p-3 flex items-center leading-7 font-normal  capitalize rounded-lg "
               >
                 <FiUsers className="relative mr-4 ml-4 text-2xl text-center " />
-                Edit Resume
+                Edit recommend
               </Link>
             </div>
             <div

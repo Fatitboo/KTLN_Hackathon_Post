@@ -29,7 +29,7 @@ function App() {
   const user = {
     token: "xx",
     isVerify: true,
-    userType: "organizer",
+    userType: "seeker",
   };
 
   return (

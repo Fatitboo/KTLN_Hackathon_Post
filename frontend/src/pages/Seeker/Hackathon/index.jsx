@@ -18,6 +18,7 @@ import HackathonInfo from "../../../components/Seeker/HackathonInfo";
 import CardProject from "../../../components/Seeker/CardProject";
 import SearchInput from "../../../components/Seeker/SearchInput";
 import BrowerHackathons from "../BrowerHackathons";
+import BrowerParticipants from "../BrowerParticipants";
 
 function HackathonDetail() {
   const { id, type } = useParams();
@@ -397,7 +398,7 @@ function HackathonDetail() {
             </div>
           </>
         )}
-        {type === "participants" && <BrowerHackathons />}
+        {type === "participants" && <BrowerParticipants />}
         <div className="px-60 max-lg:px-2 py-5 ">
           <div className="grid grid-cols-3 max-lg:grid-cols-1 gap-10">
             <div className="col-span-2 text-gray-600 " id="generated-script">

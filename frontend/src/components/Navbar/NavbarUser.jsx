@@ -24,7 +24,7 @@ function MenuList({ user, onClick }) {
 
   return (
     <div>
-      <Menu as="div" className="inline-block text-left ">
+      <Menu as="div" className="inline-block text-left text-blue-600">
         <div className="flex  align-middle ">
           <Menu.Button className="flex flex-row items-center  align-middle gap-2 w-full h-8 rounded-md bg-[#f7fdfd] md:px-2  text-sm font-medium text-slate-700 hover:bg-opacity-20 ">
             <img
@@ -70,7 +70,7 @@ function MenuList({ user, onClick }) {
               <Menu.Item>
                 {({ active }) => (
                   <Link
-                    to={"/Seeker/dashboard"}
+                    to={"/Seeker/my-profile"}
                     className={`${
                       active ? "bg-blue-500 text-white" : "text-gray-900"
                     } group flex w-full items-center rounded-sm p-2 text-sm`}

@@ -8,6 +8,8 @@ import {
   Contact,
   AboutUs,
   HackathonDetail,
+  UserPorfolio,
+  SettingHackathonRecommend,
 } from "../pages/Seeker";
 import {
   DashboardCompany,
@@ -76,12 +78,28 @@ const publicRoutes = [
     layout: LayoutNoSidebar,
   },
   { path: "/Seeker/about-us", component: AboutUs, layout: LayoutNoSidebar },
+  {
+    path: "/Seeker-detail/:id/:type",
+    component: UserPorfolio,
+    layout: LayoutNoSidebar,
+  },
+
   { path: "/Seeker/contact", component: Contact, layout: LayoutNoSidebar },
 ];
 const seekerRoutes = [
   {
     path: "/Seeker/my-profile",
     component: MyProfile,
+    layout: LayoutHasSidebar,
+  },
+  {
+    path: "/Seeker-detail/my-porfolio/:type",
+    component: UserPorfolio,
+    layout: LayoutHasSidebar,
+  },
+  {
+    path: "/Seeker/setting-recommend",
+    component: SettingHackathonRecommend,
     layout: LayoutHasSidebar,
   },
 ];

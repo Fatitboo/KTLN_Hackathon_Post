@@ -1,11 +1,16 @@
-import { Controller, Post, Body, Get, Param, Res } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  Param,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { CreateUserCommand } from 'src/user/application/commands/create-user/create-user.command';
 import { GetUserQuery } from 'src/user/application/queries/get-user/get-user.query';
-import { createUserDto } from '../dto/create-user.dto';
-import { User } from 'src/user/domain/entities/user.entity';
-import { join } from 'path';
 import { Response } from 'express';
+import { JwtAuthGuard } from 'src/user/domain/common/guards/jwtAuth.guard';
 
 @Controller('users')
 export class UserController {
@@ -13,15 +18,6 @@ export class UserController {
     private readonly commandBus: CommandBus,
     private readonly queryBus: QueryBus,
   ) {}
-
-  @Post()
-  async createUser(@Body() body: createUserDto): Promise<User> {
-    const { username, password } = body;
-    const result = await this.commandBus.execute(
-      new CreateUserCommand({ username, password }),
-    );
-    return result.data;
-  }
 
   @Get('data.json')
   async uploadData(@Res() res: Response) {
@@ -39,6 +35,7 @@ export class UserController {
   }
 
   @Get(':id')
+  @UseGuards(JwtAuthGuard)
   async getUser(@Param('id') id: string) {
     return await this.queryBus.execute(new GetUserQuery(id));
   }

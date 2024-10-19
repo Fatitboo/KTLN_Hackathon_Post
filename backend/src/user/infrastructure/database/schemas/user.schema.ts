@@ -11,10 +11,19 @@ import * as bcrypt from 'bcrypt';
 })
 export class UserDocument {
   @Prop({ unique: true, required: true })
-  username: string;
+  email: string;
 
   @Prop({ required: true })
   password: string;
+
+  @Prop({ required: false })
+  googleId: string;
+
+  @Prop({ required: false })
+  githubId: string;
+
+  @Prop({ required: false })
+  hashRefreshToken: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(UserDocument);

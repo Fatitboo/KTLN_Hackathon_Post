@@ -21,9 +21,8 @@ function JobDes({ formId, formSubmit, flag, config, content, onDoneSubmit }) {
   let [errors] = useState({});
 
   function handleSubmit(e) {
-    console.log(inputValues);
     e.preventDefault();
-    formSubmit();
+    formSubmit(inputValues);
   }
 
   const [inputValues, setInputValues] = useState({

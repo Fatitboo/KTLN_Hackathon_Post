@@ -13,6 +13,8 @@
     "@ckeditor/ckeditor5-build-classic": "^40.0.0",
     "@ckeditor/ckeditor5-react": "^6.1.0",
     "@ckeditor/ckeditor5-table": "^40.0.0",
+    "@cloudinary/react": "^1.13.0",
+    "@cloudinary/url-gen": "^1.21.0",
     "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^2.0.18",
     "@reduxjs/toolkit": "^1.9.7",
@@ -27,6 +29,8 @@
     "moment": "^2.29.4",
     "mongoose": "^8.0.3",
     "quill": "^1.3.6",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "react-froala-wysiwyg": "^4.1.3",
     "react-hook-form": "^7.46.1",
     "react-icons": "^4.11.0",
@@ -40,9 +44,7 @@
     "recharts": "^2.8.0",
     "slick-carousel": "^1.8.1",
     "sweetalert2": "^11.10.1",
-    "uuid": "^9.0.1",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",

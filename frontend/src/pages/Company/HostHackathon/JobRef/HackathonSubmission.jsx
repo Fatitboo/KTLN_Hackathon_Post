@@ -14,8 +14,7 @@ function HackathonSubmissions({ formId, formSubmit }) {
   });
   function handleSubmit(e) {
     e.preventDefault();
-    console.log(inputValues);
-    formSubmit();
+    formSubmit({ submissions: inputValues });
   }
 
   const onChange = (type, value) => {

@@ -8,7 +8,6 @@ import {
   Put,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { CreateHackathonDTO } from '../dto/create-hackathon.dto';
 import { Hackathon } from 'src/hackathon/domain/entities/hackathon.entity';
 import { CreateHackathonCommand } from 'src/hackathon/application/commands/create-hackathon/create-hackathon.command';
 import { UpdateHackathonDTO } from '../dto/update-hackathon.dto';
@@ -33,13 +32,10 @@ export class HackathonController {
     return await this.queryBus.execute(new GetHackathonQuery(id));
   }
 
-  @Post()
-  async createHackathon(
-    @Body() hackathon: CreateHackathonDTO,
-  ): Promise<Hackathon> {
-    const { hackathonName } = hackathon;
+  @Post(':userId')
+  async createHackathon(@Param('userId') userId: string): Promise<string> {
     const result = this.commandBus.execute(
-      new CreateHackathonCommand({ hackathonName: hackathonName }),
+      new CreateHackathonCommand({ userId: userId }),
     );
 
     return result;

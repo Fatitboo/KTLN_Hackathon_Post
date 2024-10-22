@@ -11,7 +11,7 @@ function HackathonEssential({ formSubmit, formId, config }) {
   const [skills, setSkills] = useState([]);
   const [inputValues, setInputValues] = useState({
     hackathonName: "",
-    tagLine: "",
+    tagline: "",
     managerMail: "",
     hostName: "",
     hackathonTypes: [],
@@ -57,8 +57,7 @@ function HackathonEssential({ formSubmit, formId, config }) {
 
   const onSubmitForm = (e) => {
     e.preventDefault();
-    console.log(inputValues);
-    formSubmit();
+    formSubmit(inputValues);
   };
 
   const inputBox = useRef();
@@ -137,8 +136,8 @@ function HackathonEssential({ formSubmit, formId, config }) {
               type="text"
               description="Create a short tagline to describe your hackathon."
               required
-              vl={inputValues.tagLine}
-              onChange={(value) => onChangeValueTextInput("tagLine", value)}
+              vl={inputValues.tagline}
+              onChange={(value) => onChangeValueTextInput("tagline", value)}
               placeHolder="e.g. Create apps and games that enhance math teaching and learning for our middle schools."
               name="numberParticipants"
             ></TextInput>

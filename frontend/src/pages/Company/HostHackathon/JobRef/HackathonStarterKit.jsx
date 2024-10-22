@@ -16,8 +16,7 @@ function HackathonStarterKit({ formId, formSubmit, config }) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    console.log(inputValues);
-    formSubmit();
+    formSubmit(inputValues);
   }
 
   function onChangeTextInput(type, e) {

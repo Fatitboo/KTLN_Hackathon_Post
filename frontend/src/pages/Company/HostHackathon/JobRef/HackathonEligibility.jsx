@@ -30,8 +30,14 @@ function HackathonEligibility({ formId, formSubmit, config }) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    console.log(inputsValues);
-    formSubmit();
+    const data = inputsValues;
+    data.teamRequirement.min = Number(data.teamRequirement.min);
+    data.teamRequirement.max =
+      data.teamRequirement.max != "" ? Number(data.teamRequirement.max) : null;
+    data.participantAge.min = Number(data.participantAge.min);
+    data.participantAge.max =
+      data.participantAge.max != "" ? Number(data.participantAge.max) : null;
+    formSubmit(data);
   }
 
   const communityTypes = [

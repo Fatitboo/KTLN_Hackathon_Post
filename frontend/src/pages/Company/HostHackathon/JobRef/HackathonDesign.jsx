@@ -1,42 +1,21 @@
 import { JobBenefitImage } from "../../../../assets/images";
 import { useState } from "react";
-import ReactImagePickerEditor from "react-image-picker-editor";
-import "react-image-picker-editor/dist/index.css";
-import { toast } from "react-toastify";
+// import ReactImagePickerEditor from "react-image-picker-editor";
+// import "react-image-picker-editor/dist/index.css";
+import axios from "axios";
 
-function HackathonDesign({ formId, formSubmit, config }) {
-  let [inputsValues, setInputValues] = useState({
-    thumbnail: "",
-    headerTitleImage: "",
+function HackathonDesign({ formId, formSubmit }) {
+  const [inputsValues, setInputValues] = useState({
+    thumbnail: null,
+    headerTitleImage: null,
   });
 
-  function handleSubmit(e) {
-    console.log(inputsValues);
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    formSubmit();
-  }
 
-  const config1 = {
-    borderRadius: "8px",
-    language: "en",
-    width: "224px",
-    height: "224px",
-    objectFit: "contain",
-    compressInitial: null,
-    darkMode: false,
-    rtl: false,
+    const data = await handleUpload();
+    formSubmit(data);
   };
-  const config2 = {
-    borderRadius: "8px",
-    language: "en",
-    width: "700px",
-    height: "112px",
-    objectFit: "contain",
-    compressInitial: null,
-    darkMode: false,
-    rtl: false,
-  };
-
   const TitleDescription = (title, description) => {
     return (
       <div>
@@ -50,6 +29,39 @@ function HackathonDesign({ formId, formSubmit, config }) {
         <p className="text-sm text-[#6F6F6F] italic">{description}</p>
       </div>
     );
+  };
+
+  const handleImageChange = (e) => {
+    const { name, files } = e.target;
+    setInputValues((prevValues) => ({
+      ...prevValues,
+      [name]: files[0],
+    }));
+  };
+
+  const handleUpload = async () => {
+    const updatedInputsValues = { ...inputsValues }; // Giữ lại giá trị cũ
+
+    for (const [key, file] of Object.entries(updatedInputsValues)) {
+      if (!file) continue;
+
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", "nhanle");
+
+      try {
+        const response = await axios.post(
+          `https://api.cloudinary.com/v1_1/dcdjan0oo/image/upload`,
+          formData
+        );
+        updatedInputsValues[key] = response.data.secure_url; // Lưu URL vào inputsValues
+        console.log(`${key} uploaded successfully:`, response.data.secure_url);
+      } catch (error) {
+        console.error(`Error uploading ${key}:`, error);
+      }
+    }
+
+    return updatedInputsValues; // Cập nhật state với URL đã upload
   };
 
   return (
@@ -80,16 +92,16 @@ function HackathonDesign({ formId, formSubmit, config }) {
                 "Upload one image to be used as a square thumbnail image for your hackathon. View example. This image will be used to represent your hackathon in places such as the Devpost hackathons page. The image must be a JPG, GIF or PNG file, up to 5 MB. For best results crop to 300x300 pixels."
               )}
               <div className="mt-8 w-56 h-56 bg-[#f2f2f2] flex flex-col items-center justify-center border text-sm text-[#6F6F6F] italic">
-                <ReactImagePickerEditor
-                  config={config1}
-                  imageSrcProp={inputsValues.thumbnail}
-                  imageChanged={(newDataUri) => {
-                    setInputValues({
-                      ...inputsValues,
-                      thumbnail: newDataUri,
-                    });
-                  }}
-                />
+                <div>
+                  <input
+                    type="file"
+                    name="thumbnail"
+                    onChange={handleImageChange}
+                  />
+                  {inputsValues.thumbnail && (
+                    <img src={inputsValues.thumbnail} alt="Uploaded" />
+                  )}
+                </div>
               </div>
             </div>
             <div>
@@ -98,16 +110,20 @@ function HackathonDesign({ formId, formSubmit, config }) {
                 "Upload one image to be used as a square thumbnail image for your hackathon. View example. This image will be used to represent your hackathon in places such as the Devpost hackathons page. The image must be a JPG, GIF or PNG file, up to 5 MB. For best results crop to 300x300 pixels."
               )}
               <div className="mt-8 w-full h-28 bg-[#f2f2f2] flex flex-col items-center justify-center border text-sm text-[#6F6F6F] italic">
-                <ReactImagePickerEditor
-                  config={config2}
-                  imageSrcProp={inputsValues.headerTitleImage}
-                  imageChanged={(newDataUri) => {
-                    setInputValues({
-                      ...inputsValues,
-                      headerTitleImage: newDataUri,
-                    });
-                  }}
-                />
+                <div>
+                  <input
+                    type="file"
+                    name="headerTitleImage"
+                    onChange={handleImageChange}
+                  />
+                  {inputsValues.headerTitleImage && (
+                    <img
+                      src={inputsValues.headerTitleImage}
+                      alt="Uploaded"
+                      style={{ width: "700px", height: "200px" }}
+                    />
+                  )}
+                </div>
               </div>
             </div>
           </form>

@@ -7,8 +7,7 @@ import { IoMdClose } from "react-icons/io";
 function HackathonToDos({ formId, formSubmit, config }) {
   function handleSubmit(e) {
     e.preventDefault();
-    console.log(inputValues);
-    formSubmit();
+    formSubmit(inputValues);
   }
 
   const actionList = [
@@ -85,14 +84,6 @@ function HackathonToDos({ formId, formSubmit, config }) {
               "Additional actions",
               "Add up to 3 additional actions for participants to help them create a great submission e.g. 'Download SDK' or 'Signup for a dev account'."
             )}
-            <button
-              onClick={(w) => {
-                w.preventDefault();
-                console.log(inputValues);
-              }}
-            >
-              clickme
-            </button>
             {inputValues.submissions.map((item, index) => {
               return (
                 <div

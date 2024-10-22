@@ -12,12 +12,17 @@ import { CreateHackathonHandler } from './application/commands/create-hackathon/
 import { GetHackathonHandler } from './application/queries/get-hackathon/get-hackathon.handler';
 import { UpdateHackathonHandler } from './application/commands/update-hackathon/update-hackathon.handler';
 import { DeleteHackathonHandler } from './application/commands/delete-hackathon/delete-hackathon.handler';
+import {
+  UserDocument,
+  UserSchema,
+} from 'src/user/infrastructure/database/schemas';
 
 @Module({
   imports: [
     CqrsModule,
     MongooseModule.forFeature([
       { name: HackathonDocument.name, schema: HackathonSchema },
+      { name: UserDocument.name, schema: UserSchema },
     ]),
   ],
   controllers: [HackathonController],

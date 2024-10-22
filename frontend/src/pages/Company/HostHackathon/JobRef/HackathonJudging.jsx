@@ -5,7 +5,7 @@ import RadioButton from "../InputField/RadioButton";
 import TextInput from "../InputField/TextInput";
 import { IoIosClose } from "react-icons/io";
 import { CustomButton } from "../../../../components";
-import ReactImagePickerEditor from "react-image-picker-editor";
+// import ReactImagePickerEditor from "react-image-picker-editor";
 import { BsCheck } from "react-icons/bs";
 
 function HackathonJudging({ formSubmit, formId, config }) {
@@ -219,7 +219,7 @@ function HackathonJudging({ formSubmit, formId, config }) {
                   </div>
                   <div className="text-gray-900 font-medium">Photo</div>
                   <div className="mt-6 w-56 h-56 bg-[#f2f2f2] flex flex-col items-center justify-center border text-sm text-[#6F6F6F] italic">
-                    <ReactImagePickerEditor
+                    {/* <ReactImagePickerEditor
                       config={config1}
                       imageSrcProp={inputValues.photo}
                       imageChanged={(newDataUri) => {
@@ -232,7 +232,7 @@ function HackathonJudging({ formSubmit, formId, config }) {
                           ),
                         });
                       }}
-                    />
+                    /> */}
                   </div>
 
                   <div

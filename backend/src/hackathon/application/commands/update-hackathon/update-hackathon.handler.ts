@@ -26,7 +26,6 @@ export class UpdateHackathonHandler
     }
 
     // Cập nhật các thuộc tính mới từ command
-    // Cập nhật các thuộc tính mới từ command
     const updatedHackathon = new Hackathon(
       id,
       hackathon.hackathonName ?? existingHackathon.hackathonName,
@@ -51,6 +50,13 @@ export class UpdateHackathonHandler
       hackathon.subjectMailTitle ?? existingHackathon.subjectMailTitle,
       hackathon.contentMailRegister ?? existingHackathon.contentMailRegister,
       hackathon.submissions ?? existingHackathon.submissions,
+      hackathon.judgingType ?? existingHackathon.judgingType,
+      hackathon.judgingPeriod ?? existingHackathon.judgingPeriod,
+      hackathon.judges ?? existingHackathon.judges,
+      hackathon.criteria ?? existingHackathon.criteria,
+      hackathon.winnersAnnounced ?? existingHackathon.winnersAnnounced,
+      hackathon.prizeCurrency ?? existingHackathon.prizeCurrency,
+      hackathon.prizes ?? existingHackathon.prizes,
     );
 
     // Gọi repository để lưu lại cập nhật

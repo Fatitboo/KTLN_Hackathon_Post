@@ -1,6 +1,15 @@
 import { Prop, raw, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
-import { Range, Submission, Task, TeamRange } from './type';
+import {
+  Criteria,
+  DateRange,
+  Judges,
+  Prize,
+  Range,
+  Submission,
+  Task,
+  TeamRange,
+} from './type';
 
 @Schema({
   timestamps: {
@@ -72,6 +81,27 @@ export class HackathonDocument {
 
   @Prop({ type: Submission })
   submissions: Submission;
+
+  @Prop()
+  judgingType: string;
+
+  @Prop()
+  judgingPeriod: DateRange;
+
+  @Prop()
+  judges: Judges[];
+
+  @Prop()
+  criteria: Criteria[];
+
+  @Prop()
+  winnersAnnounced: string;
+
+  @Prop()
+  prizeCurrency: string;
+
+  @Prop()
+  prizes: Prize[];
 
   @Prop({ type: Types.ObjectId, ref: 'User', required: true })
   user: Types.ObjectId;

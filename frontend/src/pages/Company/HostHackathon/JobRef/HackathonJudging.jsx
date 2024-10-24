@@ -7,6 +7,7 @@ import { IoIosClose } from "react-icons/io";
 import { CustomButton } from "../../../../components";
 // import ReactImagePickerEditor from "react-image-picker-editor";
 import { BsCheck } from "react-icons/bs";
+import axios from "axios";
 
 function HackathonJudging({ formSubmit, formId, config }) {
   const [inputValues, setInputValues] = useState({
@@ -19,10 +20,15 @@ function HackathonJudging({ formSubmit, formId, config }) {
     criteria: [],
   });
 
-  const onSubmitForm = (e) => {
+  const onSubmitForm = async (e) => {
     e.preventDefault();
-    console.log(inputValues);
-    formSubmit();
+    const uploadedJudges = await handleUpload(inputValues.judges);
+    const data = {
+      ...inputValues,
+      judges: uploadedJudges,
+    };
+    console.log(data);
+    formSubmit(data);
   };
 
   const judgingTypes = [
@@ -54,6 +60,35 @@ function HackathonJudging({ formSubmit, formId, config }) {
     });
   };
 
+  const handleUpload = async (judgePhotos) => {
+    const updatedJudges = [];
+
+    for (const judge of judgePhotos) {
+      const { photo, id } = judge;
+      if (!photo) continue;
+
+      const formData = new FormData();
+      formData.append("file", photo);
+      formData.append("upload_preset", "nhanle");
+
+      try {
+        const response = await axios.post(
+          `https://api.cloudinary.com/v1_1/dcdjan0oo/image/upload`,
+          formData
+        );
+        const photoUrl = response.data.secure_url;
+        console.log(`Photo for judge ${id} uploaded successfully: ${photoUrl}`);
+
+        // Cập nhật đối tượng judge với URL ảnh mới
+        updatedJudges.push({ ...judge, photo: photoUrl });
+      } catch (error) {
+        console.error(`Error uploading photo for judge ${id}:`, error);
+      }
+    }
+
+    return updatedJudges;
+  };
+
   const TitleDescription = (title, description) => {
     return (
       <div>
@@ -68,15 +103,14 @@ function HackathonJudging({ formSubmit, formId, config }) {
     );
   };
 
-  const config1 = {
-    borderRadius: "8px",
-    language: "en",
-    width: "224px",
-    height: "224px",
-    objectFit: "contain",
-    compressInitial: null,
-    darkMode: false,
-    rtl: false,
+  const handleImageChange = (type, id, e) => {
+    const { name, files } = e.target;
+    setInputValues((prevValues) => ({
+      ...prevValues,
+      judges: prevValues.judges.map((item) =>
+        item.id === id ? { ...item, [type]: files[0] } : { ...item }
+      ),
+    }));
   };
 
   return (
@@ -219,20 +253,24 @@ function HackathonJudging({ formSubmit, formId, config }) {
                   </div>
                   <div className="text-gray-900 font-medium">Photo</div>
                   <div className="mt-6 w-56 h-56 bg-[#f2f2f2] flex flex-col items-center justify-center border text-sm text-[#6F6F6F] italic">
-                    {/* <ReactImagePickerEditor
-                      config={config1}
-                      imageSrcProp={inputValues.photo}
-                      imageChanged={(newDataUri) => {
-                        setInputValues({
-                          ...inputValues,
-                          judges: inputValues.judges.map((i) =>
-                            i.id === item.id
-                              ? { ...i, photo: newDataUri }
-                              : { ...i }
-                          ),
-                        });
-                      }}
-                    /> */}
+                    <div className="mt-8 w-full h-28 bg-[#f2f2f2] flex flex-col items-center justify-center border text-sm text-[#6F6F6F] italic">
+                      <div>
+                        <input
+                          type="file"
+                          name="photo"
+                          onChange={(e) =>
+                            handleImageChange("photo", item.id, e)
+                          }
+                        />
+                        {item.photo && (
+                          <img
+                            src={item.photo}
+                            alt="Uploaded"
+                            style={{ width: "700px", height: "200px" }}
+                          />
+                        )}
+                      </div>
+                    </div>
                   </div>
 
                   <div

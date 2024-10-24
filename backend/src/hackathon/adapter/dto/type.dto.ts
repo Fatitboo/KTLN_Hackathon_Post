@@ -33,3 +33,35 @@ export class Submission {
     public isUploadVideo: boolean,
   ) {}
 }
+
+export class Judges {
+  constructor(
+    public fullName: string,
+    public email: string,
+    public title: string,
+    public photo: string,
+  ) {}
+}
+
+export class Criteria {
+  constructor(
+    public title: string,
+    public description: string,
+  ) {}
+}
+
+export class DateRange {
+  constructor(
+    public start: string,
+    public end: string,
+  ) {}
+}
+
+export class Prize {
+  constructor(
+    public prizeName: string,
+    public cashValue: string,
+    public description: string,
+    public numberWinningProject: number,
+  ) {}
+}

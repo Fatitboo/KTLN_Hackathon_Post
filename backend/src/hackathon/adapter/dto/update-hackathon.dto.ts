@@ -5,7 +5,16 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { Range, Submission, Task, TeamRange } from './type.dto';
+import {
+  Criteria,
+  DateRange,
+  Judges,
+  Prize,
+  Range,
+  Submission,
+  Task,
+  TeamRange,
+} from './type.dto';
 
 export class UpdateHackathonDTO {
   @IsOptional()
@@ -89,4 +98,25 @@ export class UpdateHackathonDTO {
 
   @IsOptional()
   submissions?: Submission;
+
+  @IsOptional()
+  judgingType?: string;
+
+  @IsOptional()
+  judgingPeriod?: DateRange;
+
+  @IsOptional()
+  judges?: Judges[];
+
+  @IsOptional()
+  criteria?: Criteria[];
+
+  @IsOptional()
+  winnersAnnounced?: string;
+
+  @IsOptional()
+  prizeCurrency?: string;
+
+  @IsOptional()
+  prizes?: Prize[];
 }

@@ -23,7 +23,10 @@ export class UserDocument {
   avatar: string;
 
   @Prop({ required: false, default: false })
-  isVerify: string;
+  isVerify: boolean;
+
+  @Prop({ required: false, default: true })
+  isActive: boolean;
 
   @Prop({ required: true })
   userType: UserType[];
@@ -36,6 +39,18 @@ export class UserDocument {
 
   @Prop({ required: false })
   hashRefreshToken: string;
+
+  @Prop()
+  tokenVerify: string;
+
+  @Prop()
+  expiredDateTokenVerify: Date;
+
+  @Prop()
+  tokenResetPassword: string;
+
+  @Prop()
+  expiredDateTokenResetPassword: Date;
 }
 
 export const UserSchema = SchemaFactory.createForClass(UserDocument).index(

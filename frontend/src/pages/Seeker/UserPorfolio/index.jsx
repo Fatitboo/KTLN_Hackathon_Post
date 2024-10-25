@@ -7,6 +7,7 @@ import CardProject from "../../../components/Seeker/CardProject";
 
 function UserPorfolio() {
   const { id, type } = useParams();
+  console.log("🚀 ~ UserPorfolio ~ id, type:", id, type);
   const myProject = [
     {
       title: "AI DataGraph",
@@ -23,7 +24,7 @@ function UserPorfolio() {
     },
   ];
   return (
-    <div className="min-h-screen ">
+    <div>
       {/* Header */}
       <div className="bg-blue-100  px-60 h-40">{/*  */}</div>
       <div className="px-60 -mt-12">
@@ -115,7 +116,9 @@ function UserPorfolio() {
               "4 Likes",
             ].map((item) => (
               <Link
-                to={`/Seeker-detail/${id}/${item.split(" ")[1]}`}
+                to={`/Seeker-detail/${id !== undefined ? id : "my-porfolio"}/${
+                  item.split(" ")[1]
+                }`}
                 key={item}
                 className={`flex flex-col items-center uppercase ${
                   type === item.split(" ")[1]
@@ -133,7 +136,11 @@ function UserPorfolio() {
               <>
                 <div className=" max-lg:grid-cols-1 gap-10">
                   <div>
-                    <div className="my-5 grid grid-cols-4 max-md:grid-cols-1 gap-6">
+                    <div
+                      className={`my-5 grid ${
+                        id !== undefined ? "grid-cols-4" : "grid-cols-3"
+                      }  max-w-60:grid-cols-3 max-md:grid-cols-1 gap-6`}
+                    >
                       {[...myProject, ...myProject].map((card, index) => (
                         <CardProject
                           key={index}

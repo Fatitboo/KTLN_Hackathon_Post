@@ -125,7 +125,7 @@ function NavbarUser({ user }) {
       dispatch(resetSuccessAction());
       navigate("/user-auth/noti-send-mail");
     }
-  }, [isSuccess]);
+  }, [dispatch, isSuccess, navigate]);
 
   return (
     <>
@@ -155,7 +155,7 @@ function NavbarUser({ user }) {
             </li>
           </ul>
           <div className="hidden lg:block">
-            {!user?.token ? (
+            {!user?.isVerify ? (
               <div>
                 <Link to="/user-auth/login">
                   <CustomButton

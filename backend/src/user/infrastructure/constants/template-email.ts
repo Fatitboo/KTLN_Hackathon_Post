@@ -6,14 +6,10 @@ export const templateHTML = (
   const title = type === 'reset' ? 'Reset password' : 'Verify Your Email';
   const contentMessage =
     type === 'reset'
-      ? 'You have requested a password reset. Please enter the code below within 10 minutes.'
+      ? 'You have requested a password reset. Please click button below within 10 minutes.'
       : 'Thank you for signing up! Please confirm your email address by clicking the button below.';
-  const contentEmail =
-    type === 'reset'
-      ? `<p class="order-details">Mã của bạn là: </p>
-        <p class="thank-you">${linkOrOtp}</p>`
-      : `<div class="button">
-        <a href=${linkOrOtp} target="_blank">Verify Email</a>
+  const contentEmail = `<div class="button">
+        <a href=${linkOrOtp} target="_blank">${type === 'reset' ? 'Reset password' : 'Verify Email'}</a>
         </div>`;
 
   const footerMessage =

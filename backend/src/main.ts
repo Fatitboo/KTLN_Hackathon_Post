@@ -28,8 +28,11 @@ async function bootstrap() {
 
   // interceptors
   app.useGlobalInterceptors(new LoggingInterceptor(new LoggerService()));
-  app.useGlobalInterceptors(new ResponseInterceptor());
-  app.enableCors();
+  // app.useGlobalInterceptors(new ResponseInterceptor());
+  app.enableCors({
+    origin: 'http://localhost:5173', // Frontend origin
+    credentials: true,
+  });
   // swagger config
   if (env !== 'production') {
     const config = new DocumentBuilder()

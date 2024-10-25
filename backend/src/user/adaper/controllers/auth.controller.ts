@@ -9,6 +9,10 @@ import {
   Inject,
   Get,
   Param,
+  HttpException,
+  HttpStatus,
+  Query,
+  Put,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { RegisterUserCommand } from 'src/user/application/commands/register-user/register-user.command';
@@ -21,7 +25,11 @@ import { GoogleOAuthGuard } from 'src/user/domain/common/guards/google-oauth.gua
 import { LoginUserCommand } from 'src/user/application/commands/login/Login-user.command';
 import { LoginUserDto } from '../dto/login-user.dto';
 import { UserType } from 'src/user/domain/entities/user.entity';
-import { VerifyEmailCommand } from 'src/user/application/commands/verify-email/verify-email.command';
+import {
+  USER_REPOSITORY,
+  UserRepository,
+} from 'src/user/domain/repositories/user.repository';
+import { Auth2Service } from '../services/auth2.service';
 
 @Controller('auth')
 export class AuthController {
@@ -30,6 +38,9 @@ export class AuthController {
     private readonly queryBus: QueryBus,
     @Inject(AuthenticationService)
     private readonly authenticationService: AuthenticationService,
+    @Inject(Auth2Service)
+    private readonly auth2Service: Auth2Service,
+    @Inject(USER_REPOSITORY) private readonly userRepository: UserRepository,
   ) {}
 
   @Get('google')
@@ -47,6 +58,7 @@ export class AuthController {
         fullname: user.fullname,
         userType: UserType.SEEKER,
         avatar: user.avatar,
+        googleAccountId: user.googleAccountId,
       }),
     );
     const { accessTokenCookie, refreshTokenCookie } =
@@ -56,10 +68,7 @@ export class AuthController {
       refreshTokenCookie,
     ]);
     return {
-      message: 'Login successfully',
-      data: {
-        ...result,
-      },
+      ...result,
     };
   }
   @HttpCode(201)
@@ -70,10 +79,7 @@ export class AuthController {
         ...body,
       }),
     );
-    return {
-      message: 'Register user successfully',
-      data: null,
-    };
+    return null;
   }
 
   @HttpCode(200)
@@ -94,10 +100,7 @@ export class AuthController {
       refreshTokenCookie,
     ]);
     return {
-      message: 'Login successful',
-      data: {
-        ...result,
-      },
+      ...result,
     };
   }
 
@@ -109,10 +112,7 @@ export class AuthController {
     const { user } = request;
     const cookie = this.authenticationService.getCookieForLogOut(user.id);
     request.res.setHeader('Set-Cookie', cookie);
-    return {
-      message: 'Logout successful',
-      data: null,
-    };
+    return null;
   }
 
   @Get('refresh')
@@ -127,20 +127,67 @@ export class AuthController {
       accessTokenCookie,
       refreshTokenCookie,
     ]);
-    return {
-      message: 'Refresh successful',
-      data: null,
-    };
+    return null;
   }
 
-  @Get('verify-email/:id')
-  @ApiBearerAuth()
-  async verifyEmail(@Req() request: any, @Param('id') id: string) {
-    await this.commandBus.execute(new VerifyEmailCommand({ id }));
-    return {
-      message: 'Verify email successfully',
-      data: null,
-    };
+  @Post('/send-token-verify-by-email/:id')
+  async sendTokenVerifyByEmail(@Param('id') id: string) {
+    try {
+      const token = await this.auth2Service.generateTokenVerifyAccount(id);
+      return { message: 'Send email verify user successfully', token };
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @Post('/send-token-reset-by-email')
+  async sendTokenResetByEmail(@Query('email') email: string) {
+    try {
+      const token = await this.auth2Service.generateTokenResetPassword(email);
+      return { message: 'Send email reset password user successfully', token };
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @Put('/update-token-verify')
+  async updateVerifyAccount(@Query('token') token: string) {
+    try {
+      const user = await this.auth2Service.updateVerifyAccount(token);
+      return { message: 'Verify account user successfully', userVerify: user };
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @Put('/update-token-reset')
+  async updateResetPassword(
+    @Query('token') token: string,
+    @Query('newPassword') newPassword: string,
+  ) {
+    try {
+      const user = await this.auth2Service.updateResetPassword(
+        token,
+        newPassword,
+      );
+      return { message: 'Reset password user successfully', userVerify: user };
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @Put('/update-password/:id')
+  async updatePassword(
+    @Param('id') id: string,
+    @Query('oldPassword') oldPassword: string,
+    @Query('newPassword') newPassword: string,
+  ) {
+    try {
+      await this.auth2Service.updatePassword(id, oldPassword, newPassword);
+      return { message: 'Change password user successfully' };
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
   }
 
   public async getTokenUser(user: any): Promise<{

@@ -9,6 +9,7 @@ import {
 } from "../../../redux/slices/users/usersSlices";
 import { AiFillExclamationCircle } from "react-icons/ai";
 import { lockAccount } from "../../../assets/images";
+import { IconGithub } from "../../../assets/icons";
 
 function Login() {
   const [accountType, setAccountType] = useState("seeker");
@@ -43,19 +44,17 @@ function Login() {
 
   useEffect(() => {
     if (userAuth) {
-      if (userAuth?.isActive) {
-        console.log(userAuth?.user?.userType === "organizer");
-        if (userAuth?.user?.userType === "organizer") {
-          navigate("/Organizer/dashboard");
+      if (userAuth?.user?.isVerify) {
+        if (userAuth?.user?.isActive) {
+          if (userAuth?.user?.userType.includes("seeker")) {
+            navigate("/");
+          }
+          if (userAuth?.user?.userType.includes("admin")) {
+            navigate("/Admin");
+          }
+        } else {
+          setIsBlock(true);
         }
-        if (userAuth?.user?.userType === "seeker") {
-          navigate("/");
-        }
-        if (userAuth?.user?.userType === "admin") {
-          navigate("/Admin");
-        }
-      } else {
-        setIsBlock(true);
       }
     }
   }, [navigate, userAuth]);
@@ -63,7 +62,7 @@ function Login() {
     <>
       {loading && <LoadingComponent />}
       {!isBlock ? (
-        <div className="w-full  flex pt-24 items-center flex-col">
+        <div className="w-full flex pt-24 items-center flex-col">
           <img
             src="https://jobbox-nextjs-v3.vercel.app/assets/imgs/page/login-register/img-4.svg"
             alt="img"
@@ -92,6 +91,14 @@ function Login() {
                 className="mr-1"
               />
             </CustomButton>
+            <CustomButton
+              title={"Sign up with GitHub"}
+              containerStyles={
+                "flex justify-center py-3 rounded items-center font-medium border border-[#ccc] w-full mb-5"
+              }
+            >
+              <img src={IconGithub} alt="logo Github" className="mr-1 w-5" />
+            </CustomButton>
             <div className="flex w-full items-center ">
               <div className="h-[0.5px] w-[32%] bg-[#ccc]"></div>
               <div className="w-[35%] flex justify-center font-light text-[#05264e] text-base">
@@ -100,28 +107,6 @@ function Login() {
               <div className="h-[0.5px] w-[33%] bg-[#ccc]"></div>
             </div>
             <form className="mt-2 w-full" onSubmit={handleSubmit(onSubmit)}>
-              {/* <div className="w-full flex items-center justify-center py-4 ">
-                <div
-                  onClick={() => setAccountType("seeker")}
-                  className={`flex cursor-pointer mr-1 px-4 py-3 rounded outline-none ${
-                    accountType === "seeker"
-                      ? "bg-[#1d4fd862] text-blue-900 font-semibold"
-                      : "bg-white border border-blue-400 "
-                  }`}
-                >
-                  Seeker Account
-                </div>
-                <div
-                  onClick={() => setAccountType("organizer")}
-                  className={`flex cursor-pointer px-4 py-3 rounded outline-none ${
-                    accountType === "organizer"
-                      ? "bg-[#1d4fd862] text-blue-900 font-semibold"
-                      : "bg-white border border-blue-400 "
-                  }`}
-                >
-                  Organizer Account
-                </div>
-              </div> */}
               <div className="mb-5 w-full">
                 <TextInput
                   type={"text"}

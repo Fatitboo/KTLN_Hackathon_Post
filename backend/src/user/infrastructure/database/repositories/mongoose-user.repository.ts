@@ -56,9 +56,11 @@ export class MongooseUserRepository implements UserRepository {
       fullname: user.fullname,
       userType: user.userType,
       avatar: user.avatar,
+      password: user.password,
       googleAccountId: user.googleAccountId,
       githubAccountId: user.githubAccountId,
       isVerify: user.isVerify,
+      isActive: user.isActive,
     });
   }
 }

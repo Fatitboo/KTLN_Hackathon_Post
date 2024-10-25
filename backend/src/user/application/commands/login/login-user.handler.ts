@@ -16,14 +16,23 @@ export class LoginUserHandler implements ICommandHandler<LoginUserCommand> {
   ) {}
 
   async execute(command: LoginUserCommand) {
-    const { password, email, userType } = command.props;
+    const { password, email, userType, googleAccountId, githubAccountId } =
+      command.props;
 
     if (!email) {
-      this.exceptionsService.UnauthorizedException();
+      this.exceptionsService.UnauthorizedException({
+        message: 'Not found user',
+      });
     }
 
     const user = await this.userRepository.findOne({ email });
-
+    if (!googleAccountId || !githubAccountId) {
+      if (!user) {
+        this.exceptionsService.UnauthorizedException({
+          message: 'Not found user',
+        });
+      }
+    }
     if (!user) {
       const newUser = new User({
         ...command.props,
@@ -36,8 +45,13 @@ export class LoginUserHandler implements ICommandHandler<LoginUserCommand> {
 
       return { user: await this.userRepository.create(newUser) };
     }
-
-    await user.verifyPassword(password);
+    try {
+      await user.verifyPassword(password);
+    } catch (error) {
+      this.exceptionsService.UnauthorizedException({
+        message: 'Email or password is not correct',
+      });
+    }
     const userTypes = user._props.userType;
     if (!userTypes.includes(userType)) {
       this.exceptionsService.UnauthorizedException({
@@ -47,10 +61,13 @@ export class LoginUserHandler implements ICommandHandler<LoginUserCommand> {
 
     return {
       user: {
+        id: user._props.id,
         email: user._props.email,
         avatar: user._props.avatar,
         fullname: user._props.fullname,
         userType: user._props.userType,
+        isVerify: user._props.isVerify,
+        isActive: user._props.isActive,
       },
     };
   }

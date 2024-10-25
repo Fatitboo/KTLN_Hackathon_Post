@@ -164,7 +164,7 @@ const SettingHackathonRecommend = () => {
   };
   return (
     <>
-      <div className="px-32 pb-10 text-sm">
+      <div className="px-32 pb-10 pt-16 text-sm">
         {/* {loading && <LoadingComponent />} */}
         {/* Start title of page  */}
         <div className="pb-8 border-b border-gray-300">

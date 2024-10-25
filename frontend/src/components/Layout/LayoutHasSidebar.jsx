@@ -8,7 +8,7 @@ function LayoutHasSidebar({ user, children }) {
         <div className="col-span-2">
           <Sidebar user={user} />
         </div>
-        <div className="relative col-span-10 bg-white  pt-16 h-max min-h-screen max-h-full w-full ">
+        <div className="relative col-span-10 bg-white h-max min-h-screen max-h-full w-full ">
           {children}{" "}
         </div>
       </div>

@@ -31,5 +31,6 @@ export class VerifyEmailHandler implements ICommandHandler<VerifyEmailCommand> {
       });
     }
     await this.userRepository.updateById(id, { isVerify: true });
+    return 'ok';
   }
 }

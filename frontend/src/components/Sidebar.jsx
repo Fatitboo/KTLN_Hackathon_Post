@@ -49,7 +49,7 @@ function Sidebar({ user }) {
       dispatch(setValueSuccess(false));
       navigate("/Organizer/post-vacancy/jobId=" + vacancyId);
     }
-  }, [isSuccess]);
+  }, [dispatch, isSuccess, navigate, vacancyId]);
 
   return (
     <aside
@@ -57,7 +57,7 @@ function Sidebar({ user }) {
                             ease-in duration-300 border-solid border border-gray-300 shadow-lg shadow-gray-300 z-10"
     >
       <div className="fixed">
-        {user?.userType === "admin" ? (
+        {user?.userType?.includes("admin") ? (
           <div className="relative w-full l-0 m-0 p-0">
             <div
               className={classNames(
@@ -203,11 +203,11 @@ function Sidebar({ user }) {
               </div>
             </div>
           </div>
-        ) : user?.userType === "seeker" ? (
+        ) : user?.userType?.includes("seeker") ? (
           <div className="relative w-full l-0 m-0 p-0">
             <div
               className={classNames(
-                isActive === "Dashboard" ? "bg-[#E9EFFB] text-blue-600" : "",
+                isActive === "My porfolio" ? "bg-[#E9EFFB] text-blue-600" : "",
                 itemStyle
               )}
             >
@@ -250,93 +250,7 @@ function Sidebar({ user }) {
                 Edit recommend
               </Link>
             </div>
-            <div
-              className={classNames(
-                isActive === "CV Manager" ? "bg-[#E9EFFB] text-blue-600" : "",
-                itemStyle
-              )}
-            >
-              <Link
-                onClick={() => dispatch(isActiveSidebarAction("CV Manager"))}
-                to="/Seeker/cv-manager"
-                className="relative text-sm text-center p-3 flex items-center leading-7 font-normal  capitalize rounded-lg "
-              >
-                <GrWorkshop className="relative mr-4 ml-4 text-2xl text-center " />
-                CV Manage
-              </Link>
-            </div>
-            <div
-              className={classNames(
-                isActive === "ShortListed Organizer"
-                  ? "bg-[#E9EFFB] text-blue-600"
-                  : "",
-                itemStyle
-              )}
-            >
-              <Link
-                onClick={() =>
-                  dispatch(isActiveSidebarAction("ShortListed Organizer"))
-                }
-                to="/Seeker/short-listed-users"
-                className="relative text-sm text-center p-3 flex items-center leading-7 font-normal  capitalize rounded-lg "
-              >
-                <BiBookmark className="relative mr-4 ml-4 text-2xl text-center " />
-                ShortListed Organizer
-              </Link>
-            </div>
-            <div
-              className={classNames(
-                isActive === "Favourite Projects"
-                  ? "bg-[#E9EFFB] text-blue-600"
-                  : "",
-                itemStyle
-              )}
-            >
-              <Link
-                onClick={() =>
-                  dispatch(isActiveSidebarAction("Favourite Projects"))
-                }
-                to="/Seeker/favourite-projects"
-                className="relative text-sm text-center p-3 flex items-center leading-7 font-normal  capitalize rounded-lg "
-              >
-                <LiaDocker className="relative mr-4 ml-4 text-2xl text-center " />
-                Favourite Projects
-              </Link>
-            </div>
-            <div
-              className={classNames(
-                isActive === "Favourite Vacancies"
-                  ? "bg-[#E9EFFB] text-blue-600"
-                  : "",
-                itemStyle
-              )}
-            >
-              <Link
-                onClick={() =>
-                  dispatch(isActiveSidebarAction("Favourite Vacancies"))
-                }
-                to="/Seeker/favourite-vacancies"
-                className="relative text-sm text-center p-3 flex items-center leading-7 font-normal  capitalize rounded-lg "
-              >
-                <BsStar className="relative mr-4 ml-4 text-2xl text-center " />
-                Favourite Vacancies
-              </Link>
-            </div>
-            <div
-              className={classNames(
-                isActive === "Applied Jobs" ? "bg-[#E9EFFB] text-blue-600" : "",
-                itemStyle
-              )}
-            >
-              <Link
-                onClick={() => dispatch(isActiveSidebarAction("Applied Jobs"))}
-                to="/Seeker/applied-jobs"
-                className="relative text-sm text-center p-3 flex items-center leading-7 font-normal  capitalize rounded-lg "
-              >
-                <LuNetwork className="relative mr-4 ml-4 text-2xl text-center " />
-                Applied Vacancies
-              </Link>
-            </div>
+
             <div
               className={classNames(
                 isActive === "Change password"

@@ -19,6 +19,7 @@ import { JwtStrategy } from './domain/common/strategies/jwt.strategy';
 import { GoogleStrategy } from './domain/common/strategies/google.strategy';
 import UserCommandHandler from './application/commands';
 import UserQueryHandler from './application/commands';
+import { Auth2Service } from './adaper/services/auth2.service';
 @Module({
   imports: [
     CqrsModule,
@@ -40,6 +41,7 @@ import UserQueryHandler from './application/commands';
     JwtRefreshTokenStrategy,
     JwtStrategy,
     GoogleStrategy,
+    Auth2Service,
   ],
 })
 export class UserModule {}

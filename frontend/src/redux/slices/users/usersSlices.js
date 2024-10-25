@@ -36,13 +36,15 @@ export const loginUserAction = createAsyncThunk(
         header: {
           "Content-Type": "application/json",
         },
+        withCredentials: true,
       };
       const { data } = await axios.post(
         `${baseUrl}/api/v1/auth/log-in`,
         userData,
         config
       );
-      if (data.isActive) {
+      console.log("🚀 ~ data:", data);
+      if (data?.user?.isActive) {
         localStorage.setItem("userInfo", JSON.stringify(data));
       }
       return data;
@@ -617,20 +619,21 @@ export const getShortListedUsersAction = createAsyncThunk(
 //create verification token
 export const resetPassSendTokenAction = createAsyncThunk(
   "users/tokenReset",
-  async (username, { rejectWithValue, getState, dispatch }) => {
+  async (username, { rejectWithValue }) => {
     // http call
     const config = {
       headers: {
-        "Content-Type": "multipart/form-data",
+        "Content-Type": "application/json",
+      },
+      params: {
+        email: username,
       },
     };
-    const formData = new FormData();
-    formData.append("username", username);
     //http call
     try {
       const { data } = await axios.post(
-        `${baseUrl}/api/v1/users/send-token-reset-by-email`,
-        formData,
+        `${baseUrl}/api/v1/auth/send-token-reset-by-email`,
+        {},
         config
       );
       return data;
@@ -652,16 +655,16 @@ export const resetPasswordAction = createAsyncThunk(
       headers: {
         "Content-Type": "multipart/form-data",
       },
+      params: {
+        token: data.token,
+        newPassword: data.password,
+      },
     };
-    //http call
-    const formData = new FormData();
-    formData.append("token", data.token);
-    formData.append("newPassword", data.password);
 
     try {
       const { data } = await axios.put(
-        `${baseUrl}/api/v1/users/update-token-reset`,
-        formData,
+        `${baseUrl}/api/v1/auth/update-token-reset`,
+        {},
         config
       );
       return data;

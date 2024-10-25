@@ -214,7 +214,7 @@ function MyProfile() {
       });
   }, [userProfile]);
   return (
-    <div className="px-32 pb-10">
+    <div className="px-32 pb-10 pt-16">
       {/* Start title of page  */}
       {loading && <LoadingComponent />}
       <ToastContainer />

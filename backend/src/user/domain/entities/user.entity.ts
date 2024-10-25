@@ -10,13 +10,14 @@ export interface UserProps {
   id?: string;
   password?: string;
   email: string;
-  fullname: string;
+  fullname?: string;
   avatar?: string;
   hashRefreshToken?: string;
   userType: UserType[];
   googleAccountId?: string;
   githubAccountId?: string;
   isVerify?: boolean;
+  isActive?: boolean;
 }
 export class User {
   constructor(public _props: UserProps) {}
@@ -50,14 +51,21 @@ export class User {
     }
   }
   public async verifyHashRefreshToken(plainTextToken: string): Promise<void> {
-    const isRefreshTokenMatching = await bcrypt.compare(
-      plainTextToken,
-      this._props.hashRefreshToken,
-    );
-    if (!isRefreshTokenMatching)
+    try {
+      const isRefreshTokenMatching = await bcrypt.compare(
+        plainTextToken,
+        this._props.hashRefreshToken,
+      );
+      if (!isRefreshTokenMatching)
+        throw new HttpException(
+          'Wrong credentials provided',
+          HttpStatus.BAD_REQUEST,
+        );
+    } catch (error) {
       throw new HttpException(
         'Wrong credentials provided',
         HttpStatus.BAD_REQUEST,
       );
+    }
   }
 }

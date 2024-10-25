@@ -22,10 +22,10 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
 
     const user = {
       provider: 'google',
-      providerId: id,
+      googleAccountId: id,
       email: emails[0].value,
-      name: `${name.givenName} ${name.familyName}`,
-      picture: photos[0].value,
+      fullname: `${name.givenName} ${name.familyName}`,
+      avatar: photos[0].value,
     };
 
     done(null, user);

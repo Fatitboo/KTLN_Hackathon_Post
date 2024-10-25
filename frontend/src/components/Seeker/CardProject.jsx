@@ -13,7 +13,7 @@ const CardProject = ({ title, description, image, isWinner, imgUser }) => {
         />
       )}
       <div className="">
-        <img src={image} alt={title} className=" h-full" />
+        <img src={image} alt={title} className="h-48 w-full" />
         <div className=" px-2 h-16">
           <h3 className="mt-2 text-base font-semibold line-clamp-1">{title}</h3>
           <p className="mt-1 text-gray-600 line-clamp-2 italic text-sm">

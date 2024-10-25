@@ -21,7 +21,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
 
   // base routing
-  app.setGlobalPrefix('api_v1');
+  app.setGlobalPrefix('api/v1');
 
   // Filter
   app.useGlobalFilters(new AllExceptionFilter(new LoggerService()));
@@ -29,7 +29,7 @@ async function bootstrap() {
   // interceptors
   app.useGlobalInterceptors(new LoggingInterceptor(new LoggerService()));
   app.useGlobalInterceptors(new ResponseInterceptor());
-
+  app.enableCors();
   // swagger config
   if (env !== 'production') {
     const config = new DocumentBuilder()

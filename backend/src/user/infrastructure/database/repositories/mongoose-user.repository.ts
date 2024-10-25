@@ -34,24 +34,31 @@ export class MongooseUserRepository implements UserRepository {
     return this.toEntity(user);
   }
 
-  async save(user: User): Promise<User> {
+  async create(user: User): Promise<User> {
     const createdUser = new this.userModel({
-      password: user.password,
-      email: user.email,
-      hashRefreshToken: user.hashRefreshToken,
+      password: user._props.password,
+      email: user._props.email,
+      avatar: user._props.avatar,
+      fullname: user._props.fullname,
+      userType: user._props.userType,
+      isVerify: user._props.isVerify,
     });
     const u = await createdUser.save();
     user.setId(u._id.toString());
-    user.password = undefined;
+    user.setPassword(undefined);
     return user;
   }
 
   private toEntity(user: any): User {
-    return new User(
-      user._id.toString(),
-      user.password,
-      user.email,
-      user.hashRefreshToken,
-    );
+    return new User({
+      id: user._id.toString(),
+      email: user.email,
+      fullname: user.fullname,
+      userType: user.userType,
+      avatar: user.avatar,
+      googleAccountId: user.googleAccountId,
+      githubAccountId: user.githubAccountId,
+      isVerify: user.isVerify,
+    });
   }
 }

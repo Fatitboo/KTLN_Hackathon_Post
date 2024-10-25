@@ -16,20 +16,42 @@ export class LoginUserHandler implements ICommandHandler<LoginUserCommand> {
   ) {}
 
   async execute(command: LoginUserCommand) {
-    const { password, email } = command.props;
+    const { password, email, userType } = command.props;
 
-    if (!email || !password) {
+    if (!email) {
       this.exceptionsService.UnauthorizedException();
     }
+
     const user = await this.userRepository.findOne({ email });
+
     if (!user) {
-      const newUser = new User(undefined, password, email);
+      const newUser = new User({
+        ...command.props,
+        password: '12345678',
+        isVerify: true,
+        fullname: command.props.fullname,
+        userType: [userType],
+      });
       await newUser.hashPassword();
 
-      return { data: await this.userRepository.save(newUser) };
+      return { user: await this.userRepository.create(newUser) };
     }
 
-    user.verifyPassword(password);
-    return { data: await this.userRepository.save(user) };
+    await user.verifyPassword(password);
+    const userTypes = user._props.userType;
+    if (!userTypes.includes(userType)) {
+      this.exceptionsService.UnauthorizedException({
+        message: 'You dont have permission to access',
+      });
+    }
+
+    return {
+      user: {
+        email: user._props.email,
+        avatar: user._props.avatar,
+        fullname: user._props.fullname,
+        userType: user._props.userType,
+      },
+    };
   }
 }

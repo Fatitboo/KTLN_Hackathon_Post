@@ -1,5 +1,5 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
-import * as bcrypt from 'bcrypt';
+import { UserType } from 'src/user/domain/entities/user.entity';
 
 // user
 @Schema({
@@ -16,14 +16,31 @@ export class UserDocument {
   @Prop({ required: true })
   password: string;
 
-  @Prop({ required: false })
-  googleId: string;
+  @Prop({ required: true })
+  fullname: string;
 
   @Prop({ required: false })
-  githubId: string;
+  avatar: string;
+
+  @Prop({ required: false, default: false })
+  isVerify: string;
+
+  @Prop({ required: true })
+  userType: UserType[];
+
+  @Prop({ required: false })
+  googleAccountId: string;
+
+  @Prop({ required: false })
+  githubAccountId: string;
 
   @Prop({ required: false })
   hashRefreshToken: string;
 }
 
-export const UserSchema = SchemaFactory.createForClass(UserDocument);
+export const UserSchema = SchemaFactory.createForClass(UserDocument).index(
+  {
+    email: 1,
+  },
+  { unique: true },
+);

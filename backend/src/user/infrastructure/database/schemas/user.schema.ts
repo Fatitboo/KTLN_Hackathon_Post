@@ -1,5 +1,9 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
-import { UserType } from 'src/user/domain/entities/user.entity';
+import {
+  SettingRecommend,
+  SocialLink,
+  UserType,
+} from 'src/user/domain/entities/user.entity';
 
 // user
 @Schema({
@@ -27,6 +31,18 @@ export class UserDocument {
 
   @Prop({ required: false, default: true })
   isActive: boolean;
+
+  @Prop({ required: false, default: false })
+  isSetPersionalSetting: boolean;
+
+  @Prop({ required: false })
+  settingRecommend?: SettingRecommend;
+
+  @Prop({ required: false })
+  bio?: string;
+
+  @Prop({ required: false })
+  socialLinks?: SocialLink[];
 
   @Prop({ required: true })
   userType: UserType[];

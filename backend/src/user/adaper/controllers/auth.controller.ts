@@ -13,6 +13,7 @@ import {
   HttpStatus,
   Query,
   Put,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { RegisterUserCommand } from 'src/user/application/commands/register-user/register-user.command';
@@ -30,6 +31,7 @@ import {
   UserRepository,
 } from 'src/user/domain/repositories/user.repository';
 import { Auth2Service } from '../services/auth2.service';
+import axios from 'axios';
 
 @Controller('auth')
 export class AuthController {
@@ -47,22 +49,37 @@ export class AuthController {
   @UseGuards(GoogleOAuthGuard)
   async googleAuth() {}
 
-  @Get('google-redirect')
-  @UseGuards(GoogleOAuthGuard)
-  async googleAuthRedirect(@Request() request: any) {
-    const { user } = request;
+  @Post('google-redirect')
+  // @UseGuards(GoogleOAuthGuard)
+  async googleAuthRedirect(
+    @Request() request: any,
+    @Body() body: { token: string },
+  ) {
+    // const { user } = request;
+    const response = await axios.get(
+      `https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=${body.token}`,
+    );
+
+    if (response.status !== 200) {
+      throw new UnauthorizedException('Invalid Google token');
+    }
+
+    const { sub, email, name, picture } = response.data as any;
+
     const result = await this.commandBus.execute(
       new LoginUserCommand({
-        password: user.password,
-        email: user.email,
-        fullname: user.fullname,
+        password: '123456',
+        email,
+        fullname: name,
         userType: UserType.SEEKER,
-        avatar: user.avatar,
-        googleAccountId: user.googleAccountId,
+        avatar: picture,
+        googleAccountId: sub,
+        loginType: 'google',
       }),
     );
-    const { accessTokenCookie, refreshTokenCookie } =
-      await this.getTokenUser(result);
+    const { accessTokenCookie, refreshTokenCookie } = await this.getTokenUser(
+      result.user,
+    );
     request.res.setHeader('Set-Cookie', [
       accessTokenCookie,
       refreshTokenCookie,
@@ -93,8 +110,9 @@ export class AuthController {
     const result = await this.commandBus.execute(
       new LoginUserCommand({ ...body }),
     );
-    const { accessTokenCookie, refreshTokenCookie } =
-      await this.getTokenUser(result);
+    const { accessTokenCookie, refreshTokenCookie } = await this.getTokenUser(
+      result.user,
+    );
     request.res.setHeader('Set-Cookie', [
       accessTokenCookie,
       refreshTokenCookie,

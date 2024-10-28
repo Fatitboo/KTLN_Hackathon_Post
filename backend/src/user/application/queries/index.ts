@@ -1,2 +1,2 @@
-import { GetUserHandler } from './get-user/get-user.handler';
+import { GetUserHandler } from './get-user-detail/get-user-detail.handler';
 export default [GetUserHandler];

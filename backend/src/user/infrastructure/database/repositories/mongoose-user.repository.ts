@@ -41,9 +41,11 @@ export class MongooseUserRepository implements UserRepository {
       avatar: user._props.avatar,
       fullname: user._props.fullname,
       userType: user._props.userType,
+      isSetPersionalSetting: false,
       isVerify: user._props.isVerify,
     });
     const u = await createdUser.save();
+    user._props.isSetPersionalSetting = false;
     user.setId(u._id.toString());
     user.setPassword(undefined);
     return user;
@@ -61,6 +63,9 @@ export class MongooseUserRepository implements UserRepository {
       githubAccountId: user.githubAccountId,
       isVerify: user.isVerify,
       isActive: user.isActive,
+      isSetPersionalSetting: user.isSetPersionalSetting,
+      settingRecommend: user.settingRecommend,
+      socialLinks: user.socialLinks,
     });
   }
 }

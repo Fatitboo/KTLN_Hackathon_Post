@@ -102,6 +102,11 @@ const seekerRoutes = [
     component: SettingHackathonRecommend,
     layout: LayoutHasSidebar,
   },
+  {
+    path: "/setting-recommend",
+    component: SettingHackathonRecommend,
+    layout: LayoutNoSidebar,
+  },
 ];
 const corRoutes = [
   {

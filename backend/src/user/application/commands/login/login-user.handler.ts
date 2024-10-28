@@ -16,8 +16,7 @@ export class LoginUserHandler implements ICommandHandler<LoginUserCommand> {
   ) {}
 
   async execute(command: LoginUserCommand) {
-    const { password, email, userType, googleAccountId, githubAccountId } =
-      command.props;
+    const { password, email, userType, loginType } = command.props;
 
     if (!email) {
       this.exceptionsService.UnauthorizedException({
@@ -26,25 +25,38 @@ export class LoginUserHandler implements ICommandHandler<LoginUserCommand> {
     }
 
     const user = await this.userRepository.findOne({ email });
-    if (!googleAccountId || !githubAccountId) {
+    if (loginType === 'google') {
       if (!user) {
-        this.exceptionsService.UnauthorizedException({
-          message: 'Not found user',
+        const newUser = new User({
+          ...command.props,
+          password: '12345678',
+          isVerify: true,
+          fullname: command.props.fullname,
+          userType: [userType],
         });
+        await newUser.hashPassword();
+
+        return { user: await this.userRepository.create(newUser) };
       }
+      return {
+        user: {
+          id: user._props.id,
+          email: user._props.email,
+          avatar: user._props.avatar,
+          fullname: user._props.fullname,
+          userType: user._props.userType,
+          isVerify: user._props.isVerify,
+          isActive: user._props.isActive,
+          isSetPersionalSetting: user._props.isSetPersionalSetting,
+        },
+      };
     }
     if (!user) {
-      const newUser = new User({
-        ...command.props,
-        password: '12345678',
-        isVerify: true,
-        fullname: command.props.fullname,
-        userType: [userType],
+      this.exceptionsService.UnauthorizedException({
+        message: 'Not found user',
       });
-      await newUser.hashPassword();
-
-      return { user: await this.userRepository.create(newUser) };
     }
+
     try {
       await user.verifyPassword(password);
     } catch (error) {
@@ -68,6 +80,7 @@ export class LoginUserHandler implements ICommandHandler<LoginUserCommand> {
         userType: user._props.userType,
         isVerify: user._props.isVerify,
         isActive: user._props.isActive,
+        isSetPersionalSetting: user._props.isSetPersionalSetting,
       },
     };
   }

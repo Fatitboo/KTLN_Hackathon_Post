@@ -8,7 +8,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { GetUserQuery } from 'src/user/application/queries/get-user/get-user.query';
+import { GetUserQuery } from 'src/user/application/queries/get-user-detail/get-user-detail.query';
 import { Response } from 'express';
 import { JwtAuthGuard } from 'src/user/domain/common/guards/jwtAuth.guard';
 

@@ -56,11 +56,48 @@ export const loginUserAction = createAsyncThunk(
     }
   }
 );
+
+export const oAuthWithGoogleAction = createAsyncThunk(
+  "users/login-google",
+  async (credential, { rejectWithValue }) => {
+    try {
+      const config = {
+        header: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      };
+      const { data } = await axios.post(
+        "http://localhost:3000/api/v1/auth/google-redirect",
+        { token: credential },
+        config
+      );
+
+      console.log("🚀 ~ data:", data);
+      if (data?.user?.isActive) {
+        localStorage.setItem("userInfo", JSON.stringify(data));
+      }
+      return data;
+    } catch (error) {
+      if (!error?.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
 // Logout user
 export const logoutUserAction = createAsyncThunk(
   "users/logout",
-  async (payload, { rejectWithValue, getState, dispatch }) => {
+  async (payload, { rejectWithValue }) => {
     try {
+      await axios.post(
+        `${baseUrl}/api/v1/auth/logout`,
+        {},
+        {
+          withCredentials: true,
+        }
+      );
       localStorage.removeItem("userInfo");
     } catch (error) {
       if (!error?.response) {
@@ -875,6 +912,20 @@ const usersSlices = createSlice({
         state.appErr = undefined;
       }),
       builder.addCase(loginUserAction.rejected, (state, action) => {
+        state.loading = false;
+        state.appErr = action?.payload?.message;
+      }),
+      // login user
+      builder.addCase(oAuthWithGoogleAction.pending, (state, action) => {
+        state.loading = true;
+        state.appErr = undefined;
+      }),
+      builder.addCase(oAuthWithGoogleAction.fulfilled, (state, action) => {
+        state.loading = false;
+        state.userAuth = action?.payload;
+        state.appErr = undefined;
+      }),
+      builder.addCase(oAuthWithGoogleAction.rejected, (state, action) => {
         state.loading = false;
         state.appErr = action?.payload?.message;
       }),

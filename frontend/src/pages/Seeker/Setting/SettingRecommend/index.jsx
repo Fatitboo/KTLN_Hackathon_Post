@@ -130,7 +130,7 @@ const SettingHackathonRecommend = () => {
   const [listSkillApi, setListSkillApi] = useState([]);
   const [spin, setSpin] = useState(false);
   const [occupation, setOccupation] = useState("");
-  const [cuurentLevel, setCurrentLevel] = useState("");
+  const [currentLevel, setCurrentLevel] = useState("");
   const [interests, setInterest] = useState([]);
   const handleHackathonTypeChange = (value) => {
     setInterest((prev) =>
@@ -329,7 +329,7 @@ const SettingHackathonRecommend = () => {
                       <div
                         key={item}
                         className={`px-4 py-1 flex items-center cursor-pointer rounded-sm border my-1 mr-2
-                ${specialty === item ? " border-blue-900" : "border-gray-300"}
+                ${interests === item ? " border-blue-900" : "border-gray-300"}
               `}
                         onClick={() => handleHackathonTypeChange(item)}
                       >
@@ -342,22 +342,6 @@ const SettingHackathonRecommend = () => {
                       </div>
                     ))}
                   </div>
-                  {specialty === "Other" && (
-                    <div className="mb-2 -mt-4 w-[50%]">
-                      <TextInput
-                        register={register("oldPassword", {
-                          required: "Old Password is required",
-                        })}
-                        placeHolder={"Type your specialty"}
-                        error={
-                          errors.oldPassword ? errors.oldPassword.message : ""
-                        }
-                        name="oldPassword"
-                        containerStyles="text-[#05264e] text-base w-full tw-bg-white"
-                        labelStyle="text-[#05264e] text-sm"
-                      />
-                    </div>
-                  )}
                 </div>
               </div>
             </div>
@@ -375,7 +359,7 @@ const SettingHackathonRecommend = () => {
                       <div
                         key={item}
                         className={`px-4 py-1 flex items-center cursor-pointer rounded-sm border my-1 mr-2
-                ${specialty === item ? " border-blue-900" : "border-gray-300"}
+                ${occupation === item ? " border-blue-900" : "border-gray-300"}
               `}
                         onClick={() => setOccupation(item)}
                       >
@@ -398,11 +382,13 @@ const SettingHackathonRecommend = () => {
                       <div
                         key={item}
                         className={`px-4 py-1 flex items-center cursor-pointer rounded-sm border my-1 mr-2
-                ${specialty === item ? " border-blue-900" : "border-gray-300"}
+                ${
+                  currentLevel === item ? " border-blue-900" : "border-gray-300"
+                }
               `}
                         onClick={() => setCurrentLevel(item)}
                       >
-                        {cuurentLevel === item ? (
+                        {currentLevel === item ? (
                           <CheckCircleIcon className="rounded-full bg-gray-200 w-5 h-5 mr-2" />
                         ) : (
                           <div className="rounded-full bg-gray-200 w-5 h-5 mr-2" />

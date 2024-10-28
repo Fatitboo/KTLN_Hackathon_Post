@@ -6,6 +6,23 @@ export enum UserType {
   ADMIN = 'admin',
 }
 
+export enum SocialType {
+  LINKEDIN = 'Linkedin',
+  GITHUB = 'Github',
+  FACEBOOK = 'Facebook',
+  WEBSITE = 'Website',
+}
+export interface SettingRecommend {
+  specialty?: string;
+  skills?: string[];
+  interestedIn?: string[];
+  occupation?: string;
+  currentLevel?: string;
+}
+export interface SocialLink {
+  type: SocialType;
+  url: string;
+}
 export interface UserProps {
   id?: string;
   password?: string;
@@ -18,6 +35,10 @@ export interface UserProps {
   githubAccountId?: string;
   isVerify?: boolean;
   isActive?: boolean;
+  isSetPersionalSetting?: boolean;
+  settingRecommend?: SettingRecommend;
+  socialLinks?: SocialLink[];
+  bio?: string;
 }
 export class User {
   constructor(public _props: UserProps) {}

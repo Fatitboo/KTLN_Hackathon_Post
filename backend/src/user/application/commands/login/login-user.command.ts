@@ -8,6 +8,7 @@ export class LoginUserCommandProps {
   googleAccountId?: string;
   githubAccountId?: string;
   avatar?: string;
+  loginType?: string;
 }
 export class LoginUserCommand {
   constructor(public readonly props: LoginUserCommandProps) {}

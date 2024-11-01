@@ -15,11 +15,13 @@ import {
 import LoadingComponent from "../Loading";
 import { LogoImage } from "../../assets/images";
 import { ArrowRightIcon } from "@heroicons/react/20/solid";
+import { isActiveSidebarAction } from "../../redux/slices/skills/skillsSlices";
 function MenuList({ user, onClick }) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const handlerLogOut = () => {
-    dispatch(logoutUserAction());
-    window.location.href = "/user-auth/login";
+    dispatch(logoutUserAction(navigate));
+    // window.location.href = "/user-auth/login";
   };
 
   return (
@@ -58,7 +60,10 @@ function MenuList({ user, onClick }) {
               <Menu.Item>
                 {({ active }) => (
                   <Link
-                    to={"/Seeker/dashboard"}
+                    onClick={() =>
+                      dispatch(isActiveSidebarAction("My porfolio"))
+                    }
+                    to="/Seeker-detail/my-porfolio/Projects"
                     className={`${
                       active ? "bg-blue-500 text-white" : "text-gray-900"
                     } group flex w-full items-center rounded-sm p-2 text-sm`}

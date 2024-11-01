@@ -12,9 +12,10 @@ import LoadingComponent from "../Loading";
 import { LogoImage } from "../../assets/images";
 function MenuList({ user, onClick }) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const handlerLogOut = () => {
-    dispatch(logoutUserAction());
-    window.location.href = "/user-auth/login";
+    dispatch(logoutUserAction(navigate));
+    // window.location.href = "/user-auth/login";
   };
 
   return (

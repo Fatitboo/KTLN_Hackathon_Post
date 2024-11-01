@@ -64,7 +64,7 @@ export default function CustomeCbbAddress({
           className="relative cursor-default"
         >
           <div
-            className="relative z-[40] w-full cursor-default rounded-sm bg-white mt-0.5 py-2 px-3 text-left text-gray-900 shadow-sm border border-gray-300 focus:bg-white sm:text-base sm:leading-6"
+            className="relative z-[40] w-full h-11 cursor-default rounded-sm bg-white mt-0.5 py-2 px-3 text-left text-gray-900 shadow-sm border border-gray-300 focus:bg-white sm:text-base sm:leading-6"
             style={{
               borderColor: `${
                 error ? "#a9252b" : outline ? "#2D2D2D" : "rgb(209 213 219)"

@@ -1,88 +1,77 @@
-import { AiFillExclamationCircle } from "react-icons/ai";
-import {
-  CustomButton,
-  LoadingComponent,
-  TextInput,
-} from "../../../../components";
+import { CustomButton, TextInput } from "../../../../components";
 import { useEffect, useRef, useState } from "react";
 import Swal from "sweetalert2";
 import {
-  changePasswordAction,
+  getUserProfileAction,
   resetSuccessAction,
+  updateUserAction,
 } from "../../../../redux/slices/users/usersSlices";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import fetchSkillApikey from "../../../../utils/fetchSkillApiKey";
 import { IoIosClose } from "react-icons/io";
+import { useNavigate } from "react-router-dom";
 
 const SettingHackathonRecommend = () => {
-  const specializes = [
-    {
-      id: 1,
-      name: "Full-stack developer",
-    },
-    {
-      id: 2,
-      name: "Front-end developer",
-    },
-    {
-      id: 3,
-      name: "Mobile developer",
-    },
-    {
-      id: 4,
-      name: "Designer",
-    },
-    {
-      id: 5,
-      name: "Data scientist",
-    },
-    {
-      id: 6,
-      name: "Back-end developer",
-    },
-    {
-      id: 7,
-      name: "Business",
-    },
-    {
-      id: 8,
-      name: "Product manager",
-    },
-    {
-      id: 9,
-      name: "Android app developer",
-    },
-  ];
   const dispatch = useDispatch();
   const {
     register,
     handleSubmit,
-    getValues,
     reset,
+    setValue,
     formState: { errors },
   } = useForm({ mode: "onChange" });
   const onSubmit = (data) => {
-    dispatch(changePasswordAction(data));
+    const updateUserProps = {
+      updateType: "setting_recommend",
+      settingRecommend: {
+        specialty: specialty === "Other" ? data.specialty : specialty,
+        skills,
+        interestedIn: [...interests],
+        occupation,
+        currentLevel,
+      },
+    };
+    console.log("🚀 ~ onSubmit ~ updateUserProps:", updateUserProps);
+    dispatch(updateUserAction(updateUserProps));
   };
   const storeData = useSelector((store) => store.users);
-  const { loading, appErr, isSuccess } = storeData;
+  const { loading, isSuccessUpd, userAuth, isSuccess, userProfile } = storeData;
+  const navigate = useNavigate();
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccessUpd) {
       dispatch(resetSuccessAction());
       Swal.fire({
-        title: "Changed!",
-        text: "Your password has been changed.",
+        title: "Success!",
+        text: "Your setting recommend has been changed.",
         icon: "success",
         confirmButtonColor: "#3085d6",
       }).then(async (result) => {
         if (result.isConfirmed) {
-          reset();
+          navigate("/");
         }
       });
     }
-  }, [isSuccess]);
+  }, [dispatch, isSuccessUpd, reset]);
+  useEffect(() => {
+    dispatch(
+      getUserProfileAction({ getType: "setting_recommend", getBy: "id" })
+    );
+  }, []);
+  useEffect(() => {
+    dispatch(resetSuccessAction());
+    setCurrentLevel(userProfile?.settingRecommend?.currentLevel);
+    setOccupation(userProfile?.settingRecommend?.occupation);
+    setSkills([...(userProfile?.settingRecommend?.skills ?? [])]);
+    setInterest([...(userProfile?.settingRecommend?.interestedIn ?? [])]);
+    const spe = userProfile?.settingRecommend?.specialty;
+    setSpecialty(specialties.includes(spe) ? spe : "Other");
+    if (!specialties.includes(spe)) {
+      setValue("specialty", spe);
+    }
+  }, [userProfile]);
+
   const [skills, setSkills] = useState([]);
   const [specialty, setSpecialty] = useState("");
   const specialties = [
@@ -211,14 +200,12 @@ const SettingHackathonRecommend = () => {
                   {specialty === "Other" && (
                     <div className="mb-2 -mt-4 w-[50%]">
                       <TextInput
-                        register={register("oldPassword", {
+                        register={register("specialty", {
                           required: "Old Password is required",
                         })}
                         placeHolder={"Type your specialty"}
-                        error={
-                          errors.oldPassword ? errors.oldPassword.message : ""
-                        }
-                        name="oldPassword"
+                        error={errors.specialty ? errors.specialty.message : ""}
+                        name="specialty"
                         containerStyles="text-[#05264e] text-base w-full tw-bg-white"
                         labelStyle="text-[#05264e] text-sm"
                       />

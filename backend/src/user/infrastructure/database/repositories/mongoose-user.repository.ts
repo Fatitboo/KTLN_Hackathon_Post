@@ -43,6 +43,8 @@ export class MongooseUserRepository implements UserRepository {
       userType: user._props.userType,
       isSetPersionalSetting: false,
       isVerify: user._props.isVerify,
+      googleAccountId: user._props.googleAccountId,
+      githubAccountId: user._props.githubAccountId,
     });
     const u = await createdUser.save();
     user._props.isSetPersionalSetting = false;

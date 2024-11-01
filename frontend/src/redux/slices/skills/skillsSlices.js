@@ -246,7 +246,7 @@ const skillsSlices = createSlice({
     loading: false,
     skillsList: [],
     appErr: null,
-    isActive: "Dashboard",
+    isActive: "My Profile",
     histories: [],
   },
   reducers: {},

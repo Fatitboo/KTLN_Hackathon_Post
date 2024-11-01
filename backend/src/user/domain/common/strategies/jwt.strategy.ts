@@ -1,6 +1,6 @@
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { Request } from 'express';
 import { ExceptionsService } from '../../../../shared/infrastructure/exceptions/exceptions.service';
 import {
@@ -17,6 +17,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
         (request: Request) => {
+          if (!request?.cookies?.Authentication) {
+            throw new UnauthorizedException('TokenExpiredError');
+          }
           return request?.cookies?.Authentication;
         },
       ]),

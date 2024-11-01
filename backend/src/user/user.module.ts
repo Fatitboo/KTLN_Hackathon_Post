@@ -18,7 +18,7 @@ import { JwtRefreshTokenStrategy } from './domain/common/strategies/jwtRefresh.s
 import { JwtStrategy } from './domain/common/strategies/jwt.strategy';
 import { GoogleStrategy } from './domain/common/strategies/google.strategy';
 import UserCommandHandler from './application/commands';
-import UserQueryHandler from './application/commands';
+import UserQueryHandler from './application/queries';
 import { Auth2Service } from './adaper/services/auth2.service';
 @Module({
   imports: [

@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { CustomButton, LoadingComponent } from "../../../components";
 import { pleaseWaiting, verifiedSuccessfulImage } from "../../../assets/images";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,8 +8,8 @@ import { logoutUserAction } from "../../../redux/slices/users/usersSlices";
 
 function VerifyAccount() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { token } = useParams();
-  console.log("🚀 ~ VerifyAccount ~ token:", token);
   useEffect(() => {
     dispatch(verifyAccountAction(token));
   }, [dispatch, token]);
@@ -44,7 +44,7 @@ function VerifyAccount() {
 
             <Link to={"/user-auth/login"} className="mt-5 w-full">
               <CustomButton
-                onClick={() => dispatch(logoutUserAction())}
+                onClick={() => dispatch(logoutUserAction(navigate))}
                 title={"Logout"}
                 containerStyles={
                   "bg-[#3c65f5] focus:bg-[#05264e]  w-full py-4 pl-5 pr-5 rounded flex justify-center items-center text-white mb-3"

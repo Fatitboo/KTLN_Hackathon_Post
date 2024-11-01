@@ -1,10 +1,16 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
-import {
-  SettingRecommend,
-  SocialLink,
-  UserType,
-} from 'src/user/domain/entities/user.entity';
-
+import { SocialType, UserType } from 'src/user/domain/entities/user.entity';
+export class SettingRecommend {
+  specialty?: string;
+  skills?: string[];
+  interestedIn?: string[];
+  occupation?: string;
+  currentLevel?: string;
+}
+export class SocialLink {
+  type: SocialType;
+  url: string;
+}
 // user
 @Schema({
   timestamps: {

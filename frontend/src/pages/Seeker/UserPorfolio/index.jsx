@@ -1,13 +1,29 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { defaultAvt, imgDefaultProject } from "../../../assets/images";
 import { CustomButton } from "../../../components";
 import { Link, useParams } from "react-router-dom";
 import HackathonInfo from "../../../components/Seeker/HackathonInfo";
 import CardProject from "../../../components/Seeker/CardProject";
+import { useDispatch, useSelector } from "react-redux";
+import { getUserProfileAction } from "../../../redux/slices/users/usersSlices";
 
 function UserPorfolio() {
   const { id, type } = useParams();
-  console.log("🚀 ~ UserPorfolio ~ id, type:", id, type);
+  const dispatch = useDispatch();
+  const [uProfile, setUProfile] = useState({});
+  const storeData = useSelector((store) => store?.users);
+  const { userProfile, loading, appErr, isSuccess, isSuccessUpd } = storeData;
+  useEffect(() => {
+    setUProfile({ ...userProfile });
+  }, [userProfile]);
+  useEffect(() => {
+    dispatch(
+      getUserProfileAction({
+        getType: "all",
+        getBy: "id",
+      })
+    );
+  }, []);
   const myProject = [
     {
       title: "AI DataGraph",
@@ -26,12 +42,13 @@ function UserPorfolio() {
   return (
     <div>
       {/* Header */}
-      <div className="bg-blue-100  px-60 h-40">{/*  */}</div>
+      <div className="bg-blue-100  px-60 h-40" />
       <div className="px-60 -mt-12">
         <div className="flex ">
           <div className="flex items-center flex-col space-y-2">
             <img
-              src={defaultAvt}
+              sizes="w-32"
+              src={uProfile?.avatar || defaultAvt}
               alt="Profile"
               className="w-32 rounded-full border-4 border-white"
             />
@@ -49,14 +66,14 @@ function UserPorfolio() {
             </div>
           </div>
           <div className="mt-2 mx-10">
-            <div className="text-3xl font-medium">Nguyen Van Phat</div>
+            <div className="text-3xl font-medium">{uProfile?.fullname}</div>
             <p className="text-gray-500 text-base mt-5">
               Student at the University of Waterloo
             </p>
             <div className="flex space-x-4 mt-2 text-blue-500">
-              <a href="#">Website</a>
-              <a href="#">GitHub</a>
-              <a href="#">LinkedIn</a>
+              <a href={uProfile?.socialLinks?.link}>Website</a>
+              <a href={uProfile?.socialLinks?.link}>GitHub</a>
+              <a href={uProfile?.socialLinks?.link}>LinkedIn</a>
             </div>
             <div className="text-sm ">
               <div className="flex items-start mt-2 ">
@@ -84,20 +101,16 @@ function UserPorfolio() {
               <div className="flex items-start mt-2 ">
                 <div className=" font-medium mr-2">Interests</div>
                 <div className="flex flex-wrap gap-2">
-                  {[
-                    "Fintech",
-                    "Gaming",
-                    "Machine Learning/AI",
-                    "Productivity",
-                    "Music/Art",
-                  ].map((interest) => (
-                    <span
-                      key={interest}
-                      className="bg-gray-100 text-gray-600 px-3 py-0.5 rounded-sm"
-                    >
-                      {interest}
-                    </span>
-                  ))}
+                  {[...(uProfile?.settingRecommend?.interestedIn ?? [])].map(
+                    (interest) => (
+                      <span
+                        key={interest}
+                        className="bg-gray-100 text-gray-600 px-3 py-0.5 rounded-sm"
+                      >
+                        {interest}
+                      </span>
+                    )
+                  )}
                 </div>
               </div>
             </div>

@@ -4,7 +4,6 @@ import {
   USER_REPOSITORY,
   UserRepository,
 } from '../../../domain/repositories/user.repository';
-import { User } from '../../../domain/entities/user.entity';
 import { Inject } from '@nestjs/common';
 import { ExceptionsService } from 'src/shared/infrastructure/exceptions/exceptions.service';
 
@@ -29,6 +28,7 @@ export class UpdateUserHandler implements ICommandHandler<UpdateUserCommand> {
           settingRecommend: {
             ...command.props.settingRecommend,
           },
+          isSetPersionalSetting: true,
         });
         return { settingRecommend: updatedUser._props.settingRecommend };
       case 'profile_user':
@@ -41,6 +41,13 @@ export class UpdateUserHandler implements ICommandHandler<UpdateUserCommand> {
           fullname: profileUpdatedUser._props.fullname,
           bio: profileUpdatedUser._props.bio,
           socialLinks: profileUpdatedUser._props.socialLinks,
+        };
+      case 'avatar':
+        const avatarUpdatedUser = await this.userRepository.updateById(id, {
+          avatar: command.props.avatar,
+        });
+        return {
+          avatar: avatarUpdatedUser._props.avatar,
         };
       default:
         this.exceptionsService.badRequestException({

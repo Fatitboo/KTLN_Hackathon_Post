@@ -40,8 +40,8 @@ function Sidebar({ user }) {
   const activeStyle =
     "bg-[#4880FF] text-white hover:bg-[#4880FF] hover:text-white";
   const handleLogout = () => {
-    dispatch(logoutUserAction());
-    window.location.href = "/user-auth/login";
+    dispatch(logoutUserAction(navigate));
+    // window.location.href = "/user-auth/login";
   };
 
   useEffect(() => {

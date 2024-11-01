@@ -65,6 +65,7 @@ export class AuthController {
     }
 
     const { sub, email, name, picture } = response.data as any;
+    console.log('🚀 ~ AuthController ~ response.data:', response.data);
 
     const result = await this.commandBus.execute(
       new LoginUserCommand({
@@ -123,11 +124,13 @@ export class AuthController {
   }
 
   @HttpCode(200)
-  @Post('logout')
+  @Get('logout')
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ description: 'logout' })
   async logout(@Request() request: any) {
     const { user } = request;
+    console.log('🚀 ~ AuthController ~ logout ~ user:', user);
+
     const cookie = this.authenticationService.getCookieForLogOut(user.id);
     request.res.setHeader('Set-Cookie', cookie);
     return null;

@@ -9,7 +9,6 @@ import {
   getUserProfileAction,
   resetSuccessAction,
   updateAvatarAction,
-  updateUserProfileAction,
 } from "../../../../redux/slices/users/usersSlices";
 import { AiFillExclamationCircle } from "react-icons/ai";
 import { useForm } from "react-hook-form";
@@ -31,8 +30,7 @@ function MyProfile() {
 
   const onSubmitInfo = (data) => {
     const dt = {
-      fullName: data.fullname,
-      phoneNumber: data.phone,
+      fullname: data.fullname,
       email: data.email,
       dob: data.dob,
       website: data.website,
@@ -41,7 +39,7 @@ function MyProfile() {
       actions: 3,
     };
     console.log(data);
-    dispatch(updateUserProfileAction(dt));
+    // dispatch(updateUserProfileAction(dt));
   };
   const onSubmitAddress = (data) => {
     const dt = {
@@ -53,7 +51,7 @@ function MyProfile() {
       actions: 2,
     };
     console.log(dt);
-    dispatch(updateUserProfileAction(dt));
+    // dispatch(updateUserProfileAction(dt));
   };
   const onSubmitSocialLink = (data) => {
     const dt = {
@@ -64,12 +62,17 @@ function MyProfile() {
       actions: 1,
     };
     console.log(data);
-    dispatch(updateUserProfileAction(dt));
+    // dispatch(updateUserProfileAction(dt));
   };
   const [errImg, setErrImg] = useState(null);
   useEffect(() => {
-    dispatch(getUserProfileAction());
-  }, [dispatch]);
+    dispatch(
+      getUserProfileAction({
+        getType: "profile_user",
+        getBy: "id",
+      })
+    );
+  }, []);
 
   const storeData = useSelector((store) => store?.users);
   const { userProfile, loading, appErr, isSuccess, isSuccessUpd } = storeData;
@@ -86,35 +89,35 @@ function MyProfile() {
   }, [isSuccessUpd]);
   useEffect(() => {
     setUProfile({ ...userProfile });
-    setValue("fullname", userProfile?.fullName);
-    setValue("phone", userProfile?.phoneNumber);
+    setValue("fullname", userProfile?.fullname);
+    // setValue("phone", userProfile?.phoneNumber);
     setValue("email", userProfile?.email);
-    setValue("expectSalary", userProfile?.expectSalary);
-    setValue("dob", convertDate(userProfile?.dayOfBirth));
-    setValue("description", userProfile?.description);
-    setValue("website", userProfile?.website);
-    // setValue('province', userProfile?.address?.province);
-    // setValue('district', userProfile?.address?.district);
-    // setValue('country', userProfile?.address?.country);
-    setValue("addressDetail", userProfile?.address?.addressDetail);
-    // setValue('ward', userProfile?.address?.ward);
-    if (userProfile?.address) {
-      setAdrSelected({
-        province: userProfile?.address?.province,
-        district: userProfile?.address?.district,
-        ward: userProfile?.address?.ward,
-      });
-    } else {
-      setAdrSelected({
-        province: "",
-        district: "",
-        ward: "",
-      });
-    }
-    setValue("facebook", userProfile?.fbLink);
-    setValue("twitter", userProfile?.twLink);
-    setValue("linkedin", userProfile?.lkLink);
-    setValue("instagram", userProfile?.insLink);
+    // setValue("expectSalary", userProfile?.expectSalary);
+    // setValue("dob", convertDate(userProfile?.dayOfBirth));
+    // setValue("description", userProfile?.description);
+    // setValue("website", userProfile?.website);
+    // // setValue('province', userProfile?.address?.province);
+    // // setValue('district', userProfile?.address?.district);
+    // // setValue('country', userProfile?.address?.country);
+    // setValue("addressDetail", userProfile?.address?.addressDetail);
+    // // setValue('ward', userProfile?.address?.ward);
+    // if (userProfile?.address) {
+    //   setAdrSelected({
+    //     province: userProfile?.address?.province,
+    //     district: userProfile?.address?.district,
+    //     ward: userProfile?.address?.ward,
+    //   });
+    // } else {
+    //   setAdrSelected({
+    //     province: "",
+    //     district: "",
+    //     ward: "",
+    //   });
+    // }
+    // setValue("facebook", userProfile?.fbLink);
+    // setValue("twitter", userProfile?.twLink);
+    // setValue("linkedin", userProfile?.lkLink);
+    // setValue("instagram", userProfile?.insLink);
   }, [userProfile]);
   const filterProvince = (e) => {
     fetch(districtApi(e.code))
@@ -239,7 +242,7 @@ function MyProfile() {
                   <div className="relative flex items-end ">
                     <img
                       src={
-                        userProfile?.avatar?.fileUrl ??
+                        userProfile?.avatar ??
                         "https://i.pinimg.com/564x/16/3e/39/163e39beaa36d1f9a061b0f0c5669750.jpg"
                       }
                       alt="avt"
@@ -284,7 +287,7 @@ function MyProfile() {
                 <div className="grid grid-cols-2 pb-4 gap-5">
                   <div className="px-1">
                     <TextInput
-                      value={uProfile?.fullName}
+                      value={uProfile?.fullname}
                       name="fullname"
                       register={register("fullname")}
                       type="text"
@@ -310,6 +313,7 @@ function MyProfile() {
                       value={uProfile?.email}
                       name="email"
                       register={register("email")}
+                      readOnly={true}
                       type="email"
                       label="Email"
                       placeholder="vanphat@gmail.com"

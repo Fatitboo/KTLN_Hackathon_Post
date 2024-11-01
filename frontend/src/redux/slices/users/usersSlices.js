@@ -1,11 +1,12 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import customeAxios from "../../configAxios";
 import baseUrl from "../../../utils/baseUrl";
-const apiPrefix = "api/v1/users";
+const apiPrefixUsers = "api/v1/users";
+const apiPrefixAuth = "api/v1/auth";
 // register user
 export const registerUserAction = createAsyncThunk(
   "users/register",
-  async (user, { rejectWithValue, getState, dispatch }) => {
+  async (user, { rejectWithValue }) => {
     try {
       // http call
       const config = {
@@ -13,8 +14,8 @@ export const registerUserAction = createAsyncThunk(
           "Content-Type": "application/json",
         },
       };
-      const { data } = await axios.post(
-        `${baseUrl}/api/v1/auth/register`,
+      const { data } = await customeAxios.post(
+        `${apiPrefixAuth}/register`,
         user,
         config
       );
@@ -30,20 +31,18 @@ export const registerUserAction = createAsyncThunk(
 // login user
 export const loginUserAction = createAsyncThunk(
   "users/login",
-  async (userData, { rejectWithValue, getState, dispatch }) => {
+  async (userData, { rejectWithValue }) => {
     try {
       const config = {
         header: {
           "Content-Type": "application/json",
         },
-        withCredentials: true,
       };
-      const { data } = await axios.post(
-        `${baseUrl}/api/v1/auth/log-in`,
+      const { data } = await customeAxios.post(
+        `${apiPrefixAuth}/log-in`,
         userData,
         config
       );
-      console.log("🚀 ~ data:", data);
       if (data?.user?.isActive) {
         localStorage.setItem("userInfo", JSON.stringify(data));
       }
@@ -65,15 +64,13 @@ export const oAuthWithGoogleAction = createAsyncThunk(
         header: {
           "Content-Type": "application/json",
         },
-        withCredentials: true,
       };
-      const { data } = await axios.post(
-        "http://localhost:3000/api/v1/auth/google-redirect",
+      const { data } = await customeAxios.post(
+        `${apiPrefixAuth}/google-redirect`,
         { token: credential },
         config
       );
 
-      console.log("🚀 ~ data:", data);
       if (data?.user?.isActive) {
         localStorage.setItem("userInfo", JSON.stringify(data));
       }
@@ -89,16 +86,13 @@ export const oAuthWithGoogleAction = createAsyncThunk(
 // Logout user
 export const logoutUserAction = createAsyncThunk(
   "users/logout",
-  async (payload, { rejectWithValue }) => {
+  async (navigator, { rejectWithValue }) => {
     try {
-      await axios.post(
-        `${baseUrl}/api/v1/auth/logout`,
-        {},
-        {
-          withCredentials: true,
-        }
-      );
-      localStorage.removeItem("userInfo");
+      await customeAxios.get(`${apiPrefixAuth}/logout`);
+      if (navigator) {
+        localStorage.removeItem("userInfo");
+        navigator("/user-auth/login");
+      }
     } catch (error) {
       if (!error?.response) {
         throw error;
@@ -107,95 +101,35 @@ export const logoutUserAction = createAsyncThunk(
     }
   }
 );
-// update avatar user
-export const updateAvatarAction = createAsyncThunk(
-  "users/updateAvatar",
-  async (avatar, { rejectWithValue, getState, dispatch }) => {
-    try {
-      const user = getState()?.users;
-      const { userAuth } = user;
-      // http call
-      const config = {
-        headers: {
-          Authorization: `Bearer ${userAuth?.user?.token}`,
-          "Content-Type": "multipart/form-data",
-        },
-      };
-      const formData = new FormData();
-      formData.append("file", avatar.file);
-      formData.append("publicId", avatar.publicId);
-      const { data } = await axios.post(
-        `${baseUrl}/${apiPrefix}/update-image-user/${userAuth?.user?.userId}`,
-        formData,
-        config
-      );
-      var getUserAuth = JSON.parse(localStorage.getItem("userInfo"));
 
-      console.log(data);
-      getUserAuth.user.avatar = data.image;
-      localStorage.setItem("userInfo", JSON.stringify(getUserAuth));
-      return data;
-    } catch (error) {
-      if (!error?.response) {
-        throw error;
-      }
-      return rejectWithValue(error?.response?.data);
-    }
-  }
-);
 // get profile user
 export const getUserProfileAction = createAsyncThunk(
   "users/getUserProfile",
-  async (payload, { rejectWithValue, getState, dispatch }) => {
+  async ({ getType, getBy, id }, { rejectWithValue, getState, dispatch }) => {
     try {
       const user = getState()?.users;
       const { userAuth } = user;
       // http call
       const config = {
         headers: {
-          Authorization: `Bearer ${userAuth?.user?.token}`,
           "Content-Type": "application/json",
         },
+        params: {
+          getType,
+          getBy,
+        },
       };
-      const { data } = await axios.get(
-        `${baseUrl}/${apiPrefix}/get-profile-user/${userAuth?.user?.userId}`,
+      const { data } = await customeAxios.get(
+        `${apiPrefixUsers}/get-user-profile/${id || userAuth?.user?.id}`,
         config
       );
+
       var getUserAuth = JSON.parse(localStorage.getItem("userInfo"));
 
       console.log(data);
-      getUserAuth.user.fullName = data.userProfile.fullName;
-      localStorage.setItem("userInfo", JSON.stringify(getUserAuth));
+      // getUserAuth.user.fullname = data.userProfile.fullname;
+      // localStorage.setItem("userInfo", JSON.stringify(getUserAuth));
 
-      return data;
-    } catch (error) {
-      if (!error?.response) {
-        throw error;
-      }
-      return rejectWithValue(error?.response?.data);
-    }
-  }
-);
-// get resume seeker
-export const getUserResumeAction = createAsyncThunk(
-  "users/getUserResume",
-  async (payload, { rejectWithValue, getState, dispatch }) => {
-    try {
-      const user = getState()?.users;
-      const { userAuth } = user;
-      // http call
-      const config = {
-        headers: {
-          Authorization: `Bearer ${userAuth?.user?.token}`,
-          "Content-Type": "application/json",
-        },
-      };
-
-      const { data } = await axios.get(
-        `${baseUrl}/${apiPrefix}/get-resume-user/${userAuth?.user?.userId}`,
-        config
-      );
-      console.log(data);
       return data;
     } catch (error) {
       if (!error?.response) {
@@ -206,132 +140,37 @@ export const getUserResumeAction = createAsyncThunk(
   }
 );
 // update profile seeker
-export const updateUserProfileAction = createAsyncThunk(
-  "users/updateUserProfile",
+export const updateUserAction = createAsyncThunk(
+  "users/updateUser",
   async (info, { rejectWithValue, getState, dispatch }) => {
     try {
       const user = getState()?.users;
       const { userAuth } = user;
-      // http call
-      const config = {
-        headers: {
-          Authorization: `Bearer ${userAuth?.user?.token}`,
-          "Content-Type": "application/json",
-        },
-      };
+      const { data } = await customeAxios.post(
+        `${apiPrefixUsers}/update-user/${userAuth?.user?.id}`,
+        info
+      );
+      var getUserAuth = JSON.parse(localStorage.getItem("userInfo"));
+      if (info.getType === "setting_recommend") {
+        getUserAuth.user.isSetPersionalSetting = data.isSetPersionalSetting;
+      }
+      if (info.getType === "profile_user") {
+        getUserAuth.user.fullname = data.fullname;
+      }
+      if (info.getType === "avatar") {
+        getUserAuth.user.avatar = data.avatar;
+      }
+      localStorage.setItem("userInfo", JSON.stringify(getUserAuth));
+      return data;
+    } catch (error) {
+      if (!error?.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
 
-      const { data } = await axios.put(
-        `${baseUrl}/${apiPrefix}/update-user-information/${userAuth?.user?.userId}`,
-        info,
-        config
-      );
-      console.log(data);
-      return data;
-    } catch (error) {
-      if (!error?.response) {
-        throw error;
-      }
-      return rejectWithValue(error?.response?.data);
-    }
-  }
-);
-// update resume seeker
-export const updateUserResumeAction = createAsyncThunk(
-  "users/updateUserResume",
-  async (info, { rejectWithValue, getState, dispatch }) => {
-    try {
-      const user = getState()?.users;
-      const { userAuth } = user;
-      // http call
-      const config = {
-        headers: {
-          Authorization: `Bearer ${userAuth?.user?.token}`,
-          "Content-Type": "application/json",
-        },
-      };
-      console.log(info);
-      const { data } = await axios.put(
-        `${baseUrl}/${apiPrefix}/update-seeker-resume/${userAuth?.user?.userId}`,
-        info,
-        config
-      );
-      console.log(data);
-      return data;
-    } catch (error) {
-      if (!error?.response) {
-        throw error;
-      }
-      return rejectWithValue(error?.response?.data);
-    }
-  }
-);
-// update cv seeker
-export const updateUserCvAction = createAsyncThunk(
-  "users/updateUserCv",
-  async (info, { rejectWithValue, getState, dispatch }) => {
-    try {
-      const user = getState()?.users;
-      const { userAuth } = user;
-      // http call
-      const config = {
-        headers: {
-          Authorization: `Bearer ${userAuth?.user?.token}`,
-          "Content-Type": "multipart/form-data",
-        },
-      };
-      const formData = new FormData();
-      formData.append("file", info.file);
-      const { data } = await axios.post(
-        `${baseUrl}/${apiPrefix}/update-seeker-cv/${userAuth?.user?.userId}`,
-        formData,
-        config
-      );
-      if (info.notify) {
-        info.notify("success", "Update file CV successfully!");
-      }
-      console.log(data);
-      return data;
-    } catch (error) {
-      if (!error?.response) {
-        throw error;
-      }
-      return rejectWithValue(error?.response?.data);
-    }
-  }
-);
-// update Filename cv seeker
-export const updateFilenameCvAction = createAsyncThunk(
-  "users/updateFilenameCv",
-  async (info, { rejectWithValue, getState, dispatch }) => {
-    try {
-      const user = getState()?.users;
-      const { userAuth } = user;
-      // http call
-      const config = {
-        headers: {
-          Authorization: `Bearer ${userAuth?.user?.token}`,
-          "Content-Type": "multipart/form-data",
-        },
-      };
-      const formData = new FormData();
-      formData.append("newName", info.newName);
-      formData.append("publicId", info.publicId);
-      console.log(formData);
-      const { data } = await axios.post(
-        `${baseUrl}/${apiPrefix}/update-filename-cv/${userAuth?.user?.userId}`,
-        formData,
-        config
-      );
-      console.log(data);
-      return data;
-    } catch (error) {
-      if (!error?.response) {
-        throw error;
-      }
-      return rejectWithValue(error?.response?.data);
-    }
-  }
-);
 // update Avtive Cor By Admin
 export const updateAvtiveCorByAdminAction = createAsyncThunk(
   "users/updateAvtiveCorByAdmin",
@@ -346,8 +185,8 @@ export const updateAvtiveCorByAdminAction = createAsyncThunk(
           "Content-Type": "application/json",
         },
       };
-      const { data } = await axios.put(
-        `${baseUrl}/${apiPrefix}/update-active-cor/${id}`,
+      const { data } = await customeAxios.put(
+        `${baseUrl}/${apiPrefixUsers}/update-active-cor/${id}`,
         {},
         config
       );
@@ -377,8 +216,8 @@ export const deleteUserCvAction = createAsyncThunk(
       };
       const formData = new FormData();
       formData.append("publicId", dt.publicId);
-      const { data } = await axios.post(
-        `${baseUrl}/${apiPrefix}/delete-seeker-cv/${userAuth?.user?.userId}`,
+      const { data } = await customeAxios.post(
+        `${baseUrl}/${apiPrefixUsers}/delete-seeker-cv/${userAuth?.user?.userId}`,
         formData,
         config
       );
@@ -409,8 +248,8 @@ export const getAllUserCvAction = createAsyncThunk(
           "Content-Type": "application/json",
         },
       };
-      const { data } = await axios.get(
-        `${baseUrl}/${apiPrefix}/get-all-cv/${userAuth?.user?.userId}`,
+      const { data } = await customeAxios.get(
+        `${baseUrl}/${apiPrefixUsers}/get-all-cv/${userAuth?.user?.userId}`,
         config
       );
       console.log(data);
@@ -436,8 +275,8 @@ export const getAllCorsAction = createAsyncThunk(
           Authorization: `Bearer ${userAuth?.user?.token}`,
         },
       };
-      const { data } = await axios.get(
-        `${baseUrl}/${apiPrefix}/get-all-organizers`,
+      const { data } = await customeAxios.get(
+        `${baseUrl}/${apiPrefixUsers}/get-all-organizers`,
         config
       );
       console.log(data);
@@ -465,8 +304,8 @@ export const getAllSeekersAction = createAsyncThunk(
           "Content-Type": "application/json",
         },
       };
-      const { data } = await axios.get(
-        `${baseUrl}/${apiPrefix}/get-all-seekers`,
+      const { data } = await customeAxios.get(
+        `${baseUrl}/${apiPrefixUsers}/get-all-seekers`,
         config
       );
       console.log(data);
@@ -493,8 +332,8 @@ export const getAllRecommnendSeekerAction = createAsyncThunk(
           "Content-Type": "application/json",
         },
       };
-      const { data } = await axios.get(
-        `${baseUrl}/${apiPrefix}/get-projects-vacancies-to-invite/${userAuth?.user?.userId}`,
+      const { data } = await customeAxios.get(
+        `${baseUrl}/${apiPrefixUsers}/get-projects-vacancies-to-invite/${userAuth?.user?.userId}`,
         config
       );
       console.log(data);
@@ -526,8 +365,8 @@ export const sendRecommendSeekerAction = createAsyncThunk(
       formData.append("recommendType", info.recommendType);
       formData.append("seekerId", info.seekerId);
 
-      const { data } = await axios.post(
-        `${baseUrl}/${apiPrefix}/send-mail-recommend/${userAuth?.user?.userId}`,
+      const { data } = await customeAxios.post(
+        `${baseUrl}/${apiPrefixUsers}/send-mail-recommend/${userAuth?.user?.userId}`,
         formData,
         config
       );
@@ -555,8 +394,8 @@ export const getDetailUserAction = createAsyncThunk(
           "Content-Type": "application/json",
         },
       };
-      const { data } = await axios.get(
-        `${baseUrl}/${apiPrefix}/get-user-by-id/${id}`,
+      const { data } = await customeAxios.get(
+        `${baseUrl}/${apiPrefixUsers}/get-user-by-id/${id}`,
         config
       );
       console.log(data);
@@ -583,8 +422,8 @@ export const getDataStatisticalAction = createAsyncThunk(
           "Content-Type": "application/json",
         },
       };
-      const { data } = await axios.get(
-        `${baseUrl}/${apiPrefix}/get-data-statistical/${userAuth?.user?.userId}`,
+      const { data } = await customeAxios.get(
+        `${baseUrl}/${apiPrefixUsers}/get-data-statistical/${userAuth?.user?.userId}`,
         config
       );
       console.log(data);
@@ -611,8 +450,8 @@ export const getDataStatisticalAdminAction = createAsyncThunk(
           "Content-Type": "application/json",
         },
       };
-      const { data } = await axios.get(
-        `${baseUrl}/${apiPrefix}/get-data-statistical-admin`,
+      const { data } = await customeAxios.get(
+        `${baseUrl}/${apiPrefixUsers}/get-data-statistical-admin`,
         config
       );
       console.log(data);
@@ -639,8 +478,8 @@ export const getShortListedUsersAction = createAsyncThunk(
           "Content-Type": "application/json",
         },
       };
-      const { data } = await axios.get(
-        `${baseUrl}/${apiPrefix}/get-short-listed-users/${userAuth?.user?.userId}`,
+      const { data } = await customeAxios.get(
+        `${baseUrl}/${apiPrefixUsers}/get-short-listed-users/${userAuth?.user?.userId}`,
         config
       );
       console.log(data);
@@ -668,7 +507,7 @@ export const resetPassSendTokenAction = createAsyncThunk(
     };
     //http call
     try {
-      const { data } = await axios.post(
+      const { data } = await customeAxios.post(
         `${baseUrl}/api/v1/auth/send-token-reset-by-email`,
         {},
         config
@@ -699,7 +538,7 @@ export const resetPasswordAction = createAsyncThunk(
     };
 
     try {
-      const { data } = await axios.put(
+      const { data } = await customeAxios.put(
         `${baseUrl}/api/v1/auth/update-token-reset`,
         {},
         config
@@ -721,18 +560,15 @@ export const changePasswordAction = createAsyncThunk(
     const { userAuth } = user;
     // http call
     const config = {
-      headers: {
-        Authorization: `Bearer ${userAuth?.user?.token}`,
-        "Content-Type": "multipart/form-data",
+      params: {
+        oldPassword: data.oldPassword,
+        newPassword: data.password,
       },
     };
-    const formData = new FormData();
-    formData.append("oldPassword", data.oldPassword);
-    formData.append("newPassword", data.password);
     try {
-      const { data } = await axios.put(
-        `${baseUrl}/api/v1/users/update-password/${userAuth?.user?.userId}`,
-        formData,
+      const { data } = await customeAxios.put(
+        `${apiPrefixAuth}/update-password/${userAuth?.user?.id}`,
+        {},
         config
       );
       return data;
@@ -760,7 +596,7 @@ export const updateShortlistedUsersAction = createAsyncThunk(
     const formData = new FormData();
     formData.append("userId", userId);
     try {
-      const { data } = await axios.put(
+      const { data } = await customeAxios.put(
         `${baseUrl}/api/v1/users/update-shortListedUser/${userAuth?.user?.userId}`,
         formData,
         config
@@ -789,7 +625,7 @@ export const applyVacancyAction = createAsyncThunk(
       },
     };
     try {
-      const { data } = await axios.post(
+      const { data } = await customeAxios.post(
         `${baseUrl}/api/v1/users/apply-vacancies/${userAuth?.user?.userId}/${vacanciesId}`,
         {},
         config
@@ -818,7 +654,7 @@ export const applyVacancyWithAnswersAction = createAsyncThunk(
     };
     try {
       console.log(payload);
-      const { data } = await axios.post(
+      const { data } = await customeAxios.post(
         `${baseUrl}/api/v1/users/apply-vacancy-and-answers/${userAuth?.user?.userId}/${payload.vacanciesId}`,
         payload.jobPreScreen,
         config
@@ -951,44 +787,11 @@ const usersSlices = createSlice({
       }),
       builder.addCase(getUserProfileAction.fulfilled, (state, action) => {
         state.loading = false;
-        state.userProfile = action?.payload?.userProfile;
-        state.userAuth.user.fullName = action?.payload?.userProfile.fullName;
+        state.userProfile = { ...state.userProfile, ...action?.payload };
+        // state.userAuth.user.fullname = action?.payload?.fullname;
         state.appErr = undefined;
       }),
       builder.addCase(getUserProfileAction.rejected, (state, action) => {
-        state.loading = false;
-        state.appErr = action?.payload?.message;
-      }),
-      // get resume user
-      builder.addCase(getUserResumeAction.pending, (state, action) => {
-        state.loading = true;
-        state.appErr = undefined;
-        state.isSuccess = false;
-      }),
-      builder.addCase(getUserResumeAction.fulfilled, (state, action) => {
-        state.loading = false;
-        state.userResume = action?.payload?.userResume;
-        state.appErr = undefined;
-      }),
-      builder.addCase(getUserResumeAction.rejected, (state, action) => {
-        state.loading = false;
-        state.appErr = action?.payload?.message;
-      }),
-      // update avatar user
-      builder.addCase(updateAvatarAction.pending, (state, action) => {
-        state.loading = true;
-        state.appErr = undefined;
-      }),
-      builder.addCase(updateAvatarAction.fulfilled, (state, action) => {
-        state.loading = false;
-        state.userProfile = {
-          ...state.userProfile,
-          avatar: action?.payload?.image,
-        };
-        state.userAuth.user.avatar = action?.payload?.image;
-        state.appErr = undefined;
-      }),
-      builder.addCase(updateAvatarAction.rejected, (state, action) => {
         state.loading = false;
         state.appErr = action?.payload?.message;
       }),
@@ -1009,43 +812,20 @@ const usersSlices = createSlice({
         state.appErrSendMail = action?.payload?.message;
       }),
       // update profile user
-      builder.addCase(updateUserProfileAction.pending, (state, action) => {
+      builder.addCase(updateUserAction.pending, (state, action) => {
         state.loading = true;
         state.appErr = undefined;
         state.isSuccessUpd = false;
       }),
-      builder.addCase(updateUserProfileAction.fulfilled, (state, action) => {
+      builder.addCase(updateUserAction.fulfilled, (state, action) => {
         state.loading = false;
-        state.userProfile = action?.payload?.userProfile;
+        state.userProfile = { ...state.userProfile, ...action?.payload };
         state.appErr = undefined;
         state.isSuccessUpd = true;
       }),
-      builder.addCase(updateUserProfileAction.rejected, (state, action) => {
+      builder.addCase(updateUserAction.rejected, (state, action) => {
         state.loading = false;
         state.appErr = action?.payload?.message;
-        state.isSuccessUpd = false;
-      }),
-      // update resume user
-      builder.addCase(updateUserResumeAction.pending, (state, action) => {
-        state.loading = true;
-        state.appErr = undefined;
-        state.isSuccess = false;
-        state.isSuccessUpd = false;
-      }),
-      builder.addCase(updateUserResumeAction.fulfilled, (state, action) => {
-        state.loading = false;
-        state.userResume = {
-          ...state.userResume,
-          ...action?.payload?.userResume,
-        };
-        state.appErr = undefined;
-        state.isSuccess = true;
-        state.isSuccessUpd = true;
-      }),
-      builder.addCase(updateUserResumeAction.rejected, (state, action) => {
-        state.loading = false;
-        state.appErr = action?.payload?.message;
-        state.isSuccess = false;
         state.isSuccessUpd = false;
       }),
       // get all cv
@@ -1084,27 +864,6 @@ const usersSlices = createSlice({
           state.appErr = action?.payload?.message;
         }
       ),
-      // add cv user
-      builder.addCase(updateUserCvAction.pending, (state, action) => {
-        state.loading = true;
-        state.appErr = undefined;
-        state.isSuccess = false;
-      }),
-      builder.addCase(updateUserCvAction.fulfilled, (state, action) => {
-        state.loading = false;
-        if (state.cvUser) {
-          state.cvUser.push(action?.payload?.cv);
-        } else {
-          state.cvUser = [{ ...action?.payload?.cv }];
-        }
-        state.appErr = undefined;
-        state.isSuccess = true;
-      }),
-      builder.addCase(updateUserCvAction.rejected, (state, action) => {
-        state.loading = false;
-        state.appErr = action?.payload?.message;
-        state.isSuccess = false;
-      }),
       // update AvtiveCorByAdmin Action
       builder.addCase(updateAvtiveCorByAdminAction.pending, (state, action) => {
         state.loading = true;
@@ -1137,26 +896,6 @@ const usersSlices = createSlice({
           state.isSuccessUpd = false;
         }
       ),
-      // update  filename cv user
-      builder.addCase(updateFilenameCvAction.pending, (state, action) => {
-        state.loading = true;
-        state.appErr = undefined;
-        state.isSuccess = false;
-      }),
-      builder.addCase(updateFilenameCvAction.fulfilled, (state, action) => {
-        state.loading = false;
-        let crCv = state.cvUser.findIndex(
-          (cv) => cv.publicId === action?.payload?.publicId
-        );
-        state.cvUser[crCv].filename = action?.payload?.newName;
-        state.appErr = undefined;
-        state.isSuccess = true;
-      }),
-      builder.addCase(updateFilenameCvAction.rejected, (state, action) => {
-        state.loading = false;
-        state.appErr = action?.payload?.message;
-        state.isSuccess = false;
-      }),
       // delete cv user
       builder.addCase(deleteUserCvAction.pending, (state, action) => {
         state.loading = true;

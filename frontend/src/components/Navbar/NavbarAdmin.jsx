@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { IoIosNotifications, IoMdMail } from "react-icons/io";
 import { Link } from "react-router-dom";
+import { LogoImage } from "../../assets/images";
 
 
 function NavbarAdmin() {
@@ -17,11 +18,11 @@ function NavbarAdmin() {
     } 
     return (
         <>
-            <div className='fixed top-0 l-0 r-0 t-0 w-full  bg-[#f7fdfd] z-50 shadow'>
-                <nav className='container mx-auto flex items-center justify-between p-5'>
+            <div className='fixed top-0 l-0 r-0 t-0 w-full bg-[#fff] z-50 shadow'>
+                <nav className='container mx-auto flex items-center justify-between py-4 px-40'>
                     <div>
                         <Link to='/Admin' className="text-blue-600 font-bold text-xl">
-                            Project<span className="text-[#1677cccb]">Finder</span>
+                        <img src={LogoImage} alt="" className="" />
                         </Link>
                     </div>
                     <div className="flex">

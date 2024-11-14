@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { logoutUserAction } from "../../redux/slices/users/usersSlices";
 import LoadingComponent from "../Loading";
 import { creatHackathonId } from "../../redux/slices/hackathons/hackathonsSlices";
+import { LogoImage } from "../../assets/images";
 function MenuList({ user, onClick }) {
   const dispatch = useDispatch();
   const handlerLogOut = () => {

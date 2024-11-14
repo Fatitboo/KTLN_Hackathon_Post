@@ -25,9 +25,10 @@ function Layout({ user, role }) {
 function App() {
   const storeData = useSelector((store) => store.users);
 
-  // const user = storeData?.userAuth?.user
-
+  // // const user = storeData?.userAuth?.user
   const user = {
+    token: "xx",
+    isVerify: true,
     userType: "organizer",
   };
 

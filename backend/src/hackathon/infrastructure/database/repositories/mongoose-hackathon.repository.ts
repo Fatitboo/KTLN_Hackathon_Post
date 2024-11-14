@@ -15,6 +15,12 @@ export class MongooseHackathonRepository implements HackathonRepository {
     private readonly userModel: Model<UserDocument>,
   ) {}
 
+  async findAll(page: number): Promise<HackathonDocument[]> {
+    const hackathons = await this.hackathonModel.find().lean().exec();
+    if (!hackathons) return [];
+    return hackathons;
+  }
+
   async findById(id: string): Promise<HackathonDocument | null> {
     const hackathon = await this.hackathonModel.findById(id).lean().exec();
     if (!hackathon) return null;

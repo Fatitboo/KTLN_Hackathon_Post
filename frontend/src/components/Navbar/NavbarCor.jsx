@@ -130,7 +130,7 @@ function NavbarCor({ user }) {
               >
                 <Link
                   onClick={() => {
-                    dispatch(creatHackathonId());
+                    // dispatch(creatHackathonId());
                   }}
                   className="text-sm text-bold text-center font-bold p-3 flex items-center leading-7 rounded-lg "
                 >

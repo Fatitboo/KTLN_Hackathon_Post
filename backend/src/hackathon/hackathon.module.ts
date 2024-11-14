@@ -16,6 +16,7 @@ import {
   UserDocument,
   UserSchema,
 } from 'src/user/infrastructure/database/schemas';
+import { GetHackathonsHandler } from './application/queries/get-hackathons/get-hackathons.handler';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import {
   providers: [
     { provide: HACKATHON_REPOSITORY, useClass: MongooseHackathonRepository },
     GetHackathonHandler,
+    GetHackathonsHandler,
     CreateHackathonHandler,
     UpdateHackathonHandler,
     DeleteHackathonHandler,

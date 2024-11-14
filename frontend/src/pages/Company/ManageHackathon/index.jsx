@@ -12,6 +12,7 @@ import {
 } from "../../../redux/slices/projects/projectsSlices";
 import { useDispatch, useSelector } from "react-redux";
 import { CiDollar } from "react-icons/ci";
+import { getAllHackathons } from "../../../redux/slices/hackathons/hackathonsSlices";
 
 const listItemCbb = [
   { id: 1, name: "All", value: "All" },
@@ -58,51 +59,24 @@ function ManageHackathon() {
       updateAt: "5 minutes ago",
     },
   ]);
-  // let user = useSelector((state) => state.users.userAuth.user)
-  const user = {
-    userType: "organizer",
-  };
-  let projectsOfCor = useSelector((state) => state.projects.projectsOfCor);
-  //   let loading = useSelector((state) => state.projects.loading);
-  let loading = false;
-  let loadingDL = useSelector((state) => state.projects.loadingDL);
-  //   useEffect(() => {
-  //     // dispatch(getAllProjectsUser({ id: user.userId }));
-  //   }, []);
-  const onFilterValueSelected = (filterValue) => {
-    // if (filterValue.value === "All") setCurrentProjects(projectsOfCor);
-    // else
-    //   setCurrentProjects(
-    //     projectsOfCor.filter((item) => item.status === filterValue.value)
-    //   );
-  };
+  let { loading, hackathons } = useSelector((state) => state.hackathons);
 
-  const handleSearch = (e) => {
-    setCurrentProjects(
-      projectsOfCor.filter(
-        (item) =>
-          item.projectName
-            .toLowerCase()
-            .trim()
-            .includes(e.target.value.toLowerCase().trim()) ||
-          item.status
-            .toLowerCase()
-            .trim()
-            .includes(e.target.value.toLowerCase().trim())
-      )
-    );
-  };
+  useEffect(() => {
+    dispatch(getAllHackathons());
+  }, []);
+  useEffect(() => {
+    console.log(hackathons);
+  }, [hackathons]);
+  const onFilterValueSelected = (filterValue) => {};
 
-  //   useEffect(() => {
-  //     if (projectsOfCor) setCurrentProjects(projectsOfCor);
-  //   }, [projectsOfCor]);
+  const handleSearch = (e) => {};
 
   const handleDeleteProject = (item) => {
     dispatch(deleteProjectAction({ id: item.projectId }));
   };
 
   const handlePaymentProject = (item) => {
-    navigate(`/Organizer/payment/project/${item.projectId}`);
+    // navigate(`/Organizer/payment/project/${item.projectId}`);
   };
 
   return (
@@ -150,7 +124,7 @@ function ManageHackathon() {
                   <div
                     onClick={() => {
                       dispatch(setValueSuccess(false));
-                      navigate("/Organizer/create-project");
+                      // navigate("/Organizer/create-project");
                     }}
                     className="relative text-sm text-center pr-4 p-3 text-[white] cursor-pointer hover:bg-[#0146a6] bg-[#1967d3] flex items-center leading-7 font-normal rounded-lg "
                   >
@@ -275,8 +249,7 @@ function ManageHackathon() {
                               </tr>
                             );
                           })
-                        : currentProjects?.map((item, index) => {
-                            console.log("DO");
+                        : hackathons?.map((item, index) => {
                             return (
                               <tr
                                 key={index}
@@ -290,6 +263,7 @@ function ManageHackathon() {
                                     <div className="w-12 h-12">
                                       <img
                                         src={item.thumbnail}
+                                        className="w-16 h-16"
                                         alt="description of image"
                                       />
                                     </div>
@@ -298,26 +272,32 @@ function ManageHackathon() {
                                         {item.hackathonName}
                                       </div>
                                       <div className="flex font-light text-sm">
-                                        {item.updateAt}
+                                        {item.update_at}
                                       </div>
                                     </div>
                                   </div>
                                 </td>
                                 <td className="font-light text-white w-1/12">
                                   <div className="items-center bg-[#00B69B] rounded-full flex justify-center font-semibold w-24">
-                                    <div className="mr-1">{item.status}</div>
+                                    <div className="mr-1">
+                                      {item.isPublished ? "Online" : "Offline"}
+                                    </div>
                                   </div>
                                 </td>
                                 <td className="font-semibold text-blue-700 w-1/12  ">
                                   <div className="flex h-full items-center">
-                                    <div className="mr-1">{item.type}</div>
+                                    <div className="mr-1">{item.applyFor}</div>
                                   </div>
                                 </td>
                                 <td className="text-center w-[14%] font-semibold text-gray-700 text-base">
-                                  <div>{item.tagLines}</div>
+                                  <div>{item.tagline}</div>
                                 </td>
                                 <td className="text-center w-[14%] font-semibold text-gray-700 text-base">
-                                  <div>{item.themeTags}</div>
+                                  <div>
+                                    {item.hackathonTypes.map(
+                                      (item) => `#${item}\n`
+                                    )}
+                                  </div>
                                 </td>
                                 <td>
                                   <div className="">
@@ -356,11 +336,7 @@ function ManageHackathon() {
                                       <li
                                         className="list-none relative bg-[#f5f7fc] border rounded-md border-[#e9ecf9] px-1 pt-1 hover:bg-[#ce3e37] hover:text-white"
                                         style={{
-                                          backgroundColor:
-                                            loadingDL &&
-                                            item?.projectId === selectId
-                                              ? "#ce3e37"
-                                              : "",
+                                          backgroundColor: "#ce3e37",
                                         }}
                                         onClick={() => {
                                           setSelectedId(item?.projectId);
@@ -368,7 +344,7 @@ function ManageHackathon() {
                                         }}
                                       >
                                         <button>
-                                          {loadingDL &&
+                                          {/* {loadingDL &&
                                           item?.projectId === selectId ? (
                                             <svg
                                               className="right-1 animate-spin h-5 w-5 text-white"
@@ -390,9 +366,9 @@ function ManageHackathon() {
                                                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                                               ></path>
                                             </svg>
-                                          ) : (
-                                            <LiaTrashAltSolid fontSize={18} />
-                                          )}
+                                          ) : */}
+
+                                          <LiaTrashAltSolid fontSize={18} />
                                         </button>
                                       </li>
                                     </div>

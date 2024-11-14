@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Hackathon } from 'src/hackathon/domain/entities/hackathon.entity';
@@ -14,6 +15,7 @@ import { UpdateHackathonDTO } from '../dto/update-hackathon.dto';
 import { GetHackathonQuery } from 'src/hackathon/application/queries/get-hackathon/get-hackathon.query';
 import { UpdateHackathonCommand } from 'src/hackathon/application/commands/update-hackathon/update-hackathon.command';
 import { DeleteHackathonCommand } from 'src/hackathon/application/commands/delete-hackathon/delete-hackathon.command';
+import { GetHackathonsQuery } from 'src/hackathon/application/queries/get-hackathons/get-hackathons.query';
 
 @Controller('hackathons')
 export class HackathonController {
@@ -22,9 +24,9 @@ export class HackathonController {
     private readonly queryBus: QueryBus,
   ) {}
 
-  @Get('')
-  async allHackathons() {
-    return 'All hackathons';
+  @Get()
+  async getAllHackathons(@Query('page') page: number) {
+    return await this.queryBus.execute(new GetHackathonsQuery(page));
   }
 
   @Get(':id')

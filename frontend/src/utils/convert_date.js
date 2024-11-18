@@ -7,7 +7,7 @@ export function calculateTimeLeft(endDateStr) {
 
   // Nếu thời gian là số âm, trả về "expired"
   if (timeLeftMs < 0) {
-    return "Expired";
+    return "Ended";
   }
 
   // Chuyển đổi thời gian còn lại sang ngày

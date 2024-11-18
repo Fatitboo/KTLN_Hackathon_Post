@@ -116,7 +116,7 @@ function Register() {
             <div className="text-4xl font-bold mt-3 mb-2">
               Start for free Today
             </div>
-            <div className="text-sm mb-5 text-[#6c757d]">
+            <div className="text-sm mb-4 text-[#6c757d]">
               Access to all features. No credit card required.
             </div>
             {/* <CustomButton
@@ -132,18 +132,21 @@ function Register() {
                 className="mr-1"
               />
             </CustomButton> */}
-            <GoogleLogin
-              onSuccess={handleSuccess}
-              onError={() => alert("Google Login Failed")}
-            />
-            <CustomButton
-              title={"Sign up with GitHub"}
-              containerStyles={
-                "flex justify-center py-3 rounded items-center font-medium border border-[#ccc] w-full mb-5"
-              }
-            >
-              <img src={IconGithub} alt="logo Github" className="mr-1 w-5" />
-            </CustomButton>
+            <div className="flex items-center gap-3">
+              <GoogleLogin
+                onSuccess={handleSuccess}
+                onError={() => alert("Google Login Failed")}
+              />
+              <CustomButton
+                title={"Sign up with GitHub"}
+                containerStyles={
+                  "flex justify-center py-2 rounded items-center text-sm  items-center border border-[#ccc] w-[210px] px-2 my-5"
+                }
+              >
+                <img src={IconGithub} alt="logo Github" className="mr-1 w-5" />
+              </CustomButton>
+            </div>
+
             <div className="flex w-full items-center ">
               <div className="h-[0.5px] w-[32%] bg-[#ccc]"></div>
               <div className="w-[45%] flex justify-center font-light text-[#05264e] text-base">

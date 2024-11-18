@@ -6,6 +6,7 @@ import HackathonItem from "../../../components/Seeker/HackathonItem";
 import { data_popular } from "../../../utils/data_hackathon";
 import SearchInput from "../../../components/Seeker/SearchInput";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 const hackathons = [
   {
     name: "Student Mental Health Hackathon",
@@ -239,21 +240,23 @@ function BrowerHackathons() {
                 return (
                   <>
                     <div className="my-6">
-                      <HackathonItem
-                        id={index}
-                        startDate={hackathon.start_date}
-                        endDate={hackathon.end_date}
-                        themes={hackathon.tags}
-                        organization={hackathon.organizer}
-                        period={hackathon.period}
-                        title={hackathon.name}
-                        isExtended={true}
-                        isFeature={index % 2 === 0 ? true : false}
-                        location={hackathon.location}
-                        prizes={`${hackathon.currency} ${hackathon.price}`}
-                        participants={hackathon.participants}
-                        imageHackthon={hackathon.logo_link}
-                      />
+                      <Link to="/Hackathon-detail/1234125/overview">
+                        <HackathonItem
+                          id={index}
+                          startDate={hackathon.start_date}
+                          endDate={hackathon.end_date}
+                          themes={hackathon.tags}
+                          organization={hackathon.organizer}
+                          period={hackathon.period}
+                          title={hackathon.name}
+                          isExtended={true}
+                          isFeature={index % 2 === 0 ? true : false}
+                          location={hackathon.location}
+                          prizes={`${hackathon.currency} ${hackathon.price}`}
+                          participants={hackathon.participants}
+                          imageHackthon={hackathon.logo_link}
+                        />
+                      </Link>
                     </div>
                   </>
                 );

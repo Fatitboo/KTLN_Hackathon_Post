@@ -4,16 +4,18 @@ import baseUrl from "../../utils/baseUrl";
 
 const customeAxios = axios.create({
   baseURL: baseUrl, // Replace with your API base URL
-  withCredentials: true, // Send cookies with each request
+  withCredentials: true,
 });
 customeAxios.interceptors.response.use(
   (response) => response,
   async (error) => {
+    console.log("🚀 ~ error:", error);
     const originalRequest = error.config;
 
     if (
       error.response &&
       error.response.status === 401 &&
+      error.response.data.message === "TokenExpiredError" &&
       !originalRequest._retry
     ) {
       originalRequest._retry = true;
@@ -32,7 +34,7 @@ customeAxios.interceptors.response.use(
           confirmButtonColor: "#3085d6",
         }).then(async (result) => {
           if (result.isConfirmed) {
-            window.location.href = "/login"; // Redirect to login or handle as necessary
+            window.location.href = "/user-auth/login"; // Redirect to login or handle as necessary
           }
         });
 

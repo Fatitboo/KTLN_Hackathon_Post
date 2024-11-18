@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import customeAxios from "../../configAxios";
 import baseUrl from "../../../utils/baseUrl";
+import axios from "axios";
 const apiPrefixUsers = "api/v1/users";
 const apiPrefixAuth = "api/v1/auth";
 // register user
@@ -38,8 +39,8 @@ export const loginUserAction = createAsyncThunk(
           "Content-Type": "application/json",
         },
       };
-      const { data } = await customeAxios.post(
-        `${apiPrefixAuth}/log-in`,
+      const { data } = await axios.post(
+        `${baseUrl}/api/v1/auth/log-in`,
         userData,
         config
       );
@@ -65,8 +66,8 @@ export const oAuthWithGoogleAction = createAsyncThunk(
           "Content-Type": "application/json",
         },
       };
-      const { data } = await customeAxios.post(
-        `${apiPrefixAuth}/google-redirect`,
+      const { data } = await axios.post(
+        `${baseUrl}/api/v1/auth/google-redirect`,
         { token: credential },
         config
       );
@@ -86,9 +87,11 @@ export const oAuthWithGoogleAction = createAsyncThunk(
 // Logout user
 export const logoutUserAction = createAsyncThunk(
   "users/logout",
-  async (navigator, { rejectWithValue }) => {
+  async (navigator, { rejectWithValue, getState }) => {
     try {
-      await customeAxios.get(`${apiPrefixAuth}/logout`);
+      const user = getState()?.users;
+      const { userAuth } = user;
+      await customeAxios.get(`${apiPrefixAuth}/logout/${userAuth?.user?.id}`);
       if (navigator) {
         localStorage.removeItem("userInfo");
         navigator("/user-auth/login");
@@ -118,6 +121,7 @@ export const getUserProfileAction = createAsyncThunk(
           getType,
           getBy,
         },
+        // withCredentials: true,
       };
       const { data } = await customeAxios.get(
         `${apiPrefixUsers}/get-user-profile/${id || userAuth?.user?.id}`,
@@ -170,7 +174,34 @@ export const updateUserAction = createAsyncThunk(
     }
   }
 );
-
+//change Password
+export const changePasswordAction = createAsyncThunk(
+  "users/changePassword",
+  async (data, { rejectWithValue, getState, dispatch }) => {
+    const user = getState()?.users;
+    const { userAuth } = user;
+    // http call
+    const config = {
+      params: {
+        oldPassword: data.oldPassword,
+        newPassword: data.password,
+      },
+    };
+    try {
+      const { data } = await customeAxios.put(
+        `${apiPrefixAuth}/update-password/${userAuth?.user?.id}`,
+        {},
+        config
+      );
+      return data;
+    } catch (error) {
+      if (!error?.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
 // update Avtive Cor By Admin
 export const updateAvtiveCorByAdminAction = createAsyncThunk(
   "users/updateAvtiveCorByAdmin",
@@ -552,34 +583,7 @@ export const resetPasswordAction = createAsyncThunk(
     }
   }
 );
-//change Password
-export const changePasswordAction = createAsyncThunk(
-  "users/changePassword",
-  async (data, { rejectWithValue, getState, dispatch }) => {
-    const user = getState()?.users;
-    const { userAuth } = user;
-    // http call
-    const config = {
-      params: {
-        oldPassword: data.oldPassword,
-        newPassword: data.password,
-      },
-    };
-    try {
-      const { data } = await customeAxios.put(
-        `${apiPrefixAuth}/update-password/${userAuth?.user?.id}`,
-        {},
-        config
-      );
-      return data;
-    } catch (error) {
-      if (!error?.response) {
-        throw error;
-      }
-      return rejectWithValue(error?.response?.data);
-    }
-  }
-);
+
 //update Shortlisted Users
 export const updateShortlistedUsersAction = createAsyncThunk(
   "users/updateShortlistedUsers",

@@ -160,7 +160,7 @@ function NavbarUser({ user }) {
             </li>
           </ul>
           <div className="hidden lg:block">
-            {!user?.isVerify ? (
+            {!user ? (
               <div>
                 <Link to="/user-auth/login">
                   <CustomButton

@@ -76,17 +76,17 @@ function Sidebar({ user }) {
             </div>
             <div
               className={classNames(
-                isActive === "Projects" ? "bg-[#E9EFFB] text-blue-600" : "",
+                isActive === "Hackathons" ? "bg-[#E9EFFB] text-blue-600" : "",
                 itemStyle
               )}
             >
               <Link
                 to="/Admin/approval-project"
-                onClick={() => dispatch(isActiveSidebarAction("Projects"))}
+                onClick={() => dispatch(isActiveSidebarAction("Hackathons"))}
                 className="relative text-sm text-center p-3 flex items-center leading-7 font-normal  capitalize rounded-lg "
               >
                 <MdOutlineFactCheck className="relative mr-4 ml-4 text-2xl text-center " />
-                Manage Projects
+                Manage Hackathons
               </Link>
             </div>
             <div
@@ -104,7 +104,7 @@ function Sidebar({ user }) {
                 Manage Organizer
               </Link>
             </div>
-            <div
+            {/* <div
               className={classNames(
                 isActive === "Manage Vacancy"
                   ? "bg-[#E9EFFB] text-blue-600"
@@ -122,14 +122,14 @@ function Sidebar({ user }) {
                 <PiSuitcaseSimpleDuotone className="relative mr-4 ml-4 text-2xl text-center " />
                 Manage Vacancy
               </Link>
-            </div>
+            </div> */}
             {/* <div className={classNames(isActive === 'Skills' ? 'bg-[#E9EFFB] text-blue-600' : '', itemStyle)}>
                                 <Link onClick={()=>dispatch(isActiveSidebarAction('Skills'))} to="/Admin/skills-management"  className="relative text-sm text-center p-3 flex items-center leading-7 font-normal  capitalize rounded-lg ">
                                     <GrWorkshop className='relative mr-4 ml-4 text-2xl text-center ' />
                                     Skills
                                 </Link>
                             </div> */}
-            <div
+            {/* <div
               className={classNames(
                 isActive === "Occupations" ? "bg-[#E9EFFB] text-blue-600" : "",
                 itemStyle
@@ -143,7 +143,7 @@ function Sidebar({ user }) {
                 <LuNetwork className="relative mr-4 ml-4 text-2xl text-center " />
                 Occupations
               </Link>
-            </div>
+            </div> */}
             <div
               className={classNames(
                 isActive === "Reports" ? "bg-[#E9EFFB] text-blue-600" : "",

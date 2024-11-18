@@ -120,7 +120,6 @@ function BrowerProjects() {
     <>
       <div className="py-10 px-60 flex bg-[#0b4540] w-full text-white text-center font-bold items-center justify-between">
         <h1>Explore projects from Portfolios and hackathons</h1>
-        <Link to="/Hackathon-detail/1234125/overview">To detail</Link>
         <CustomButton
           title="Add your projects"
           containerStyles="bg-[#21a196] w-fit font-medium text-white py-2 px-5 focus:outline-none hover:bg-blue-500 rounded-sm text-base"

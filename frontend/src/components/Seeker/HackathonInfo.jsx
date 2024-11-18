@@ -8,13 +8,35 @@ import {
 import { PiBankBold } from "react-icons/pi";
 import { calculateTimeLeft } from "../../utils/convert_date";
 
-const HackathonInfo = () => {
+const HackathonInfo = ({
+  isOpen,
+  prizes,
+  participants,
+  organization,
+  themes,
+  location,
+}) => {
+  function convertTagsToArray(tagsStr) {
+    // Loại bỏ dấu ngoặc đơn đầu và cuối, sau đó tách chuỗi thành mảng
+    const cleanedStr = tagsStr.replace(/[\[\]']/g, "").trim();
+    const tagsArray = cleanedStr.split(",").map((tag) => tag.trim());
+
+    return tagsArray;
+  }
+  const decodeHTML = (html) => {
+    const txt = document.createElement("textarea");
+    txt.innerHTML = html;
+    return txt.value;
+  };
   return (
     <>
       <div className="bg-white rounded-sm py-2 border border-gray-300">
         <div className="py-3 px-5">
           <div className="text-white bg-[#21a196] rounded py-1.5 px-4 mr-6 w-fit">
-            <li> {calculateTimeLeft("2024-12-01")}</li>
+            <li>
+              {" "}
+              {isOpen === "ended" ? "Ended" : calculateTimeLeft("2024-12-01")}
+            </li>
           </div>
 
           <div className="font-medium my-2">Deadline</div>
@@ -39,10 +61,18 @@ const HackathonInfo = () => {
           </div>
           <div className="flex font-light mt-3 text-sm">
             <div className="mr-6">
-              <strong className="font-semibold">${1000}</strong> in prizes
+              {prizes ? (
+                <div
+                  className="font-semibold"
+                  dangerouslySetInnerHTML={{ __html: decodeHTML(prizes) }}
+                ></div>
+              ) : (
+                <strong className="font-semibold">${1000} in prizes</strong>
+              )}
             </div>
-            <div className="">
-              <strong className="font-semibold">{1000}</strong> participants
+            <div className="ml-5">
+              <strong className="font-semibold">{participants || 1000}</strong>{" "}
+              participants
             </div>
           </div>
         </div>
@@ -50,7 +80,7 @@ const HackathonInfo = () => {
           <div className="flex items-center">
             <BsFlagFill className="text-gray-700 mr-3" />
             <div className="rounded-full border border-blue-500 pl-2 pr-2 mr-3 py-1 text-blue-500 text-sm line-clamp-1">
-              {"organization"}
+              {organization || "organization"}
             </div>
           </div>
           <div className="flex items-center mt-3">
@@ -62,7 +92,11 @@ const HackathonInfo = () => {
           <div className="flex  mt-3 ">
             <BsTagsFill className="text-gray-700 mr-2 mt-2 " />
             <div className="flex flex-wrap">
-              {["Beginner Friendly", "Low code", "Web"].map((item) => {
+              {[
+                ...(themes
+                  ? convertTagsToArray(themes)
+                  : ["Beginner Friendly", "Low code", "Web"]),
+              ].map((item) => {
                 return (
                   <>
                     <div className="rounded-[3px] bg-blue-50 px-3 py-1 text-blue-700 text-sm my-1 mr-2">

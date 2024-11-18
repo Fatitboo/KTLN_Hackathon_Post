@@ -1,5 +1,19 @@
 import { LayoutNoSidebar, LayoutHasSidebar } from "../components/index";
-import { Dashboard } from "../pages/Admin";
+import {
+  AddOccupation,
+  Approval,
+  CompanyProfileAdmin,
+  Dashboard,
+  EditOccupation,
+  HistoryTransaction,
+  ManageReport,
+  ManageVacancyAdmin,
+  OccupationMng,
+  ProjectDetailAdmin,
+  Skills,
+  UserMng,
+  VacancyInfoAdmin,
+} from "../pages/Admin";
 import {
   Home,
   MyProfile,
@@ -127,8 +141,67 @@ const corRoutes = [
 ];
 const AdminRoutes = [
   //Admin Layout
-
+  {
+    path: "/Admin/user-management",
+    component: UserMng,
+    layout: LayoutHasSidebar,
+  },
+  {
+    path: "/Admin/user-management/:id",
+    component: CompanyProfileAdmin,
+    layout: LayoutHasSidebar,
+  },
+  {
+    path: "/Admin/approval-project",
+    component: Approval,
+    layout: LayoutHasSidebar,
+  },
+  {
+    path: "/Admin/approval-project/:id",
+    component: ProjectDetailAdmin,
+    layout: LayoutHasSidebar,
+  },
+  {
+    path: "/Admin/manage-vacancy",
+    component: ManageVacancyAdmin,
+    layout: LayoutHasSidebar,
+  },
+  {
+    path: "/Admin/manage-vacancy/:id",
+    component: VacancyInfoAdmin,
+    layout: LayoutHasSidebar,
+  },
   { path: "/Admin", component: Dashboard, layout: LayoutHasSidebar },
+  {
+    path: "/Admin/skills-management",
+    component: Skills,
+    layout: LayoutHasSidebar,
+  },
+  {
+    path: "/Admin/occupation-management",
+    component: OccupationMng,
+    layout: LayoutHasSidebar,
+  },
+  {
+    path: "/Admin/occupation-management/add-occupation",
+    component: AddOccupation,
+    layout: LayoutHasSidebar,
+  },
+  {
+    path: "/Admin/occupation-management/edit-occupation/:id",
+    component: EditOccupation,
+    layout: LayoutHasSidebar,
+  },
+  {
+    path: "/Admin/manage-report",
+    component: ManageReport,
+    layout: LayoutHasSidebar,
+  },
+  {
+    path: "/Admin/history-transactions",
+    component: HistoryTransaction,
+    layout: LayoutHasSidebar,
+  },
 ];
 
 export { publicRoutes, seekerRoutes, AdminRoutes, corRoutes };

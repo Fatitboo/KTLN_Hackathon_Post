@@ -19,10 +19,12 @@ import CardProject from "../../../components/Seeker/CardProject";
 import SearchInput from "../../../components/Seeker/SearchInput";
 import BrowerHackathons from "../BrowerHackathons";
 import BrowerParticipants from "../BrowerParticipants";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 function HackathonDetail() {
   const { id, type } = useParams();
-  const item = {
+  const itemx = {
     name: "Seam Miniapp Challenge",
     organization_name: "Seam",
     location: "Online",
@@ -183,6 +185,17 @@ function HackathonDetail() {
       `,
     hackathon_id: 1,
   };
+  const [item, setItemHackathon] = useState({});
+  const getHackathonDetail = async (hackathon_id) => {
+    const { data } = await axios.get(
+      "http://localhost:5001/get-hackathon-detail/" + hackathon_id
+    );
+    console.log("🚀 ~ getHackathonDetail ~ data:", data);
+    setItemHackathon(data[0]);
+  };
+  useEffect(() => {
+    getHackathonDetail(id);
+  }, [id]);
   const decodeHTML = (html) => {
     const txt = document.createElement("textarea");
     txt.innerHTML = html;
@@ -294,16 +307,36 @@ function HackathonDetail() {
           <div className="px-60 max-lg:px-2 py-5 bg-gray-100">
             <div className="grid grid-cols-3 max-lg:grid-cols-1 gap-10">
               <div className="col-span-2">
-                <h2 className="font-semibold mt-5">{item.name}</h2>
-                <p className="text-xl mt-5 h-16">{item.desc}</p>
+                <h2 className="font-semibold mt-5">{item?.title}</h2>
+                <p className="text-xl mt-5 h-16">
+                  {item?.challenge_description}
+                </p>
                 <div className="grid grid-cols-5">
-                  <div className="col-span-1">
-                    <CustomButton
-                      title="Join hackathon"
-                      containerStyles="bg-blue-600 w-fit font-medium text-white py-2 px-5 focus:outline-none hover:bg-blue-500 rounded-sm text-base border border-blue-600"
-                    />
+                  <div className="col-span-2">
+                    {item?.open_state === "ended" ? (
+                      <div className="w-full mb-4">
+                        <div>This hackathon has ended</div>
+                        <CustomButton
+                          title="Find more hackathons"
+                          containerStyles="bg-blue-600 mt-2   font-medium text-white py-2 px-5 focus:outline-none hover:bg-blue-500 rounded-sm text-base border border-blue-600"
+                        />
+                      </div>
+                    ) : (
+                      <div className="w-full">
+                        <CustomButton
+                          title="Join hackathon"
+                          containerStyles="bg-blue-600  font-medium text-white py-2 px-5 focus:outline-none hover:bg-blue-500 rounded-sm text-base border border-blue-600"
+                        />
+                      </div>
+                    )}
+                    {item?.winners_announced && (
+                      <CustomButton
+                        title="View the winners"
+                        containerStyles="bg-gray-600 w-fit font-medium text-white py-2 px-5 focus:outline-none hover:bg-gray-500 rounded-sm text-base border border-gray-600"
+                      />
+                    )}
                   </div>
-                  <div className="text-sm ml-10 col-span-4 ">
+                  <div className="text-sm ml-10 col-span-3 ">
                     <div className="font-bold mb-2">Who can participate</div>
                     <div className="grid grid-cols-2 gap-5 mb-4">
                       <ul>
@@ -327,7 +360,15 @@ function HackathonDetail() {
                 </div>
               </div>
               <div className="col-span-1 text-sm mt-2">
-                <HackathonInfo />
+                <HackathonInfo
+                  isOpen={item?.open_state}
+                  endDate={item?.submission_period_dates}
+                  themes={item?.themes}
+                  organization={item?.organization_name}
+                  location={item?.displayed_location}
+                  prizes={item?.prize_amount}
+                  participants={item?.registrations_count}
+                />
               </div>
             </div>
           </div>
@@ -401,7 +442,10 @@ function HackathonDetail() {
         {type === "participants" && <BrowerParticipants />}
         <div className="px-60 max-lg:px-2 py-5 ">
           <div className="grid grid-cols-3 max-lg:grid-cols-1 gap-10">
-            <div className="col-span-2 text-gray-600 " id="generated-script">
+            <div
+              className="col-span-2 text-gray-600 min-h-40 "
+              id="generated-script"
+            >
               {type === "overview" && (
                 <div>
                   <div

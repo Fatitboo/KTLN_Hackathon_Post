@@ -23,6 +23,7 @@ const HackathonItem = ({
   endDate,
   isManagedByDevpost,
   themes,
+  isOpen,
 }) => {
   function convertTagsToArray(tagsStr) {
     // Loại bỏ dấu ngoặc đơn đầu và cuối, sau đó tách chuỗi thành mảng
@@ -31,7 +32,11 @@ const HackathonItem = ({
 
     return tagsArray;
   }
-
+  const decodeHTML = (html) => {
+    const txt = document.createElement("textarea");
+    txt.innerHTML = html;
+    return txt.value;
+  };
   return (
     <>
       <div className=" relative group">
@@ -52,33 +57,42 @@ const HackathonItem = ({
                 : "border-l-4 border-l-[#21a196] hover:border-[#21a196] pl-5"
             } border-gray-200 cursor-pointer transition-transform duration-500 transform`}
           >
-            <div className={`col-span-1  w-full py-5 pl-5 `}>
+            <div className={`col-span-1 min-h-40 w-full py-5 pl-5 `}>
               <img
                 src={imageHackthon || LogoOrgExample}
                 alt=""
-                className="shadow-md "
+                className="shadow-md min-h-[100px]"
               />
             </div>
             <div className="col-span-3  py-5 px-4  font-semibold ">
               <h3 className={`${isExtended ? "line-clamp-2" : "line-clamp-1"}`}>
                 {title}
               </h3>
-              <div className="flex font-light mt-4 text-xs items-center">
-                <div className="text-white bg-[#21a196] rounded-full py-1.5 px-4 mr-6">
-                  <li> {calculateTimeLeft(endDate)}</li>
+              <div className="flex font-light mt-4 text-xs items-center ">
+                <div className="text-white bg-[#21a196] rounded-full py-1.5 px-4 mr-6 flex items-center">
+                  <div className="w-1 h-1 rounded-full bg-white mr-3" />
+                  <div className="font-medium text-sm">
+                    {" "}
+                    {isOpen === "ended" ? "Ended" : calculateTimeLeft(endDate)}
+                  </div>
                 </div>
-                <div className="flex items-start text-sm">
+                <div className="flex items-center text-sm">
                   {location === "Online" ? (
                     <AiOutlineGlobal className="mr-2 mt-0.5" />
                   ) : (
                     <BsFillPinMapFill className="mr-2 mt-0.5" />
                   )}
-                  <h6 className="line-clamp-1">{location}</h6>
+                  <h6 className="line-clamp-2 text-ellipsis w-[200px]">
+                    {location}
+                  </h6>
                 </div>
               </div>
               <div className="flex font-light mt-6 text-sm">
                 <div className="py-1.5 mr-6">
-                  <strong className="font-semibold">{prizes}</strong> in prizes
+                  <div
+                    className="font-semibold"
+                    dangerouslySetInnerHTML={{ __html: decodeHTML(prizes) }}
+                  ></div>
                 </div>
                 <div className="py-1.5 ">
                   <strong className="font-semibold">{participants}</strong>{" "}

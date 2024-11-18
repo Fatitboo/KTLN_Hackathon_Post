@@ -105,7 +105,7 @@ function Login() {
             <div className="w-[418px] flex items-center flex-col">
               <div className="text-sm text-blue-700">Welcome back!</div>
               <div className="text-4xl font-bold mt-3 mb-2">Member Login</div>
-              <div className="text-sm mb-8 text-[#6c757d]">
+              <div className="text-sm mb-4 text-[#6c757d]">
                 Access to all features. No credit card required.
               </div>
               {/* <CustomButton
@@ -120,19 +120,25 @@ function Login() {
                   className="mr-1"
                 />
               </CustomButton> */}
-              <GoogleLogin
-                onSuccess={handleSuccess}
-                onError={() => alert("Google Login Failed")}
-              />
-              <CustomButton
-                title={"Sign up with GitHub"}
-                containerStyles={
-                  "flex justify-center py-3 rounded items-center font-medium border border-[#ccc] w-full mb-5"
-                }
-              >
-                <img src={IconGithub} alt="logo Github" className="mr-1 w-5" />
-              </CustomButton>
-              <div className="flex w-full items-center ">
+              <div className="flex items-center gap-3">
+                <GoogleLogin
+                  onSuccess={handleSuccess}
+                  onError={() => alert("Google Login Failed")}
+                />
+                <CustomButton
+                  title={"Sign up with GitHub"}
+                  containerStyles={
+                    "flex justify-center py-2 rounded text-sm  items-center border border-[#ccc] w-[210px] px-2 my-5"
+                  }
+                >
+                  <img
+                    src={IconGithub}
+                    alt="logo Github"
+                    className="mr-1 w-5"
+                  />
+                </CustomButton>
+              </div>
+              <div className="flex w-full items-center text-sm">
                 <div className="h-[0.5px] w-[32%] bg-[#ccc]"></div>
                 <div className="w-[35%] flex justify-center font-light text-[#05264e] text-base">
                   Continue with

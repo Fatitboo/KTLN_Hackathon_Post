@@ -18,8 +18,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       jwtFromRequest: ExtractJwt.fromExtractors([
         (request: Request) => {
           if (!request?.cookies?.Authentication) {
-            throw new UnauthorizedException('TokenExpiredError');
-          }
+            throw new UnauthorizedException('NotFoundAuthentication');
+          } //TokenExpiredError
           return request?.cookies?.Authentication;
         },
       ]),

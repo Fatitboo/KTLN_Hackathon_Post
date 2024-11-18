@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import {
   getUserProfileAction,
   resetSuccessAction,
-  updateAvatarAction,
+  // updateAvatarAction,
 } from "../../../../redux/slices/users/usersSlices";
 import { AiFillExclamationCircle } from "react-icons/ai";
 import { useForm } from "react-hook-form";
@@ -163,7 +163,7 @@ function MyProfile() {
       publicId: userProfile?.avatar?.publicId ?? "",
     };
 
-    dispatch(updateAvatarAction(avatar));
+    // dispatch(updateAvatarAction(avatar));
   };
   const convertDate = (tt) => {
     const date = new Date(tt);

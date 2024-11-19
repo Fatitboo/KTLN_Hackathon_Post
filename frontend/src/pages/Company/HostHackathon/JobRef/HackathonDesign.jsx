@@ -91,17 +91,23 @@ function HackathonDesign({ formId, formSubmit }) {
                 "Thumbnail image",
                 "Upload one image to be used as a square thumbnail image for your hackathon. View example. This image will be used to represent your hackathon in places such as the Devpost hackathons page. The image must be a JPG, GIF or PNG file, up to 5 MB. For best results crop to 300x300 pixels."
               )}
-              <div className="mt-8 w-56 h-56 bg-[#f2f2f2] flex flex-col items-center justify-center border text-sm text-[#6F6F6F] italic">
-                <div>
-                  <input
-                    type="file"
-                    name="thumbnail"
-                    onChange={handleImageChange}
-                  />
-                  {inputsValues.thumbnail && (
-                    <img src={inputsValues.thumbnail} alt="Uploaded" />
-                  )}
+              <div>
+                <div className="mt-8 w-56 h-56 bg-[#f2f2f2] flex flex-col items-center justify-center border text-sm text-[#6F6F6F] italic mb-1">
+                  <div className="w-full h-full flex items-center justify-center">
+                    {inputsValues.thumbnail && (
+                      <img
+                        className="w-full h-full"
+                        src={URL.createObjectURL(inputsValues.thumbnail)}
+                        alt="Uploaded"
+                      />
+                    )}
+                  </div>
                 </div>
+                <input
+                  type="file"
+                  name="thumbnail"
+                  onChange={handleImageChange}
+                />
               </div>
             </div>
             <div>
@@ -109,21 +115,23 @@ function HackathonDesign({ formId, formSubmit }) {
                 "Thumbnail image",
                 "Upload one image to be used as a square thumbnail image for your hackathon. View example. This image will be used to represent your hackathon in places such as the Devpost hackathons page. The image must be a JPG, GIF or PNG file, up to 5 MB. For best results crop to 300x300 pixels."
               )}
-              <div className="mt-8 w-full h-28 bg-[#f2f2f2] flex flex-col items-center justify-center border text-sm text-[#6F6F6F] italic">
-                <div>
-                  <input
-                    type="file"
-                    name="headerTitleImage"
-                    onChange={handleImageChange}
-                  />
-                  {inputsValues.headerTitleImage && (
-                    <img
-                      src={inputsValues.headerTitleImage}
-                      alt="Uploaded"
-                      style={{ width: "700px", height: "200px" }}
-                    />
-                  )}
+              <div>
+                <div className="mt-8 w-full h-28 bg-[#f2f2f2] flex flex-col items-center justify-center border text-sm text-[#6F6F6F] italic mb-1">
+                  <div>
+                    {inputsValues.headerTitleImage && (
+                      <img
+                        src={URL.createObjectURL(inputsValues.headerTitleImage)}
+                        alt="Uploaded"
+                        className="w-full h-full"
+                      />
+                    )}
+                  </div>
                 </div>
+                <input
+                  type="file"
+                  name="headerTitleImage"
+                  onChange={handleImageChange}
+                />
               </div>
             </div>
           </form>

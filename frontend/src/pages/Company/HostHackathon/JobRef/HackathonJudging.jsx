@@ -252,25 +252,23 @@ function HackathonJudging({ formSubmit, formId, config }) {
                     />
                   </div>
                   <div className="text-gray-900 font-medium">Photo</div>
-                  <div className="mt-6 w-56 h-56 bg-[#f2f2f2] flex flex-col items-center justify-center border text-sm text-[#6F6F6F] italic">
-                    <div className="mt-8 w-full h-28 bg-[#f2f2f2] flex flex-col items-center justify-center border text-sm text-[#6F6F6F] italic">
-                      <div>
-                        <input
-                          type="file"
-                          name="photo"
-                          onChange={(e) =>
-                            handleImageChange("photo", item.id, e)
-                          }
-                        />
+                  <div>
+                    <div className="mt-8 w-56 h-56 bg-[#f2f2f2] flex flex-col items-center justify-center border text-sm text-[#6F6F6F] italic mb-1">
+                      <div className="w-full h-full">
                         {item.photo && (
                           <img
-                            src={item.photo}
+                            src={URL.createObjectURL(item.photo)}
                             alt="Uploaded"
-                            style={{ width: "700px", height: "200px" }}
+                            className="w-full h-full"
                           />
                         )}
                       </div>
                     </div>
+                    <input
+                      type="file"
+                      name="photo"
+                      onChange={(e) => handleImageChange("photo", item.id, e)}
+                    />
                   </div>
 
                   <div

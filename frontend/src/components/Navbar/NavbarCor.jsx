@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { BiChevronDown } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
@@ -9,8 +9,10 @@ import CustomButton from "../CustomButton";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUserAction } from "../../redux/slices/users/usersSlices";
 import LoadingComponent from "../Loading";
-import { creatHackathonId } from "../../redux/slices/hackathons/hackathonsSlices";
-import { LogoImage } from "../../assets/images";
+import {
+  creatHackathonId,
+  resetValue,
+} from "../../redux/slices/hackathons/hackathonsSlices";
 function MenuList({ user, onClick }) {
   const dispatch = useDispatch();
   const handlerLogOut = () => {
@@ -106,6 +108,7 @@ function NavbarCor({ user }) {
   useEffect(() => {
     if (hackathons.isSuccess) {
       navigate(`/Organizer/host-hackathon/${hackathons.hackathonId}`);
+      dispatch(resetValue({ key: "isSuccess", value: false }));
     }
   }, [hackathons?.isSuccess]);
   return (
@@ -131,7 +134,7 @@ function NavbarCor({ user }) {
               >
                 <Link
                   onClick={() => {
-                    // dispatch(creatHackathonId());
+                    dispatch(creatHackathonId());
                   }}
                   className="text-sm text-bold text-center font-bold p-3 flex items-center leading-7 rounded-lg "
                 >

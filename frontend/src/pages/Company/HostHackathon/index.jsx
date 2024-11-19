@@ -18,7 +18,7 @@ import {
   getCurrentVacanciesComponent,
   resetComponent,
 } from "../../../redux/slices/vacancies/vacanciesSlices";
-import { useParams } from "react-router-dom";
+import { useNavigate, useNavigation, useParams } from "react-router-dom";
 import { Modal } from "../../../components";
 import { IoClose } from "react-icons/io5";
 import PreviewVacancy from "./JobRef/JobComponents/PreviewVacancy";
@@ -32,6 +32,7 @@ import {
 function HostHackathon() {
   const params = useParams();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { hackathonId, isSuccessUD } = useSelector((store) => store.hackathons);
   const nextJobRef = () => {
     if (jobRefKey < jobRef.length) {
@@ -57,6 +58,10 @@ function HostHackathon() {
   useEffect(() => {
     if (isSuccessUD) {
       dispatch(resetValue({ key: "isSuccessUD", value: false }));
+      if (jobRefKey === 8) {
+        console.log("DÔ");
+        navigate("/Organizer/manage-hackathons");
+      }
       nextJobRef();
     }
   }, [isSuccessUD]);

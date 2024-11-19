@@ -1,18 +1,18 @@
-import { AiOutlineCheckCircle, AiOutlineSearch } from "react-icons/ai";
+import { AiOutlineSearch } from "react-icons/ai";
 import { ComboBox } from "../../../components";
-import { BiMap, BiPackage, BiPencil } from "react-icons/bi";
+import { BiPencil } from "react-icons/bi";
 import { LiaEyeSolid, LiaTrashAltSolid } from "react-icons/lia";
 import { Link, useNavigate } from "react-router-dom";
 import { HiPlus } from "react-icons/hi";
 import { useEffect, useState } from "react";
-import {
-  deleteProjectAction,
-  getAllProjectsUser,
-  setValueSuccess,
-} from "../../../redux/slices/projects/projectsSlices";
+import { setValueSuccess } from "../../../redux/slices/projects/projectsSlices";
 import { useDispatch, useSelector } from "react-redux";
 import { CiDollar } from "react-icons/ci";
-import { getAllHackathons } from "../../../redux/slices/hackathons/hackathonsSlices";
+import {
+  deleteHackathonComponent,
+  getAllHackathons,
+  resetValue,
+} from "../../../redux/slices/hackathons/hackathonsSlices";
 
 const listItemCbb = [
   { id: 1, name: "All", value: "All" },
@@ -27,56 +27,56 @@ function ManageHackathon() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   let [selectId, setSelectedId] = useState();
-  let [currentProjects, setCurrentProjects] = useState([
-    {
-      thumbnail:
-        "https://images.ctfassets.net/ub3bwfd53mwy/5WFv6lEUb1e6kWeP06CLXr/acd328417f24786af98b1750d90813de/4_Image.jpg?w=750",
-      hackathonName: "UIT Game App",
-      status: "Online",
-      type: "London, UK",
-      tagLines: "#Game #App",
-      themeTags: "#AR/VR #Communication",
-      updateAt: "Last update 5 minutes ago",
-    },
-    {
-      thumbnail:
-        "https://images.ctfassets.net/ub3bwfd53mwy/5WFv6lEUb1e6kWeP06CLXr/acd328417f24786af98b1750d90813de/4_Image.jpg?w=750",
-      hackathonName: "UIT Game App",
-      status: "Online",
-      type: "University",
-      tagLines: "#Game #App",
-      themeTags: "#AR/VR #Communication",
-      updateAt: "5 minutes ago",
-    },
-    {
-      thumbnail:
-        "https://images.ctfassets.net/ub3bwfd53mwy/5WFv6lEUb1e6kWeP06CLXr/acd328417f24786af98b1750d90813de/4_Image.jpg?w=750",
-      hackathonName: "UIT Game App",
-      status: "Online",
-      type: "University",
-      tagLines: "#Game #App",
-      themeTags: "#AR/VR #Communication",
-      updateAt: "5 minutes ago",
-    },
-  ]);
-  let { loading, hackathons } = useSelector((state) => state.hackathons);
+  let [currentHackathons, setCurrentHackathons] = useState([]);
+  let { loading, hackathons, loadingDelete, isSuccessDelete } = useSelector(
+    (state) => state.hackathons
+  );
 
   useEffect(() => {
     dispatch(getAllHackathons());
   }, []);
   useEffect(() => {
-    console.log(hackathons);
+    if (hackathons) {
+      setCurrentHackathons(hackathons);
+    }
   }, [hackathons]);
+
+  useEffect(() => {
+    if (isSuccessDelete) {
+      setCurrentHackathons(hackathons.filter((item) => item._id !== selectId));
+      dispatch(resetValue({ key: "isSuccessDelete", value: false }));
+    }
+  }, [isSuccessDelete]);
   const onFilterValueSelected = (filterValue) => {};
 
-  const handleSearch = (e) => {};
-
-  const handleDeleteProject = (item) => {
-    dispatch(deleteProjectAction({ id: item.projectId }));
+  const handleSearch = (e) => {
+    console.log(e);
+    setCurrentHackathons(
+      hackathons.filter(
+        (item) =>
+          item.hackathonName
+            .toLowerCase()
+            .trim()
+            .includes(e.target.value.toLowerCase().trim()) ||
+          item.tagline
+            .toLowerCase()
+            .trim()
+            .includes(e.target.value.toLowerCase().trim()) ||
+          item.applyFor
+            .toLowerCase()
+            .trim()
+            .includes(e.target.value.toLowerCase().trim()) ||
+          item.hackathonTypes
+            .join("")
+            .toLowerCase()
+            .trim()
+            .includes(e.target.value.toLowerCase().trim())
+      )
+    );
   };
 
-  const handlePaymentProject = (item) => {
-    // navigate(`/Organizer/payment/project/${item.projectId}`);
+  const handleDeleteProject = (item) => {
+    dispatch(deleteHackathonComponent({ id: item._id }));
   };
 
   return (
@@ -88,7 +88,7 @@ function ManageHackathon() {
         <div className="max-w-full pt-3 shrink-0 w-full">
           <div className="relative rounded-lg bg-white shadow max-w-full shrink-0 w-full px-6 py-6">
             <div className="font-medium text-3xl text-gray-900 mb-4 leading-10">
-              Manage Projects!
+              Manage Hackathons!
             </div>
             <div className="relative w-full">
               {/* Start header of content */}
@@ -147,7 +147,7 @@ function ManageHackathon() {
                           Status
                         </th>
                         <th className="relative text-[#3a60bf] font-medium py-6 text-base text-left w-1/12">
-                          Type
+                          Apply for
                         </th>
                         <th className="relative text-[#3a60bf] font-medium py-6 text-base w-[14%] text-center">
                           Tagline
@@ -249,7 +249,7 @@ function ManageHackathon() {
                               </tr>
                             );
                           })
-                        : hackathons?.map((item, index) => {
+                        : currentHackathons?.map((item, index) => {
                             return (
                               <tr
                                 key={index}
@@ -263,7 +263,7 @@ function ManageHackathon() {
                                     <div className="w-12 h-12">
                                       <img
                                         src={item.thumbnail}
-                                        className="w-16 h-16"
+                                        className="w-full h-full"
                                         alt="description of image"
                                       />
                                     </div>
@@ -272,7 +272,8 @@ function ManageHackathon() {
                                         {item.hackathonName}
                                       </div>
                                       <div className="flex font-light text-sm">
-                                        {item.update_at}
+                                        {item.update_at.split("T")[0]}{" "}
+                                        {item.update_at.split("T")[1]}
                                       </div>
                                     </div>
                                   </div>
@@ -284,26 +285,28 @@ function ManageHackathon() {
                                     </div>
                                   </div>
                                 </td>
-                                <td className="font-semibold text-blue-700 w-1/12  ">
+                                <td className="font-semibold text-blue-700 w-1/12">
                                   <div className="flex h-full items-center">
                                     <div className="mr-1">{item.applyFor}</div>
                                   </div>
                                 </td>
-                                <td className="text-center w-[14%] font-semibold text-gray-700 text-base">
-                                  <div>{item.tagline}</div>
+                                <td className="text-center w-[20%] font-semibold text-gray-700 text-base">
+                                  <div className="line-clamp-3 w-full">
+                                    {item.tagline}
+                                  </div>
                                 </td>
                                 <td className="text-center w-[14%] font-semibold text-gray-700 text-base">
-                                  <div>
-                                    {item.hackathonTypes.map(
-                                      (item) => `#${item}\n`
-                                    )}
+                                  <div className="flex flex-col items-center">
+                                    {item.hackathonTypes.map((type, index) => (
+                                      <span key={index}>#{type} </span>
+                                    ))}
                                   </div>
                                 </td>
                                 <td>
                                   <div className="">
                                     <div className="list-none flex relative item-center justify-center">
                                       <Link
-                                        to={`/Organizer/manage-project/project-detail/${item?.projectId}`}
+                                        to={`/Hackathon-detail/${item?._id}/overview`}
                                         className="list-none relative mr-2 bg-[#f5f7fc] border rounded-md border-[#e9ecf9] px-1 pt-1 hover:bg-[#5f86e9] hover:text-white"
                                       >
                                         <LiaEyeSolid fontSize={18} />
@@ -321,7 +324,7 @@ function ManageHackathon() {
                                         <li
                                           className={`opacity-100 cursor-pointer hover:bg-[#278646] hover:text-white relative mr-2 bg-[#f5f7fc] border rounded-md border-[#e9ecf9] px-1 pt-1 `}
                                           onClick={() => {
-                                            handlePaymentProject(item);
+                                            // handlePaymentProject(item);
                                           }}
                                         >
                                           <div>
@@ -335,17 +338,14 @@ function ManageHackathon() {
                                       )}
                                       <li
                                         className="list-none relative bg-[#f5f7fc] border rounded-md border-[#e9ecf9] px-1 pt-1 hover:bg-[#ce3e37] hover:text-white"
-                                        style={{
-                                          backgroundColor: "#ce3e37",
-                                        }}
                                         onClick={() => {
-                                          setSelectedId(item?.projectId);
+                                          setSelectedId(item?._id);
                                           handleDeleteProject(item);
                                         }}
                                       >
                                         <button>
-                                          {/* {loadingDL &&
-                                          item?.projectId === selectId ? (
+                                          {loadingDelete &&
+                                          item?._id === selectId ? (
                                             <svg
                                               className="right-1 animate-spin h-5 w-5 text-white"
                                               xmlns="http://www.w3.org/2000/svg"
@@ -366,9 +366,9 @@ function ManageHackathon() {
                                                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                                               ></path>
                                             </svg>
-                                          ) : */}
-
-                                          <LiaTrashAltSolid fontSize={18} />
+                                          ) : (
+                                            <LiaTrashAltSolid fontSize={18} />
+                                          )}
                                         </button>
                                       </li>
                                     </div>

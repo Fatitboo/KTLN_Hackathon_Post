@@ -56,7 +56,6 @@ export const creatHackathonId = createAsyncThunk(
     }
   }
 );
-
 //update Hackathon Component
 export const updateHackathonComponent = createAsyncThunk(
   "hackathons/updateHackathon",
@@ -74,6 +73,33 @@ export const updateHackathonComponent = createAsyncThunk(
       const { data } = await axios.put(
         `${baseUrl}/${apiPrefix}/${payload.id}`,
         { ...payload.hackathon },
+        config
+      );
+      return data;
+    } catch (error) {
+      if (!error?.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+//delete Hackathon Component
+export const deleteHackathonComponent = createAsyncThunk(
+  "hackathons/deleteHackathon",
+  async (payload, { rejectWithValue, getState, dispatch }) => {
+    try {
+      const user = getState()?.users;
+      const { userAuth } = user;
+      // http call
+      const config = {
+        headers: {
+          // Authorization: `Bearer ${userAuth?.user?.token}`,
+          "Content-Type": "application/json",
+        },
+      };
+      const { data } = await axios.delete(
+        `${baseUrl}/${apiPrefix}/${payload.id}`,
         config
       );
       return data;
@@ -143,6 +169,19 @@ const hackathonsSlices = createSlice({
       builder.addCase(updateHackathonComponent.rejected, (state, action) => {
         state.loadingUpdate = true;
         state.isSuccessUD = false;
+      });
+
+    builder.addCase(deleteHackathonComponent.pending, (state, action) => {
+      state.loadingDelete = true;
+      state.isSuccessDelete = false;
+    }),
+      builder.addCase(deleteHackathonComponent.fulfilled, (state, action) => {
+        state.loadingDelete = false;
+        state.isSuccessDelete = true;
+      }),
+      builder.addCase(deleteHackathonComponent.rejected, (state, action) => {
+        state.loadingDelete = true;
+        state.isSuccessDelete = false;
       });
   },
 });

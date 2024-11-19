@@ -101,6 +101,11 @@ const corRoutes = [
     component: HostHackathon,
     layout: LayoutNoSidebar,
   },
+  {
+    path: "/Organizer/manage-hackathons/:id",
+    component: HackathonDetail,
+    layout: LayoutNoSidebar,
+  },
 ];
 const AdminRoutes = [
   //Admin Layout

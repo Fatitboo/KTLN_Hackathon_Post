@@ -1,17 +1,18 @@
-import { AiOutlineCheckCircle, AiOutlineSearch } from "react-icons/ai";
+import { AiOutlineSearch } from "react-icons/ai";
 import { ComboBox } from "../../../components";
-import { BiMap, BiPackage, BiPencil } from "react-icons/bi";
+import { BiPencil } from "react-icons/bi";
 import { LiaEyeSolid, LiaTrashAltSolid } from "react-icons/lia";
 import { Link, useNavigate } from "react-router-dom";
 import { HiPlus } from "react-icons/hi";
 import { useEffect, useState } from "react";
-import {
-  deleteProjectAction,
-  getAllProjectsUser,
-  setValueSuccess,
-} from "../../../redux/slices/projects/projectsSlices";
+import { setValueSuccess } from "../../../redux/slices/projects/projectsSlices";
 import { useDispatch, useSelector } from "react-redux";
 import { CiDollar } from "react-icons/ci";
+import {
+  deleteHackathonComponent,
+  getAllHackathons,
+  resetValue,
+} from "../../../redux/slices/hackathons/hackathonsSlices";
 
 const listItemCbb = [
   { id: 1, name: "All", value: "All" },
@@ -26,66 +27,47 @@ function ManageHackathon() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   let [selectId, setSelectedId] = useState();
-  let [currentProjects, setCurrentProjects] = useState([
-    {
-      thumbnail:
-        "https://images.ctfassets.net/ub3bwfd53mwy/5WFv6lEUb1e6kWeP06CLXr/acd328417f24786af98b1750d90813de/4_Image.jpg?w=750",
-      hackathonName: "UIT Game App",
-      status: "Online",
-      type: "London, UK",
-      tagLines: "#Game #App",
-      themeTags: "#AR/VR #Communication",
-      updateAt: "Last update 5 minutes ago",
-    },
-    {
-      thumbnail:
-        "https://images.ctfassets.net/ub3bwfd53mwy/5WFv6lEUb1e6kWeP06CLXr/acd328417f24786af98b1750d90813de/4_Image.jpg?w=750",
-      hackathonName: "UIT Game App",
-      status: "Online",
-      type: "University",
-      tagLines: "#Game #App",
-      themeTags: "#AR/VR #Communication",
-      updateAt: "5 minutes ago",
-    },
-    {
-      thumbnail:
-        "https://images.ctfassets.net/ub3bwfd53mwy/5WFv6lEUb1e6kWeP06CLXr/acd328417f24786af98b1750d90813de/4_Image.jpg?w=750",
-      hackathonName: "UIT Game App",
-      status: "Online",
-      type: "University",
-      tagLines: "#Game #App",
-      themeTags: "#AR/VR #Communication",
-      updateAt: "5 minutes ago",
-    },
-  ]);
-  // let user = useSelector((state) => state.users.userAuth.user)
-  const user = {
-    userType: "organizer",
-  };
-  let projectsOfCor = useSelector((state) => state.projects.projectsOfCor);
-  //   let loading = useSelector((state) => state.projects.loading);
-  let loading = false;
-  let loadingDL = useSelector((state) => state.projects.loadingDL);
-  //   useEffect(() => {
-  //     // dispatch(getAllProjectsUser({ id: user.userId }));
-  //   }, []);
-  const onFilterValueSelected = (filterValue) => {
-    // if (filterValue.value === "All") setCurrentProjects(projectsOfCor);
-    // else
-    //   setCurrentProjects(
-    //     projectsOfCor.filter((item) => item.status === filterValue.value)
-    //   );
-  };
+  let [currentHackathons, setCurrentHackathons] = useState([]);
+  let { loading, hackathons, loadingDelete, isSuccessDelete } = useSelector(
+    (state) => state.hackathons
+  );
+
+  useEffect(() => {
+    dispatch(getAllHackathons());
+  }, []);
+  useEffect(() => {
+    if (hackathons) {
+      setCurrentHackathons(hackathons);
+    }
+  }, [hackathons]);
+
+  useEffect(() => {
+    if (isSuccessDelete) {
+      setCurrentHackathons(hackathons.filter((item) => item._id !== selectId));
+      dispatch(resetValue({ key: "isSuccessDelete", value: false }));
+    }
+  }, [isSuccessDelete]);
+  const onFilterValueSelected = (filterValue) => {};
 
   const handleSearch = (e) => {
-    setCurrentProjects(
-      projectsOfCor.filter(
+    console.log(e);
+    setCurrentHackathons(
+      hackathons.filter(
         (item) =>
-          item.projectName
+          item.hackathonName
             .toLowerCase()
             .trim()
             .includes(e.target.value.toLowerCase().trim()) ||
-          item.status
+          item.tagline
+            .toLowerCase()
+            .trim()
+            .includes(e.target.value.toLowerCase().trim()) ||
+          item.applyFor
+            .toLowerCase()
+            .trim()
+            .includes(e.target.value.toLowerCase().trim()) ||
+          item.hackathonTypes
+            .join("")
             .toLowerCase()
             .trim()
             .includes(e.target.value.toLowerCase().trim())
@@ -93,16 +75,8 @@ function ManageHackathon() {
     );
   };
 
-  //   useEffect(() => {
-  //     if (projectsOfCor) setCurrentProjects(projectsOfCor);
-  //   }, [projectsOfCor]);
-
   const handleDeleteProject = (item) => {
-    dispatch(deleteProjectAction({ id: item.projectId }));
-  };
-
-  const handlePaymentProject = (item) => {
-    navigate(`/Organizer/payment/project/${item.projectId}`);
+    dispatch(deleteHackathonComponent({ id: item._id }));
   };
 
   return (
@@ -114,7 +88,7 @@ function ManageHackathon() {
         <div className="max-w-full pt-3 shrink-0 w-full">
           <div className="relative rounded-lg bg-white shadow max-w-full shrink-0 w-full px-6 py-6">
             <div className="font-medium text-3xl text-gray-900 mb-4 leading-10">
-              Manage Projects!
+              Manage Hackathons!
             </div>
             <div className="relative w-full">
               {/* Start header of content */}
@@ -150,7 +124,7 @@ function ManageHackathon() {
                   <div
                     onClick={() => {
                       dispatch(setValueSuccess(false));
-                      navigate("/Organizer/create-project");
+                      // navigate("/Organizer/create-project");
                     }}
                     className="relative text-sm text-center pr-4 p-3 text-[white] cursor-pointer hover:bg-[#0146a6] bg-[#1967d3] flex items-center leading-7 font-normal rounded-lg "
                   >
@@ -173,7 +147,7 @@ function ManageHackathon() {
                           Status
                         </th>
                         <th className="relative text-[#3a60bf] font-medium py-6 text-base text-left w-1/12">
-                          Type
+                          Apply for
                         </th>
                         <th className="relative text-[#3a60bf] font-medium py-6 text-base w-[14%] text-center">
                           Tagline
@@ -275,8 +249,7 @@ function ManageHackathon() {
                               </tr>
                             );
                           })
-                        : currentProjects?.map((item, index) => {
-                            console.log("DO");
+                        : currentHackathons?.map((item, index) => {
                             return (
                               <tr
                                 key={index}
@@ -290,6 +263,7 @@ function ManageHackathon() {
                                     <div className="w-12 h-12">
                                       <img
                                         src={item.thumbnail}
+                                        className="w-full h-full"
                                         alt="description of image"
                                       />
                                     </div>
@@ -298,32 +272,41 @@ function ManageHackathon() {
                                         {item.hackathonName}
                                       </div>
                                       <div className="flex font-light text-sm">
-                                        {item.updateAt}
+                                        {item.update_at.split("T")[0]}{" "}
+                                        {item.update_at.split("T")[1]}
                                       </div>
                                     </div>
                                   </div>
                                 </td>
                                 <td className="font-light text-white w-1/12">
                                   <div className="items-center bg-[#00B69B] rounded-full flex justify-center font-semibold w-24">
-                                    <div className="mr-1">{item.status}</div>
+                                    <div className="mr-1">
+                                      {item.isPublished ? "Online" : "Offline"}
+                                    </div>
                                   </div>
                                 </td>
-                                <td className="font-semibold text-blue-700 w-1/12  ">
+                                <td className="font-semibold text-blue-700 w-1/12">
                                   <div className="flex h-full items-center">
-                                    <div className="mr-1">{item.type}</div>
+                                    <div className="mr-1">{item.applyFor}</div>
+                                  </div>
+                                </td>
+                                <td className="text-center w-[20%] font-semibold text-gray-700 text-base">
+                                  <div className="line-clamp-3 w-full">
+                                    {item.tagline}
                                   </div>
                                 </td>
                                 <td className="text-center w-[14%] font-semibold text-gray-700 text-base">
-                                  <div>{item.tagLines}</div>
-                                </td>
-                                <td className="text-center w-[14%] font-semibold text-gray-700 text-base">
-                                  <div>{item.themeTags}</div>
+                                  <div className="flex flex-col items-center">
+                                    {item.hackathonTypes.map((type, index) => (
+                                      <span key={index}>#{type} </span>
+                                    ))}
+                                  </div>
                                 </td>
                                 <td>
                                   <div className="">
                                     <div className="list-none flex relative item-center justify-center">
                                       <Link
-                                        to={`/Organizer/manage-project/project-detail/${item?.projectId}`}
+                                        to={`/Hackathon-detail/${item?._id}/overview`}
                                         className="list-none relative mr-2 bg-[#f5f7fc] border rounded-md border-[#e9ecf9] px-1 pt-1 hover:bg-[#5f86e9] hover:text-white"
                                       >
                                         <LiaEyeSolid fontSize={18} />
@@ -341,7 +324,7 @@ function ManageHackathon() {
                                         <li
                                           className={`opacity-100 cursor-pointer hover:bg-[#278646] hover:text-white relative mr-2 bg-[#f5f7fc] border rounded-md border-[#e9ecf9] px-1 pt-1 `}
                                           onClick={() => {
-                                            handlePaymentProject(item);
+                                            // handlePaymentProject(item);
                                           }}
                                         >
                                           <div>
@@ -355,21 +338,14 @@ function ManageHackathon() {
                                       )}
                                       <li
                                         className="list-none relative bg-[#f5f7fc] border rounded-md border-[#e9ecf9] px-1 pt-1 hover:bg-[#ce3e37] hover:text-white"
-                                        style={{
-                                          backgroundColor:
-                                            loadingDL &&
-                                            item?.projectId === selectId
-                                              ? "#ce3e37"
-                                              : "",
-                                        }}
                                         onClick={() => {
-                                          setSelectedId(item?.projectId);
+                                          setSelectedId(item?._id);
                                           handleDeleteProject(item);
                                         }}
                                       >
                                         <button>
-                                          {loadingDL &&
-                                          item?.projectId === selectId ? (
+                                          {loadingDelete &&
+                                          item?._id === selectId ? (
                                             <svg
                                               className="right-1 animate-spin h-5 w-5 text-white"
                                               xmlns="http://www.w3.org/2000/svg"

@@ -1,0 +1,453 @@
+import { useParams, Link } from "react-router-dom";
+import {
+  backgroundSearch,
+  defaultAvt,
+  imgDefaultProject,
+} from "../../../assets/images";
+import { CustomButton } from "../../../components";
+import HackathonInfo from "../../../components/Seeker/HackathonInfo";
+import CardProject from "../../../components/Seeker/CardProject";
+import SearchInput from "../../../components/Seeker/SearchInput";
+import BrowerHackathons from "../BrowerHackathons";
+
+function HackathonDetail() {
+  const { id, type } = useParams();
+  const item = {
+    name: "Seam Miniapp Challenge",
+    organization_name: "Seam",
+    location: "Online",
+    themes: "Mobile, Music/Art, Web",
+    submission_start_date: "2025-02-05",
+    submission_end_date: "2025-02-19",
+    prize: "$1,050",
+    registrations: 207,
+    desc: "Create apps and games for a gen-z social platform",
+    img_avt:
+      "https://d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/002/968/223/datas/original.png",
+    img_bg:
+      "https://d112y698adiu2z.cloudfront.net/photos/production/challenge_background_images/002/968/229/datas/original.png",
+    url: "https://seam-miniapp-challenge.devpost.com/",
+    image:
+      "https://d112y698adiu2z.cloudfront.net/photos/production/challenge_photos/002/970/198/datas/original.png",
+    description:
+      "&lt;h4 id=&quot;about-the-challenge&quot; class=&quot;h2-title&quot;&gt;About the Challenge&lt;/h4&gt;\n&lt;p&gt;The Seam miniapp challenge inspires everyone to build the future of social networks by contributing miniapps. Seam is an app where you can create and discover miniapps and post new types of things for your friends.&lt;/p&gt;\n&lt;ul&gt;\n&lt;li&gt;Submitted miniapps can go live to our community of more than 20k users in the web app at &lt;a href=&quot;http://seam.so&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;seam.so&lt;/a&gt; and also live on the iOS appstore!&lt;/li&gt;\n&lt;li&gt;All miniapp code is open source, so you can remix and learn from examples.&lt;/li&gt;\n&lt;li&gt;You earn Seam Points when other users unlock your miniapps.&lt;/li&gt;\n&lt;/ul&gt;\n&lt;h4 id=&quot;get-started&quot; class=&quot;h2-title&quot;&gt;Get Started&lt;/h4&gt;\n&lt;p&gt;Before creating a miniapp, you should join Seam! Creating a Seam account allows you to claim a username and profile that will be used as the author of the miniapp. More importantly though, it allows you to join a community of other builders, designers, and curators all building the future of social networking together.&lt;/p&gt;\n&lt;p&gt;Either join on web at &lt;a href=&quot;https://www.seam.so/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;seam.so&lt;/a&gt;, or &lt;a href=&quot;https://apps.apple.com/us/app/seam-social/id6473547569&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;download our iOS app from the Apple appstore&lt;/a&gt;.&lt;/p&gt;\n&lt;p&gt;&lt;/p&gt;\n&lt;p&gt;Start coding at &lt;a href=&quot;https://docs.getseam.xyz/&quot;&gt;docs.getseam.xyz&lt;/a&gt;, our step-by-step guide to get you started. Miniapps are small React components written in Typescript. If you have written JavaScript before, this will be a fun challenge. Even if you are new to front-end development, it is a good place to learn. Simple miniapps can take only 15 minutes to create, and you can make them as complex as you want.&lt;/p&gt;",
+    judging_criteria: `
+      &lt;div class=&quot;section-title bold&quot;&gt;
+      &lt;h3 class=&quot;subheader section-title-left&quot;&gt;
+            Judging Criteria
+          &lt;/h3&gt;
+      &lt;span class=&quot;section-title-line&quot;&gt;&lt;/span&gt;
+      &lt;/div&gt;
+      &lt;ul class=&quot;no-bullet&quot;&gt;
+      &lt;li&gt;
+      &lt;strong&gt;Voting for top 2 overall&lt;/strong&gt;&lt;br/&gt;
+              Seam users will unlock the miniapps that they are most excited about. Each unlock during the Voting Period will constitute a vote towards winning the challenge. The top three miniapps that were unlocked will be awarded prizes.
+            &lt;/li&gt;
+      &lt;li&gt;
+      &lt;strong&gt;Judging for the other prizes&lt;/strong&gt;&lt;br/&gt;
+              The Judges, at their sole discretion, will evaluate and determine the recipients of the additional prizes based on criteria they find appropriate. 
+            &lt;/li&gt;
+      &lt;/ul&gt;
+      `,
+    rule_section: `
+      &lt;div class=&quot;row&quot;&gt;
+      &lt;div class=&quot;small-12 columns&quot;&gt;
+      &lt;section class=&quot;row text-content content-section&quot; id=&quot;main&quot;&gt;
+      &lt;section class=&quot;large-12 columns&quot; role=&quot;main&quot;&gt;
+      &lt;h4 id=&quot;timing-and-important-dates&quot;&gt;Timing and Important Dates&lt;/h4&gt;
+      &lt;ul&gt;
+      &lt;li&gt;Registration period: Tuesday July 30th 2024 - August 6th 2024&lt;/li&gt;
+      &lt;li&gt;Registration &amp;amp; Submission period: August 6th (10am EST) - August 19th (5pm EST)&lt;/li&gt;
+      &lt;li&gt;Judging Period: August 19th - August 26th (9am EST)&lt;/li&gt;
+      &lt;li&gt;Voting Period: August 26th (9am EST ) - September 2nd (5pm EST)&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;h4 id=&quot;eligibility&quot;&gt;Eligibility&lt;/h4&gt;
+      &lt;p&gt;The miniapp challenge IS open to:&lt;/p&gt;
+      &lt;ul&gt;
+      &lt;li&gt;Persons who have reached the age of majority in their place of residence at the time of entry (“Eligible Individuals”);&lt;/li&gt;
+      &lt;li&gt;Groups composed of Eligible Individuals (“Teams”); and&lt;/li&gt;
+      &lt;li&gt;Entities (including corporations, nonprofit organizations, limited liability companies, partnerships, and other legal entities) that are established and legally recognized at the time of entry.&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;The miniapp challenge is unfortunately NOT open to:&lt;/p&gt;
+      &lt;ul&gt;
+      &lt;li&gt;Individuals residing in, or Organizations based in, any country, state, province, or territory where participation in the Hackathon or receipt of a prize is prohibited by United States law or local regulations (including, but not limited to, Brazil, Quebec, Russia, Crimea, Cuba, Iran, North Korea, Syria, and any other country designated by the United States Treasury’s Office of Foreign Assets Control).&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;No purchase is required to be considered eligible for the challenge.&lt;/p&gt;
+      &lt;h4 id=&quot;how-to-submit&quot;&gt;How to Submit&lt;/h4&gt;
+      &lt;p&gt;To be considered a submission for the challenge, the code for the miniapp must be submitted as a &lt;a href=&quot;https://github.com/seam-xyz/Miniapp-Builder&quot;&gt;Pull Request in the Github repository for Seam’s miniapps&lt;/a&gt; by the end of the submission period.&lt;/p&gt;
+      &lt;p&gt;Additionally, submissions are encouraged on Devpost to add more detail as well as to be added to the project gallery.&lt;/p&gt;
+      &lt;p&gt;For a successful submission, the miniapp should:&lt;/p&gt;
+      &lt;ul&gt;
+      &lt;li&gt;Compile and run within the Seam miniapp builder environment without errors or crashes&lt;/li&gt;
+      &lt;li&gt;Run performantly without excessive lagging or glitching&lt;/li&gt;
+      &lt;li&gt;Allow a user to make a post and successfully render in the feed&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;h4 id=&quot;judges-and-criteria&quot;&gt;Judges and Criteria&lt;/h4&gt;
+      &lt;p&gt;&lt;strong&gt;Voting for top 2 Prizes.&lt;/strong&gt; At the beginning of the Judging Period, the judges will confer and create a list of the finalists. The Seam team will work with the finalists in code review to ensure that each miniapp submission is ready to be published into the Seam miniapp marketplace. At the end of the Judging Period, each finalist miniapp will be published live onto the Seam social platform for all other Seam users to unlock and use to create posts.&lt;/p&gt;
+      &lt;p&gt;During the Voting Period, Seam users will unlock the miniapps that they are most excited about. Each unlock during the Voting Period will constitute a vote towards winning the challenge. At the end of the Voting Period, the top two miniapps that were unlocked will be awarded prizes.&lt;/p&gt;
+      &lt;p&gt;&lt;strong&gt;Judging for the other prizes.&lt;/strong&gt; The Judges, at their sole discretion, will evaluate and determine the recipients of the additional prizes based on criteria they find appropriate. Their decisions will be final and binding.&lt;/p&gt;
+      &lt;p&gt;We welcome miniapps that are original, engaging, and stem from your own creativity. We encourage the representation of diverse perspectives on Seam, provided that the miniapps show respect for users with differing viewpoints and maintain high quality standards. We reserve the right to reject any miniapps that, in our discretion, contain content or exhibit behavior deemed unacceptable.&lt;/p&gt;
+      &lt;h4 id=&quot;prizes&quot;&gt;Prizes&lt;/h4&gt;
+      &lt;p&gt;Most Unlocked Mini App (Overall Winner) - The largest prize will be given to the contestant whose Mini App gets the most unlocks on Seam. It will consist of a First Place Ribbon Badge for their Seam profile, Seam Points, and $500.&lt;/p&gt;
+      &lt;p&gt;Second Most Unlocked Mini App- This prize will be given to the contestant whose Mini App gets the second most unlocks. It will consist of a Second Place Ribbon Badge, Seam Points.&lt;/p&gt;
+      &lt;p&gt;Honorable Mentions:&lt;/p&gt;
+      &lt;ul&gt;
+      &lt;li&gt;Best Design- This will go to the contestant who creates the Mini App with the best design. It will consist of Seam Points, a Best Design Ribbon, and $100.&lt;/li&gt;
+      &lt;li&gt;Most Creative- This will go to the contestant who creates the most creative Mini App It will consist of Seam Points, a Most Creative Ribbon, and $100.&lt;/li&gt;
+      &lt;li&gt;Highest Quality- This will go to the contestant who creates the highest quality Mini App. It will consist of Seam Points, a Highest Quality Ribbon, and $100.&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;&lt;/p&gt;
+      &lt;p&gt;&lt;/p&gt;
+      &lt;p&gt;Everyone who participates gets Seam Points and a Badge.&lt;/p&gt;
+      &lt;h4 id=&quot;rights-withholdings&quot;&gt;Rights &amp;amp; Withholdings&lt;/h4&gt;
+      &lt;p&gt;&lt;strong&gt;Publicity.&lt;/strong&gt; By joining the miniapp challenge, you’ll have the chance to get your submission featured and receive shoutouts on Seam’s social media channels! We may share your name, photo, voice, and where you’re from to highlight your amazing work. Your participation means you’re okay with us using this info to spread the word, whether it’s through existing or new media, all around the world, without further prizes to you. This includes using it for advertising and promotional purposes to give you and your work the recognition you deserve.&lt;/p&gt;
+      &lt;p&gt;&lt;strong&gt;Administrator.&lt;/strong&gt; The challenge is administered by BingBong Inc, dba Seam Social.&lt;/p&gt;
+      &lt;p&gt;&lt;/p&gt;
+      &lt;p&gt;&lt;strong&gt;Terms of Service&lt;/strong&gt;. By making a submission to this challenge, you agree to the &lt;a href=&quot;https://www.notion.so/Community-Guidelines-798d92c34a12418ea0bf4558b1b22314?pvs=21&quot;&gt;Seam Terms of Service and Community Guidelines&lt;/a&gt;.&lt;/p&gt;
+      &lt;/section&gt;
+      &lt;/section&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      `,
+    challenge_requirements: `
+      &lt;div class=&quot;section-title bold&quot;&gt;
+      &lt;h3 class=&quot;subheader section-title-left&quot;&gt;
+              Requirements
+            &lt;/h3&gt;
+      &lt;span class=&quot;section-title-line&quot;&gt;&lt;/span&gt;
+      &lt;/div&gt;
+      &lt;div&gt;
+      &lt;h4&gt;What to Build&lt;/h4&gt;
+      &lt;p&gt;The goal for this miniapp challenge is to create new, fun ways to share with your friends on Seam.&lt;/p&gt;
+      &lt;p&gt;Miniapps make posts. Users play with miniapps to create new art, music, or games, which then can be experienced by your friends. Miniapps live inside Seam, the super app, which acts as a constant contact book and platform for the feeds and groupchats that miniapps live inside of. Miniapps are creative tools that render their end product to a feed.&lt;/p&gt;
+      &lt;p&gt;A miniapp fundamentally has two steps. They start with the singleplayer mode, where someone enters their data, plays the game, or interacts with the app. The second mode is how it shows up in a feed, which is a typically the finished product of the creative process: the finished song, GIF, or highscore. Some quick examples:&lt;/p&gt;
+      &lt;ul&gt;
+      &lt;li&gt;Artistic miniapps first allow artists to draw on a canvas, and then post their watercolor. Yes, Microsoft Paint is basically a miniapp.&lt;/li&gt;
+      &lt;li&gt;Commerce miniapps first allow a seller to decide what to sell and how to make the post look, and then allows users to buy with one tap.&lt;/li&gt;
+      &lt;li&gt;Game miniapps first allow friends to play the game, and then allows them to compete by posting their highscores.&lt;/li&gt;
+      &lt;li&gt;Utility miniapps take the most arcane 3D image filetypes, and then render them properly in the feed.&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;The options for miniapps are endless — see the examples that already exist on &lt;a href=&quot;http://seam.so&quot;&gt;seam.so&lt;/a&gt;.&lt;/p&gt;
+      &lt;h4&gt;How to Submit&lt;/h4&gt;
+      &lt;p&gt;To be considered a submission for the challenge, the code for the miniapp must be submitted as a &lt;a href=&quot;https://github.com/seam-xyz/Miniapp-Builder&quot;&gt;Pull Request in the Github repository for Seam’s miniapps&lt;/a&gt; by the end of the submission period.&lt;/p&gt;
+      &lt;p&gt;Additionally, submissions are encouraged on Devpost to add more detail as well as to be added to the project gallery.&lt;/p&gt;
+      &lt;p&gt;For a successful submission, the miniapp should:&lt;/p&gt;
+      &lt;p&gt;&lt;/p&gt;
+      &lt;ul&gt;
+      &lt;li&gt;Compile and run within the Seam miniapp builder environment without errors or crashes&lt;/li&gt;
+      &lt;li&gt;Run performantly without excessive lagging or glitching&lt;/li&gt;
+      &lt;li&gt;Allow a user to make a post and successfully render in the feed&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;/div&gt;
+      `,
+    resources_section: `
+      &lt;div class=&quot;row&quot;&gt;
+      &lt;div class=&quot;small-12 columns&quot;&gt;
+      &lt;section class=&quot;row text-content content-section&quot; id=&quot;main&quot;&gt;
+      &lt;section class=&quot;large-12 columns&quot; role=&quot;main&quot;&gt;
+      &lt;h4 id=&quot;introduction&quot;&gt;Introduction
+      &lt;/h4&gt;
+      &lt;p&gt;All documentation for creating Seam miniapps can be found at docs.getseam.xyz.&lt;/p&gt;
+      &lt;p&gt;The codebase to get started is in &lt;a href=&quot;https://github.com/seam-xyz/Miniapp-Builder&quot;&gt;our GitHub repository&lt;/a&gt;.&lt;/p&gt;
+      &lt;h4 id=&quot;tools-and-technologies&quot;&gt;Tools and Technologies&lt;/h4&gt;
+      &lt;p&gt;Seam miniapps are React components, written in Typescript.&lt;/p&gt;
+      &lt;h4 id=&quot;inspiration&quot;&gt;Inspiration&lt;/h4&gt;
+      &lt;p&gt;Find our list of &lt;a href=&quot;https://www.notion.so/Seam-Miniapp-Idea-List-9d28594c48ca432a90e0e088274a72c1?pvs=21&quot;&gt;miniapp ideas in our Notion.&lt;/a&gt;&lt;/p&gt;
+      &lt;h4 id=&quot;contact-us-support-channels&quot;&gt;Contact Us &amp;amp; Support Channels&lt;/h4&gt;
+      &lt;p&gt;Keep up-to-date with the challenge by following Seam on &lt;a href=&quot;https://x.com/seam_xyz&quot;&gt;Twitter&lt;/a&gt; and on &lt;a href=&quot;https://www.instagram.com/seam.social/&quot;&gt;Instagram&lt;/a&gt;.&lt;/p&gt;
+      &lt;p&gt;There are two ways to get in contact with the Seam team:&lt;/p&gt;
+      &lt;ul&gt;
+      &lt;li&gt;If it’s a question about Seam, email us at hello@getseam.xyz.&lt;/li&gt;
+      &lt;li&gt;If it’s getting support about building your miniapp, &lt;a href=&quot;https://www.seam.so/home&quot;&gt;make a post on Seam&lt;/a&gt;. This way other builders will also be able to chime in and help out!&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;If you’ve found a bug on Seam or in the miniapp builder, please create an issue on Github.&lt;/p&gt;
+      &lt;h4 id=&quot;additional-resource-links&quot;&gt;Additional Resource links&lt;/h4&gt;
+      &lt;p&gt;&lt;/p&gt;
+      &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;https://medium.com/seam-social/miniapps-future-of-social-networks-9f29406e2fe2&quot;&gt;Miniapps: Future of Social Networks&lt;/a&gt;&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;/section&gt;
+      &lt;/section&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      `,
+    hackathon_id: 1,
+  };
+  const decodeHTML = (html) => {
+    const txt = document.createElement("textarea");
+    txt.innerHTML = html;
+    return txt.value;
+  };
+  const myProject = [
+    {
+      title: "AI DataGraph",
+      description: "Data sharing network for AI model training on Metagraph.",
+      image: "https://via.placeholder.com/150",
+      isWinner: false,
+    },
+    {
+      title: "AutoSight",
+      description:
+        "Earn income while you drive. Autosight is a metaroboth-powered.",
+      image: "https://via.placeholder.com/150",
+      isWinner: true,
+    },
+  ];
+  return (
+    <>
+      <div>
+        <div
+          className="flex flex-col pt-5 bg-no-repeat bg-cover"
+          style={{
+            backgroundImage: `url(${item.img_bg ?? backgroundSearch})`,
+          }}
+        >
+          <div className="px-60 max-lg:px-2">
+            <img src={item.image} alt={item.name} />
+          </div>
+          <div className=" flex bg-gray-400 opacity-70 py-3 mt-3 text-white text-normal">
+            <div className="px-60 max-lg:px-2 ">
+              <Link
+                to={`/Hackathon-detail/${id}/overview`}
+                className={`py-4 px-4 hover:underline ${
+                  type === "overview" ? "text-black opacity-100 bg-white" : ""
+                }`}
+              >
+                Overview
+              </Link>
+              <Link
+                to={`/Hackathon-detail/${id}/my-project`}
+                className={`py-4 px-4 hover:underline ${
+                  type === "my-project" ? "text-black opacity-100 bg-white" : ""
+                }`}
+              >
+                MyProject
+              </Link>
+              <Link
+                to={`/Hackathon-detail/${id}/participants`}
+                className={`py-4 px-4 hover:underline ${
+                  type === "participants"
+                    ? "text-black opacity-100 bg-white"
+                    : ""
+                }`}
+              >
+                Participants
+              </Link>
+              <Link
+                to={`/Hackathon-detail/${id}/resourses`}
+                className={`py-4 px-4 hover:underline ${
+                  type === "resourses" ? "text-black opacity-100 bg-white" : ""
+                }`}
+              >
+                Resourses
+              </Link>
+              <Link
+                to={`/Hackathon-detail/${id}/rules`}
+                className={`py-4 px-4 hover:underline ${
+                  type === "rules" ? "text-black opacity-100 bg-white" : ""
+                }`}
+              >
+                Rules
+              </Link>
+              <Link
+                to={`/Hackathon-detail/${id}/project-gallery`}
+                className={`py-4 px-4 hover:underline ${
+                  type === "project-gallery"
+                    ? "text-black opacity-100 bg-white"
+                    : ""
+                }`}
+              >
+                Project gallery
+              </Link>
+              <Link
+                to={`/Hackathon-detail/${id}/updates`}
+                className={`py-4 px-4 hover:underline ${
+                  type === "updates" ? "text-black opacity-100 bg-white" : ""
+                }`}
+              >
+                Updates
+              </Link>
+              <Link
+                to={`/Hackathon-detail/${id}/discussions`}
+                className={`py-4 px-4 hover:underline ${
+                  type === "discussions"
+                    ? "text-black opacity-100 bg-white"
+                    : ""
+                }`}
+              >
+                Discussions
+              </Link>
+            </div>
+          </div>
+        </div>
+        {type === "overview" && (
+          <div className="px-60 max-lg:px-2 py-5 bg-gray-100">
+            <div className="grid grid-cols-3 max-lg:grid-cols-1 gap-10">
+              <div className="col-span-2">
+                <h2 className="font-semibold mt-5">{item.name}</h2>
+                <p className="text-xl mt-5 h-16">{item.desc}</p>
+                <div className="grid grid-cols-5">
+                  <div className="col-span-1">
+                    <CustomButton
+                      title="Join hackathon"
+                      containerStyles="bg-blue-600 w-fit font-medium text-white py-2 px-5 focus:outline-none hover:bg-blue-500 rounded-sm text-base border border-blue-600"
+                    />
+                  </div>
+                  <div className="text-sm ml-10 col-span-4 ">
+                    <div className="font-bold mb-2">Who can participate</div>
+                    <div className="grid grid-cols-2 gap-5 mb-4">
+                      <ul>
+                        <li>
+                          Above legal age of majority in country of residence
+                        </li>
+                        <li>Specific</li>
+                      </ul>
+                      <ul>
+                        <li>Team max size: 3 individuals</li>
+                        <li>Specific</li>
+                      </ul>
+                    </div>
+                    <Link
+                      to={`/Hackathon-detail/${id}/rules`}
+                      className="font-normal mt-5 text-blue-600"
+                    >
+                      View all rules
+                    </Link>
+                  </div>
+                </div>
+              </div>
+              <div className="col-span-1 text-sm mt-2">
+                <HackathonInfo />
+              </div>
+            </div>
+          </div>
+        )}
+        {type === "my-project" && (
+          <>
+            <div className="px-60 max-lg:px-2 py-5 ">
+              <div className="grid grid-cols-3 max-lg:grid-cols-1 gap-10">
+                <div className="col-span-2">
+                  <h2 className="font-semibold mt-5">My hackathon projects</h2>
+                  <div>
+                    <div className="my-5 grid grid-cols-3 max-md:grid-cols-1 gap-6">
+                      {[...myProject, ...myProject].map((card, index) => (
+                        <CardProject
+                          key={index}
+                          title={card.title}
+                          description={card.description}
+                          image={imgDefaultProject}
+                          imgUser={defaultAvt}
+                          isWinner={card.isWinner}
+                          votes={card.votes}
+                          comments={card.comments}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <div className="col-span-1 text-sm mt-2">
+                  <div>
+                    <CustomButton
+                      title="Join hackathon"
+                      containerStyles="my-4  bg-blue-600 w-fit font-medium text-white py-2 px-5 focus:outline-none hover:bg-blue-500 rounded-sm text-base border border-blue-600"
+                    />
+                    <HackathonInfo />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+        {type === "project-gallery" && (
+          <>
+            <div className="px-60 max-lg:px-2 py-5 ">
+              <div>
+                <div className="mb-10 w-[75%]">
+                  <SearchInput
+                    textPlaceholder={"Search project"}
+                    btnText={"Search project"}
+                  />
+                </div>
+                <div className="my-5 grid grid-cols-4 max-md:grid-cols-1 gap-6">
+                  {[...myProject, ...myProject, ...myProject].map(
+                    (card, index) => (
+                      <CardProject
+                        key={index}
+                        title={card.title}
+                        description={card.description}
+                        image={imgDefaultProject}
+                        imgUser={defaultAvt}
+                        isWinner={card.isWinner}
+                        votes={card.votes}
+                        comments={card.comments}
+                      />
+                    )
+                  )}
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+        {type === "participants" && <BrowerHackathons />}
+        <div className="px-60 max-lg:px-2 py-5 ">
+          <div className="grid grid-cols-3 max-lg:grid-cols-1 gap-10">
+            <div className="col-span-2 text-gray-600 " id="generated-script">
+              {type === "overview" && (
+                <div>
+                  <div
+                    className="mb-6"
+                    dangerouslySetInnerHTML={{
+                      __html: decodeHTML(item?.description),
+                    }}
+                  ></div>
+                  <div
+                    className="mb-6"
+                    dangerouslySetInnerHTML={{
+                      __html: decodeHTML(item?.challenge_description),
+                    }}
+                  ></div>
+                  <div
+                    className="mb-6"
+                    dangerouslySetInnerHTML={{
+                      __html: decodeHTML(item?.challenge_requirements),
+                    }}
+                  ></div>
+                  <div
+                    className="mb-6"
+                    dangerouslySetInnerHTML={{
+                      __html: decodeHTML(item?.judging_criteria),
+                    }}
+                  ></div>
+                </div>
+              )}
+              {type === "rules" && (
+                <div>
+                  <div
+                    className="mb-6"
+                    dangerouslySetInnerHTML={{
+                      __html: decodeHTML(item?.rule_section),
+                    }}
+                  ></div>
+                </div>
+              )}
+              {type === "resourses" && (
+                <div>
+                  <div
+                    className="mb-6"
+                    dangerouslySetInnerHTML={{
+                      __html: decodeHTML(item?.resources_section),
+                    }}
+                  ></div>
+                </div>
+              )}
+            </div>
+
+            <div className="col-span-1"></div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
+export default HackathonDetail;

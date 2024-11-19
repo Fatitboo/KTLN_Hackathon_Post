@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import { AiFillExclamationCircle } from "react-icons/ai";
 
-export default function ComboBox({
+export default function SearchComboBox({
   label,
   require,
   description,
@@ -31,10 +31,10 @@ export default function ComboBox({
     console.log(["Selected"], selected);
   }, [selected]);
 
-  // useEffect(() => {
-  //   if (selectItem) setSelected(selectItem);
-  //   console.log(["SelectedItem"], selectItem);
-  // }, [selectItem]);
+  useEffect(() => {
+    if (selectItem) setSelected(selectItem);
+    console.log(["SelectedItem"], selectItem);
+  }, [selectItem]);
 
   const dropDownTag = useRef();
 
@@ -54,6 +54,7 @@ export default function ComboBox({
         <div
           name={name}
           type={type}
+          rules={rules}
           value={selected?.id}
           onClick={toggleStateDropdown}
           onBlur={() => {

@@ -26,6 +26,9 @@ export class UserDocument {
   @Prop({ required: true })
   password: string;
 
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'Hackathon' }] })
+  hackathons: Types.ObjectId[];
+
   @Prop({ required: true })
   fullname: string;
 

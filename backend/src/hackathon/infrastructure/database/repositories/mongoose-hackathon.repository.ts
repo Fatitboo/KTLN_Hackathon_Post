@@ -4,41 +4,62 @@ import { HackathonRepository } from 'src/hackathon/domain/repositories/hackathon
 import { HackathonDocument } from '../schemas';
 import { Model } from 'mongoose';
 import { NotFoundException } from '@nestjs/common';
+import { UserDocument } from 'src/user/infrastructure/database/schemas';
 
 export class MongooseHackathonRepository implements HackathonRepository {
   constructor(
     @InjectModel(HackathonDocument.name)
     private readonly hackathonModel: Model<HackathonDocument>,
+
+    @InjectModel(UserDocument.name)
+    private readonly userModel: Model<UserDocument>,
   ) {}
 
-  async findById(id: string): Promise<Hackathon | null> {
-    const hackathon = await this.hackathonModel.findById(id).exec();
-    if (!hackathon) return null;
-    return new Hackathon(hackathon.id, hackathon.hackathonName);
+  async findAll(page: number): Promise<HackathonDocument[]> {
+    const hackathons = await this.hackathonModel.find().lean().exec();
+    if (!hackathons) return [];
+    return hackathons;
   }
 
-  async save(hackathon: Hackathon): Promise<Hackathon> {
+  async findById(id: string): Promise<HackathonDocument | null> {
+    const hackathon = await this.hackathonModel.findById(id).lean().exec();
+    if (!hackathon) return null;
+    return hackathon;
+  }
+
+  async create(userId: string): Promise<string> {
+    const existingUser = await this.userModel.findById(userId);
+
+    if (!existingUser) {
+      throw new NotFoundException(`User with ID ${userId} not found.`);
+    }
+
     const createHackathon = new this.hackathonModel({
-      hackathonName: hackathon.hackathonName,
+      user: userId,
     });
 
     const hackObj = await createHackathon.save();
-    hackathon.setId(hackObj._id.toString());
-    return hackathon;
+
+    existingUser.hackathons.push(hackObj._id);
+    await existingUser.save();
+
+    return hackObj._id.toString();
   }
 
-  async update(hackathon: Hackathon): Promise<Hackathon> {
-    const existingHackathon = await this.hackathonModel.findById(hackathon.id);
+  async update(id: string, hackathon: Hackathon): Promise<HackathonDocument> {
+    const updatedHackathon = await this.hackathonModel
+      .findByIdAndUpdate(
+        id,
+        { $set: hackathon },
+        { new: true, useFindAndModify: false },
+      )
+      .exec();
 
-    if (!existingHackathon) {
-      throw new NotFoundException(
-        `Hackathon with ID ${hackathon.id} not found.`,
-      );
+    if (!updatedHackathon) {
+      throw new NotFoundException(`Hackathon with ID ${id} not found.`);
     }
-    existingHackathon.hackathonName = hackathon.hackathonName;
-    await existingHackathon.save();
 
-    return hackathon;
+    return updatedHackathon;
   }
 
   async delete(id: string): Promise<string> {

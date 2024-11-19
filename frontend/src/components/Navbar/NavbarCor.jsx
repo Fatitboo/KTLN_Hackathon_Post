@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { BiChevronDown } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
@@ -9,7 +9,10 @@ import CustomButton from "../CustomButton";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUserAction } from "../../redux/slices/users/usersSlices";
 import LoadingComponent from "../Loading";
-import { LogoImage } from "../../assets/images";
+import {
+  creatHackathonId,
+  resetValue,
+} from "../../redux/slices/hackathons/hackathonsSlices";
 function MenuList({ user, onClick }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -99,22 +102,19 @@ function MenuList({ user, onClick }) {
 function NavbarCor({ user }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [isOpen, setIsOpen] = useState(false);
-  const handlerCloseNavbar = () => {
-    setIsOpen((prev) => !prev);
-  };
-  const account = useSelector((store) => store?.account);
-  const { loading, token, appErr, isSuccess } = account;
+
+  const { loading, appErr, isSuccess } = useSelector((store) => store?.account);
+  const hackathons = useSelector((store) => store?.hackathons);
 
   useEffect(() => {
-    if (isSuccess) {
-      dispatch(resetSuccessAction());
-      navigate("/user-auth/noti-send-mail");
+    if (hackathons.isSuccess) {
+      navigate(`/Organizer/host-hackathon/${hackathons.hackathonId}`);
+      dispatch(resetValue({ key: "isSuccess", value: false }));
     }
-  }, [isSuccess]);
+  }, [hackathons?.isSuccess]);
   return (
     <>
-      {loading && <LoadingComponent />}
+      {(loading || hackathons?.loadingCreate) && <LoadingComponent />}
       <div className="fixed top-0 l-0 r-0 t-0 w-full bg-[#f7fdfd] z-50 shadow">
         <nav className="container mx-auto flex items-center justify-between p-5">
           <div>
@@ -134,7 +134,9 @@ function NavbarCor({ user }) {
                 }
               >
                 <Link
-                  to={"/Organizer/host-hackathon/1"}
+                  onClick={() => {
+                    dispatch(creatHackathonId());
+                  }}
                   className="text-sm text-bold text-center font-bold p-3 flex items-center leading-7 rounded-lg "
                 >
                   Host a hackathon

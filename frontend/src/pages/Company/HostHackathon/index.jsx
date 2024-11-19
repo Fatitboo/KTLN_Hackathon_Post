@@ -5,42 +5,35 @@ import {
   HackathonEligibility,
   HackathonEssential,
   HackathonDesign,
-  JobPreferences,
-  JobPreScreen,
+  HackathonStarterKit,
   JobReview,
   HackathonSite,
+  HackathonToDos,
+  HackathonSubmission,
+  HackathonJudging,
+  HackathonPrize,
 } from "./JobRef";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getCurrentVacanciesComponent,
-  postFullVacancy,
   resetComponent,
 } from "../../../redux/slices/vacancies/vacanciesSlices";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useNavigation, useParams } from "react-router-dom";
 import { Modal } from "../../../components";
 import { IoClose } from "react-icons/io5";
 import PreviewVacancy from "./JobRef/JobComponents/PreviewVacancy";
 import SuccessCreate from "./JobRef/SuccessCreate";
 import { ToastContainer } from "react-toastify";
-import { BsSkipForward } from "react-icons/bs";
-// Add job basic
-// 	- Job title
-// 	- number of people to hỉe
-// 	- location
-// Add job details
-// 	- What type of job is it?
-// 		+ Fulltime,
-// 		+ Part-time (Many Hours perweek)
-// 		+ temporary (Length/period)
-// Add pay and benefit
-// Describe the job
-// Set preferences
-// pre-screen applicants
-// review
+import {
+  resetValue,
+  updateHackathonComponent,
+} from "../../../redux/slices/hackathons/hackathonsSlices";
 
 function HostHackathon() {
   const params = useParams();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { hackathonId, isSuccessUD } = useSelector((store) => store.hackathons);
   const nextJobRef = () => {
     if (jobRefKey < jobRef.length) {
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -49,6 +42,29 @@ function HostHackathon() {
       setJobProgress((jobRefKey / jobRef.length) * 100 + "%");
     }
   };
+
+  const updateHackathon = (data) => {
+    if (hackathonId) {
+      console.log(hackathonId, data);
+      dispatch(
+        updateHackathonComponent({
+          id: hackathonId,
+          hackathon: data,
+        })
+      );
+    }
+  };
+
+  useEffect(() => {
+    if (isSuccessUD) {
+      dispatch(resetValue({ key: "isSuccessUD", value: false }));
+      if (jobRefKey === 8) {
+        console.log("DÔ");
+        navigate("/Organizer/manage-hackathons");
+      }
+      nextJobRef();
+    }
+  }, [isSuccessUD]);
   const [modal, setModal] = useState(false);
   var [jobRefKey, setJobRefKey] = useState(0);
   var [jobProgress, setJobProgress] = useState("0%");
@@ -58,48 +74,75 @@ function HostHackathon() {
     "form-hackathon-eligibility",
     "form-hackathon-design",
     "form-hackathon-site",
-    "form-job-ref",
+    "form-hackathon-todos",
+    "form-hackathon-starter-kit",
+    "form-hackathon-submission",
+    "form-hackathon-judging",
+    "form-hackathon-prize",
     "form-job-pre",
     "form-job-rev",
   ];
   const jobRef = [
     <HackathonEssential
-      formSubmit={nextJobRef}
+      formSubmit={updateHackathon}
       flag={0}
       formId={formId[0]}
       key={0}
     />,
     <HackathonEligibility
-      formSubmit={nextJobRef}
+      formSubmit={updateHackathon}
       formId={formId[1]}
       flag={1}
       key={1}
     />,
     <HackathonDesign
-      formSubmit={nextJobRef}
+      formSubmit={updateHackathon}
       formId={formId[2]}
       flag={2}
       key={2}
     />,
     <HackathonSite
-      formSubmit={nextJobRef}
+      formSubmit={updateHackathon}
       formId={formId[3]}
       flag={3}
       key={3}
     />,
-    <JobPreferences
-      formSubmit={nextJobRef}
+    <HackathonToDos
+      formSubmit={updateHackathon}
       formId={formId[4]}
       flag={4}
       key={4}
     />,
-    <JobPreScreen
-      formSubmit={nextJobRef}
+    <HackathonStarterKit
+      formSubmit={updateHackathon}
       formId={formId[5]}
       flag={5}
       key={5}
     />,
-    <JobReview formSubmit={nextJobRef} formId={formId[6]} flag={6} key={6} />,
+    <HackathonSubmission
+      formSubmit={updateHackathon}
+      formId={formId[6]}
+      flag={6}
+      key={6}
+    />,
+    <HackathonJudging
+      formSubmit={updateHackathon}
+      formId={formId[7]}
+      flag={7}
+      key={7}
+    />,
+    <HackathonPrize
+      formSubmit={updateHackathon}
+      formId={formId[8]}
+      flag={8}
+      key={8}
+    />,
+    <JobReview
+      formSubmit={updateHackathon}
+      formId={formId[9]}
+      flag={9}
+      key={9}
+    />,
   ];
 
   //const currentJobComponent = useSelector((state) => state.vacancies.currentJobComponent)
@@ -116,7 +159,7 @@ function HostHackathon() {
   }
 
   useEffect(() => {
-    dispatch(getCurrentVacanciesComponent(params.id));
+    // dispatch(getCurrentVacanciesComponent(params.id));s
   }, []);
 
   useEffect(() => {
@@ -158,7 +201,7 @@ function HostHackathon() {
             )}
           </div>
           <div className="flex flex-row justify-between">
-            {jobRefKey != 0 && jobRefKey !== 7 ? (
+            {jobRefKey != 0 && jobRefKey !== 9 ? (
               <div
                 className="flex items-center justify-center h-[53px] box-border bg-[white] border px-[18px] py-[8px] rounded-[8px] text-[#1967d3] hover:bg-[#eef1fe] hover:border-[#1967d3] cursor-pointer"
                 onClick={backJobRef}
@@ -185,14 +228,14 @@ function HostHackathon() {
                 </div>
               ) : null}
 
-              {jobRefKey === 7 ? null : (
+              {jobRefKey === 9 ? null : (
                 <button
                   type="submit"
                   form={formId[jobRefKey]}
                   className="flex items-center justify-center h-[53px] box-border bg-[#1967d3] px-[18px] py-[8px] rounded-[8px] text-[#fff] hover:bg-[#0146a6] cursor-pointer"
                 >
                   <span className="text-[15px] leading-none font-bold mr-2">
-                    {jobRefKey === 6 ? "Create" : "Continue"}
+                    {jobRefKey === 8 ? "Create" : "Continue"}
                   </span>
 
                   <TbArrowRight className="w-6 h-6" />

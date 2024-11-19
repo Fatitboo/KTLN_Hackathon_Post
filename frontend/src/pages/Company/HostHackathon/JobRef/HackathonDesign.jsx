@@ -1,26 +1,21 @@
 import { JobBenefitImage } from "../../../../assets/images";
 import { useState } from "react";
+// import ReactImagePickerEditor from "react-image-picker-editor";
+// import "react-image-picker-editor/dist/index.css";
+import axios from "axios";
 
-import { toast } from "react-toastify";
-
-function HackathonDesign({ formId, formSubmit, config }) {
-  let [inputsValues, setInputValues] = useState({
-    showPayBy: { id: -1, name: "" },
-    pay_1: "",
-    pay_2: "",
-    rate: { id: -1, name: "" },
+function HackathonDesign({ formId, formSubmit }) {
+  const [inputsValues, setInputValues] = useState({
+    thumbnail: null,
+    headerTitleImage: null,
   });
 
-  let [errors, setErrors] = useState({});
-
-  let [ErrorMessages, setErrorMessages] = useState({});
-
-  function handleSubmit(e) {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    formSubmit();
-  }
-  const notify = (type, message) => toast(message, { type: type });
 
+    const data = await handleUpload();
+    formSubmit(data);
+  };
   const TitleDescription = (title, description) => {
     return (
       <div>
@@ -34,6 +29,39 @@ function HackathonDesign({ formId, formSubmit, config }) {
         <p className="text-sm text-[#6F6F6F] italic">{description}</p>
       </div>
     );
+  };
+
+  const handleImageChange = (e) => {
+    const { name, files } = e.target;
+    setInputValues((prevValues) => ({
+      ...prevValues,
+      [name]: files[0],
+    }));
+  };
+
+  const handleUpload = async () => {
+    const updatedInputsValues = { ...inputsValues }; // Giữ lại giá trị cũ
+
+    for (const [key, file] of Object.entries(updatedInputsValues)) {
+      if (!file) continue;
+
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", "nhanle");
+
+      try {
+        const response = await axios.post(
+          `https://api.cloudinary.com/v1_1/dcdjan0oo/image/upload`,
+          formData
+        );
+        updatedInputsValues[key] = response.data.secure_url; // Lưu URL vào inputsValues
+        console.log(`${key} uploaded successfully:`, response.data.secure_url);
+      } catch (error) {
+        console.error(`Error uploading ${key}:`, error);
+      }
+    }
+
+    return updatedInputsValues; // Cập nhật state với URL đã upload
   };
 
   return (
@@ -63,12 +91,23 @@ function HackathonDesign({ formId, formSubmit, config }) {
                 "Thumbnail image",
                 "Upload one image to be used as a square thumbnail image for your hackathon. View example. This image will be used to represent your hackathon in places such as the Devpost hackathons page. The image must be a JPG, GIF or PNG file, up to 5 MB. For best results crop to 300x300 pixels."
               )}
-              <div className="mt-1 w-56 h-56 bg-[#f2f2f2] flex flex-col items-center justify-center border text-sm text-[#6F6F6F] italic">
-                <div>5 MB - JPG, PNG, GIF</div>
-                <div>1:1 aspect ratio</div>
-                <button className="bg-[#808080] font-bold rounded-lg text-white py-1 px-3 mt-2">
-                  Select image
-                </button>
+              <div>
+                <div className="mt-8 w-56 h-56 bg-[#f2f2f2] flex flex-col items-center justify-center border text-sm text-[#6F6F6F] italic mb-1">
+                  <div className="w-full h-full flex items-center justify-center">
+                    {inputsValues.thumbnail && (
+                      <img
+                        className="w-full h-full"
+                        src={URL.createObjectURL(inputsValues.thumbnail)}
+                        alt="Uploaded"
+                      />
+                    )}
+                  </div>
+                </div>
+                <input
+                  type="file"
+                  name="thumbnail"
+                  onChange={handleImageChange}
+                />
               </div>
             </div>
             <div>
@@ -76,11 +115,23 @@ function HackathonDesign({ formId, formSubmit, config }) {
                 "Thumbnail image",
                 "Upload one image to be used as a square thumbnail image for your hackathon. View example. This image will be used to represent your hackathon in places such as the Devpost hackathons page. The image must be a JPG, GIF or PNG file, up to 5 MB. For best results crop to 300x300 pixels."
               )}
-              <div className="mt-1 w-full h-28 bg-[#f2f2f2] flex flex-col items-center justify-center border text-sm text-[#6F6F6F] italic">
-                <div>5 MB - JPG, PNG, GIF</div>
-                <button className="bg-[#808080] font-bold rounded-lg text-white py-1 px-3 mt-2">
-                  Select image
-                </button>
+              <div>
+                <div className="mt-8 w-full h-28 bg-[#f2f2f2] flex flex-col items-center justify-center border text-sm text-[#6F6F6F] italic mb-1">
+                  <div>
+                    {inputsValues.headerTitleImage && (
+                      <img
+                        src={URL.createObjectURL(inputsValues.headerTitleImage)}
+                        alt="Uploaded"
+                        className="w-full h-full"
+                      />
+                    )}
+                  </div>
+                </div>
+                <input
+                  type="file"
+                  name="headerTitleImage"
+                  onChange={handleImageChange}
+                />
               </div>
             </div>
           </form>

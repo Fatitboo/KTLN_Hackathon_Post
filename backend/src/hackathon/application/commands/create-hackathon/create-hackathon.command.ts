@@ -1,7 +1,6 @@
 export class CreateHackathonCommandProps {
-  hackathonName: string;
+  userId: string;
 }
-
 export class CreateHackathonCommand {
   constructor(public readonly props: CreateHackathonCommandProps) {}
 }

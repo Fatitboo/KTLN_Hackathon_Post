@@ -27,7 +27,7 @@ export class UserController {
   ) {}
 
   @Post('/update-user/:id')
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   async updateUser(@Param('id') id: string, @Body() body: UpdateUserDto) {
     return await this.commandBus.execute(
       new UpdateUserCommand({
@@ -38,7 +38,7 @@ export class UserController {
   }
 
   @Get('/get-user-profile/:id')
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   async getUser(
     @Param('id') id: string,
     @Query('getType') getType: GetUserType,

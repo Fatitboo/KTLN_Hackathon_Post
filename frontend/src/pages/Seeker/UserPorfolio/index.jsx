@@ -71,30 +71,30 @@ function UserPorfolio() {
               Student at the University of Waterloo
             </p>
             <div className="flex space-x-4 mt-2 text-blue-500">
-              <a href={uProfile?.socialLinks?.link}>Website</a>
-              <a href={uProfile?.socialLinks?.link}>GitHub</a>
-              <a href={uProfile?.socialLinks?.link}>LinkedIn</a>
+              <a className="cursor-pointer" href={uProfile?.socialLinks?.link}>
+                Website
+              </a>
+              <a className="cursor-pointer" href={uProfile?.socialLinks?.link}>
+                GitHub
+              </a>
+              <a className="cursor-pointer" href={uProfile?.socialLinks?.link}>
+                LinkedIn
+              </a>
             </div>
             <div className="text-sm ">
               <div className="flex items-start mt-2 ">
                 <div className=" font-medium mr-2">Skills</div>
                 <div className="flex flex-wrap gap-2">
-                  {[
-                    "Java",
-                    "Photoshop",
-                    "Design",
-                    "Unity",
-                    "HTML",
-                    "JavaScript",
-                    "CSS",
-                  ].map((skill) => (
-                    <span
-                      key={skill}
-                      className="bg-gray-100 text-gray-600 px-3 py-0.5 rounded-sm"
-                    >
-                      {skill}
-                    </span>
-                  ))}
+                  {[...(uProfile?.settingRecommend?.skills ?? [])].map(
+                    (skill) => (
+                      <span
+                        key={skill}
+                        className="bg-gray-100 text-gray-600 px-3 py-0.5 rounded-sm"
+                      >
+                        {skill}
+                      </span>
+                    )
+                  )}
                 </div>
               </div>
 

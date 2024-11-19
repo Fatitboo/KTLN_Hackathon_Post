@@ -20,6 +20,7 @@ import { GoogleStrategy } from './domain/common/strategies/google.strategy';
 import UserCommandHandler from './application/commands';
 import UserQueryHandler from './application/queries';
 import { Auth2Service } from './adaper/services/auth2.service';
+import { GithubStrategy } from './domain/common/strategies/github.strategy';
 @Module({
   imports: [
     CqrsModule,
@@ -39,6 +40,7 @@ import { Auth2Service } from './adaper/services/auth2.service';
     EnvironmentConfigService,
     LocalStrategy,
     JwtRefreshTokenStrategy,
+    GithubStrategy,
     JwtStrategy,
     GoogleStrategy,
     Auth2Service,

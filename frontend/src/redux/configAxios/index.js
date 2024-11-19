@@ -15,18 +15,31 @@ customeAxios.interceptors.response.use(
     if (
       error.response &&
       error.response.status === 401 &&
-      error.response.data.message === "TokenExpiredError" &&
       !originalRequest._retry
     ) {
       originalRequest._retry = true;
+      if (error.response.data.message === "TokenExpiredError") {
+        try {
+          // Attempt to refresh the access token
+          await axios.post("/auth/refresh", {}, { withCredentials: true }); // Refresh endpoint using refresh token
 
-      try {
-        // Attempt to refresh the access token
-        await axios.post("/auth/refresh", {}, { withCredentials: true }); // Refresh endpoint using refresh token
+          return customeAxios(originalRequest); // Retry the original request
+        } catch (refreshError) {
+          // Refresh failed, prompt login
+          Swal.fire({
+            title: "Autho fail!",
+            text: "Please login again.",
+            icon: "warning",
+            confirmButtonColor: "#3085d6",
+          }).then(async (result) => {
+            if (result.isConfirmed) {
+              window.location.href = "/user-auth/login"; // Redirect to login or handle as necessary
+            }
+          });
 
-        return customeAxios(originalRequest); // Retry the original request
-      } catch (refreshError) {
-        // Refresh failed, prompt login
+          return Promise.reject(refreshError);
+        }
+      } else {
         Swal.fire({
           title: "Autho fail!",
           text: "Please login again.",
@@ -37,8 +50,6 @@ customeAxios.interceptors.response.use(
             window.location.href = "/user-auth/login"; // Redirect to login or handle as necessary
           }
         });
-
-        return Promise.reject(refreshError);
       }
     }
 

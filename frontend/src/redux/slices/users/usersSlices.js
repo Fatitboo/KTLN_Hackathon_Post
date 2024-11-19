@@ -38,6 +38,7 @@ export const loginUserAction = createAsyncThunk(
         header: {
           "Content-Type": "application/json",
         },
+        withCredentials: true,
       };
       const { data } = await axios.post(
         `${baseUrl}/api/v1/auth/log-in`,
@@ -65,12 +66,43 @@ export const oAuthWithGoogleAction = createAsyncThunk(
         header: {
           "Content-Type": "application/json",
         },
+        withCredentials: true,
       };
       const { data } = await axios.post(
         `${baseUrl}/api/v1/auth/google-redirect`,
         { token: credential },
         config
       );
+
+      if (data?.user?.isActive) {
+        localStorage.setItem("userInfo", JSON.stringify(data));
+      }
+      return data;
+    } catch (error) {
+      if (!error?.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
+export const oAuthWithGithubAction = createAsyncThunk(
+  "users/login-github",
+  async (credential, { rejectWithValue }) => {
+    try {
+      const config = {
+        header: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      };
+      const { data } = await axios.post(
+        `${baseUrl}/api/v1/auth/github/callback`,
+        { code: credential },
+        config
+      );
+      console.log("🚀 ~ data:", data);
 
       if (data?.user?.isActive) {
         localStorage.setItem("userInfo", JSON.stringify(data));
@@ -91,7 +123,9 @@ export const logoutUserAction = createAsyncThunk(
     try {
       const user = getState()?.users;
       const { userAuth } = user;
-      await customeAxios.get(`${apiPrefixAuth}/logout/${userAuth?.user?.id}`);
+      await customeAxios.get(`${apiPrefixAuth}/logout/${userAuth?.user?.id}`, {
+        withCredentials: true,
+      });
       if (navigator) {
         localStorage.removeItem("userInfo");
         navigator("/user-auth/login");
@@ -766,6 +800,20 @@ const usersSlices = createSlice({
         state.appErr = undefined;
       }),
       builder.addCase(oAuthWithGoogleAction.rejected, (state, action) => {
+        state.loading = false;
+        state.appErr = action?.payload?.message;
+      }),
+      // login user
+      builder.addCase(oAuthWithGithubAction.pending, (state, action) => {
+        state.loading = true;
+        state.appErr = undefined;
+      }),
+      builder.addCase(oAuthWithGithubAction.fulfilled, (state, action) => {
+        state.loading = false;
+        state.userAuth = action?.payload;
+        state.appErr = undefined;
+      }),
+      builder.addCase(oAuthWithGithubAction.rejected, (state, action) => {
         state.loading = false;
         state.appErr = action?.payload?.message;
       }),

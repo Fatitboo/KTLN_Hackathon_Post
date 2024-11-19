@@ -18,7 +18,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       jwtFromRequest: ExtractJwt.fromExtractors([
         (request: Request) => {
           if (!request?.cookies?.Authentication) {
-            throw new UnauthorizedException('NotFoundAuthentication');
+            throw new UnauthorizedException('Not found access token');
           } //TokenExpiredError
           return request?.cookies?.Authentication;
         },
@@ -28,6 +28,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: any) {
+    const currentTime = Math.floor(Date.now() / 1000); // Thời gian hiện tại (giây)
+    if (payload.exp < currentTime) {
+      throw new UnauthorizedException('TokenExpiredError');
+    }
     const user = await this.userRepository.findOne({ email: payload.email });
     if (!user) {
       this.exceptionService.UnauthorizedException({

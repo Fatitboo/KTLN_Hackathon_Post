@@ -86,6 +86,12 @@ function Login() {
       });
     }
   };
+  const handleLoginGithub = () => {
+    const clientID = "Ov23li2OBHnvzstAMXu3";
+    const redirectURI = "http://localhost:5173/user/github-callback";
+    window.location.href = `https://github.com/login/oauth/authorize?client_id=${clientID}&redirect_uri=${redirectURI}`;
+  };
+
   return (
     <>
       {loading && <LoadingComponent />}
@@ -126,6 +132,7 @@ function Login() {
                   onError={() => alert("Google Login Failed")}
                 />
                 <CustomButton
+                  onClick={handleLoginGithub}
                   title={"Sign up with GitHub"}
                   containerStyles={
                     "flex justify-center py-2 rounded text-sm  items-center border border-[#ccc] w-[210px] px-2 my-5"

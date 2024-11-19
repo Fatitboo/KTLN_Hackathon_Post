@@ -14,6 +14,7 @@ import {
   Query,
   Put,
   UnauthorizedException,
+  Res,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { RegisterUserCommand } from 'src/user/application/commands/register-user/register-user.command';
@@ -32,6 +33,8 @@ import {
 } from 'src/user/domain/repositories/user.repository';
 import { Auth2Service } from '../services/auth2.service';
 import axios from 'axios';
+import { AuthGuard } from '@nestjs/passport';
+import { Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -48,6 +51,75 @@ export class AuthController {
   @Get('google')
   @UseGuards(GoogleOAuthGuard)
   async googleAuth() {}
+
+  @Get('github')
+  @UseGuards(AuthGuard('github'))
+  async githubLogin() {}
+
+  convertToJSON = (query) => {
+    return query.split('&').reduce((acc, pair) => {
+      const [key, value] = pair.split('=');
+      acc[key] = decodeURIComponent(value || '');
+      return acc;
+    }, {});
+  };
+
+  @Post('github/callback')
+  async githubCallback(
+    @Request() request: any,
+    @Body() body: { code: string },
+    @Res() res: Response,
+  ) {
+    // Exchange code for access token
+    const response = await axios.post(
+      'https://github.com/login/oauth/access_token',
+      {
+        client_id: process.env.GITHUB_CLIENT_ID,
+        client_secret: process.env.GITHUB_CLIENT_SECRET,
+        code: body.code,
+      },
+    );
+    if (response.status !== 200) {
+      throw new UnauthorizedException('Invalid Github token');
+    }
+
+    console.log('🚀 ~ AuthController ~ response.data:', response.data);
+
+    const jsonData = this.convertToJSON(response.data as string);
+    console.log('🚀 ~ AuthController ~ githubCallback ~ jsonData:', jsonData);
+    const rs = await axios.get('https://api.github.com/user', {
+      headers: {
+        Authorization: `Bearer ${jsonData.access_token}`,
+      },
+    });
+    const data: any = rs.data;
+    console.log('🚀 ~ AuthController ~ githubCallback ~ data:', rs.data);
+    // const result = await this.commandBus.execute(
+    //   new LoginUserCommand({
+    //     password: '123456',
+    //     email: data.email,
+    //     fullname: data.name,
+    //     userType: UserType.SEEKER,
+    //     avatar: data.avatar_url,
+    //     githubAccountId: 'sub',
+    //     loginType: 'github',
+    //   }),
+    // );
+    // const { accessTokenCookie, refreshTokenCookie } = await this.getTokenUser(
+    //   result.user,
+    // );
+    // request.res.setHeader('Set-Cookie', [
+    //   accessTokenCookie,
+    //   refreshTokenCookie,
+    // ]);
+    const frontendUrl = `http://localhost:5173/`;
+
+    // Chuyển hướng người dùng về frontend
+    res.redirect(frontendUrl);
+    return {
+      ...data,
+    };
+  }
 
   @Post('google-redirect')
   // @UseGuards(GoogleOAuthGuard)
@@ -125,7 +197,7 @@ export class AuthController {
 
   @HttpCode(200)
   @Get('logout/:id')
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ description: 'logout' })
   async logout(@Request() request: any, @Param('id') id: string) {
     // const { user } = request;

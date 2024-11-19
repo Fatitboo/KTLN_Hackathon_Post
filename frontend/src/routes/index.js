@@ -40,6 +40,7 @@ import {
   ChangePassword,
   unAuthoPage,
 } from "../pages/Auth";
+import LoginGithubSuccess from "../pages/Auth/LoginGithubSuccess/LoginGithubSuccess";
 
 const publicRoutes = [
   // User Layout
@@ -68,6 +69,11 @@ const publicRoutes = [
   {
     path: "/user-auth/unauthozied",
     component: unAuthoPage,
+    layout: LayoutNoSidebar,
+  },
+  {
+    path: "/user/github-callback",
+    component: LoginGithubSuccess,
     layout: LayoutNoSidebar,
   },
   {

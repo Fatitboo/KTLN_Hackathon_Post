@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { defaultAvt, imgDefaultProject } from "../../../assets/images";
-import { CustomButton } from "../../../components";
+import { CustomButton, Modal } from "../../../components";
 import { Link, useParams } from "react-router-dom";
 import HackathonInfo from "../../../components/Seeker/HackathonInfo";
 import CardProject from "../../../components/Seeker/CardProject";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserProfileAction } from "../../../redux/slices/users/usersSlices";
+import { AskToAddProject } from "../../../components/Modal/askToAddProject";
 
 function UserPorfolio() {
   const { id, type } = useParams();
   const dispatch = useDispatch();
   const [uProfile, setUProfile] = useState({});
+  const [openAskToAddProject, setOpenAskToAddProject] = useState(false);
+
   const storeData = useSelector((store) => store?.users);
   const { userProfile, loading, appErr, isSuccess, isSuccessUpd } = storeData;
   useEffect(() => {
@@ -60,6 +63,7 @@ function UserPorfolio() {
             </div>
             <div className="flex items-center justify-center">
               <CustomButton
+                onClick={() => setOpenAskToAddProject(true)}
                 title="Add a new project"
                 containerStyles="bg-[#0b8510] w-fit font-medium text-white py-1 px-2 focus:outline-none hover:bg-blue-500 rounded-sm text-sm border border-blue-600"
               />
@@ -174,6 +178,14 @@ function UserPorfolio() {
           </div>
         </div>
       </div>
+      <Modal open={openAskToAddProject}>
+        <AskToAddProject
+          isAddProject={true}
+          setopenReport={setOpenAskToAddProject}
+          item={{}}
+          isVacancy={true}
+        />
+      </Modal>
     </div>
   );
 }

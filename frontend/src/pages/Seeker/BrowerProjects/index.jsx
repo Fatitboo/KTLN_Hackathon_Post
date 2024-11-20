@@ -118,7 +118,7 @@ function BrowerProjects() {
   }, [currentPage, itemPerPage, cards]);
   return (
     <>
-      <div className="py-10 px-60 flex bg-[#0b4540] w-full text-white text-center font-bold items-center justify-between">
+      <div className="py-10 px-60 flex h-40 bg-[#0b4540] w-full text-white text-center font-bold items-center justify-between">
         <h1>Explore projects from Portfolios and hackathons</h1>
         <CustomButton
           title="Add your projects"

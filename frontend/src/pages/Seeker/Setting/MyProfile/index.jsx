@@ -230,7 +230,7 @@ function MyProfile() {
         </div>
       </div>
       <div className="flex flex-wrap">
-        <div className="max-w-full pt-3  w-full">
+        <div className="max-w-full pt-3 w-full">
           <form
             onSubmit={handleSubmit(onSubmitInfo)}
             className="relative  mb-8 bg-white  max-w-full pt-1 shrink-0 w-full"

@@ -1,4 +1,5 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
+import { Types } from 'mongoose';
 import { SocialType, UserType } from 'src/user/domain/entities/user.entity';
 export class SettingRecommend {
   specialty?: string;
@@ -28,6 +29,9 @@ export class UserDocument {
 
   @Prop({ type: [{ type: Types.ObjectId, ref: 'Hackathon' }] })
   hackathons: Types.ObjectId[];
+
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'Project' }] })
+  projects: Types.ObjectId[];
 
   @Prop({ required: true })
   fullname: string;

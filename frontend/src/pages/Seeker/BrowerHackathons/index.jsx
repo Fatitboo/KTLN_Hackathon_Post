@@ -82,7 +82,7 @@ function BrowerHackathons() {
   return (
     <>
       <></>
-      <div className="p-10 bg-[#0b4540] text-white text-center font-bold">
+      <div className=" h-40 flex items-center justify-center  bg-[#0b4540] text-white text-center font-bold">
         <h1>Join the world's best online and in-person hackathons</h1>
       </div>
       {/* Popular hackthon */}

@@ -51,6 +51,33 @@ export class LoginUserHandler implements ICommandHandler<LoginUserCommand> {
         },
       };
     }
+    if (loginType === 'github') {
+      if (!user) {
+        const newUser = new User({
+          ...command.props,
+          password: '12345678',
+          isVerify: true,
+          fullname: command.props.fullname,
+          userType: [userType],
+        });
+        await newUser.hashPassword();
+
+        return { user: await this.userRepository.create(newUser) };
+      }
+      return {
+        user: {
+          id: user._props.id,
+          email: user._props.email,
+          avatar: user._props.avatar,
+          fullname: user._props.fullname,
+          userType: user._props.userType,
+          isVerify: user._props.isVerify,
+          isActive: user._props.isActive,
+          isSetPersionalSetting: user._props.isSetPersionalSetting,
+          githubAccountId: user._props.githubAccountId,
+        },
+      };
+    }
     if (!user) {
       this.exceptionsService.UnauthorizedException({
         message: 'Not found user',

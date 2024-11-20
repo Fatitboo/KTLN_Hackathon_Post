@@ -41,6 +41,8 @@ import {
   unAuthoPage,
 } from "../pages/Auth";
 import LoginGithubSuccess from "../pages/Auth/LoginGithubSuccess/LoginGithubSuccess";
+import AddProject from "../pages/Seeker/Project/AddProject";
+import ProjectDetail from "../pages/Seeker/Project/ProjectDetail";
 
 const publicRoutes = [
   // User Layout
@@ -103,7 +105,11 @@ const publicRoutes = [
     component: UserPorfolio,
     layout: LayoutNoSidebar,
   },
-
+  {
+    path: "/Seeker/project/:projectId",
+    component: ProjectDetail,
+    layout: LayoutNoSidebar,
+  },
   { path: "/Seeker/contact", component: Contact, layout: LayoutNoSidebar },
 ];
 const seekerRoutes = [
@@ -112,6 +118,12 @@ const seekerRoutes = [
     component: MyProfile,
     layout: LayoutHasSidebar,
   },
+  {
+    path: "/Seeker/project/add-project",
+    component: AddProject,
+    layout: LayoutNoSidebar,
+  },
+
   {
     path: "/Seeker-detail/my-porfolio/:type",
     component: UserPorfolio,

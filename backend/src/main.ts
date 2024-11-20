@@ -17,11 +17,11 @@ async function bootstrap() {
 
   app.use(cookieParser());
 
-  app.enableCors({
-    origin: '*',
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    credentials: true,
-  });
+  // app.enableCors({
+  //   origin: '*',
+  //   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  //   credentials: true,
+  // });
 
   // pipes
   app.useGlobalPipes(new ValidationPipe());
@@ -37,6 +37,7 @@ async function bootstrap() {
   // app.useGlobalInterceptors(new ResponseInterceptor());
   app.enableCors({
     origin: 'http://localhost:5173', // Frontend origin
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
   // swagger config

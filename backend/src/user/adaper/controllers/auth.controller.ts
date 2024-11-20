@@ -68,7 +68,7 @@ export class AuthController {
   async githubCallback(
     @Request() request: any,
     @Body() body: { code: string },
-    @Res() res: Response,
+    // @Res() res: Response,
   ) {
     // Exchange code for access token
     const response = await axios.post(
@@ -94,30 +94,26 @@ export class AuthController {
     });
     const data: any = rs.data;
     console.log('🚀 ~ AuthController ~ githubCallback ~ data:', rs.data);
-    // const result = await this.commandBus.execute(
-    //   new LoginUserCommand({
-    //     password: '123456',
-    //     email: data.email,
-    //     fullname: data.name,
-    //     userType: UserType.SEEKER,
-    //     avatar: data.avatar_url,
-    //     githubAccountId: 'sub',
-    //     loginType: 'github',
-    //   }),
-    // );
-    // const { accessTokenCookie, refreshTokenCookie } = await this.getTokenUser(
-    //   result.user,
-    // );
-    // request.res.setHeader('Set-Cookie', [
-    //   accessTokenCookie,
-    //   refreshTokenCookie,
-    // ]);
-    const frontendUrl = `http://localhost:5173/`;
-
-    // Chuyển hướng người dùng về frontend
-    res.redirect(frontendUrl);
+    const result = await this.commandBus.execute(
+      new LoginUserCommand({
+        password: '123456',
+        email: data.email,
+        fullname: data.name,
+        userType: UserType.SEEKER,
+        avatar: data.avatar_url,
+        githubAccountId: data.login,
+        loginType: 'github',
+      }),
+    );
+    const { accessTokenCookie, refreshTokenCookie } = await this.getTokenUser(
+      result.user,
+    );
+    request.res.setHeader('Set-Cookie', [
+      accessTokenCookie,
+      refreshTokenCookie,
+    ]);
     return {
-      ...data,
+      ...result,
     };
   }
 

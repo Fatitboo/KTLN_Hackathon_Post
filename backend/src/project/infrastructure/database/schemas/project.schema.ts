@@ -22,11 +22,17 @@ export class ProjectDocument {
   @Prop()
   content: string;
 
-  @Prop()
+  @Prop({
+    default:
+      'https://res.cloudinary.com/dvnxdtrzn/image/upload/v1732183629/shopDEV/imgDefaultProject_atbisz.gif',
+  })
   thumnailImage: string;
 
   @Prop({ type: [String] })
   builtWith: string[];
+
+  @Prop({ type: [String] })
+  tryoutLinks: string[];
 
   @Prop({ type: [String] })
   likedBy: string[];

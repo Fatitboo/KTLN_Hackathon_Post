@@ -7,6 +7,7 @@ export class Project {
     public content: string,
     public thumnailImage: string,
     public builtWith: string[],
+    public tryoutLinks: string[],
     public likedBy: string[],
     public createdByUsername: string[],
     public galary: GalaryItem[],

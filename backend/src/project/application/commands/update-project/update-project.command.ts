@@ -1,4 +1,4 @@
-import { UpdateProjectDTO } from 'src/Project/adapter/dto/update-project.dto';
+import { UpdateProjectDTO } from 'src/project/adapter/dto/update-project.dto';
 
 export class UpdateProjectCommandProps {
   id: string;

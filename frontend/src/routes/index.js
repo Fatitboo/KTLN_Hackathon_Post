@@ -119,7 +119,7 @@ const seekerRoutes = [
     layout: LayoutHasSidebar,
   },
   {
-    path: "/Seeker/project/add-project",
+    path: "/Seeker/project/:projectId/edit",
     component: AddProject,
     layout: LayoutNoSidebar,
   },

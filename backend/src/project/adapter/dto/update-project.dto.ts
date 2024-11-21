@@ -24,6 +24,10 @@ export class UpdateProjectDTO {
 
   @IsOptional()
   @IsArray()
+  tryoutLinks: string[];
+
+  @IsOptional()
+  @IsArray()
   likedBy: string[];
 
   @IsOptional()

@@ -17,6 +17,6 @@ export class CreateProjectHandler
 
   async execute(command: CreateProjectCommand) {
     const { userId, title } = command.props;
-    return { ProjectId: await this.projectRepository.create(userId, title) };
+    return { projectId: await this.projectRepository.create(userId, title) };
   }
 }

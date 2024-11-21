@@ -34,11 +34,13 @@ export class MongooseProjectRepository implements ProjectRepository {
       throw new NotFoundException(`User with ID ${userId} not found.`);
     }
     let projectNameId = `${title.trim().toLocaleLowerCase().replace(/ /g, '-')}`;
+    const timestamp: number = Date.now();
 
     const existProject = await this.ProjectModel.findOne({ projectNameId });
     if (existProject) {
       projectNameId =
-        projectNameId + `-${existProject._id.toString().slice(0, 5)}`;
+        projectNameId +
+        `-${existProject._id.toString().slice(0, 4)}${timestamp.toString().slice(-4)}`;
     }
     const createProject = new this.ProjectModel({
       owner: userId,
@@ -58,9 +60,12 @@ export class MongooseProjectRepository implements ProjectRepository {
     let projectNameId = `${project.projectTitle.trim().toLocaleLowerCase().replace(/ /g, '-')}`;
 
     const existProject = await this.ProjectModel.findOne({ projectNameId });
-    if (existProject) {
+    const timestamp: number = Date.now();
+
+    if (existProject && existProject?._id.toString() !== id) {
       projectNameId =
-        projectNameId + `-${existProject._id.toString().slice(0, 5)}`;
+        projectNameId +
+        `-${existProject._id.toString().slice(0, 4)}${timestamp.toString().slice(-4)}`;
     }
     project.setProjectNameId(projectNameId);
     const updatedProject = await this.ProjectModel.findByIdAndUpdate(

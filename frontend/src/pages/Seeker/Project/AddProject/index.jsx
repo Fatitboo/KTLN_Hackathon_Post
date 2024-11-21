@@ -1,39 +1,80 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { CustomButton, TextInput } from "../../../../components";
 import { useEffect, useRef, useState } from "react";
-import axios from "axios";
 import { useForm } from "react-hook-form";
 import FroalaEditor from "react-froala-wysiwyg";
-import { CgAdd, CgClose } from "react-icons/cg";
+import { CgClose } from "react-icons/cg";
 import { v4 as uuidv4 } from "uuid";
-import CardProject from "../../../../components/Seeker/CardProject";
 import { imgDefaultProject } from "../../../../assets/images";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getProjectSingle,
+  resetSuccessAction,
+  updateProject,
+} from "../../../../redux/slices/projects/projectsSlices";
+import fetchSkillApikey from "../../../../utils/fetchSkillApiKey";
+import { IoIosClose } from "react-icons/io";
 
 function AddProject() {
+  const inputBox = useRef();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { projectId } = useParams();
+  const [spin, setSpin] = useState(false);
+  const [skills, setSkills] = useState([]);
+  const [value, setValueDes] = useState(
+    `<h4 style='color: rgb(0, 0, 0); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif; font-size: medium; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;' id="isPasted"><strong><span style="font-size: 18px;">Inspiration</span></strong></h4><h4 style='color: rgb(0, 0, 0); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif; font-size: medium; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;'><strong><span style="font-size: 18px;">What it does</span></strong></h4><h4 style='color: rgb(0, 0, 0); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif; font-size: medium; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;'><strong><span style="font-size: 18px;"> How I built it</span></strong></h4><h4 style='color: rgb(0, 0, 0); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif; font-size: medium; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;'><strong><span style="font-size: 18px;">Challenges I ran into</span></strong></h4><h4 style='color: rgb(0, 0, 0); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif; font-size: medium; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;'><strong><span style="font-size: 18px;">Accomplishments that I'm proud of</span></strong></h4><h4 style='color: rgb(0, 0, 0); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif; font-size: medium; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;'><strong><span style="font-size: 18px;">What I learned</span></strong></h4><h4 style='color: rgb(0, 0, 0); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif; font-size: medium; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;'><strong><span style="font-size: 18px;">What's next</span></strong></h4>`
+  );
+  const [loading, setLoading] = useState(false);
+  const [titleBinding, setTitleBinding] = useState("");
+  const [taglineBinding, setTaglineBinding] = useState("");
+  const [galaryList, setGalaryList] = useState([]);
+  const [listSkillApi, setListSkillApi] = useState([]);
+  const [fileThumnail, setFileThumnail] = useState(null);
+  const { project, isSuccess } = useSelector((store) => store.projects);
+  const [tryoutLinks, setTryoutLinks] = useState([{ id: uuidv4(), name: "" }]);
+  var myHeaders = new Headers();
+  myHeaders.append("apikey", fetchSkillApikey);
+  var requestOptions = {
+    method: "GET",
+    redirect: "follow",
+    headers: myHeaders,
+  };
+
   const decodeHTML = (html) => {
     const txt = document.createElement("textarea");
     txt.innerHTML = html;
     return txt.value;
   };
-
   const {
     register,
     unregister,
     handleSubmit,
     getValues,
+    setValue,
     formState: { errors },
   } = useForm({ mode: "onChange" });
   const onSubmit = (data) => {
-    const dataLogin = {
-      // email: data.email,
-      // password: data.password,
-      // userType: accountType,
+    const pl = {
+      projectTitle: data.projectName,
+      tagline: data.tagLine,
+      content: value.toString(),
+      thumnailImage: fileThumnail,
+      builtWith: skills,
+      tryoutLinks: tryoutLinks.map((item) => data[`field_${item?.id}`]),
+      galary: [{ url: data.videoLink, caption: "" }, ...galaryList],
     };
-    // dispatch(loginUserAction(dataLogin));
+    console.log("🚀 ~ onSubmit ~ pl:", pl);
+
+    dispatch(
+      updateProject({
+        id: projectId,
+        data: pl,
+        navigate,
+      })
+    );
   };
-  const inputBox = useRef();
-  const [skills, setSkills] = useState([]);
-  const [listSkillApi, setListSkillApi] = useState([]);
+
   const fetchDataSkill = (value) => {
     if (value === "") {
       setListSkillApi([]);
@@ -49,14 +90,10 @@ function AddProject() {
         .catch((error) => console.log("error", error));
     }
   };
-  const [value, setValueDes] = useState([]);
-  const [tryoutLinks, setTryoutLinks] = useState([{ id: uuidv4(), name: "" }]);
-  const [galaryList, setGalaryList] = useState([]);
-  const [spin, setSpin] = useState(false);
+
   const handleAddTryoutLinks = () => {
     setTryoutLinks((prev) => [...prev, { id: uuidv4(), name: "" }]);
   };
-  const [fileThumnail, setFileThumnail] = useState(null);
 
   const handleDeleteLink = (deleteId) => {
     const newList = tryoutLinks.filter((item) => {
@@ -65,21 +102,30 @@ function AddProject() {
     setTryoutLinks(newList);
     unregister("field_" + deleteId);
   };
-  const [loading, setLoading] = useState(false);
-  const [dataBinding, setDataBinding] = useState({
-    title: "",
-    description: "",
-  });
+
   const handleUpdateAvt = async (e, addList) => {
     const file = e.target.files[0];
-    setLoading(true);
-    const rs = await uploadImageFromLocalFiles({ file });
+    if (file) {
+      setLoading(true);
+      const rs = await uploadImageFromLocalFiles({ file });
 
-    setLoading(false);
-    if (addList) {
-      setGalaryList((prev) => [...prev, { url: rs.url, caption: "" }]);
+      setLoading(false);
+      if (addList) {
+        setGalaryList((prev) => [...prev, { url: rs.url, caption: "" }]);
+      } else setFileThumnail(rs.url);
     }
-    setFileThumnail(rs.url);
+  };
+  // Hàm xử lý thay đổi caption
+  const handleCaptionChange = (url, newCaption) => {
+    setGalaryList((prevFiles) => {
+      console.log("🚀 ~ handleCaptionChange ~ prevFiles:", prevFiles);
+      return prevFiles.map((file) =>
+        file.url === url ? { ...file, caption: newCaption } : file
+      );
+    });
+  };
+  const handleDeleteGalaryItem = (url) => {
+    setGalaryList((prevFiles) => prevFiles.filter((file) => file.url !== url));
   };
 
   const uploadImageFromLocalFiles = async ({ file }) => {
@@ -105,6 +151,45 @@ function AddProject() {
     }
   };
 
+  useEffect(() => {
+    console.log("🚀 ~ AddProject ~ productId:", projectId);
+    if (projectId !== undefined) {
+      dispatch(getProjectSingle(projectId));
+    }
+  }, [projectId]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      console.log("🚀 ~ AddProject ~ project:", project);
+
+      setValue("projectName", project?.projectTitle);
+      setTitleBinding(project?.projectTitle);
+      setValue("tagLine", project?.tagline);
+      setTaglineBinding(project?.tagline);
+      setSkills([...(project?.builtWith ?? [])]);
+      if (project?.content) {
+        setValueDes(project?.content);
+      }
+      setFileThumnail(project?.thumnailImage);
+      if (project?.galary) {
+        project.galary?.forEach((element, index) => {
+          if (index === 0) setValue("videoLink", project.galary[0].url);
+          else {
+            setGalaryList((prev) => [
+              ...prev,
+              { url: element.url, caption: element.caption ?? "" },
+            ]);
+          }
+        });
+      }
+      if (project?.tryoutLinks) {
+        project.tryoutLinks?.forEach((element) => {
+          setTryoutLinks((prev) => [...prev, { id: uuidv4(), name: element }]);
+        });
+      }
+      dispatch(resetSuccessAction());
+    }
+  }, [project]);
   return (
     <>
       <div>
@@ -127,16 +212,10 @@ function AddProject() {
                 type={"text"}
                 register={register("projectName", {
                   required: "Project name is required!",
+                  onChange: (event) => {
+                    setTitleBinding(event.target.value);
+                  },
                 })}
-                onBlur={(event) => {
-                  setDataBinding((prev) => {
-                    return {
-                      ...prev,
-                      title: event.target.value,
-                    };
-                  });
-                }}
-                value={dataBinding.title}
                 error={errors.projectName ? errors.projectName.message : ""}
                 label="What is your project called? *"
                 name="projectName"
@@ -150,21 +229,10 @@ function AddProject() {
                 type={"text"}
                 register={register("tagLine", {
                   required: "Tag line is required!",
+                  onChange: (event) => {
+                    setTaglineBinding(event.target.value);
+                  },
                 })}
-                value={dataBinding.description}
-                onChange={(event) => {
-                  setDataBinding((prev) => {
-                    console.log(
-                      "🚀 ~ setDataBinding ~ event.target.value:",
-                      event.target.value
-                    );
-
-                    return {
-                      ...prev,
-                      description: event.target.value,
-                    };
-                  });
-                }}
                 error={errors.tagLine ? errors.tagLine.message : ""}
                 label="Here's the elevator pitch? *"
                 description={`What's your idea? This will be a short tagline for the project`}
@@ -271,10 +339,15 @@ function AddProject() {
                 </div>
               </div>
             </div>
+
             <div>
               <p className="block leading-8 text-gray-900 font-medium mt-6">
-                Project descriptions*
+                About the project *
               </p>
+              <div className="text-xs text-[#6F6F6F] italic mb-4">
+                Be sure to write what inspired you, what you learned, how you
+                built your project, and the challenges you faced
+              </div>
               <FroalaEditor
                 model={value}
                 onModelChange={(event, editor) => {
@@ -308,29 +381,65 @@ function AddProject() {
                 }}
               />
             </div>
-
-            <div className="flex items-end my-5 ">
-              <div className="w-full h-32 flex items-center justify-center border-dashed border-2 border-gray-300">
-                <input
-                  onChange={(e) => handleUpdateAvt(e, true)}
-                  type="file"
-                  name="attachment"
-                  accept="image/*"
-                  id="uploadImgGerally"
-                  hidden
-                  className="opacity-0 absolute hidden overflow-hidden h-0 w-0 z-[-1]"
-                />
-
-                <label
-                  htmlFor="uploadImgGerally"
-                  className="flex ml-3 rounded items-center justify-center px-2 flex-col cursor-pointer bg-gray-300 text-black  border m-0  border-[#ced4e1]  "
-                >
-                  Choose file
-                </label>
+            <div>
+              <div className=" font-medium text-base mt-4">Image Galary</div>
+              <div className="text-xs text-[#6F6F6F] italic mb-4">
+                JPG, PNG or GIF format, 5 MB max file size. For best results,
+                use a 3:2 ratio.
               </div>
-              {galaryList?.map((item) => {
-                return <div key={item}></div>;
-              })}
+              <div className="flex items-end my-5 ">
+                <div className="w-full h-32 flex items-center justify-center border-dashed border-2 border-gray-300">
+                  <input
+                    onChange={(e) => handleUpdateAvt(e, true)}
+                    type="file"
+                    name="attachment"
+                    accept="image/*"
+                    id="uploadImgGerally"
+                    hidden
+                    className="opacity-0 absolute hidden overflow-hidden h-0 w-0 z-[-1]"
+                  />
+
+                  <label
+                    htmlFor="uploadImgGerally"
+                    className="flex ml-3 rounded items-center justify-center px-2 flex-col cursor-pointer bg-gray-300 text-black  border m-0  border-[#ced4e1]  "
+                  >
+                    Choose file
+                  </label>
+                </div>
+              </div>
+              <div className="mt-4 space-y-4">
+                {galaryList.map((file) => (
+                  <div
+                    key={file.url}
+                    className="flex items-center gap-y-4 gap-x-8 py-4 px-8  border border-gray-300 rounded shadow-sm"
+                  >
+                    {/* Hiển thị ảnh */}
+                    <img
+                      src={file.url}
+                      alt="Uploaded"
+                      className="w-24 h-24 object-cover rounded shadow-sm"
+                    />
+
+                    {/* Input caption */}
+                    <input
+                      type="text"
+                      placeholder="Add a caption"
+                      value={file.caption}
+                      onChange={(e) =>
+                        handleCaptionChange(file.url, e.target.value)
+                      }
+                      className="flex-1 px-4 py-1 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    />
+
+                    <div
+                      className="cursor-pointer"
+                      onClick={() => handleDeleteGalaryItem(file.url)}
+                    >
+                      <CgClose />
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
 
             <div className="mt-6">
@@ -338,21 +447,21 @@ function AddProject() {
                 <div className=" font-medium text-base">
                   "Try it out" links{" "}
                 </div>
-                <div className="text-xs italic">
+                <div className="text-xs text-[#6F6F6F] italic">
                   Add links where people can try your project or see your code.
                 </div>
                 <div className="grid grid-cols-1">
                   {tryoutLinks.map((item, index) => (
                     <div
                       key={item.id}
-                      className="flex w-full my-1 items-center"
+                      className="flex w-full my-1 items-center "
                     >
-                      <div className="relative mt-2 mr-3 ">
+                      <div className="relative  mt-2 mr-3 ">
                         <input
                           type="text"
                           {...register(`field_${item.id}`)}
                           name={`field_${item.id}`}
-                          className="block  focus:bg-white  text-base w-[600px] rounded-sm border-0 py-2 pl-5 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
+                          className="block  focus:bg-white  text-base w-[850px] rounded-sm border-0 py-2 pl-5 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
                           style={{
                             borderColor: `${
                               errors[`field_${index}`] ? "#a9252b" : ""
@@ -410,19 +519,19 @@ function AddProject() {
           </div>
           <div className="mt-5 w-full col-span-1">
             <div className="font-medium text-base">Thumnail Image</div>
-            <div className=" cursor-pointer max-w-xs bg-white border border-gray-300 rounded-sm hover:shadow-md">
+            <div className="mb-5 cursor-pointer max-w-xs bg-white border border-gray-300 rounded-sm hover:shadow-md">
               <div className="">
                 <img
                   src={fileThumnail ?? imgDefaultProject}
-                  alt={dataBinding?.title}
+                  alt={titleBinding}
                   className="h-48 w-full"
                 />
-                <div className=" px-2 h-16">
+                <div className="mb-2 px-2 h-16">
                   <h3 className="mt-2 text-base font-semibold line-clamp-1">
-                    {dataBinding?.title}
+                    {titleBinding}
                   </h3>
-                  <p className="mt-1 text-gray-600 line-clamp-2 italic text-sm">
-                    {dataBinding?.description}
+                  <p className="my-1 text-[#6F6F6F] line-clamp-2 italic text-sm">
+                    {taglineBinding}
                   </p>
                 </div>
               </div>
@@ -436,13 +545,13 @@ function AddProject() {
               hidden
               className="opacity-0 absolute hidden overflow-hidden h-0 w-0 z-[-1]"
             />
-            <div
+            <label
               htmlFor="uploadImg"
-              className="cursor-pointer text-blue-600 my-5"
+              className="cursor-pointer text-blue-600 "
             >
               Change image
-            </div>
-            <div className="text-sm text-gray-700">
+            </label>
+            <div className="text-sm text-[#6F6F6F]">
               JPG, PNG or GIF format, 5 MB max file size. For best results, use
               a 3:2 ratio.
             </div>

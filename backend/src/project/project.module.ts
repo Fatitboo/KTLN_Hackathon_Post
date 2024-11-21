@@ -10,13 +10,13 @@ import { PROJECT_REPOSITORY } from './domain/repositories/project.repository';
 import { MongooseProjectRepository } from './infrastructure/database/repositories/mongoose-project.repository';
 import { CreateProjectHandler } from './application/commands/create-project/create-project.handler';
 import { GetProjectHandler } from './application/queries/get-project/get-project.handler';
-import { UpdateProjectHandler } from './application/commands/update-project/update-project.handler';
-import { DeleteProjectHandler } from './application/commands/delete-project/delete-project.handler';
 import {
   UserDocument,
   UserSchema,
 } from 'src/user/infrastructure/database/schemas';
 import { GetProjectsHandler } from './application/queries/get-projects/get-projects.handler';
+import { UpdateProjectHandler } from './application/commands/update-project/update-project.handler';
+import { DeleteProjectHandler } from './application/commands/delete-project/delete-project.handler';
 
 @Module({
   imports: [

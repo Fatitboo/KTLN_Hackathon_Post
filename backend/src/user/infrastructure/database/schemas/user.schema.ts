@@ -33,6 +33,9 @@ export class UserDocument {
   @Prop({ type: [{ type: Types.ObjectId, ref: 'Project' }] })
   projects: Types.ObjectId[];
 
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'Blog' }] })
+  blogs: Types.ObjectId[];
+
   @Prop({ required: true })
   fullname: string;
 

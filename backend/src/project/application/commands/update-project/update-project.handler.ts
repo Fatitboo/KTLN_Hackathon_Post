@@ -34,6 +34,7 @@ export class UpdateProjectHandler
       project.content ?? existingProject.content,
       project.thumnailImage ?? existingProject.thumnailImage,
       project.builtWith ?? existingProject.builtWith,
+      project.tryoutLinks ?? existingProject.tryoutLinks,
       project.likedBy ?? existingProject.likedBy,
       project.createdByUsername ?? existingProject.createdByUsername,
       project.galary ?? existingProject.galary,

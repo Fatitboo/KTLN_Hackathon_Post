@@ -5,10 +5,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { LoggerService } from './shared/infrastructure/logger/logger.service';
 import { AllExceptionFilter } from './shared/infrastructure/common/filter/exception.filter';
 import { LoggingInterceptor } from './shared/infrastructure/common/interceptors/logging.interceptor';
-import {
-  ResponseFormat,
-  ResponseInterceptor,
-} from './shared/infrastructure/common/interceptors/response.interceptor';
+import { ResponseFormat } from './shared/infrastructure/common/interceptors/response.interceptor';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {

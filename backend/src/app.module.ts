@@ -7,6 +7,8 @@ import { ExceptionsModule } from './shared/infrastructure/exceptions/exceptions.
 import { LoggerModule } from './shared/infrastructure/logger/logger.module';
 import { UserModule } from './user/user.module';
 import { HackathonModule } from './hackathon/hackathon.module';
+import { BlogModule } from './blog/blog.module';
+import { ProjectModule } from './project/project.module';
 
 @Module({
   imports: [
@@ -28,6 +30,8 @@ import { HackathonModule } from './hackathon/hackathon.module';
     ]),
     UserModule,
     HackathonModule,
+    BlogModule,
+    ProjectModule,
   ],
   controllers: [],
   providers: [

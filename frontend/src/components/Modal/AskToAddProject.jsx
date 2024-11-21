@@ -6,70 +6,30 @@ import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import LoadingComponent from "../Loading";
 import CustomButton from "../CustomButton";
-import CustomRadioButton from "../Organizer/CustomRadioButton";
 import { imgDefaultProject } from "../../assets/images";
 import { useForm } from "react-hook-form";
 import TextInput from "../TextInput";
+import { createProject } from "../../redux/slices/projects/projectsSlices";
+import { useNavigate } from "react-router-dom";
 
-export const AskToAddProject = ({
-  setopenReport,
-  item,
-  isVacancy,
-  isAddProject,
-}) => {
-  const { isSuccessRp, loading } = useSelector((store) => store.skills);
+export const AskToAddProject = ({ setopenReport, isAddProject }) => {
   const dispatch = useDispatch();
-  const Reportss = [
-    {
-      id: 0,
-      name: "Information that is discriminatory and offensive",
-      value: 0,
-      type: "none",
-    },
-    {
-      id: 1,
-      name: "This is a fake project or vacancy",
-      value: 1,
-      type: "none",
-    },
-    {
-      id: 2,
-      name: "Incorrect information",
-      value: 24,
-      type: "none",
-    },
-    {
-      id: 3,
-      name: "This is advertising, not employment",
-      value: 7,
-      type: "none",
-    },
-    {
-      id: 4,
-      name: "Another",
-      value: 14,
-      type: "none",
-    },
-  ];
-  const [rpType, setRpType] = useState("");
+  const navigate = useNavigate();
+  const { loading } = useSelector((store) => store.projects);
   const [seletedTag, setSelectedTag] = useState(isAddProject ? "No" : "Yes");
-  const [reDes, setRpDes] = useState("");
-  function handleCheckReports(e) {
-    setRpType(e.name);
-  }
+
   const {
     register,
     handleSubmit,
-    getValues,
     formState: { errors },
   } = useForm({ mode: "onChange" });
   const onSubmit = (data) => {
-    const dataLogin = {
-      email: data.email,
-      password: data.password,
-      userType: accountType,
+    const payload = {
+      data: { title: data.projectName },
+      navigate: navigate,
     };
-    // dispatch(loginUserAction(dataLogin));
+    console.log("🚀 ~ onSubmit ~ payload:", payload);
+    dispatch(createProject(payload));
   };
   return (
     <div className="w-[600px] rounded-lg bg-white h-auto">

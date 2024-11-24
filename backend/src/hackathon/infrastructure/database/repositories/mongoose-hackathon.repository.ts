@@ -15,7 +15,7 @@ export class MongooseHackathonRepository implements HackathonRepository {
     private readonly userModel: Model<UserDocument>,
   ) {}
   async findAllRegisterUser(id: string, page: number): Promise<any[]> {
-    const registerUsers = await this.hackathonModel
+    const existingHackathon = await this.hackathonModel
       .findById(id)
       .populate({
         path: 'registerUsers.userId',
@@ -23,8 +23,8 @@ export class MongooseHackathonRepository implements HackathonRepository {
       })
       .lean()
       .exec();
-    if (!registerUsers) return null;
-    return registerUsers.registerUsers;
+    if (!existingHackathon) return null;
+    return existingHackathon.registerUsers;
   }
 
   async findAll(page: number): Promise<HackathonDocument[]> {

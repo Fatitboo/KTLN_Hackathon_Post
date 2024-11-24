@@ -45,8 +45,14 @@ export class HackathonDocument {
   @Prop({ type: [String] })
   hackathonTypes: string[];
 
-  @Prop()
+  @Prop({ type: [RegisterUser] })
   registerUsers: RegisterUser[];
+
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'Project' }] })
+  submitions: Types.ObjectId[];
+
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'Project' }] })
+  registedTeams: Types.ObjectId[];
 
   @Prop()
   applyFor: string;

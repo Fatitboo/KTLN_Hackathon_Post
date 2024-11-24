@@ -5,29 +5,37 @@ import { NotFoundException } from '@nestjs/common';
 import { UserDocument } from 'src/user/infrastructure/database/schemas';
 import { ProjectRepository } from 'src/project/domain/repositories/project.repository';
 import { Project } from 'src/project/domain/entities/project.entity';
+import { HackathonDocument } from 'src/hackathon/infrastructure/database/schemas';
 
 export class MongooseProjectRepository implements ProjectRepository {
   constructor(
     @InjectModel(ProjectDocument.name)
-    private readonly ProjectModel: Model<ProjectDocument>,
+    private readonly projectModel: Model<ProjectDocument>,
+
+    @InjectModel(HackathonDocument.name)
+    private readonly hackathonModel: Model<HackathonDocument>,
 
     @InjectModel(UserDocument.name)
     private readonly userModel: Model<UserDocument>,
   ) {}
 
   async findAll(page: number): Promise<ProjectDocument[]> {
-    const projects = await this.ProjectModel.find().lean().exec();
+    const projects = await this.projectModel.find().lean().exec();
     if (!projects) return [];
     return projects;
   }
 
   async findById(id: string): Promise<ProjectDocument | null> {
-    const project = await this.ProjectModel.findById(id).lean().exec();
+    const project = await this.projectModel.findById(id).lean().exec();
     if (!project) return null;
     return project;
   }
 
-  async create(userId: string, title: string): Promise<string> {
+  async create(
+    userId: string,
+    title: string,
+    hackathonId: string | undefined,
+  ): Promise<string> {
     const existingUser = await this.userModel.findById(userId);
 
     if (!existingUser) {
@@ -36,13 +44,13 @@ export class MongooseProjectRepository implements ProjectRepository {
     let projectNameId = `${title.trim().toLocaleLowerCase().replace(/ /g, '-')}`;
     const timestamp: number = Date.now();
 
-    const existProject = await this.ProjectModel.findOne({ projectNameId });
+    const existProject = await this.projectModel.findOne({ projectNameId });
     if (existProject) {
       projectNameId =
         projectNameId +
         `-${existProject._id.toString().slice(0, 4)}${timestamp.toString().slice(-4)}`;
     }
-    const createProject = new this.ProjectModel({
+    const createProject = new this.projectModel({
       owner: userId,
       projectTitle: title,
       projectNameId,
@@ -52,14 +60,23 @@ export class MongooseProjectRepository implements ProjectRepository {
 
     existingUser.projects.push(prjObj._id);
     await existingUser.save();
-
+    if (hackathonId) {
+      const existHackathon = await this.hackathonModel.findById(hackathonId);
+      if (!existHackathon) {
+        throw new NotFoundException(
+          `Hackathon with ID ${hackathonId} not found.`,
+        );
+      }
+      existHackathon.registedTeams.push(prjObj._id);
+      await existHackathon.save();
+    }
     return prjObj._id.toString();
   }
 
   async update(id: string, project: Project): Promise<ProjectDocument> {
     let projectNameId = `${project.projectTitle.trim().toLocaleLowerCase().replace(/ /g, '-')}`;
 
-    const existProject = await this.ProjectModel.findOne({ projectNameId });
+    const existProject = await this.projectModel.findOne({ projectNameId });
     const timestamp: number = Date.now();
 
     if (existProject && existProject?._id.toString() !== id) {
@@ -68,11 +85,13 @@ export class MongooseProjectRepository implements ProjectRepository {
         `-${existProject._id.toString().slice(0, 4)}${timestamp.toString().slice(-4)}`;
     }
     project.setProjectNameId(projectNameId);
-    const updatedProject = await this.ProjectModel.findByIdAndUpdate(
-      id,
-      { $set: project },
-      { new: true, useFindAndModify: false },
-    ).exec();
+    const updatedProject = await this.projectModel
+      .findByIdAndUpdate(
+        id,
+        { $set: project },
+        { new: true, useFindAndModify: false },
+      )
+      .exec();
 
     if (!updatedProject) {
       throw new NotFoundException(`Project with ID ${id} not found.`);
@@ -82,13 +101,13 @@ export class MongooseProjectRepository implements ProjectRepository {
   }
 
   async delete(id: string): Promise<string> {
-    const existingProject = await this.ProjectModel.findById(id);
+    const existingProject = await this.projectModel.findById(id);
 
     if (!existingProject) {
       throw new NotFoundException(`Project with ID ${id} not found.`);
     }
 
-    await this.ProjectModel.findByIdAndDelete(id);
+    await this.projectModel.findByIdAndDelete(id);
 
     return 'Delete successfully';
   }

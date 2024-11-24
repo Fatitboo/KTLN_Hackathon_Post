@@ -17,12 +17,17 @@ import {
 import { GetProjectsHandler } from './application/queries/get-projects/get-projects.handler';
 import { UpdateProjectHandler } from './application/commands/update-project/update-project.handler';
 import { DeleteProjectHandler } from './application/commands/delete-project/delete-project.handler';
+import {
+  HackathonDocument,
+  HackathonSchema,
+} from 'src/hackathon/infrastructure/database/schemas';
 
 @Module({
   imports: [
     CqrsModule,
     MongooseModule.forFeature([
       { name: ProjectDocument.name, schema: ProjectSchema },
+      { name: HackathonDocument.name, schema: HackathonSchema },
       { name: UserDocument.name, schema: UserSchema },
     ]),
   ],

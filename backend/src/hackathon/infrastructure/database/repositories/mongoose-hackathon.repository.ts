@@ -14,6 +14,18 @@ export class MongooseHackathonRepository implements HackathonRepository {
     @InjectModel(UserDocument.name)
     private readonly userModel: Model<UserDocument>,
   ) {}
+  async findAllRegisterUser(id: string, page: number): Promise<any[]> {
+    const registerUsers = await this.hackathonModel
+      .findById(id)
+      .populate({
+        path: 'registerUsers.userId',
+        select: '_id fullname avatar settingRecommend',
+      })
+      .lean()
+      .exec();
+    if (!registerUsers) return null;
+    return registerUsers.registerUsers;
+  }
 
   async findAll(page: number): Promise<HackathonDocument[]> {
     const hackathons = await this.hackathonModel.find().lean().exec();

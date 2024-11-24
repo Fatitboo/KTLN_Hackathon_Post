@@ -18,6 +18,7 @@ import {
   GetUserType,
 } from 'src/user/application/queries/get-user-detail/get-user-detail.query';
 import { UpdateUserCommand } from 'src/user/application/commands/update-user/update-user.command';
+import { RegisterToHackathonCommand } from 'src/user/application/commands/register-to-hackathon/register-to-hackathon.command';
 
 @Controller('users')
 export class UserController {
@@ -33,6 +34,21 @@ export class UserController {
       new UpdateUserCommand({
         id,
         ...body,
+      }),
+    );
+  }
+
+  @Post('/register-hackathon/:userId')
+  @UseGuards(JwtAuthGuard)
+  async registerHackathon(
+    @Param('userId') userId: string,
+    @Body() body: { hackathonId: string; additionalInfo: any },
+  ) {
+    return await this.commandBus.execute(
+      new RegisterToHackathonCommand({
+        userId,
+        hackathonId: body.hackathonId,
+        additionalInfo: body.additionalInfo,
       }),
     );
   }

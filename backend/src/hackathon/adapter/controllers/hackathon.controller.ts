@@ -16,6 +16,7 @@ import { GetHackathonQuery } from 'src/hackathon/application/queries/get-hackath
 import { UpdateHackathonCommand } from 'src/hackathon/application/commands/update-hackathon/update-hackathon.command';
 import { DeleteHackathonCommand } from 'src/hackathon/application/commands/delete-hackathon/delete-hackathon.command';
 import { GetHackathonsQuery } from 'src/hackathon/application/queries/get-hackathons/get-hackathons.query';
+import { GetAllRegisterUsersQuery } from 'src/hackathon/application/queries/get-all-register-users/get-all-register-users.query';
 
 @Controller('hackathons')
 export class HackathonController {
@@ -51,6 +52,19 @@ export class HackathonController {
     if (id == null) throw new Error('Id is empty');
     const result = this.commandBus.execute(
       new UpdateHackathonCommand({ id: id, hackathon: hackathon }),
+    );
+
+    return result;
+  }
+
+  @Get('register-users/:id')
+  async getAllRegisterUserHackathon(
+    @Param('id') id: string,
+    @Query('page') page: number,
+  ): Promise<any[]> {
+    if (id == null) throw new Error('Id is empty');
+    const result = this.queryBus.execute(
+      new GetAllRegisterUsersQuery(id, page),
     );
 
     return result;

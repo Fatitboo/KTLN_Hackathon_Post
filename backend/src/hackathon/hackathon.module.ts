@@ -17,6 +17,7 @@ import {
   UserSchema,
 } from 'src/user/infrastructure/database/schemas';
 import { GetHackathonsHandler } from './application/queries/get-hackathons/get-hackathons.handler';
+import { GetAllRegisterUsersHandler } from './application/queries/get-all-register-users/get-all-register-users.handler';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { GetHackathonsHandler } from './application/queries/get-hackathons/get-h
     { provide: HACKATHON_REPOSITORY, useClass: MongooseHackathonRepository },
     GetHackathonHandler,
     GetHackathonsHandler,
+    GetAllRegisterUsersHandler,
     CreateHackathonHandler,
     UpdateHackathonHandler,
     DeleteHackathonHandler,

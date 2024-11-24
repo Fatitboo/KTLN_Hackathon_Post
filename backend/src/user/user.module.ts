@@ -21,6 +21,12 @@ import UserCommandHandler from './application/commands';
 import UserQueryHandler from './application/queries';
 import { Auth2Service } from './adaper/services/auth2.service';
 import { GithubStrategy } from './domain/common/strategies/github.strategy';
+import {
+  HackathonDocument,
+  HackathonSchema,
+} from 'src/hackathon/infrastructure/database/schemas';
+import { HACKATHON_REPOSITORY } from 'src/hackathon/domain/repositories/hackathon.repository';
+import { MongooseHackathonRepository } from 'src/hackathon/infrastructure/database/repositories/mongoose-hackathon.repository';
 @Module({
   imports: [
     CqrsModule,
@@ -28,11 +34,13 @@ import { GithubStrategy } from './domain/common/strategies/github.strategy';
     EnvironmentConfigModule,
     ExceptionsModule,
     MongooseModule.forFeature([
+      { name: HackathonDocument.name, schema: HackathonSchema },
       { name: UserDocument.name, schema: UserSchema },
     ]),
   ],
   controllers: [UserController, AuthController],
   providers: [
+    { provide: HACKATHON_REPOSITORY, useClass: MongooseHackathonRepository },
     { provide: USER_REPOSITORY, useClass: MongooseUserRepository },
     ...UserCommandHandler,
     ...UserQueryHandler,

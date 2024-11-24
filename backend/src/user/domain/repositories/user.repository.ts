@@ -5,4 +5,9 @@ export interface UserRepository {
   findOne(filter: object): Promise<User | null>;
   create(user: User): Promise<User>;
   updateById(id: string, updateData: object): Promise<User>;
+  addUserRegisterToHackathon(
+    userId: string,
+    hackathonId: string,
+    additionalInfo: any,
+  ): Promise<string>;
 }

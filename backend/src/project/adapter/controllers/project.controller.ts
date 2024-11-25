@@ -37,10 +37,14 @@ export class ProjectController {
   @Post(':userId')
   async createProject(
     @Param('userId') userId: string,
-    @Body() body: { title: string },
+    @Body() body: { title: string; hackathonId?: string },
   ): Promise<string> {
     const result = this.commandBus.execute(
-      new CreateProjectCommand({ userId: userId, title: body.title }),
+      new CreateProjectCommand({
+        userId: userId,
+        title: body.title,
+        hackathonId: body.hackathonId,
+      }),
     );
 
     return result;

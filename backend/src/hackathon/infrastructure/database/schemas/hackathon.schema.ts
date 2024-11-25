@@ -15,13 +15,15 @@ export enum TEAM_STATUS {
   WORKING_SOLO = 'working_solo',
   FINDING_TEAMATE = 'finding_teamate',
 }
-export class RegisterUser {
-  @Prop({ type: Types.ObjectId, ref: 'User', required: true })
-  userId: Types.ObjectId;
 
-  @Prop({ type: TEAM_STATUS })
+export class RegisterUser {
+  @Prop({ type: [String] })
+  userId: string[];
+
+  @Prop({ type: String, enum: TEAM_STATUS, required: true })
   status: TEAM_STATUS;
 }
+
 @Schema({
   timestamps: {
     createdAt: 'create_at',
@@ -45,7 +47,7 @@ export class HackathonDocument {
   @Prop({ type: [String] })
   hackathonTypes: string[];
 
-  @Prop({ type: [RegisterUser] })
+  @Prop({ type: [RegisterUser], default: [] })
   registerUsers: RegisterUser[];
 
   @Prop({ type: [{ type: Types.ObjectId, ref: 'Project' }] })

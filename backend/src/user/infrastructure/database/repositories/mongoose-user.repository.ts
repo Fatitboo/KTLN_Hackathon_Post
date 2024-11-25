@@ -39,7 +39,7 @@ export class MongooseUserRepository implements UserRepository {
     }
     existingUser.registerHackathons.push(existingHackathon._id);
     existingHackathon.registerUsers.push({
-      userId: existingUser._id,
+      userId: existingUser._id.toString(),
       ...additionalInfo,
     });
     await existingUser.save();

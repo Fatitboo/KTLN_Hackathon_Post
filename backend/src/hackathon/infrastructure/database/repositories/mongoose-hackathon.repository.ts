@@ -25,11 +25,17 @@ export class MongooseHackathonRepository implements HackathonRepository {
       const uId = element.userId;
       const u = await this.userModel.findById(uId);
       if (!u) continue;
+      const timestamp: number = Date.now();
       rs.push({
         userId: u._id.toString(),
         name: u.fullname,
         email: u.email,
+        avatar: u.avatar,
+        numProjects: u.projects.length,
+        numFollows: parseInt(timestamp.toString().slice(-2)),
+        numAchiements: parseInt(timestamp.toString().slice(6, 8)),
         settingRecommend: u.settingRecommend,
+        status: element.status,
       });
     }
     return rs;

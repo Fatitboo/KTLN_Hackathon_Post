@@ -41,8 +41,17 @@ import {
   unAuthoPage,
 } from "../pages/Auth";
 import LoginGithubSuccess from "../pages/Auth/LoginGithubSuccess/LoginGithubSuccess";
-import AddProject from "../pages/Seeker/Project/AddProject";
-import ProjectDetail from "../pages/Seeker/Project/ProjectDetail";
+import Overview from "../pages/Seeker/Hackathon/Overview";
+import MyProject from "../pages/Seeker/Hackathon/MyProject";
+import BrowerParticipants from "../pages/Seeker/BrowerParticipants";
+import ProjectGallery from "../pages/Seeker/Hackathon/ProjectGallery";
+import Rule from "../pages/Seeker/Hackathon/Rule";
+import Resourses from "../pages/Seeker/Hackathon/Resoures";
+import RegisterToHackathon from "../pages/Seeker/Hackathon/Register";
+import AddProject from "../pages/Seeker/ManageProject/AddProject";
+import ProjectDetail from "../pages/Seeker/ManageProject/ProjectDetail";
+import ManageProject from "../pages/Seeker/ManageProject";
+import ManageTeam from "../pages/Seeker/ManageProject/ManageTeam";
 
 const publicRoutes = [
   // User Layout
@@ -95,9 +104,47 @@ const publicRoutes = [
     layout: LayoutNoSidebar,
   },
   {
-    path: "/Hackathon-detail/:id/:type",
+    path: "/Hackathon-detail/:id",
     component: HackathonDetail,
     layout: LayoutNoSidebar,
+    nested: [
+      {
+        path: "overview",
+        element: Overview,
+      },
+      {
+        path: "my-project",
+        element: MyProject,
+      },
+      {
+        path: "participants",
+        element: BrowerParticipants,
+      },
+      {
+        path: "project-gallery",
+        element: ProjectGallery,
+      },
+      {
+        path: "rules",
+        element: Rule,
+      },
+      {
+        path: "resourses",
+        element: Resourses,
+      },
+      {
+        path: "updates",
+        element: Rule,
+      },
+      {
+        path: "discussions",
+        element: Resourses,
+      },
+      {
+        path: "register",
+        element: RegisterToHackathon,
+      },
+    ],
   },
   { path: "/Seeker/about-us", component: AboutUs, layout: LayoutNoSidebar },
   {
@@ -118,12 +165,26 @@ const seekerRoutes = [
     component: MyProfile,
     layout: LayoutHasSidebar,
   },
+  // {
+  //   path: "/Seeker/project/:projectId/edit",
+  //   component: AddProject,
+  //   layout: LayoutNoSidebar,
+  // },
   {
-    path: "/Seeker/project/:projectId/edit",
-    component: AddProject,
+    path: "/Seeker/project/manage-project/:projectId",
+    component: ManageProject,
     layout: LayoutNoSidebar,
+    nested: [
+      {
+        path: "manage-team",
+        element: ManageTeam,
+      },
+      {
+        path: "edit",
+        element: AddProject,
+      },
+    ],
   },
-
   {
     path: "/Seeker-detail/my-porfolio/:type",
     component: UserPorfolio,

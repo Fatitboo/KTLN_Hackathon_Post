@@ -216,210 +216,124 @@ function ProjectDetail() {
       isWinner: true,
     },
   ];
+  const likes = 53;
+  const comments = [
+    {
+      name: "VrGame Dev",
+      text: "I played this on web3 and android but new web3 game is more exciting as it has more screen view.",
+    },
+    {
+      name: "gioni marko",
+      text: "So cute and adorable game. Fall into childhood",
+    },
+    {
+      name: "Frankie C. Vernon",
+      text: "Dive into the rhythmic challenges of Motu Pop Bubble Shooter Game blending bubble-popping fun with Friday Night Funkin vibes. Engage in catchy beats while clearing colorful bubbles for victory!",
+    },
+  ];
   return (
     <>
       <div>
-        <div className="py-10 px-60 flex h-40 bg-[#0b4540] w-full text-white text-center font-bold items-center justify-between">
-          <h1>Explore projects from Portfolios and hackathons</h1>
-          <CustomButton
-            title="Add your projects"
-            containerStyles="bg-[#21a196] w-fit font-medium text-white py-2 px-5 focus:outline-none hover:bg-blue-500 rounded-sm text-base"
-          />
+        <div className="bg-teal-900 text-white text-center py-10 rounded-lg px-60">
+          <h1 className="text-4xl font-bold mb-2">
+            Motu Pop Bubble Shooter Game
+          </h1>
+          <p className="text-lg mb-6">
+            Pop bubbles, rescue motu's chhotu, and blast through fun puzzles in
+            this thrilling bubble shooter adventure! Compete, earn, and enjoy a
+            vibrant world of challenges!
+          </p>
+
+          <div className="flex justify-center gap-4">
+            <button className="flex items-center gap-2 bg-teal-600 text-white py-2 px-4 rounded-sm hover:bg-teal-700 focus:outline-none">
+              <span role="img" aria-label="heart">
+                ❤️
+              </span>{" "}
+              Like {"10"}
+            </button>
+            <button className="flex items-center gap-2 bg-blue-600 text-white py-2 px-4 rounded-sm hover:bg-blue-700 focus:outline-none">
+              <span role="img" aria-label="comment">
+                💬
+              </span>{" "}
+              Comment {"10"}
+            </button>
+          </div>
         </div>
-        {type === "overview" && (
-          <div className="px-60 max-lg:px-2 py-5 bg-gray-100">
-            <div className="grid grid-cols-3 max-lg:grid-cols-1 gap-10">
-              <div className="col-span-2">
-                <h2 className="font-semibold mt-5">{item?.title}</h2>
-                <p className="text-xl mt-5 h-16">
-                  {item?.challenge_description}
-                </p>
-                <div className="grid grid-cols-5">
-                  <div className="col-span-2">
-                    {item?.open_state === "ended" ? (
-                      <div className="w-full mb-4">
-                        <div>This hackathon has ended</div>
-                        <CustomButton
-                          title="Find more hackathons"
-                          containerStyles="bg-blue-600 mt-2   font-medium text-white py-2 px-5 focus:outline-none hover:bg-blue-500 rounded-sm text-base border border-blue-600"
-                        />
-                      </div>
-                    ) : (
-                      <div className="w-full">
-                        <CustomButton
-                          title="Join hackathon"
-                          containerStyles="bg-blue-600  font-medium text-white py-2 px-5 focus:outline-none hover:bg-blue-500 rounded-sm text-base border border-blue-600"
-                        />
-                      </div>
-                    )}
-                    {item?.winners_announced && (
-                      <CustomButton
-                        title="View the winners"
-                        containerStyles="bg-gray-600 w-fit font-medium text-white py-2 px-5 focus:outline-none hover:bg-gray-500 rounded-sm text-base border border-gray-600"
-                      />
-                    )}
-                  </div>
-                  <div className="text-sm ml-10 col-span-3 ">
-                    <div className="font-bold mb-2">Who can participate</div>
-                    <div className="grid grid-cols-2 gap-5 mb-4">
-                      <ul>
-                        <li>
-                          Above legal age of majority in country of residence
-                        </li>
-                        <li>Specific</li>
-                      </ul>
-                      <ul>
-                        <li>Team max size: 3 individuals</li>
-                        <li>Specific</li>
-                      </ul>
-                    </div>
-                    <Link
-                      to={`/Hackathon-detail/${id}/rules`}
-                      className="font-normal mt-5 text-blue-600"
-                    >
-                      View all rules
-                    </Link>
-                  </div>
-                </div>
-              </div>
-              <div className="col-span-1 text-sm mt-2">
-                <HackathonInfo
-                  isOpen={item?.open_state}
-                  endDate={item?.submission_period_dates}
-                  themes={item?.themes}
-                  organization={item?.organization_name}
-                  location={item?.displayed_location}
-                  prizes={item?.prize_amount}
-                  participants={item?.registrations_count}
+        <div className="px-60 pt-5">
+          <div className="border-blue-500 border-b-4 w-24">
+            <h1 className="text-3xl font-medium mb-2 ">STORY</h1>
+          </div>
+        </div>
+        <hr />
+        <div className="px-60">
+          {/* Built With Section */}
+          <div className="mb-8">
+            <h2 className="text-xl font-bold mb-4">Built With</h2>
+            <div className="flex flex-wrap gap-2">
+              {["adobe", "c#", "illustrator", "javascript"].map(
+                (item, index) => {
+                  return (
+                    <>
+                      <span
+                        index={index}
+                        className="bg-gray-200 px-4 py-1 text-sm "
+                      >
+                        {item}
+                      </span>
+                    </>
+                  );
+                }
+              )}
+            </div>
+          </div>
+
+          {/* Try It Out Section */}
+          <div className="mb-8">
+            <h2 className="text-xl font-bold mb-4">Try it out</h2>
+            <a
+              href="https://motupop.fun"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:underline"
+            >
+              motupop.fun
+            </a>
+          </div>
+          <hr />
+          {/* Like and Comments Section */}
+          <div className="my-8">
+            <div className="flex items-center gap-4 mb-4">
+              <button className="flex items-center gap-2 bg-teal-600 text-white py-2 px-4 rounded-md hover:bg-teal-700">
+                <span>❤️</span> Like {likes}
+              </button>
+              <div className="flex -space-x-3 items-center">
+                {/* Example avatars */}
+                <img
+                  className="w-8 h-8 rounded-full border-2 border-white"
+                  src={defaultAvt}
+                  alt="User 1"
                 />
+                <img
+                  className="w-8 h-8 rounded-full border-2 border-white"
+                  src={defaultAvt}
+                  alt="User 2"
+                />
+                <div className="text-gray-600 text-sm pl-5">+43 more</div>
               </div>
             </div>
           </div>
-        )}
-        {type === "my-project" && (
-          <>
-            <div className="px-60 max-lg:px-2 py-5 ">
-              <div className="grid grid-cols-3 max-lg:grid-cols-1 gap-10">
-                <div className="col-span-2">
-                  <h2 className="font-semibold mt-5">My hackathon projects</h2>
-                  <div>
-                    <div className="my-5 grid grid-cols-3 max-md:grid-cols-1 gap-6">
-                      {[...myProject, ...myProject].map((card, index) => (
-                        <CardProject
-                          key={index}
-                          title={card.title}
-                          description={card.description}
-                          image={imgDefaultProject}
-                          imgUser={defaultAvt}
-                          isWinner={card.isWinner}
-                          votes={card.votes}
-                          comments={card.comments}
-                        />
-                      ))}
-                    </div>
-                  </div>
+          <hr />
+          {/* Updates Section */}
+          <div>
+            <h2 className="text-xl font-bold my-4">Updates</h2>
+            <div className="space-y-4">
+              {comments.map((comment, index) => (
+                <div key={index} className="bg-white p-4 rounded-md shadow-md">
+                  <h4 className="font-bold">{comment.name}</h4>
+                  <p className="text-gray-700">{comment.text}</p>
                 </div>
-                <div className="col-span-1 text-sm mt-2">
-                  <div>
-                    <CustomButton
-                      title="Join hackathon"
-                      containerStyles="my-4  bg-blue-600 w-fit font-medium text-white py-2 px-5 focus:outline-none hover:bg-blue-500 rounded-sm text-base border border-blue-600"
-                    />
-                    <HackathonInfo />
-                  </div>
-                </div>
-              </div>
+              ))}
             </div>
-          </>
-        )}
-        {type === "project-gallery" && (
-          <>
-            <div className="px-60 max-lg:px-2 py-5 ">
-              <div>
-                <div className="mb-10 w-[75%]">
-                  <SearchInput
-                    textPlaceholder={"Search project"}
-                    btnText={"Search project"}
-                  />
-                </div>
-                <div className="my-5 grid grid-cols-4 max-md:grid-cols-1 gap-6">
-                  {[...myProject, ...myProject, ...myProject].map(
-                    (card, index) => (
-                      <CardProject
-                        key={index}
-                        title={card.title}
-                        description={card.description}
-                        image={imgDefaultProject}
-                        imgUser={defaultAvt}
-                        isWinner={card.isWinner}
-                        votes={card.votes}
-                        comments={card.comments}
-                      />
-                    )
-                  )}
-                </div>
-              </div>
-            </div>
-          </>
-        )}
-        {type === "participants" && <BrowerParticipants />}
-        <div className="px-60 max-lg:px-2 py-5 ">
-          <div className="grid grid-cols-3 max-lg:grid-cols-1 gap-10">
-            <div
-              className="col-span-2 text-gray-600 min-h-40 "
-              id="generated-script"
-            >
-              {type === "overview" && (
-                <div>
-                  <div
-                    className="mb-6"
-                    dangerouslySetInnerHTML={{
-                      __html: decodeHTML(item?.description),
-                    }}
-                  ></div>
-                  <div
-                    className="mb-6"
-                    dangerouslySetInnerHTML={{
-                      __html: decodeHTML(item?.challenge_description),
-                    }}
-                  ></div>
-                  <div
-                    className="mb-6"
-                    dangerouslySetInnerHTML={{
-                      __html: decodeHTML(item?.challenge_requirements),
-                    }}
-                  ></div>
-                  <div
-                    className="mb-6"
-                    dangerouslySetInnerHTML={{
-                      __html: decodeHTML(item?.judging_criteria),
-                    }}
-                  ></div>
-                </div>
-              )}
-              {type === "rules" && (
-                <div>
-                  <div
-                    className="mb-6"
-                    dangerouslySetInnerHTML={{
-                      __html: decodeHTML(item?.rule_section),
-                    }}
-                  ></div>
-                </div>
-              )}
-              {type === "resourses" && (
-                <div>
-                  <div
-                    className="mb-6"
-                    dangerouslySetInnerHTML={{
-                      __html: decodeHTML(item?.resources_section),
-                    }}
-                  ></div>
-                </div>
-              )}
-            </div>
-
-            <div className="col-span-1"></div>
           </div>
         </div>
       </div>

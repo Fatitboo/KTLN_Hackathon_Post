@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import FroalaEditor from "react-froala-wysiwyg";
 import { CgClose } from "react-icons/cg";
 import { v4 as uuidv4 } from "uuid";
-import { imgDefaultProject } from "../../../../assets/images";
+import { defaultAvt, imgDefaultProject } from "../../../../assets/images";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getProjectSingle,
@@ -15,7 +15,7 @@ import {
 import fetchSkillApikey from "../../../../utils/fetchSkillApiKey";
 import { IoIosClose } from "react-icons/io";
 
-function AddProject() {
+function ManageTeam() {
   const inputBox = useRef();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -190,68 +190,44 @@ function AddProject() {
       dispatch(resetSuccessAction());
     }
   }, [project]);
+  const [teammates, setTeammates] = useState([
+    { name: "Nguyễn Văn Phát", username: "@Fatitboo" },
+  ]);
   return (
     <>
-      <div>
-        <div className="py-10 px-60 flex h-40 bg-[#0b4540] w-full text-white text-center font-bold items-center justify-between">
-          <div className="flex items-start flex-col">
-            <h2>Post a new project</h2>
-            <div className="font-light text-sm mt-5">
-              Please respect our community guidelines.
-            </div>
-          </div>
-        </div>
+      <div className="px-60">
+        <h2 className="my-8">Manage team</h2>
+        <p>
+          Add, remove, and look for teammates. If you're working alone,{" "}
+          <a href="#">skip this step.</a>
+        </p>
 
-        <form
-          className="px-60 py-5 grid grid-cols-4 gap-6"
-          onSubmit={handleSubmit(onSubmit)}
-        >
-          <div className="mt-4 w-full col-span-3 ">
-            <div className="mb-5 w-full">
-              <TextInput
-                type={"text"}
-                register={register("projectName", {
-                  required: "Project name is required!",
-                  onChange: (event) => {
-                    setTitleBinding(event.target.value);
-                  },
-                })}
-                error={errors.projectName ? errors.projectName.message : ""}
-                label="What is your project called? *"
-                name="projectName"
-                containerStyles="text-[#05264e] text-base w-full tw-bg-white"
-                labelStyle="text-[#05264e] font-medium"
-              />
-            </div>
+        <hr className="my-8" />
 
-            <div className="mb-5 w-full">
-              <TextInput
-                type={"text"}
-                register={register("tagLine", {
-                  required: "Tag line is required!",
-                  onChange: (event) => {
-                    setTaglineBinding(event.target.value);
-                  },
-                })}
-                error={errors.tagLine ? errors.tagLine.message : ""}
-                label="Here's the elevator pitch? *"
-                description={`What's your idea? This will be a short tagline for the project`}
-                name="tagLine"
-                placeHolder={"A short tag line for project."}
-                containerStyles="text-[#05264e] text-base w-full tw-bg-white"
-                labelStyle="text-[#05264e] font-medium"
-              />
-            </div>
-
+        <form className="w-[50%] " onSubmit={handleSubmit(onSubmit)}>
+          <TextInput
+            type={"text"}
+            register={register("teamName", {
+              required: "Team name is required!",
+            })}
+            error={errors.teamName ? errors.teamName.message : ""}
+            label="What is your team called? *"
+            name="teamName"
+            containerStyles="text-[#05264e] text-base w-full tw-bg-white"
+            labelStyle="text-[#05264e] font-medium"
+          />
+        </form>
+        <div className=" py-5 grid grid-cols-3 gap-20">
+          <div className="mt-4 w-full col-span-2 ">
             <div className="mb-5">
               <div className="block text-base font-medium text-gray-700">
-                Build with? *
+                Invite teammates
               </div>
-              <div className="text-xs text-[#6F6F6F] italic mb-3">
-                What languages, frameworks, platforms, cloud services,
-                databases, APIs, or other technologies did you use?
+              <div className="text-sm text-[#6F6F6F] italic my-3">
+                Either share the link below privately with your teammates or
+                send an invite link via email
               </div>
-              <div className="relative">
+              <div className="relative flex items-center">
                 <div
                   tabIndex={0}
                   onChange={() => setListSkillApi([])}
@@ -275,6 +251,7 @@ function AddProject() {
                       </div>
                     );
                   })}
+                  <div className="flex"></div>
                   <div className="flex-1 ">
                     <input
                       type="text"
@@ -311,6 +288,20 @@ function AddProject() {
                     </svg>
                   ) : null}
                 </div>
+                <button
+                  onClick={() => navigator.clipboard.writeText(inviteLink)}
+                  style={{
+                    padding: "8px 10px",
+                    marginLeft: "20px",
+                    backgroundColor: "#f0f0f0",
+                    border: "1px solid #ccc",
+                    borderRadius: "2px",
+                    cursor: "pointer",
+                    width: "170px",
+                  }}
+                >
+                  Send email
+                </button>
                 <div
                   className="relative"
                   style={{
@@ -338,174 +329,39 @@ function AddProject() {
                   </div>
                 </div>
               </div>
-            </div>
 
-            <div>
-              <p className="block leading-8 text-gray-900 font-medium mt-6">
-                About the project *
-              </p>
-              <div className="text-xs text-[#6F6F6F] italic mb-4">
-                Be sure to write what inspired you, what you learned, how you
-                built your project, and the challenges you faced
-              </div>
-              <FroalaEditor
-                model={value}
-                onModelChange={(event, editor) => {
-                  setValueDes(event);
-                }}
-                config={{
-                  placeholderText:
-                    "Provide a comprehensive job description, outlining the roles, responsibilities, qualifications, and any additional information relevant to the job.",
-                  charCounterCount: true,
-                  toolbarButtons: {
-                    moreParagraph: {
-                      buttons: ["formatUL", "outdent", "indent"],
-                    },
-                    moreText: {
-                      buttons: ["bold", "italic", "underline", "fontSize"],
-                    },
-                    moreRich: {
-                      buttons: ["insertImage", "insertVideo", "insertTable"],
-                    },
-                    moreMisc: {
-                      buttons: ["undo", "redo"],
-                    },
-                  },
-                  height: 250,
-                  heightMin: 250,
-                  resizable: true,
-                  wordCounter: true,
-                  wordCounterLabel: "words",
-                  wordCounterBbCode: false,
-                  wordCounterTimeout: 0,
-                }}
-              />
-            </div>
-            <div>
-              <div className=" font-medium text-base mt-4">Image Galary</div>
-              <div className="text-xs text-[#6F6F6F] italic mb-4">
-                JPG, PNG or GIF format, 5 MB max file size. For best results,
-                use a 3:2 ratio.
-              </div>
-              <div className="flex items-end my-5 ">
-                <div className="w-full h-32 flex items-center justify-center border-dashed border-2 border-gray-300">
-                  <input
-                    onChange={(e) => handleUpdateAvt(e, true)}
-                    type="file"
-                    name="attachment"
-                    accept="image/*"
-                    id="uploadImgGerally"
-                    hidden
-                    className="opacity-0 absolute hidden overflow-hidden h-0 w-0 z-[-1]"
-                  />
-
-                  <label
-                    htmlFor="uploadImgGerally"
-                    className="flex ml-3 rounded items-center justify-center px-2 flex-col cursor-pointer bg-gray-300 text-black  border m-0  border-[#ced4e1]  "
-                  >
-                    Choose file
-                  </label>
-                </div>
-              </div>
-              <div className="mt-4 space-y-4">
-                {galaryList.map((file) => (
-                  <div
-                    key={file.url}
-                    className="flex items-center gap-y-4 gap-x-8 py-4 px-8  border border-gray-300 rounded shadow-sm"
-                  >
-                    {/* Hiển thị ảnh */}
-                    <img
-                      src={file.url}
-                      alt="Uploaded"
-                      className="w-24 h-24 object-cover rounded shadow-sm"
-                    />
-
-                    {/* Input caption */}
-                    <input
-                      type="text"
-                      placeholder="Add a caption"
-                      value={file.caption}
-                      onChange={(e) =>
-                        handleCaptionChange(file.url, e.target.value)
-                      }
-                      className="flex-1 px-4 py-1 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    />
-
-                    <div
-                      className="cursor-pointer"
-                      onClick={() => handleDeleteGalaryItem(file.url)}
-                    >
-                      <CgClose />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="mt-6">
-              <div className="">
-                <div className=" font-medium text-base">
-                  "Try it out" links{" "}
-                </div>
-                <div className="text-xs text-[#6F6F6F] italic">
-                  Add links where people can try your project or see your code.
-                </div>
-                <div className="grid grid-cols-1">
-                  {tryoutLinks.map((item, index) => (
-                    <div
-                      key={item.id}
-                      className="flex w-full my-1 items-center "
-                    >
-                      <div className="relative  mt-2 mr-3 ">
-                        <input
-                          type="text"
-                          {...register(`field_${item.id}`)}
-                          name={`field_${item.id}`}
-                          className="block  focus:bg-white  text-base w-[850px] rounded-sm border-0 py-2 pl-5 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
-                          style={{
-                            borderColor: `${
-                              errors[`field_${index}`] ? "#a9252b" : ""
-                            }`,
-                            outlineColor: `${
-                              errors[`field_${index}`] ? "#a9252b" : ""
-                            }`,
-                          }}
-                          placeholder="URL for demo site, app store listing, Github repo, etc..."
-                        />
-                      </div>
-                      <div
-                        className="cursor-pointer"
-                        onClick={() => handleDeleteLink(item.id)}
-                      >
-                        <CgClose />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
+              <div className="my-5">
+                <p className="mb-2">Secret invite link</p>
                 <div
-                  onClick={handleAddTryoutLinks}
-                  className="cursor-pointer text-blue-600 my-5"
+                  style={{ display: "flex", alignItems: "center", gap: "10px" }}
                 >
-                  ADD ANOTHER LINK
+                  <input
+                    type="text"
+                    value={"inviteLink"}
+                    readOnly
+                    style={{
+                      flex: 1,
+                      padding: "8px",
+                      border: "1px solid #ccc",
+                      borderRadius: "2px",
+                    }}
+                  />
+                  <button
+                    onClick={() => navigator.clipboard.writeText(inviteLink)}
+                    style={{
+                      padding: "8px 10px",
+                      backgroundColor: "#f0f0f0",
+                      border: "1px solid #ccc",
+                      borderRadius: "2px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Copy
+                  </button>
                 </div>
               </div>
-
-              <div className="mb-5 w-full">
-                <TextInput
-                  type={"text"}
-                  register={register("videoLink")}
-                  label="Video demo link"
-                  name="videoLink"
-                  description={
-                    "This video will be embedded at the top of your project page. "
-                  }
-                  containerStyles="text-[#05264e] text-base w-full tw-bg-white"
-                  labelStyle="text-[#05264e] font-medium"
-                  placeHolder="Youtube, Facebook Video, Vimeo or Youku URL"
-                />
-              </div>
             </div>
+
             <div className="w-[1/3]">
               <CustomButton
                 // isDisable={loading}
@@ -518,48 +374,46 @@ function AddProject() {
             </div>
           </div>
           <div className="mt-5 w-full col-span-1">
-            <div className="font-medium text-base">Thumnail Image</div>
-            <div className="mb-5 cursor-pointer max-w-xs bg-white border border-gray-300 rounded-sm hover:shadow-md">
-              <div className="">
-                <img
-                  src={fileThumnail ?? imgDefaultProject}
-                  alt={titleBinding}
-                  className="h-48 w-full"
-                />
-                <div className="mb-2 px-2 h-16">
-                  <h3 className="mt-2 text-base font-semibold line-clamp-1">
-                    {titleBinding}
-                  </h3>
-                  <p className="my-1 text-[#6F6F6F] line-clamp-2 italic text-sm">
-                    {taglineBinding}
-                  </p>
-                </div>
-              </div>
+            <div className="font-medium text-base">Current teammates</div>
+            <div className="text-sm text-[#6F6F6F] italic my-3">
+              Only the project creator, <strong>Nguyễn Văn Phát</strong>, can
+              remove team members.
             </div>
-            <input
-              onChange={(e) => handleUpdateAvt(e)}
-              type="file"
-              name="attachment"
-              accept="image/*"
-              id="uploadImg"
-              hidden
-              className="opacity-0 absolute hidden overflow-hidden h-0 w-0 z-[-1]"
-            />
-            <label
-              htmlFor="uploadImg"
-              className="cursor-pointer text-blue-600 "
-            >
-              Change image
-            </label>
-            <div className="text-sm text-[#6F6F6F]">
-              JPG, PNG or GIF format, 5 MB max file size. For best results, use
-              a 3:2 ratio.
+            <div style={{ listStyle: "none", padding: 0 }}>
+              {teammates.map((teammate, index) => (
+                <div
+                  key={index}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "10px",
+                    marginBottom: "10px",
+                  }}
+                >
+                  <img
+                    src={defaultAvt}
+                    alt="avatar"
+                    style={{
+                      width: "40px",
+                      height: "40px",
+                      borderRadius: "50%",
+                      backgroundColor: "#ccc",
+                    }}
+                  />
+                  <div>
+                    <p style={{ margin: 0 }}>{teammate.name}</p>
+                    <p style={{ margin: 0, color: "#888" }}>
+                      {teammate.username}
+                    </p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
-        </form>
+        </div>
       </div>
     </>
   );
 }
 
-export default AddProject;
+export default ManageTeam;

@@ -10,16 +10,28 @@ import { useSelector } from "react-redux";
 
 function Layout({ user, role }) {
   const location = useLocation();
-  // if (!user) return <Navigate to='/user-auth/login' state={{ from: location }} replace />
-  // else {
-  // if(user?.userType === role ){
-  return <Outlet />;
-  // }
-  // else{
-  // return <Navigate to='/user-auth/unauthozied' state={{ from: location }} replace />
-  // }
-  // }
-  // return user ? (<Outlet />) : (<Navigate to='/user-auth/login' state={{ from: location }} replace />);
+  if (!user)
+    return (
+      <Navigate to="/user-auth/login" state={{ from: location }} replace />
+    );
+  else {
+    if (user?.userType?.includes(role)) {
+      return <Outlet />;
+    } else {
+      return (
+        <Navigate
+          to="/user-auth/unauthozied"
+          state={{ from: location }}
+          replace
+        />
+      );
+    }
+  }
+  // return user ? (
+  //   <Outlet />
+  // ) : (
+  //   <Navigate to="/user-auth/login" state={{ from: location }} replace />
+  // );
 }
 
 function App() {
@@ -39,6 +51,29 @@ function App() {
           {seekerRoutes.map((route, index) => {
             const Layout = route.layout;
             const Page = route.component;
+            if (route.nested) {
+              const m = route.nested;
+              return (
+                <Route
+                  key={index}
+                  path={route.path}
+                  element={
+                    <Layout user={user}>
+                      <Page />
+                    </Layout>
+                  }
+                >
+                  <Route
+                    index
+                    element={<Navigate to="manage-team" replace />}
+                  />
+                  {m.map((r, index) => {
+                    const L = r.element;
+                    return <Route key={index} path={r.path} element={<L />} />;
+                  })}
+                </Route>
+              );
+            }
             return (
               <Route
                 key={index}
@@ -89,6 +124,26 @@ function App() {
         {publicRoutes.map((route, index) => {
           const Layout = route.layout;
           const Page = route.component;
+          if (route.nested) {
+            const m = route.nested;
+            return (
+              <Route
+                key={index}
+                path={route.path}
+                element={
+                  <Layout user={user}>
+                    <Page />
+                  </Layout>
+                }
+              >
+                <Route index element={<Navigate to="overview" replace />} />
+                {m.map((r, index) => {
+                  const L = r.element;
+                  return <Route key={index} path={r.path} element={<L />} />;
+                })}
+              </Route>
+            );
+          }
           return (
             <Route
               key={index}

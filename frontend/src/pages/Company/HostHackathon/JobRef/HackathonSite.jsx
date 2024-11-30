@@ -15,6 +15,8 @@ import "froala-editor/js/plugins/font_size.min.js";
 
 import FroalaEditor from "react-froala-wysiwyg";
 import TextInput from "../InputField/TextInput";
+import { IconLlama } from "../../../../assets/icons";
+import OptimizeContentPopup from "../../../../components/Organizer/OptimizeContentPopup";
 
 function JobDes({ formId, formSubmit, flag, config, content, onDoneSubmit }) {
   const editor = useRef();
@@ -77,47 +79,57 @@ function JobDes({ formId, formSubmit, flag, config, content, onDoneSubmit }) {
               "Main Description",
               "Describe your hackathon and what makes it special. Many in-person hackathons include their event schedules here too."
             )}
-            <div
-              ref={editor}
-              name="jobDes"
-              className="border border-[black] rounded-md overflow-hidden h-96"
-              style={{
-                borderColor: `${errors.jobDes ? "#a9252b" : ""}`,
-                outlineColor: `${errors.jobDes ? "#a9252b" : ""}`,
-              }}
-            >
-              <FroalaEditor
-                model={inputValues.mainDescription}
-                onModelChange={(event, editor) => {
-                  handleChange(event, "mainDescription");
+            <div className="relative">
+              <div
+                ref={editor}
+                name="jobDes"
+                className="border border-[black] rounded-md h-96 overflow-hidden"
+                style={{
+                  borderColor: `${errors.jobDes ? "#a9252b" : ""}`,
+                  outlineColor: `${errors.jobDes ? "#a9252b" : ""}`,
                 }}
-                config={{
-                  placeholderText:
-                    "Provide a comprehensive vacancy description, outlining the roles, responsibilities, qualifications, and any additional information relevant to the job.",
-                  charCounterCount: true,
-                  toolbarButtons: {
-                    moreParagraph: {
-                      buttons: ["formatUL", "outdent", "indent"],
+              >
+                <FroalaEditor
+                  model={inputValues.mainDescription}
+                  onModelChange={(event, editor) => {
+                    handleChange(event, "mainDescription");
+                  }}
+                  content
+                  config={{
+                    placeholderText:
+                      "Provide a comprehensive vacancy description, outlining the roles, responsibilities, qualifications, and any additional information relevant to the job.",
+                    charCounterCount: true,
+                    toolbarButtons: {
+                      moreParagraph: {
+                        buttons: ["formatUL", "outdent", "indent"],
+                      },
+                      moreText: {
+                        buttons: ["bold", "italic", "underline", "fontSize"],
+                      },
+                      moreRich: {
+                        buttons: ["insertImage", "insertVideo", "insertTable"],
+                      },
+                      moreMisc: {
+                        buttons: ["undo", "redo"],
+                      },
                     },
-                    moreText: {
-                      buttons: ["bold", "italic", "underline", "fontSize"],
-                    },
-                    moreRich: {
-                      buttons: ["insertImage", "insertVideo", "insertTable"],
-                    },
-                    moreMisc: {
-                      buttons: ["undo", "redo"],
-                    },
-                  },
-                  height: 325,
-                  heightMin: 325,
-                  resizable: true,
-                  wordCounter: true,
-                  wordCounterLabel: "words",
-                  wordCounterBbCode: false,
-                  wordCounterTimeout: 0,
-                }}
-              />
+                    height: 325,
+                    heightMin: 325,
+                    resizable: true,
+                    wordCounter: true,
+                    wordCounterLabel: "words",
+                    wordCounterBbCode: false,
+                    wordCounterTimeout: 0,
+                  }}
+                />
+              </div>
+              <div className="absolute top-0 right-0 translate-x-1/2 translate-y-2 z-10">
+                <OptimizeContentPopup
+                  message={
+                    "Welcome to the Canva AI & Integrations Hackathon! Unleash your creativity and technical prowess in this exciting competition designed to push the boundaries of innovation within the Canva Developers Community. Whether you're an experienced developer or just starting out, this hackathon is your chance to shine. Join us in building apps or integrations for the Canva Apps Marketplace using our powerful Apps SDK and the brand new Connect APIs or solutions for Canva users building with our Apps SDK. After the hackathon, you may even be able to monetize your apps to Canva’s {185 million} monthly active users! This is more than just a competition—it's an opportunity to grow, learn, and make a significant impact. By participating, you'll not only gain invaluable experience but also contribute to generating high-quality use cases for the Connect APIs. Don't miss this chance to be a part of the vibrant Canva Developers Community, showcase your innovative solutions, and potentially see your project featured in the Canva Apps Marketplace. Register now and start creating something amazing! "
+                  }
+                />
+              </div>
             </div>
           </div>
 

@@ -59,7 +59,6 @@ function HostHackathon() {
     if (isSuccessUD) {
       dispatch(resetValue({ key: "isSuccessUD", value: false }));
       if (jobRefKey === 8) {
-        console.log("DÔ");
         navigate("/Organizer/manage-hackathons");
       }
       nextJobRef();
@@ -84,19 +83,19 @@ function HostHackathon() {
   ];
   const jobRef = [
     <HackathonEssential
-      formSubmit={updateHackathon}
+      formSubmit={nextJobRef}
       flag={0}
       formId={formId[0]}
       key={0}
     />,
     <HackathonEligibility
-      formSubmit={updateHackathon}
+      formSubmit={nextJobRef}
       formId={formId[1]}
       flag={1}
       key={1}
     />,
     <HackathonDesign
-      formSubmit={updateHackathon}
+      formSubmit={nextJobRef}
       formId={formId[2]}
       flag={2}
       key={2}

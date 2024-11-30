@@ -9,6 +9,7 @@ import { setValueSuccess } from "../../../redux/slices/projects/projectsSlices";
 import { useDispatch, useSelector } from "react-redux";
 import { CiDollar } from "react-icons/ci";
 import {
+  creatHackathonId,
   deleteHackathonComponent,
   getAllHackathons,
   resetValue,
@@ -28,9 +29,14 @@ function ManageHackathon() {
   const navigate = useNavigate();
   let [selectId, setSelectedId] = useState();
   let [currentHackathons, setCurrentHackathons] = useState([]);
-  let { loading, hackathons, loadingDelete, isSuccessDelete } = useSelector(
-    (state) => state.hackathons
-  );
+  let {
+    loading,
+    hackathons,
+    hackathonId,
+    isSuccess,
+    loadingDelete,
+    isSuccessDelete,
+  } = useSelector((state) => state.hackathons);
 
   useEffect(() => {
     dispatch(getAllHackathons());
@@ -40,6 +46,13 @@ function ManageHackathon() {
       setCurrentHackathons(hackathons);
     }
   }, [hackathons]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      navigate(`/Organizer/host-hackathon/${hackathonId}`);
+      dispatch(resetValue({ key: "isSuccess", value: false }));
+    }
+  }, [isSuccess]);
 
   useEffect(() => {
     if (isSuccessDelete) {
@@ -123,7 +136,7 @@ function ManageHackathon() {
                 <div className="flex ">
                   <div
                     onClick={() => {
-                      dispatch(setValueSuccess(false));
+                      dispatch(creatHackathonId());
                       // navigate("/Organizer/create-project");
                     }}
                     className="relative text-sm text-center pr-4 p-3 text-[white] cursor-pointer hover:bg-[#0146a6] bg-[#1967d3] flex items-center leading-7 font-normal rounded-lg "

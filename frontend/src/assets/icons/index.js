@@ -15,3 +15,6 @@ export { default as DegreeIcon } from "./icon-degree.svg";
 export { default as PaypalIcon } from "./paypal.png";
 export { default as NewTabIcon } from "./in-new-tab.svg";
 export { default as IconGithub } from "./github-logo.png";
+export { default as IconLlama } from "./llama.jpg";
+export { default as IconSend } from "./send.png";
+export { default as IconResponse } from "./response.gif";

@@ -33,7 +33,7 @@ async function bootstrap() {
   app.useGlobalInterceptors(new LoggingInterceptor(new LoggerService()));
   // app.useGlobalInterceptors(new ResponseInterceptor());
   app.enableCors({
-    origin: 'http://localhost:5173', // Frontend origin
+    origin: '*', // Frontend origin
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });

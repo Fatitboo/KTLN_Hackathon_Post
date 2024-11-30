@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import baseUrl from "../../../utils/baseUrl";
 import axios from "axios";
-const apiPrefix = "api_v1/hackathons";
+const apiPrefix = "api/v1/hackathons";
 
 //get all hackathons
 export const getAllHackathons = createAsyncThunk(
@@ -44,7 +44,7 @@ export const creatHackathonId = createAsyncThunk(
       // };
 
       const { data } = await axios.post(
-        `${baseUrl}/${apiPrefix}/6713914e5cb4b783f0004058`,
+        `${baseUrl}/${apiPrefix}/671a5d4ce7e9496444c1697a`,
         payload
       );
       return data;
@@ -137,7 +137,7 @@ const hackathonsSlices = createSlice({
     }),
       builder.addCase(getAllHackathons.fulfilled, (state, action) => {
         state.loading = false;
-        state.hackathons = action?.payload?.data;
+        state.hackathons = action?.payload;
       }),
       builder.addCase(getAllHackathons.rejected, (state, action) => {
         state.loading = false;
@@ -149,8 +149,9 @@ const hackathonsSlices = createSlice({
         state.isSuccess = false;
       }),
       builder.addCase(creatHackathonId.fulfilled, (state, action) => {
+        console.log(action.payload);
         state.loadingCreate = false;
-        state.hackathonId = action?.payload.data.hackathonId;
+        state.hackathonId = action?.payload?.hackathonId;
         state.isSuccess = true;
       }),
       builder.addCase(creatHackathonId.rejected, (state, action) => {

@@ -1,24 +1,55 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { UserRepository } from '../../../domain/repositories/user.repository';
 import { User } from '../../../domain/entities/user.entity';
 import { UserDocument } from '../schemas';
-import { HackathonDocument } from 'src/hackathon/infrastructure/database/schemas';
+import {
+  HackathonDocument,
+  TEAM_STATUS,
+} from 'src/hackathon/infrastructure/database/schemas';
+import { ProjectDocument } from 'src/project/infrastructure/database/schemas';
 
 @Injectable()
 export class MongooseUserRepository implements UserRepository {
   constructor(
     @InjectModel(UserDocument.name)
     private readonly userModel: Model<UserDocument>,
+    @InjectModel(ProjectDocument.name)
+    private readonly projectModel: Model<ProjectDocument>,
     @InjectModel(HackathonDocument.name)
     private readonly hackathonModel: Model<HackathonDocument>,
   ) {}
+  searchUser(
+    registeredHackathonId?: string,
+    searchQuery?: string,
+    searchTerm?: string,
+  ): Promise<any> {
+    const query: any = {
+      registerHackathons: new Types.ObjectId(registeredHackathonId),
+      $or: [],
+    };
+    const orQuery: any = [];
+    // Thêm điều kiện tìm kiếm
+    if (searchTerm === 'all') {
+      orQuery.push({ fullname: { $regex: searchQuery, $options: 'i' } });
+      orQuery.push({ email: { $regex: searchQuery, $options: 'i' } });
+    }
+
+    if (searchTerm === 'email') {
+      orQuery.push({ email: { $regex: searchQuery, $options: 'i' } });
+    }
+    query.$or = orQuery;
+    return this.userModel
+      .find(query)
+      .select('fullname email avatar isVerify') // Chọn các trường cần trả về
+      .exec();
+  }
   async addUserRegisterToHackathon(
     userId: string,
     hackathonId: string,
     additionalInfo: any,
-  ): Promise<string> {
+  ): Promise<any> {
     const existingUser = await this.userModel.findById(userId);
 
     if (!existingUser) {
@@ -42,9 +73,34 @@ export class MongooseUserRepository implements UserRepository {
       userId: existingUser._id.toString(),
       ...additionalInfo,
     });
+
+    // check has team
+    let projectId;
+    const isHadTeam = additionalInfo.status;
+    if (isHadTeam === TEAM_STATUS.HAD_TEAM) {
+      const createProject = new this.projectModel({
+        owner: userId,
+        teamName: 'Untitled',
+        createdByUsername: [userId],
+        createdBy: [existingUser._id],
+        teamType: 'team',
+        registeredToHackathon: existingHackathon._id,
+      });
+
+      const prjObj = await createProject.save();
+      projectId = prjObj._id.toString();
+
+      existingUser.projects.push(prjObj._id);
+      existingHackathon.registedTeams.push(prjObj._id);
+    }
+
     await existingUser.save();
     await existingHackathon.save();
-    return 'User register successfully!';
+    return {
+      projectId,
+      teamStatus: isHadTeam,
+      hackathonId,
+    };
   }
   async updateById(id: string, updateData: object): Promise<User | null> {
     const user = await this.userModel.findByIdAndUpdate(id, {

@@ -16,12 +16,13 @@ export class CreateProjectHandler
   ) {}
 
   async execute(command: CreateProjectCommand) {
-    const { userId, title, hackathonId } = command.props;
+    const { userId, title, hackathonId, teamType } = command.props;
     return {
       projectId: await this.projectRepository.create(
         userId,
         title,
         hackathonId,
+        teamType,
       ),
     };
   }

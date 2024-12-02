@@ -16,6 +16,7 @@ import { UpdateProjectCommand } from 'src/project/application/commands/update-pr
 import { DeleteProjectCommand } from 'src/project/application/commands/delete-project/delete-project.command';
 import { GetProjectsQuery } from 'src/project/application/queries/get-projects/get-projects.query';
 import { UpdateProjectDTO } from '../dto/update-project.dto';
+import { GetProjectRegisteredHackathonQuery } from 'src/project/application/queries/get-projec-registered-hackathon/get-project-registered-hackathon.query';
 
 @Controller('projects')
 export class ProjectController {
@@ -34,16 +35,27 @@ export class ProjectController {
     return await this.queryBus.execute(new GetProjectQuery(id));
   }
 
+  @Get(':userId/:hackathonId')
+  async getRegisteredProjectTo(
+    @Param('userId') userId: string,
+    @Param('hackathonId') hackathonId: string,
+  ) {
+    return await this.queryBus.execute(
+      new GetProjectRegisteredHackathonQuery({ userId, hackathonId }),
+    );
+  }
+
   @Post(':userId')
   async createProject(
     @Param('userId') userId: string,
-    @Body() body: { title: string; hackathonId?: string },
+    @Body() body: { title: string; hackathonId?: string; teamType?: string },
   ): Promise<string> {
     const result = this.commandBus.execute(
       new CreateProjectCommand({
         userId: userId,
         title: body.title,
         hackathonId: body.hackathonId,
+        teamType: body.teamType,
       }),
     );
 

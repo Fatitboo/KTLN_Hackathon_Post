@@ -9,5 +9,10 @@ export interface UserRepository {
     userId: string,
     hackathonId: string,
     additionalInfo: any,
-  ): Promise<string>;
+  ): Promise<any>;
+  searchUser(
+    registeredHackathonId?: string,
+    searchQuery?: string,
+    searchTerm?: string,
+  ): Promise<any>;
 }

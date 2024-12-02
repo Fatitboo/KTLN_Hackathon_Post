@@ -8,12 +8,15 @@ import extractId from "../../../utils/extractId";
 const ManageProject = () => {
   const { projectId } = useParams();
   // projectId = !imptHktid_hackathonId_projectId
+  const currentPathname = window.location.pathname; // Lấy pathname
+  console.log(currentPathname);
   const [item, setItem] = useState(null);
+  const [statePage, setStatePage] = useState(1);
   useEffect(() => {
     if (projectId !== undefined) {
       const hackathonId = extractId({ type: "hackathonId", str: projectId });
       // const prjId = extractId({type: 'projectId', str: projectId})
-      if (hackathonId === "hacktest") {
+      if (hackathonId === "12762") {
         setItem({
           img_bg: backgroundSearch,
           image: imgDefaultProject,
@@ -24,6 +27,23 @@ const ManageProject = () => {
       }
     }
   }, [projectId]);
+  useEffect(() => {
+    if (currentPathname) {
+      const arr = currentPathname.split("/");
+
+      const lastE = arr[arr.length - 1];
+      console.log("🚀 ~ useEffect ~ lastE:", lastE);
+      if (lastE === "manage-team") {
+        setStatePage(1);
+      }
+      if (lastE === "edit") {
+        setStatePage(2);
+      }
+      if (lastE === "submit") {
+        setStatePage(3);
+      }
+    }
+  }, [currentPathname]);
   return (
     <>
       <div>
@@ -55,7 +75,7 @@ const ManageProject = () => {
         </div>
         <div className=" max-lg:px-2 py-5 min-h-60 ">
           <div className="px-60">
-            <Stepper currentStep={2} />
+            <Stepper currentStep={statePage} />
           </div>
           <Outlet />
         </div>

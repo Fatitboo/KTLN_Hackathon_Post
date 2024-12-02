@@ -6,6 +6,7 @@ import {
 } from 'src/Project/domain/repositories/Project.repository';
 import { UpdateProjectCommand } from './update-project.command';
 import { Project } from 'src/Project/domain/entities/Project.entity';
+import { Types } from 'mongoose';
 
 @CommandHandler(UpdateProjectCommand)
 export class UpdateProjectHandler
@@ -28,7 +29,9 @@ export class UpdateProjectHandler
     // Cập nhật các thuộc tính mới từ command
     const updatedProject = new Project(
       id,
-      `${project.projectTitle.trim().toLocaleLowerCase().replace(/ /g, '-')}`,
+      project.projectTitle
+        ? `${project.projectTitle?.trim().toLocaleLowerCase().replace(/ /g, '-')}`
+        : existingProject.projectNameId,
       project.projectTitle ?? existingProject.projectTitle,
       project.tagline ?? existingProject.tagline,
       project.content ?? existingProject.content,
@@ -39,6 +42,11 @@ export class UpdateProjectHandler
       project.createdByUsername ?? existingProject.createdByUsername,
       project.galary ?? existingProject.galary,
       project.updates ?? existingProject.updates,
+      project.teamName ?? existingProject.teamName,
+      project.teamType ?? existingProject.teamType,
+      project.createdBy
+        ? project.createdBy.map((item) => new Types.ObjectId(item))
+        : existingProject.createdBy,
     );
 
     // Gọi repository để lưu lại cập nhật

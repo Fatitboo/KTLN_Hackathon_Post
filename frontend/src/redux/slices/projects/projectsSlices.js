@@ -115,6 +115,27 @@ export const createProject = createAsyncThunk(
     }
   }
 );
+
+//get project registered to hackthon
+export const getProjectRegisteredToHackathonAction = createAsyncThunk(
+  "users/getProjectRegisteredToHackathonAction",
+  async (payload, { rejectWithValue, getState, dispatch }) => {
+    const user = getState()?.users;
+    const { userAuth } = user;
+    // http call
+    try {
+      const { data } = await axios.get(
+        `${baseUrl}/${apiPrefix}/${userAuth?.user?.id}/${payload.hackathonId}`
+      );
+      return data;
+    } catch (error) {
+      if (!error?.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
 //create project
 export const updateProject = createAsyncThunk(
   "projects/updateProject",
@@ -136,7 +157,7 @@ export const updateProject = createAsyncThunk(
         config
       );
       if (payload.navigate) {
-        payload.navigate("/Seeker-detail/my-porfolio/Projects");
+        payload.navigate(payload.path);
       }
       return data;
     } catch (error) {
@@ -449,6 +470,29 @@ const projectsSlices = createSlice({
         state.loadingUD = false;
         state.isSuccessUD = false;
       }),
+      //update Project
+      builder.addCase(
+        getProjectRegisteredToHackathonAction.pending,
+        (state, action) => {
+          state.loadingUD = true;
+          state.isSuccessUD = false;
+        }
+      ),
+      builder.addCase(
+        getProjectRegisteredToHackathonAction.fulfilled,
+        (state, action) => {
+          state.loadingUD = false;
+          state.projects = action.payload;
+          state.isSuccessUD = true;
+        }
+      ),
+      builder.addCase(
+        getProjectRegisteredToHackathonAction.rejected,
+        (state, action) => {
+          state.loadingUD = false;
+          state.isSuccessUD = false;
+        }
+      ),
       //delete Project
       builder.addCase(deleteProjectAction.pending, (state, action) => {
         state.loadingDL = true;

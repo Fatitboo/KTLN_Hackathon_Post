@@ -236,6 +236,38 @@ export const changePasswordAction = createAsyncThunk(
     }
   }
 );
+export const TEAM_STATUS = {
+  HAD_TEAM: "had_team",
+  WORKING_SOLO: "working_solo",
+  FINDING_TEAMATE: "finding_teamate",
+};
+//register hackathon action
+export const registerHackathonAction = createAsyncThunk(
+  "users/registerHackathonAction",
+  async (payload, { rejectWithValue, getState, dispatch }) => {
+    const user = getState()?.users;
+    const { userAuth } = user;
+    // http call
+
+    try {
+      const { data } = await customeAxios.post(
+        `${apiPrefixUsers}/register-hackathon/${userAuth?.user?.id}`,
+        {
+          hackathonId: payload.hackathonId,
+          additionalInfo: payload.additionalInfo,
+        }
+      );
+
+      return data;
+    } catch (error) {
+      if (!error?.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
 // update Avtive Cor By Admin
 export const updateAvtiveCorByAdminAction = createAsyncThunk(
   "users/updateAvtiveCorByAdmin",
@@ -1039,6 +1071,17 @@ const usersSlices = createSlice({
       state.appErr = action?.payload?.message;
       state.isSuccess = false;
     });
+    builder.addCase(registerHackathonAction.fulfilled, (state, action) => {
+      state.loading = false;
+      state.appErr = undefined;
+      state.registerRs = action.payload;
+      state.isSuccess = true;
+    });
+    builder.addCase(registerHackathonAction.rejected, (state, action) => {
+      state.loading = false;
+      state.appErr = action?.payload?.message;
+      state.isSuccess = false;
+    });
 
     //reset pass account
     builder.addCase(resetPasswordAction.pending, (state, action) => {
@@ -1063,6 +1106,7 @@ const usersSlices = createSlice({
       state.isSuccessUpd = false;
       state.isSuccessApplied = false;
       state.isSuccessSendMail = false;
+      state.appErr = null;
     });
     builder.addCase(resetUserAuthAction.fulfilled, (state, action) => {
       state.userAuth = null;

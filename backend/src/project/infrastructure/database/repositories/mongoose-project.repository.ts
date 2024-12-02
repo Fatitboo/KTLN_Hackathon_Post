@@ -1,6 +1,6 @@
 import { InjectModel } from '@nestjs/mongoose';
 import { ProjectDocument } from '../schemas';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { NotFoundException } from '@nestjs/common';
 import { UserDocument } from 'src/user/infrastructure/database/schemas';
 import { ProjectRepository } from 'src/project/domain/repositories/project.repository';
@@ -18,6 +18,18 @@ export class MongooseProjectRepository implements ProjectRepository {
     @InjectModel(UserDocument.name)
     private readonly userModel: Model<UserDocument>,
   ) {}
+  async findProjectRegisteredHackathon(
+    userId: string,
+    hackathonId: string,
+  ): Promise<any[]> {
+    const projects = await this.projectModel
+      .find({
+        createdBy: new Types.ObjectId(userId),
+        registeredToHackathon: new Types.ObjectId(hackathonId),
+      })
+      .exec();
+    return projects;
+  }
 
   async findAll(page: number): Promise<ProjectDocument[]> {
     const projects = await this.projectModel.find().lean().exec();
@@ -26,7 +38,10 @@ export class MongooseProjectRepository implements ProjectRepository {
   }
 
   async findById(id: string): Promise<ProjectDocument | null> {
-    const project = await this.projectModel.findById(id).lean().exec();
+    const project = await this.projectModel
+      .findById(id)
+      .populate({ path: 'owner', select: '_id email fullname avatar' })
+      .exec();
     if (!project) return null;
     return project;
   }
@@ -35,6 +50,7 @@ export class MongooseProjectRepository implements ProjectRepository {
     userId: string,
     title: string,
     hackathonId: string | undefined,
+    teamType: string | undefined,
   ): Promise<string> {
     const existingUser = await this.userModel.findById(userId);
 
@@ -54,6 +70,10 @@ export class MongooseProjectRepository implements ProjectRepository {
       owner: userId,
       projectTitle: title,
       projectNameId,
+      teamName: 'Untitled',
+      createdByUsername: [userId],
+      createdBy: [existingUser._id],
+      teamType,
     });
 
     const prjObj = await createProject.save();
@@ -74,7 +94,9 @@ export class MongooseProjectRepository implements ProjectRepository {
   }
 
   async update(id: string, project: Project): Promise<ProjectDocument> {
-    let projectNameId = `${project.projectTitle.trim().toLocaleLowerCase().replace(/ /g, '-')}`;
+    let projectNameId = project.projectTitle
+      ? `${project.projectTitle.trim().toLocaleLowerCase().replace(/ /g, '-')}`
+      : project.projectTitle;
 
     const existProject = await this.projectModel.findOne({ projectNameId });
     const timestamp: number = Date.now();

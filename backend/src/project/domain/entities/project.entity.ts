@@ -1,3 +1,5 @@
+import { Types } from 'mongoose';
+
 export class Project {
   constructor(
     public id: string,
@@ -12,6 +14,9 @@ export class Project {
     public createdByUsername: string[],
     public galary: GalaryItem[],
     public updates: UpdateItem[],
+    public teamName: string,
+    public teamType: string,
+    public createdBy: Types.ObjectId[],
   ) {}
   setId(id: string) {
     this.id = id;

@@ -72,6 +72,7 @@ function AddProject() {
         id: extractId({ str: projectId }),
         data: pl,
         navigate,
+        path: `/Hackathon-detail/12762/my-project`,
       })
     );
   };
@@ -153,9 +154,8 @@ function AddProject() {
   };
 
   useEffect(() => {
-    console.log("🚀 ~ AddProject ~ productId:", projectId);
     if (projectId !== undefined) {
-      const prjId = extractId({ str: projectId });
+      const prjId = extractId({ type: "projectId", str: projectId });
       dispatch(getProjectSingle(prjId));
     }
   }, [projectId]);

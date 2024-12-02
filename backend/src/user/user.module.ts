@@ -27,6 +27,12 @@ import {
 } from 'src/hackathon/infrastructure/database/schemas';
 import { HACKATHON_REPOSITORY } from 'src/hackathon/domain/repositories/hackathon.repository';
 import { MongooseHackathonRepository } from 'src/hackathon/infrastructure/database/repositories/mongoose-hackathon.repository';
+import {
+  ProjectDocument,
+  ProjectSchema,
+} from 'src/project/infrastructure/database/schemas';
+import { PROJECT_REPOSITORY } from 'src/project/domain/repositories/project.repository';
+import { MongooseProjectRepository } from 'src/project/infrastructure/database/repositories/mongoose-project.repository';
 @Module({
   imports: [
     CqrsModule,
@@ -36,12 +42,14 @@ import { MongooseHackathonRepository } from 'src/hackathon/infrastructure/databa
     MongooseModule.forFeature([
       { name: HackathonDocument.name, schema: HackathonSchema },
       { name: UserDocument.name, schema: UserSchema },
+      { name: ProjectDocument.name, schema: ProjectSchema },
     ]),
   ],
   controllers: [UserController, AuthController],
   providers: [
     { provide: HACKATHON_REPOSITORY, useClass: MongooseHackathonRepository },
     { provide: USER_REPOSITORY, useClass: MongooseUserRepository },
+    { provide: PROJECT_REPOSITORY, useClass: MongooseProjectRepository },
     ...UserCommandHandler,
     ...UserQueryHandler,
     AuthenticationService,

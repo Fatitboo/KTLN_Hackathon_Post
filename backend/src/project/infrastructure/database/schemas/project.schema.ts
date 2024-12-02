@@ -10,16 +10,16 @@ import { GalaryItem, UpdateItem } from './type';
   collection: 'Projects',
 })
 export class ProjectDocument {
-  @Prop()
+  @Prop({ type: String })
   projectNameId: string;
 
-  @Prop()
+  @Prop({ type: String })
   projectTitle: string;
 
-  @Prop()
+  @Prop({ type: String })
   tagline: string;
 
-  @Prop()
+  @Prop({ type: String })
   content: string;
 
   @Prop({
@@ -40,13 +40,28 @@ export class ProjectDocument {
   @Prop({ type: [String] })
   createdByUsername: string[];
 
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'User' }] })
+  createdBy: Types.ObjectId[];
+
+  @Prop({ type: Types.ObjectId, ref: 'Hackathon' })
+  registeredToHackathon: Types.ObjectId;
+
+  @Prop({ type: Boolean })
+  isSubmmited: boolean;
+
+  @Prop({ type: String })
+  teamName: string;
+
+  @Prop({ type: String })
+  teamType: string; // personal | team | solo
+
   @Prop({ type: [GalaryItem] })
   galary: GalaryItem[];
 
   @Prop({ type: [UpdateItem] })
   updates: UpdateItem[];
 
-  @Prop({ type: Types.ObjectId, ref: 'User', required: true })
+  @Prop({ type: Types.ObjectId, ref: 'UserDocument', required: true })
   owner: Types.ObjectId;
 }
 export const ProjectSchema = SchemaFactory.createForClass(ProjectDocument);

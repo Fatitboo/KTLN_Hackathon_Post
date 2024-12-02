@@ -8,6 +8,14 @@ export class UpdateProjectDTO {
 
   @IsOptional()
   @IsString()
+  teamName: string;
+
+  @IsOptional()
+  @IsString()
+  teamType: string;
+
+  @IsOptional()
+  @IsString()
   tagline: string;
 
   @IsOptional()
@@ -33,6 +41,10 @@ export class UpdateProjectDTO {
   @IsOptional()
   @IsArray()
   createdByUsername: string[];
+
+  @IsOptional()
+  @IsArray()
+  createdBy: string[];
 
   @IsOptional()
   @IsArray()

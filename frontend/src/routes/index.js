@@ -52,6 +52,7 @@ import AddProject from "../pages/Seeker/ManageProject/AddProject";
 import ProjectDetail from "../pages/Seeker/ManageProject/ProjectDetail";
 import ManageProject from "../pages/Seeker/ManageProject";
 import ManageTeam from "../pages/Seeker/ManageProject/ManageTeam";
+import SubmitProject from "../pages/Seeker/ManageProject/SubmitProject";
 
 const publicRoutes = [
   // User Layout
@@ -182,6 +183,10 @@ const seekerRoutes = [
       {
         path: "edit",
         element: AddProject,
+      },
+      {
+        path: "submit",
+        element: SubmitProject,
       },
     ],
   },

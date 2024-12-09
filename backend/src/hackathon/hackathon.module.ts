@@ -18,6 +18,8 @@ import {
 } from 'src/user/infrastructure/database/schemas';
 import { GetHackathonsHandler } from './application/queries/get-hackathons/get-hackathons.handler';
 import { GetAllRegisterUsersHandler } from './application/queries/get-all-register-users/get-all-register-users.handler';
+import { SeedDataHackathonHandler } from './application/commands/seed-data-hackathon/seed-data-hackathon.handler';
+import { SearchFilterHackathonsHandler } from './application/queries/search-filter-hackathons/search-filter-hackathons.handler';
 
 @Module({
   imports: [
@@ -33,6 +35,8 @@ import { GetAllRegisterUsersHandler } from './application/queries/get-all-regist
     GetHackathonHandler,
     GetHackathonsHandler,
     GetAllRegisterUsersHandler,
+    SeedDataHackathonHandler,
+    SearchFilterHackathonsHandler,
     CreateHackathonHandler,
     UpdateHackathonHandler,
     DeleteHackathonHandler,

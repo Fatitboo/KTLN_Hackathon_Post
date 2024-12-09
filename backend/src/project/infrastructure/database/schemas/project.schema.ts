@@ -40,10 +40,10 @@ export class ProjectDocument {
   @Prop({ type: [String] })
   createdByUsername: string[];
 
-  @Prop({ type: [{ type: Types.ObjectId, ref: 'User' }] })
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'UserDocument' }] })
   createdBy: Types.ObjectId[];
 
-  @Prop({ type: Types.ObjectId, ref: 'Hackathon' })
+  @Prop({ type: Types.ObjectId, ref: 'HackathonDocument' })
   registeredToHackathon: Types.ObjectId;
 
   @Prop({ type: Boolean })

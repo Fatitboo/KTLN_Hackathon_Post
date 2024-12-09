@@ -75,7 +75,7 @@ const ManageProject = () => {
         </div>
         <div className=" max-lg:px-2 py-5 min-h-60 ">
           <div className="px-60">
-            <Stepper currentStep={statePage} />
+            <Stepper currentStep={statePage} id={projectId} />
           </div>
           <Outlet />
         </div>

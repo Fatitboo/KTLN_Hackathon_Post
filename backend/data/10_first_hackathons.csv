@@ -1,0 +1,898 @@
+id,title,displayed_location,open_state,thumbnail_url,analytics_identifier,url,time_left_to_submission,submission_period_dates,themes,prize_amount,registrations_count,featured,organization_name,winners_announced,submission_gallery_url,start_a_submission_url,invite_only,eligibility_requirement_invite_only_description,managed_by_devpost_badge,img_avt,img_bg,image,description,judging_criteria,challenge_description,challenge_requirements,rule_section,resources_section,start_date,end_date,projects,view_by,like_by,join_by
+17971,LaunchHacks IV,Online,upcoming,https://d2dmyh35ffsxbl.cloudfront.net/assets/defaults/thumbnail-placeholder-8c916ef4da99a222ce6ece077c71c7e282f071f830747b2abb5718018cbfa699.gif,LaunchHacks IV (17971),https://launchhacks-iv.devpost.com/,Upcoming,"Jun 08 - 09, 2025","Beginner Friendly, Education, Open Ended","$<span data-currency-value>20,000</span>",268,False,LaunchHacks,False,https://launchhacks-iv.devpost.com/project-gallery,https://launchhacks-iv.devpost.com/challenges/start_a_submission,False,,False,https://d2dmyh35ffsxbl.cloudfront.net/assets/defaults/thumbnail-placeholder-8c916ef4da99a222ce6ece077c71c7e282f071f830747b2abb5718018cbfa699.gif,,https://d2dmyh35ffsxbl.cloudfront.net/assets/defaults/thumbnail-placeholder-8c916ef4da99a222ce6ece077c71c7e282f071f830747b2abb5718018cbfa699.gif,&lt;h4 id=&quot;tba&quot; class=&quot;h2-title&quot;&gt;TBA&lt;/h4&gt;,"
+&lt;div class=&quot;section-title bold&quot;&gt;
+&lt;h3 class=&quot;subheader section-title-left&quot;&gt;
+      Judging Criteria
+    &lt;/h3&gt;
+&lt;span class=&quot;section-title-line&quot;&gt;&lt;/span&gt;
+&lt;/div&gt;
+&lt;ul class=&quot;no-bullet&quot;&gt;
+&lt;li&gt;
+&lt;strong&gt;TBA&lt;/strong&gt;&lt;br/&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+",The fourth iteration of LaunchHacks,"
+&lt;div class=&quot;section-title bold&quot;&gt;
+&lt;h3 class=&quot;subheader section-title-left&quot;&gt;
+          Requirements
+        &lt;/h3&gt;
+&lt;span class=&quot;section-title-line&quot;&gt;&lt;/span&gt;
+&lt;/div&gt;
+&lt;div&gt;
+&lt;h4&gt;TBA&lt;/h4&gt;
+&lt;/div&gt;
+","
+&lt;div class=&quot;row&quot;&gt;
+&lt;div class=&quot;small-12 columns&quot;&gt;
+&lt;section class=&quot;row text-content content-section&quot; id=&quot;main&quot;&gt;
+&lt;section class=&quot;large-12 columns&quot; role=&quot;main&quot;&gt;
+&lt;p&gt;TBA&lt;/p&gt;
+&lt;/section&gt;
+&lt;/section&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+","
+&lt;div class=&quot;row&quot;&gt;
+&lt;div class=&quot;small-12 columns&quot;&gt;
+&lt;section class=&quot;row text-content content-section&quot; id=&quot;main&quot;&gt;
+&lt;section class=&quot;large-12 columns&quot; role=&quot;main&quot;&gt;
+&lt;p&gt;TBA&lt;/p&gt;
+&lt;/section&gt;
+&lt;/section&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+",2025-06-08,09-06-2025,[],[],[],[]
+21765,HackUNCP 2024,"Pembroke, NC, USA",upcoming,//d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/003/020/931/datas/medium_square.jpg,HackUNCP 2024 (21765),https://hackuncp.devpost.com/,Upcoming,"Mar 22 - 23, 2025","Beginner Friendly, Machine Learning/AI","$<span data-currency-value>3,000</span>",6,False,AI@UNCP,False,https://hackuncp.devpost.com/project-gallery,https://hackuncp.devpost.com/challenges/start_a_submission,False,,False,https://d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/003/020/931/datas/original.jpg,,https://d2dmyh35ffsxbl.cloudfront.net/assets/defaults/thumbnail-placeholder-8c916ef4da99a222ce6ece077c71c7e282f071f830747b2abb5718018cbfa699.gif,"&lt;p&gt;&lt;span&gt;HackUNCP 2024 is a premier hackathon that brings together creativity, collaboration, and innovation. Participants will have the unique opportunity to work on exciting projects, tackle real-world challenges, and showcase their skills in a supportive and dynamic environment.&amp;nbsp;&lt;/span&gt;&lt;span&gt;HackUNCP 2024 will take place on a weekend between September and November. The exact date is to be announced.&lt;/span&gt;&lt;span&gt;Join us for an unforgettable weekend of coding, networking, and fun. For more details, visit &lt;/span&gt;&lt;a href=&quot;https://www.hackuncp.com/&quot;&gt;hackuncp.com&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+&lt;p&gt;&amp;nbsp;&lt;/p&gt;","
+&lt;div class=&quot;section-title bold&quot;&gt;
+&lt;h3 class=&quot;subheader section-title-left&quot;&gt;
+      Judging Criteria
+    &lt;/h3&gt;
+&lt;span class=&quot;section-title-line&quot;&gt;&lt;/span&gt;
+&lt;/div&gt;
+&lt;ul class=&quot;no-bullet&quot;&gt;
+&lt;li&gt;
+&lt;strong&gt;Originality and Innovation (33%)&lt;/strong&gt;&lt;br/&gt;
+        How unique and creative is the project?
+      &lt;/li&gt;
+&lt;li&gt;
+&lt;strong&gt;Technical Complexity (33%)&lt;/strong&gt;&lt;br/&gt;
+         How challenging and sophisticated is the implementation?
+      &lt;/li&gt;
+&lt;li&gt;
+&lt;strong&gt;Impact and Practicality (33%)&lt;/strong&gt;&lt;br/&gt;
+        How significant is the problem being addressed, and how effective is the solution?
+      &lt;/li&gt;
+&lt;/ul&gt;
+","Innovate, Collaborate, Create.","
+&lt;div class=&quot;section-title bold&quot;&gt;
+&lt;h3 class=&quot;subheader section-title-left&quot;&gt;
+          Requirements
+        &lt;/h3&gt;
+&lt;span class=&quot;section-title-line&quot;&gt;&lt;/span&gt;
+&lt;/div&gt;
+&lt;div&gt;
+&lt;p&gt;Participants are encouraged to build projects that address one of our hackathon tracks: Sustainability, Education, Healthcare, Interactive Media, and Cybersecurity. Your project can be a web application, mobile app, hardware solution, or any other creative technology that fits these themes.&lt;/p&gt;
+&lt;p&gt;All projects must be started and completed within the duration of the hackathon. Submissions should include a working prototype, a detailed project description, and a 2-minute video demo showcasing the functionality of the project. Additionally, participants must provide a link to the project&#x27;s source code (whether on platforms like GitHub, GitLab, or Google Drive), along with any necessary documentation, including setup instructions and user guides. Teams are required to adhere to the HackUNCP code of conduct and follow all submission guidelines provided.&lt;/p&gt;
+&lt;/div&gt;
+","
+&lt;div class=&quot;row&quot;&gt;
+&lt;div class=&quot;small-12 columns&quot;&gt;
+&lt;section class=&quot;row text-content content-section&quot; id=&quot;main&quot;&gt;
+&lt;section class=&quot;large-12 columns&quot; role=&quot;main&quot;&gt;
+&lt;h4 id=&quot;&quot;&gt; &lt;/h4&gt;
+&lt;/section&gt;
+&lt;/section&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+","
+&lt;div class=&quot;row&quot;&gt;
+&lt;div class=&quot;small-12 columns&quot;&gt;
+&lt;section class=&quot;row text-content content-section&quot; id=&quot;main&quot;&gt;
+&lt;section class=&quot;large-12 columns&quot; role=&quot;main&quot;&gt;
+&lt;/section&gt;
+&lt;/section&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+",2025-03-22,23-03-2025,[],[],[],[]
+22628,MEGA Hackathon 2025,Online,upcoming,//d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/003/061/634/datas/medium_square.jpg,MEGA Hackathon 2025 (22628),https://mega-hackathon-2025.devpost.com/,Upcoming,"Mar 15 - 16, 2025","Beginner Friendly, Open Ended, Social Good",$<span data-currency-value>200</span>,33,False,MegaHackathonLeague,False,https://mega-hackathon-2025.devpost.com/project-gallery,https://mega-hackathon-2025.devpost.com/challenges/start_a_submission,False,,False,https://d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/003/061/634/datas/original.jpg,https://d112y698adiu2z.cloudfront.net/photos/production/challenge_background_images/003/092/011/datas/original.png,https://d112y698adiu2z.cloudfront.net/photos/production/challenge_photos/003/092/014/datas/original.png,"&lt;h4 id=&quot;mega-hackathon-2025&quot; class=&quot;h2-title&quot;&gt;MEGA Hackathon 2025&lt;/h4&gt;
+&lt;p&gt;MEGA is a dynamic and diverse coalition of high school and college students from around the world, attending institutions such as the University of Pennsylvania, UC Berkeley, University of Chicago, Duke University, Georgia Institute of Technology, The University of Glasgow, Rutgers Preparatory School, Milton Academy, The Hun School of Princeton, The Lawrenceville School, and many more. With a shared commitment to fostering sustainable development and promoting global welfare, MEGA is proud to announce its upcoming hackathon, MEGA Hackathon 2025, which is slated to take place online on Saturday, March 15, 2025, and Sunday, March 16, 2025.&lt;/p&gt;
+&lt;p&gt;The hackathons within the past four years have been significantly successful, with participants submitting innovative projects that tackled some of the world&#39;s most pressing issues, including education, climate change, poverty, and inequality. You can check out the projects from all of our hackathons at &lt;a href=&quot;https://devpost.com/hackathons?organization=MegaHackathonLeague&quot;&gt;https://devpost.com/hackathons?organization=MegaHackathonLeague&lt;/a&gt; and our website at &lt;a href=&quot;https://site.megahack.org&quot;&gt;https://site.megahack.org/&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+&lt;h4 id=&quot;objective&quot; class=&quot;h2-title&quot;&gt;Objective&lt;/h4&gt;
+&lt;p&gt;The objective of this hackathon will be &lt;strong&gt;to apply computer science or artificial intelligence to improve infrastructure and/or propel economic growth.&lt;/strong&gt; This can be completed in the form of a business plan, game, application, or website.&lt;/p&gt;
+&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+&lt;h4 id=&quot;purpose&quot; class=&quot;h2-title&quot;&gt;Purpose&lt;/h4&gt;
+&lt;p&gt;The MEGA Hackathon is a unique opportunity for computer science students to showcase their skills and creativity, while also contributing to the United Nations&#39; seventeen sustainable development goals. By infusing computer science competitions with these goals, MEGA aims to raise awareness about pressing global issues and instill passion in the next generation of computer scientists.&lt;/p&gt;
+&lt;p&gt;MEGA&#39;s annual hackathon is an event that allows participants to collaborate and compete. This year, MEGA&#39;s hackathon will cater to a diverse range of interests and skill sets, with a variety of categories that include web development, data science, machine learning, and more.&lt;/p&gt;
+&lt;p&gt;The hackathon is open to students from all backgrounds, and there are no prerequisites for participation other than an interest in computer science and a desire to make a positive impact on the world. Participants will have the opportunity to work with mentors and industry professionals, as well as to network with other like-minded individuals from around the world.&lt;/p&gt;
+&lt;p&gt;Holistically, MEGA&#39;s annual hackathon is an exciting and impactful event that showcases the power of computer science to drive positive change in the world. We encourage all computer science students to join us for this year&#39;s event and help us make a difference!&lt;/p&gt;","
+&lt;div class=&quot;section-title bold&quot;&gt;
+&lt;h3 class=&quot;subheader section-title-left&quot;&gt;
+      Judging Criteria
+    &lt;/h3&gt;
+&lt;span class=&quot;section-title-line&quot;&gt;&lt;/span&gt;
+&lt;/div&gt;
+&lt;ul class=&quot;no-bullet&quot;&gt;
+&lt;li&gt;
+&lt;strong&gt;Innovation&lt;/strong&gt;&lt;br/&gt;
+        Max Score 5 - Is this idea new? - Will this project contribute to economic growth or improved infrastructure?
+      &lt;/li&gt;
+&lt;li&gt;
+&lt;strong&gt;Technicality&lt;/strong&gt;&lt;br/&gt;
+        Max Score 5 - Use of APIs, programs, and code in the project (if code was used) - How well was the idea implemented? (if code was used) - Is this concept possible to implement in the real world?
+      &lt;/li&gt;
+&lt;li&gt;
+&lt;strong&gt;Presentation&lt;/strong&gt;&lt;br/&gt;
+        Max Score 5 - Is the information organized? - Is the concept understandable?
+      &lt;/li&gt;
+&lt;/ul&gt;
+","A collaborative hackathon integrating computer science, STEM, economics, and infrastructure — aimed at advancing human development.","
+&lt;div class=&quot;section-title bold&quot;&gt;
+&lt;h3 class=&quot;subheader section-title-left&quot;&gt;
+          Requirements
+        &lt;/h3&gt;
+&lt;span class=&quot;section-title-line&quot;&gt;&lt;/span&gt;
+&lt;/div&gt;
+&lt;div&gt;
+&lt;p&gt;The objective of this hackathon will be to apply STEM in projects that have the potential to increase global economic growth and/or infrastructure, in alignment with the United Nations&#x27; 17 Sustainable Development Goals (&lt;a href=&quot;https://sdgs.un.org/goals&quot;&gt;https://sdgs.un.org/goals&lt;/a&gt;).&lt;/p&gt;
+&lt;p&gt;This can be completed in the form of a business plan, game, application, or website. Regardless of which form of submission you choose, please submit a presentation or video describing your final product. If you wrote any code, please submit that too (preferably through a GitHub link).&lt;/p&gt;
+&lt;/div&gt;
+","
+&lt;div class=&quot;row&quot;&gt;
+&lt;div class=&quot;small-12 columns&quot;&gt;
+&lt;section class=&quot;row text-content content-section&quot; id=&quot;main&quot;&gt;
+&lt;section class=&quot;large-12 columns&quot; role=&quot;main&quot;&gt;
+&lt;p&gt;&lt;span&gt;Failure to comply with the Code of Conduct and Rules may lead to a disqualification and removal from the hackathon.&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span&gt;The submission deadline is Sunday, March, 16 2025, at 11:45 PM EST.&lt;/span&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;span&gt;Any software development tools, IDE, and/or programming language can be used for the event. If a team member used a purchased tool licensed to him or her and the license is not transferable to other members, the member’s team must choose one available to all developer teams.&lt;/span&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;span&gt;You are permitted to use publicly developed and openly licensed API’s for your project.&lt;/span&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;span&gt;Project design/assets can be created prior to the start date of the hackathon. &lt;/span&gt;&lt;span&gt;All assets should conform to the Creative Commons License agreement standard or are freely available and you have permission or license to use them.&lt;/span&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;span&gt;A team (maximum 5 members) can submit only one entry for the hackathon. An individual cannot be on more than one team.&lt;/span&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;span&gt;A team may not code applications that violate the code of conduct. For instance, Racially insensitive ideas for an application will automatically be disqualified.&lt;/span&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt; &lt;/p&gt;
+&lt;p&gt;&lt;span&gt;Code of Conduct:&lt;/span&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;span&gt;Be Kind. Please treat all other hackers with the respect they deserve. Any form of hate crime, such as discrimination, harassment, homophobia, racism is strictly prohibited.&lt;/span&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;span&gt;Be Professional. An environment where anyone feels uncomfortable, pressured, or threatened will never be productive. &lt;/span&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;span&gt;Be Respectful. Please treat our sponsors, organizers, and judges with the utmost respect. Without them, nothing would be possible.&lt;/span&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;span&gt;Speak Up. If at any point you see a fellow hacker being harassed, please talk to the nearest hackathon organizer.&lt;/span&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/section&gt;
+&lt;/section&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+","
+&lt;div class=&quot;row&quot;&gt;
+&lt;div class=&quot;small-12 columns&quot;&gt;
+&lt;section class=&quot;row text-content content-section&quot; id=&quot;main&quot;&gt;
+&lt;section class=&quot;large-12 columns&quot; role=&quot;main&quot;&gt;
+&lt;/section&gt;
+&lt;/section&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+",2025-03-15,16-03-2025,[],[],[],[]
+22191,Rice Design-a-thon 2025,Online,upcoming,//d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/003/081/061/datas/medium_square.png,Rice Design-a-thon 2025 (22191),https://rice-design-a-thon-2025.devpost.com/,Upcoming,"Jan 31 - Feb 02, 2025","Design, Low/No Code, Social Good","$<span data-currency-value>4,390</span>",14,False,Rice Design,False,https://rice-design-a-thon-2025.devpost.com/project-gallery,https://rice-design-a-thon-2025.devpost.com/challenges/start_a_submission,False,,False,https://d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/003/081/061/datas/original.png,https://d112y698adiu2z.cloudfront.net/photos/production/challenge_background_images/003/081/123/datas/original.png,https://d2dmyh35ffsxbl.cloudfront.net/assets/defaults/thumbnail-placeholder-8c916ef4da99a222ce6ece077c71c7e282f071f830747b2abb5718018cbfa699.gif,"&lt;h4 id=&quot;register&quot; class=&quot;h2-title&quot;&gt;REGISTER&lt;/h4&gt;
+&lt;p&gt;&lt;span&gt;We are currently in our planning stages, so more information will be added once it gets closer to the event dates January 31st - February 2nd, 2025 :)&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span&gt;Register using &lt;a href=&quot;https://forms.gle/SbUpY8Rs2LHYfisKA&quot;&gt;this form&lt;/a&gt; before January 30th 11:59 PM CST !!!!&lt;/span&gt;&lt;/p&gt;","
+&lt;div class=&quot;section-title bold&quot;&gt;
+&lt;h3 class=&quot;subheader section-title-left&quot;&gt;
+      Judging Criteria
+    &lt;/h3&gt;
+&lt;span class=&quot;section-title-line&quot;&gt;&lt;/span&gt;
+&lt;/div&gt;
+&lt;ul class=&quot;no-bullet&quot;&gt;
+&lt;li&gt;
+&lt;strong&gt;https://drive.google.com/file/d/1CMnKAc-DmloZ6jWH3WF-xXZu8FJVj5ld/view?usp=sharing&lt;/strong&gt;&lt;br/&gt;
+        Rubric that judges will use to evaluate projects
+      &lt;/li&gt;
+&lt;li&gt;
+&lt;strong&gt;https://drive.google.com/file/d/1q_m3DxmyatvbpDqyAd7OubMi9uk-EPW7/view?usp=sharing&lt;/strong&gt;&lt;br/&gt;
+        Rubric that judges will use to evaluate finalist presentations
+      &lt;/li&gt;
+&lt;li&gt;
+&lt;strong&gt;User experience&lt;/strong&gt;&lt;br/&gt;
+        The product is intuitive to use and exceeds user expectations. There is a clear path to complete desired tasks.
+      &lt;/li&gt;
+&lt;li&gt;
+&lt;strong&gt;Visual design&lt;/strong&gt;&lt;br/&gt;
+        The interface follows visual design principles with design choices of spacing, typography, and color that seamlessly integrate with the functionality.
+      &lt;/li&gt;
+&lt;li&gt;
+&lt;strong&gt;User research&lt;/strong&gt;&lt;br/&gt;
+        Collects data from a variety of credible sources relevant to
+the user group. Research is conducted through both general and specific lenses.
+      &lt;/li&gt;
+&lt;li&gt;
+&lt;strong&gt;Design thinking&lt;/strong&gt;&lt;br/&gt;
+        The solution is both innovative and original. Reasoning for
+design decisions is clearly provided.
+      &lt;/li&gt;
+&lt;/ul&gt;
+","Rice Design-a-thon is a virtual, UI/UX design competition that brings student designers together to create innovative, user-centered products to empower communities","
+&lt;div class=&quot;section-title bold&quot;&gt;
+&lt;h3 class=&quot;subheader section-title-left&quot;&gt;
+          Requirements
+        &lt;/h3&gt;
+&lt;span class=&quot;section-title-line&quot;&gt;&lt;/span&gt;
+&lt;/div&gt;
+&lt;div&gt;
+&lt;p&gt;Submissions must include the following:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;span&gt;A link to your team’s prototype, whether that’s &lt;a href=&quot;https://www.youtube.com/watch?v=UUsysuFmVrA&quot;&gt;Figma&lt;/a&gt; or another design tool. The playable prototype must include at least 6 hi-fidelity screens.&lt;/span&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;span&gt;Please submit a link to a playable prototype, NOT&lt;/span&gt;&lt;span&gt; a link to your design file&lt;/span&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;span&gt;A video demo with a maximum of 3 minutes&lt;/span&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;span&gt;Please prioritize walking through the app you designed, explaining key features – information about your research and design process should be included in the free response answers&lt;/span&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;span&gt;Responses to questions about the user research and design thinking process&lt;/span&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;span&gt;Describe your project (Max 150 words)&lt;/span&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;span&gt;Describe your research process and findings. If you conducted any surveys or interviews, please include the survey form and/or interview questions here. If you conducted secondary research by pulling from online sources, please include a link to your sources. (Max 500 words)&lt;/span&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;span&gt;Describe your most important design decisions. What research findings and/or user testing results led you to make these decisions? (Max 500 words)&lt;/span&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/ol&gt;
+&lt;p&gt; &lt;/p&gt;
+&lt;h4&gt;IMPORTANT REMINDERS&lt;/h4&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;span&gt;Ensure that your responses do not exceed the word limit&lt;br/&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;span&gt;Ensure that your video does not exceed the time limit of 3 minutes&lt;br/&gt;&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;&lt;span&gt;Ensure that you have given &lt;strong&gt;access to anyone to view&lt;/strong&gt; the link to your playable prototype&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;&lt;span&gt;Ensure that you have completed all materials on Devpost &lt;strong&gt;before the 10:00 am CST deadline&lt;/strong&gt;&lt;br/&gt;&lt;br/&gt;Not meeting all of the above is grounds for disqualification &lt;/span&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+","
+&lt;div class=&quot;row&quot;&gt;
+&lt;div class=&quot;small-12 columns&quot;&gt;
+&lt;section class=&quot;row text-content content-section&quot; id=&quot;main&quot;&gt;
+&lt;section class=&quot;large-12 columns&quot; role=&quot;main&quot;&gt;
+&lt;h4 id=&quot;dates&quot;&gt;Dates&lt;/h4&gt;
+&lt;p&gt;January 31st - February 2nd, 2025&lt;/p&gt;
+&lt;h4 id=&quot;eligibility&quot;&gt;Eligibility&lt;/h4&gt;
+&lt;p&gt;Undergraduate college student with a U.S.-based residential address. Bootcamp students do NOT meet participation requirements unless they show proof of undergraduate enrollment.&lt;/p&gt;
+&lt;h4 id=&quot;project-and-submission-requirements&quot;&gt;Project and Submission Requirements&lt;/h4&gt;
+&lt;p&gt;See submission requirements on home page&lt;/p&gt;
+&lt;h4 id=&quot;prizes&quot;&gt;Prizes&lt;/h4&gt;
+&lt;p&gt;See prizes on home page&lt;/p&gt;
+&lt;h4 id=&quot;judging-criteria-and-winner-selection&quot;&gt;Judging Criteria and Winner Selection&lt;/h4&gt;
+&lt;p&gt;See judging criteria &lt;/p&gt;
+&lt;/section&gt;
+&lt;/section&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+","
+&lt;div class=&quot;row&quot;&gt;
+&lt;div class=&quot;small-12 columns&quot;&gt;
+&lt;section class=&quot;row text-content content-section&quot; id=&quot;main&quot;&gt;
+&lt;section class=&quot;large-12 columns&quot; role=&quot;main&quot;&gt;
+&lt;/section&gt;
+&lt;/section&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+",2025-01-31,02-02-2025,[],[],[],[]
+21664,DeveloperWeek 2025 Hackathon,Santa Clara Convention Center + Online,upcoming,//d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/002/935/056/datas/medium_square.jpg,DeveloperWeek 2025 Hackathon (21664),https://developerweek-2025-hackathon.devpost.com/,Upcoming,"Jan 27 - Feb 13, 2025","DevOps, Enterprise, IoT","$<span data-currency-value>12,500</span>",207,False,DevNetwork,False,https://developerweek-2025-hackathon.devpost.com/project-gallery,https://developerweek-2025-hackathon.devpost.com/challenges/start_a_submission,False,,False,https://d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/002/935/056/datas/original.jpg,,https://d112y698adiu2z.cloudfront.net/photos/production/challenge_photos/002/935/058/datas/original.jpg,"&lt;p&gt;&lt;span&gt;Join the nation&#39;s largest challenge-driven hackathon @ DeveloperWeek 2025!&lt;/span&gt;&lt;/p&gt;
+&lt;h4 id=&quot;developerweek-2025-hackathon&quot; class=&quot;h2-title&quot;&gt;&lt;span&gt;DEVELOPERWEEK 2025 HACKATHON&lt;/span&gt;&lt;/h4&gt;
+&lt;p&gt;Join the largest challenge-driven in-person &amp;amp; online hackathon, co-located with DeveloperWeek 2025!&lt;/p&gt;
+&lt;p&gt;Our hackathons regularly attract over 800+ participants -- and we are inviting the international developer community to converge in-person &amp;amp; online this year for the DeveloperWeek 2025 Hackathon!&lt;/p&gt;
+&lt;p&gt;&lt;span&gt;&lt;strong&gt;In Person&lt;/strong&gt;&amp;nbsp;&lt;strong&gt;&amp;amp; Awards&lt;/strong&gt;&amp;nbsp;- Santa Clara Convention Center - February 12-13, 2025&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span&gt;&lt;strong&gt;Online&lt;/strong&gt;&amp;nbsp;- Jan 27 - Feb 13, 2025&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&amp;nbsp;&lt;span&gt;1.&amp;nbsp;&lt;/span&gt;Register via&amp;nbsp;&lt;strong&gt;&lt;a href=&quot;https://www.developerweek.com/events/hackathon/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;&lt;span&gt;Event&lt;/span&gt;&lt;span&gt;brite.&lt;/span&gt;&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span&gt;2.&amp;nbsp;&lt;/span&gt;Create a DevPost account and click Register on the DevPost DeveloperWeek 2025 Hackathon page.&lt;/p&gt;
+&lt;p&gt;&lt;span&gt;3. DeveloperWeek 2025 Hackathon Kicks off January 27, 2025!&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span&gt;&amp;nbsp;Check out the full DeveloperWeek 202 Hackathon &lt;a href=&quot;https://www.developerweek.com/events/hackathon/&quot;&gt;schedule!&lt;/a&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span&gt;4. Review full Hackathon Instructions&amp;nbsp;&lt;a href=&quot;https://docs.google.com/document/d/e/2PACX-1vRJBHZKPGJxw9Xl3nhAvUKC0PVio4HVvfwU0PJZqBiA50lYMag44P3_M9WNMHmVANcXhhYHOlHw5k3G/pub&quot;&gt;here!&lt;/a&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span&gt;* All Hackathon Attendees must be pre-registered on both: Eventbrite &amp;amp; Devpost.&lt;/span&gt;&lt;/p&gt;","
+&lt;div class=&quot;section-title bold&quot;&gt;
+&lt;h3 class=&quot;subheader section-title-left&quot;&gt;
+      Judging Criteria
+    &lt;/h3&gt;
+&lt;span class=&quot;section-title-line&quot;&gt;&lt;/span&gt;
+&lt;/div&gt;
+&lt;ul class=&quot;no-bullet&quot;&gt;
+&lt;li&gt;
+&lt;strong&gt;Progress&lt;/strong&gt;&lt;br/&gt;
+        How much progress did you make?
+
+
+      &lt;/li&gt;
+&lt;li&gt;
+&lt;strong&gt;Concept&lt;/strong&gt;&lt;br/&gt;
+        Does it solve a real problem?
+
+
+      &lt;/li&gt;
+&lt;li&gt;
+&lt;strong&gt;Feasibility&lt;/strong&gt;&lt;br/&gt;
+        Could this become a startup or company?
+
+
+      &lt;/li&gt;
+&lt;/ul&gt;
+",Join the nation's largest challenge-driven in-person and online hackathon @ DeveloperWeek 2025!,"
+&lt;div class=&quot;section-title bold&quot;&gt;
+&lt;h3 class=&quot;subheader section-title-left&quot;&gt;
+          Requirements
+        &lt;/h3&gt;
+&lt;span class=&quot;section-title-line&quot;&gt;&lt;/span&gt;
+&lt;/div&gt;
+&lt;div&gt;
+&lt;p&gt;View the Full Set of Instructions &lt;a href=&quot;https://docs.google.com/document/d/e/2PACX-1vRJBHZKPGJxw9Xl3nhAvUKC0PVio4HVvfwU0PJZqBiA50lYMag44P3_M9WNMHmVANcXhhYHOlHw5k3G/pub&quot;&gt;here!&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Registration - Must register via both 1) &lt;a href=&quot;https://www.developerweek.com/events/hackathon/#register&quot;&gt;Eventbrite&lt;/a&gt; &amp;amp; 2) Devpost prior to Hackathon.&lt;/li&gt;
+&lt;li&gt;This is an in-person &amp;amp; online hackathon. Teams will be formed on Devpost.com at the DeveloperWeek 2025 Hackathon. From Devpost, participants can message each other to form teams, participate in chat boards, and communicate with sponsors.&lt;/li&gt;
+&lt;li&gt;Teams can build apps from scratch (Mobile App / Web App).&lt;/li&gt;
+&lt;li&gt;Teams can solve no challenges (build whatever you want) or can submit to as many challenges as they want.&lt;/li&gt;
+&lt;li&gt;There will be two rounds of judging. During Round 1, judges will review all team projects and fill out a scoring sheet on each to determine the Overall Hackathon Winner. Round 2 is the Sponsor Round of judging. Each sponsor will judge the teams working on their Challenge(s) and determine a winner(s). The sponsors choose their own prize winners.&lt;/li&gt;
+&lt;li&gt;Round 1 judging will be based on: 1) PROGRESS: How much progress you make on your submission; 2) CONCEPT: Does your submission solve a real problem?; and 3) FEASIBILITY: Could your submission grow/evolve to become a startup or be a profitable business.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+","
+&lt;div class=&quot;row&quot;&gt;
+&lt;div class=&quot;small-12 columns&quot;&gt;
+&lt;section class=&quot;row text-content content-section&quot; id=&quot;main&quot;&gt;
+&lt;section class=&quot;large-12 columns&quot; role=&quot;main&quot;&gt;
+&lt;p&gt;Age - 18 years and older. &lt;/p&gt;
+&lt;p&gt;Citizenship - Participants from any country are allowed to participate. &lt;/p&gt;
+&lt;p&gt;Location -  &lt;/p&gt;
+&lt;p&gt;&lt;span&gt;&lt;strong&gt;Online&lt;/strong&gt; - January 27 - February 13, 2025&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span&gt;&lt;strong&gt;In Person&lt;/strong&gt; - Santa Clara Convention Center - February 12-13, 2025&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Team Size - Teams can range in size from 1 - 5 people. &lt;/p&gt;
+&lt;p&gt;Registration - Must register via &lt;a href=&quot;https://www.developerweek.com/events/hackathon/#register&quot;&gt;Eventbrite&lt;/a&gt; &amp;amp; Devpost prior to Hackathon.&lt;/p&gt;
+&lt;/section&gt;
+&lt;/section&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+","
+&lt;div class=&quot;row&quot;&gt;
+&lt;div class=&quot;small-12 columns&quot;&gt;
+&lt;section class=&quot;row text-content content-section&quot; id=&quot;main&quot;&gt;
+&lt;section class=&quot;large-12 columns&quot; role=&quot;main&quot;&gt;
+&lt;/section&gt;
+&lt;/section&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+",2025-01-27,13-02-2025,[],[],[],[]
+20368,Hoya Hacks 2025,Healey Family Student Center,upcoming,//d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/002/809/856/datas/medium_square.png,Hoya Hacks 2025 (20368),https://hoya-hacks-2025.devpost.com/,Upcoming,"Jan 24 - 26, 2025","Beginner Friendly, Social Good","$<span data-currency-value>1,500</span>",50,False,Hoya Hacks,False,https://hoya-hacks-2025.devpost.com/project-gallery,https://hoya-hacks-2025.devpost.com/challenges/start_a_submission,False,,False,https://d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/002/809/856/datas/original.png,https://d112y698adiu2z.cloudfront.net/photos/production/challenge_background_images/002/809/857/datas/original.png,https://d112y698adiu2z.cloudfront.net/photos/production/challenge_photos/002/809/859/datas/original.png,&lt;h4 id=&quot;coming-soon&quot; class=&quot;h2-title&quot;&gt;Coming Soon!&lt;/h4&gt;,"
+&lt;div class=&quot;section-title bold&quot;&gt;
+&lt;h3 class=&quot;subheader section-title-left&quot;&gt;
+      Judging Criteria
+    &lt;/h3&gt;
+&lt;span class=&quot;section-title-line&quot;&gt;&lt;/span&gt;
+&lt;/div&gt;
+&lt;ul class=&quot;no-bullet&quot;&gt;
+&lt;li&gt;
+&lt;strong&gt;Coming Soon!&lt;/strong&gt;&lt;br/&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+",Hoya Hacks 2025. More information coming soon.,"
+&lt;div class=&quot;section-title bold&quot;&gt;
+&lt;h3 class=&quot;subheader section-title-left&quot;&gt;
+          Requirements
+        &lt;/h3&gt;
+&lt;span class=&quot;section-title-line&quot;&gt;&lt;/span&gt;
+&lt;/div&gt;
+&lt;div&gt;
+&lt;h4&gt;Coming Soon!&lt;/h4&gt;
+&lt;/div&gt;
+","
+&lt;div class=&quot;row&quot;&gt;
+&lt;div class=&quot;small-12 columns&quot;&gt;
+&lt;section class=&quot;row text-content content-section&quot; id=&quot;main&quot;&gt;
+&lt;section class=&quot;large-12 columns&quot; role=&quot;main&quot;&gt;
+&lt;h4 id=&quot;coming-soon&quot;&gt;Coming Soon!&lt;/h4&gt;
+&lt;h4 id=&quot;&quot;&gt; &lt;/h4&gt;
+&lt;/section&gt;
+&lt;/section&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+","
+&lt;div class=&quot;row&quot;&gt;
+&lt;div class=&quot;small-12 columns&quot;&gt;
+&lt;section class=&quot;row text-content content-section&quot; id=&quot;main&quot;&gt;
+&lt;section class=&quot;large-12 columns&quot; role=&quot;main&quot;&gt;
+&lt;h4 id=&quot;coming-soon&quot;&gt;Coming Soon!&lt;/h4&gt;
+&lt;h4 id=&quot;&quot;&gt; &lt;/h4&gt;
+&lt;/section&gt;
+&lt;/section&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+",2025-01-24,26-01-2025,[],[],[],[]
+21484,HackSpace International #1 ,Online,upcoming,//d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/002/894/586/datas/medium_square.jpg,HackSpace International #1  (21484),https://hackspace.devpost.com/,Upcoming,"Jan 03 - 05, 2025","Beginner Friendly, Education, Machine Learning/AI",$<span data-currency-value>0</span>,19,False,Cosmos Union,False,https://hackspace.devpost.com/project-gallery,https://hackspace.devpost.com/challenges/start_a_submission,False,,False,https://d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/002/894/586/datas/original.jpg,https://d112y698adiu2z.cloudfront.net/photos/production/challenge_background_images/002/894/589/datas/original.png,https://d112y698adiu2z.cloudfront.net/photos/production/challenge_photos/002/894/592/datas/original.png,"&lt;p&gt;Welcome to the inaugural Cosmos Union Hackathon, a global convergence of young minds driving innovation in STEM and space exploration! Scheduled for January 3rd-5th, this hybrid event combines the excitement of in-person collaboration at Foothill High School in the Bay Area, California, with the accessibility of online participation for international enthusiasts.&lt;/p&gt;
+&lt;p&gt;Whether you&#39;re a seasoned veteran or a curious beginner, the Cosmos Union Hackathon invites you to join our mission of igniting innovation and fostering collaboration among students aged 13-22. Our inclusive environment celebrates diversity and welcomes individuals from all backgrounds to contribute their unique perspectives and ideas.&lt;/p&gt;
+&lt;p&gt;For beginners, this hackathon is the perfect opportunity to dip your toes into the world of STEM and space exploration. Our supportive community and mentorship program are tailored to guide you through the process, regardless of your level of experience. Embrace the spirit of curiosity and experimentation as you embark on a journey of discovery alongside like-minded peers from around the world.&lt;/p&gt;
+&lt;p&gt;International participants, rejoice! The online component of our hackathon ensures that geographical barriers are no longer obstacles to collaboration. Connect with fellow enthusiasts from every corner of the globe, share cultural insights, and work together to tackle some of the most pressing challenges in science and technology.&lt;/p&gt;
+&lt;p&gt;Join us for two days of exhilarating problem-solving, mentorship from industry experts, and networking opportunities that transcend borders. Whether you&#39;re passionate about coding, engineering, robotics, or any other field within STEM, the Cosmos Union Hackathon is your gateway to unlocking your potential and making a tangible impact on the future of space exploration.&lt;/p&gt;
+&lt;p&gt;Register now and become part of a global movement dedicated to pushing the boundaries of scientific discovery. Together, let&#39;s reach for the stars and redefine what&#39;s possible.&lt;/p&gt;","
+&lt;div class=&quot;section-title bold&quot;&gt;
+&lt;h3 class=&quot;subheader section-title-left&quot;&gt;
+      Judging Criteria
+    &lt;/h3&gt;
+&lt;span class=&quot;section-title-line&quot;&gt;&lt;/span&gt;
+&lt;/div&gt;
+&lt;ul class=&quot;no-bullet&quot;&gt;
+&lt;li&gt;
+&lt;strong&gt;To come soon&lt;/strong&gt;&lt;br/&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+",Fostering a community of collaboration through youth innovation and exploration FOR the future of our planet and beyond!,,"
+&lt;div class=&quot;row&quot;&gt;
+&lt;div class=&quot;small-12 columns&quot;&gt;
+&lt;section class=&quot;row text-content content-section&quot; id=&quot;main&quot;&gt;
+&lt;section class=&quot;large-12 columns&quot; role=&quot;main&quot;&gt;
+&lt;h4 id=&quot;dates&quot;&gt;Dates&lt;/h4&gt;
+&lt;h4 id=&quot;eligibility&quot;&gt;Eligibility&lt;/h4&gt;
+&lt;h4 id=&quot;project-and-submission-requiremfents&quot;&gt;Project and Submission Requiremfents&lt;/h4&gt;
+&lt;h4 id=&quot;prizes&quot;&gt;Prizes&lt;/h4&gt;
+&lt;h4 id=&quot;judging-criteria-and-winner-seletion&quot;&gt;Judging Criteria and Winner Seletion&lt;/h4&gt;
+&lt;/section&gt;
+&lt;/section&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+","
+&lt;div class=&quot;row&quot;&gt;
+&lt;div class=&quot;small-12 columns&quot;&gt;
+&lt;section class=&quot;row text-content content-section&quot; id=&quot;main&quot;&gt;
+&lt;section class=&quot;large-12 columns&quot; role=&quot;main&quot;&gt;
+&lt;/section&gt;
+&lt;/section&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+",2025-01-03,05-01-2025,[],[],[],[]
+22705,Hacks for Hackers,Online,upcoming,//d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/003/081/042/datas/medium_square.jpg,Hacks for Hackers (22705),https://hacks-for-hackers-22705.devpost.com/,Upcoming,"Jan 03 - 05, 2025","Beginner Friendly, Open Ended, Social Good",$<span data-currency-value>0</span>,5,False,Major League Hacking,False,https://hacks-for-hackers-22705.devpost.com/project-gallery,https://hacks-for-hackers-22705.devpost.com/challenges/start_a_submission,False,,False,https://d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/003/081/042/datas/original.jpg,https://d112y698adiu2z.cloudfront.net/photos/production/challenge_background_images/003/081/044/datas/original.jpg,https://d112y698adiu2z.cloudfront.net/photos/production/challenge_photos/003/081/043/datas/original.png,"&lt;p&gt;Howdy, Friends!&lt;/p&gt;
+&lt;p&gt;We invite you to hack on projects that define your hacker journey. Build creative hacks that empower you and your fellow hackers to do more and celebrate the new year with us.&lt;/p&gt;
+&lt;p&gt;Whether you build something on the theme or not, focus on having fun. While we&#39;d love to have you build something on the theme, our themes are only here for inspiration. Please build whatever you&#39;d like!&lt;/p&gt;","
+&lt;div class=&quot;section-title bold&quot;&gt;
+&lt;h3 class=&quot;subheader section-title-left&quot;&gt;
+      Judging Criteria
+    &lt;/h3&gt;
+&lt;span class=&quot;section-title-line&quot;&gt;&lt;/span&gt;
+&lt;/div&gt;
+&lt;ul class=&quot;no-bullet&quot;&gt;
+&lt;li&gt;
+&lt;strong&gt;Completion&lt;/strong&gt;&lt;br/&gt;
+        Does the hack work? Did the team achieve everything they wanted?
+      &lt;/li&gt;
+&lt;li&gt;
+&lt;strong&gt;Originality&lt;/strong&gt;&lt;br/&gt;
+        Has this project been done before at hackathons in the past? How creative is their project in solving the problem at hand?
+      &lt;/li&gt;
+&lt;li&gt;
+&lt;strong&gt;Design&lt;/strong&gt;&lt;br/&gt;
+        Did the team put thought into the user experience? How well designed is the interface?
+      &lt;/li&gt;
+&lt;li&gt;
+&lt;strong&gt;Adherence to Theme&lt;/strong&gt;&lt;br/&gt;
+        Does the hack adhere to the event&#x27;s theme? Does it implement that theme fully or just partially?
+      &lt;/li&gt;
+&lt;li&gt;
+&lt;strong&gt;Learning&lt;/strong&gt;&lt;br/&gt;
+        Did the team stretch themselves? Did they try to learn something new? What kind of projects have they worked on before?
+      &lt;/li&gt;
+&lt;li&gt;
+&lt;strong&gt;Technology&lt;/strong&gt;&lt;br/&gt;
+        How technically impressive was the hack? Was the technical problem the team tackled difficult? Did it use a particularly clever technique or did it use many different components? Did the technology involved make you go &quot;Wow&quot;?
+      &lt;/li&gt;
+&lt;/ul&gt;
+",Build creative hacks that empower you and your fellow hackers to do more!,"
+&lt;div class=&quot;section-title bold&quot;&gt;
+&lt;h3 class=&quot;subheader section-title-left&quot;&gt;
+          Requirements
+        &lt;/h3&gt;
+&lt;span class=&quot;section-title-line&quot;&gt;&lt;/span&gt;
+&lt;/div&gt;
+&lt;div&gt;
+&lt;ul&gt;
+&lt;li&gt;We require all teams to submit a&lt;strong&gt; 2 minute&lt;/strong&gt; or less demo video.&lt;/li&gt;
+&lt;li&gt;Your code must be available in some sort of public repository. &lt;/li&gt;
+&lt;li&gt;Your code and video must remain public post event if you want to continue being eligible for prizes. If your repo and video are not public we will select new winners. &lt;/li&gt;
+&lt;li&gt;Your demo video must state the name of the hackathon at the beginning of the video. 
+&lt;ul&gt;
+&lt;li&gt;Ex. &quot;Hey I&#x27;m Sam and this is my demo for AI Hackfest.&quot;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;You must have completed &lt;strong&gt;all&lt;/strong&gt; the registration steps on Devpost. 
+&lt;ul&gt;
+&lt;li&gt;Note that Hosted by MLH events require registration and check-in on MLH&#x27;s event page.&lt;/li&gt;
+&lt;li&gt;Your email on all check in and registration platforms (Devpost, check-in form &amp;amp; MLH&#x27;s event page) must match.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Your video must be created the weekend of the hackathon. &lt;/li&gt;
+&lt;li&gt;We &lt;strong&gt;don&#x27;t&lt;/strong&gt; allow you to submit your project to other hackathons.&lt;/li&gt;
+&lt;li&gt;You can no longer submit projects that include prior work.&lt;/li&gt;
+&lt;li&gt;There is no maximum or minimum team size, but we&#x27;ve noticed that teams perform best when they have a maximum of 4 hackers.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+","
+&lt;div class=&quot;row&quot;&gt;
+&lt;div class=&quot;small-12 columns&quot;&gt;
+&lt;section class=&quot;row text-content content-section&quot; id=&quot;main&quot;&gt;
+&lt;section class=&quot;large-12 columns&quot; role=&quot;main&quot;&gt;
+&lt;p&gt;&lt;strong&gt;RULES&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Review our Hackathon Rules for a full list of the rules: &lt;a href=&quot;https://github.com/MLH/mlh-policies/blob/main/standard-hackathon-rules.md&quot;&gt;https://github.com/MLH/mlh-policies/blob/main/standard-hackathon-rules.md&lt;/a&gt; &lt;/p&gt;
+&lt;p&gt;Review our Contest Terms: &lt;a href=&quot;https://mlh.link/contest-terms&quot;&gt;https://mlh.link/contest-terms&lt;/a&gt; &lt;/p&gt;
+&lt;p&gt;Additional specific rules for our Digital Hackathons:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;ul&gt;
+&lt;li&gt;We require all teams to submit a 2 minute or less demo video.&lt;/li&gt;
+&lt;li&gt;Your code must be available in some sort of public repository. &lt;/li&gt;
+&lt;li&gt;Your code and video must remain public post event if you want to continue being eligible for prizes. If your repo and video are not public we will select new winners. &lt;/li&gt;
+&lt;li&gt;Your demo video must state the name of the hackathon at the beginning of the video. 
+&lt;ul&gt;
+&lt;li&gt;Ex. &quot;Hey I&#x27;m Sam and this is my demo for Bon Hacketit.&quot;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;You must have completed &lt;strong&gt;all&lt;/strong&gt; the registration steps on Devpost. 
+&lt;ul&gt;
+&lt;li&gt;Note that Hosted by MLH events require registration and check-in on MLH&#x27;s event page.&lt;/li&gt;
+&lt;li&gt;Your email on all check in and registration platforms (Devpost, check-in form &amp;amp; MLH&#x27;s event page) must match.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Your video must be created the weekend of the hackathon. &lt;/li&gt;
+&lt;li&gt;We &lt;strong&gt;don&#x27;t&lt;/strong&gt; allow you to submit your project to other hackathons.&lt;/li&gt;
+&lt;li&gt;You can no longer submit project that include prior work.&lt;/li&gt;
+&lt;li&gt;There is no maximum or minimum team size but we&#x27;ve noticed that teams perform best when they have a maximum of 4 hackers.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Eligibility&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;This event open to hackers, all over the world. While we primarily work with student hackers or those who have graduated within the last 12 months, working professionals are also welcome to join us. Students can include high school students, university undergraduate or postgraduate students, and people who are in vocational training such as apprenticeships.&lt;/p&gt;
+&lt;p&gt; &lt;/p&gt;
+&lt;p&gt;As per our Code of Conduct, there is no discrimination on the basis of race, religion, national origin, color, sex, gender identity, sexual orientation, social class, economic status, veteran status, disability, or age. &lt;/p&gt;
+&lt;p&gt; &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Code of Conduct&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;TL;DR.​ Be respectful. Harassment and abuse are never tolerated. If you are in a situation that makes you uncomfortable at an MLH Member Event, if the event itself is creating an unsafe or inappropriate environment, or if interacting with an MLH representative or event organizer makes you uncomfortable, please report it using the procedures included in this document.&lt;/p&gt;
+&lt;p&gt; &lt;/p&gt;
+&lt;p&gt;Major League Hacking (MLH) stands for inclusivity. We believe that every single person has the right to hack in a safe and welcoming environment.&lt;/p&gt;
+&lt;p&gt; &lt;/p&gt;
+&lt;p&gt;Harassment includes but is not limited to offensive verbal or written comments related to gender, age, sexual orientation, disability, physical appearance, body size, race, religion, social class, economic status, veteran status, sexual images, deliberate intimidation, stalking, following, harassing photography or recording, sustained disruption of talks or other events, inappropriate physical contact, and unwelcome sexual attention. If what you’re doing is making someone feel uncomfortable, that counts as harassment and is enough reason to stop doing it.&lt;/p&gt;
+&lt;p&gt;Participants asked to stop any harassing behavior are expected to comply immediately.&lt;/p&gt;
+&lt;p&gt;Sponsors, judges, mentors, volunteers, organizers, MLH staff, and anyone else at the event are also subject to the anti-harassment policy. In particular, attendees should not use sexualised images, activities, or other material both in their hacks and during the event. Booth staff (including volunteers) should not use sexualised clothing/uniforms/costumes, or otherwise create a sexualised environment.&lt;/p&gt;
+&lt;p&gt; &lt;/p&gt;
+&lt;p&gt;If a participant engages in harassing behavior, MLH may take any action it deems appropriate, including warning the offender or expulsion from the event with no eligibility for reimbursement or refund of any type.&lt;/p&gt;
+&lt;p&gt; &lt;/p&gt;
+&lt;p&gt;If you are being harassed, notice that someone else is being harassed, or have any other concerns, please contact MLH using the reporting procedures defined below.&lt;/p&gt;
+&lt;p&gt; &lt;/p&gt;
+&lt;p&gt;MLH representatives will be happy to help participants contact campus security or local law enforcement, provide escorts, or otherwise assist those experiencing harassment to feel safe for the duration of the event. We value your attendance.&lt;/p&gt;
+&lt;p&gt; &lt;/p&gt;
+&lt;p&gt;We expect participants to follow these rules at all hackathon venues, online interactions in relation to the event, hackathon-related social events, and on hackathon supplied transportation.&lt;/p&gt;
+&lt;p&gt; &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Reporting Procedures&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;If you feel uncomfortable or think there may be a potential violation of the code of conduct, please report it immediately using one of the following methods. All reporters have the right to remain anonymous.&lt;/p&gt;
+&lt;p&gt; &lt;/p&gt;
+&lt;p&gt;By sending information to the general reporting line, your report will go to any or all of the MLH representatives listed below.&lt;/p&gt;
+&lt;p&gt; &lt;/p&gt;
+&lt;p&gt;North America General Reporting - +14092026060, &lt;a href=&quot;mailto:i%E2%80%8Bncidents@mlh.io&quot;&gt;i​ncidents@mlh.io&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Canada &lt;span&gt;General Reporting - &lt;/span&gt;+13434534532, &lt;a href=&quot;mailto:i%E2%80%8Bncidents@mlh.io&quot;&gt;i​ncidents@mlh.io&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Europe General Reporting - +448008085675, &lt;a href=&quot;mailto:i%E2%80%8Bncidents@mlh.io&quot;&gt;i​ncidents@mlh.io&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Asia-Pacific General Reporting - +918000402492, &lt;a href=&quot;mailto:i%E2%80%8Bncidents@mlh.io&quot;&gt;i​ncidents@mlh.io&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt; &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Special Incidents&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;If you are uncomfortable reporting your situation to one or more of these people or need to contact any of them directly in case of emergency, direct contact details are listed below.&lt;/p&gt;
+&lt;p&gt; &lt;/p&gt;
+&lt;p&gt;Mary Siebert - +1 (516) 362-1835, ​&lt;a href=&quot;mailto:mary@mlh.io&quot;&gt;mary@mlh.io&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Ryan Swift - +1 (347) 868-6698, &lt;a href=&quot;mailto:r%E2%80%8Byan@mlh.io&quot;&gt;r​yan@mlh.io&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Nick Quinlan - +1 (510) 859-8578, ​&lt;a href=&quot;mailto:nq@mlh.io&quot;&gt;nq@mlh.io&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Jon Gottfried - +1 (212) 851-6746, &lt;a href=&quot;mailto:%E2%80%8Bjon@mlh.io&quot;&gt;​jon@mlh.io&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Swift - +1 (347) 220-8667, &lt;a href=&quot;mailto:s%E2%80%8Bwift@mlh.io&quot;&gt;s​wift@mlh.io&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;MLH reserves the right to revise, make exceptions to, or otherwise amend these policies in whole or in part. If you have any questions regarding these policies, please contact MLH by e-mail at​ &lt;a href=&quot;mailto:hi@mlh.io&quot;&gt;hi@mlh.io&lt;/a&gt;​.&lt;/p&gt;
+&lt;p&gt; &lt;/p&gt;
+&lt;p&gt;Remember!&lt;/p&gt;
+&lt;p&gt;The competition is just a part of the hackathon. To make the most out of the event, try something new, teach other people, and make new friends!&lt;/p&gt;
+&lt;p&gt;Happy Hacking from the MLH team!&lt;/p&gt;
+&lt;/section&gt;
+&lt;/section&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+","
+&lt;div class=&quot;row&quot;&gt;
+&lt;div class=&quot;small-12 columns&quot;&gt;
+&lt;section class=&quot;row text-content content-section&quot; id=&quot;main&quot;&gt;
+&lt;section class=&quot;large-12 columns&quot; role=&quot;main&quot;&gt;
+&lt;p&gt;If this is your first hackathon or if you want to learn a new skill, there are tons of resources available this weekend to aid your hackathon experience.&lt;/p&gt;
+&lt;p&gt;If you&#x27;re not looking for something specific and need inspiration for your hack this weekend, feel free to visit the following links for some general tips and tools to get started:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://hack.mlh.io%20&quot;&gt;https://hack.mlh.io&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/section&gt;
+&lt;/section&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+",2025-01-03,05-01-2025,[],[],[],[]
+22775,Winter MelonJam 2024,Online,upcoming,//d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/003/086/948/datas/medium_square.png,Winter MelonJam 2024 (22775),https://winter-melonjam-2024.devpost.com/,Upcoming,"Dec 27 - 30, 2024","Beginner Friendly, Gaming",$<span data-currency-value>0</span>,6,False,Cupertino GDC,False,https://winter-melonjam-2024.devpost.com/project-gallery,https://winter-melonjam-2024.devpost.com/challenges/start_a_submission,False,,False,https://d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/003/086/948/datas/original.png,,https://d112y698adiu2z.cloudfront.net/photos/production/challenge_photos/003/091/853/datas/original.png,"&lt;p&gt;&lt;span style=&quot;       text-decoration: none;  &quot;&gt;What is a game jam, you might ask? It&#39;s just a hackathon dedicated to games specifically, and they&#39;re loads of fun! You don&#39;t need any experience at all-- even just following a few tutorials, with your own twists, is okay! Winter MelonJam 2024 will take place December 27th 9:00 AM PST (December 27th 5:00 PM UTC), and the game jam will end on December 30th 8:59 AM PST (December 30th 4:59 PM UTC).&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span style=&quot;       text-decoration: none;  &quot;&gt;Our core mission is to transform game development from a niche topic into something everything can learn to appreciate. As such, we HIGHLY encourage high schoolers and other novices to join this game jam! We will be offering dedicated prizes for these contestants as well as hosting workshops for beginners to create a welcoming environment.&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span style=&quot;       text-decoration: none;  &quot;&gt;Check out our&lt;/span&gt;&lt;a href=&quot;https://gamedevclub.tech/melonjam/&quot;&gt;&lt;span style=&quot;       text-decoration: none;  &quot;&gt; &lt;/span&gt;&lt;span style=&quot;       text-decoration: underline;    &quot;&gt;website&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot;       text-decoration: none;  &quot;&gt; for more details!&lt;/span&gt;&lt;/p&gt;
+&lt;h4 id=&quot;important-please-read&quot; class=&quot;h2-title&quot;&gt;&lt;span style=&quot;       text-decoration: none;  &quot;&gt;Important -- PLEASE READ!&lt;/span&gt;&lt;/h4&gt;
+&lt;p&gt;&lt;span style=&quot;       text-decoration: none;  &quot;&gt;Our game jam is being hosted on &lt;a href=&quot;https://itch.io/jam/wmj2024&quot;&gt;Itch,&lt;/a&gt; and we will not accept submissions from Devpost.&lt;/span&gt;&lt;/p&gt;
+&lt;h4 id=&quot;benefits&quot; class=&quot;h2-title&quot;&gt;&lt;span style=&quot;       text-decoration: none;  &quot;&gt;Benefits&lt;/span&gt;&lt;/h4&gt;
+&lt;p&gt;&lt;span style=&quot;       text-decoration: none;  &quot;&gt;Everyone who submits a project will be given access to benefits worth thousands of dollars. We also provide many different prizes to the winners of this game jam, so be sure to sign up!&lt;/span&gt;&lt;/p&gt;
+&lt;h4 id=&quot;questions&quot; class=&quot;h2-title&quot;&gt;&lt;span style=&quot;       text-decoration: none;  &quot;&gt;Questions&lt;/span&gt;&lt;/h4&gt;
+&lt;p&gt;&lt;span style=&quot;       text-decoration: none;  &quot;&gt;If you have any other questions, please feel free to ask on our&lt;/span&gt;&lt;a href=&quot;https://discord.gg/uYmNuZymJ2&quot;&gt;&lt;span style=&quot;       text-decoration: none;  &quot;&gt; &lt;/span&gt;&lt;span style=&quot;       text-decoration: underline;    &quot;&gt;Discord server&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot;       text-decoration: none;  &quot;&gt;! Otherwise, we cannot wait to see all of the exciting ideas you have to offer! Good luck!&lt;/span&gt;&lt;/p&gt;","
+&lt;div class=&quot;section-title bold&quot;&gt;
+&lt;h3 class=&quot;subheader section-title-left&quot;&gt;
+      Judging Criteria
+    &lt;/h3&gt;
+&lt;span class=&quot;section-title-line&quot;&gt;&lt;/span&gt;
+&lt;/div&gt;
+&lt;ul class=&quot;no-bullet&quot;&gt;
+&lt;li&gt;
+&lt;strong&gt;Game Play + Game Feel&lt;/strong&gt;&lt;br/&gt;
+        How well the game squeezes out value from its mechanics/how appropriate and appealing the controls feel (snappy platforming, impactful heavy attacks, or the like). This may differ depending on the genre of game.
+      &lt;/li&gt;
+&lt;li&gt;
+&lt;strong&gt;Graphics&lt;/strong&gt;&lt;br/&gt;
+        How impressive the project looks. Objects of importance should be easily differentiable from other objects, and in general the game should be visually appealing. 
+      &lt;/li&gt;
+&lt;li&gt;
+&lt;strong&gt;Innovation&lt;/strong&gt;&lt;br/&gt;
+        How “new” a concept in the game is (avant-garde graphics, new gameplay concepts, new interpretations or combinations of old concepts, etc.)
+      &lt;/li&gt;
+&lt;li&gt;
+&lt;strong&gt;Theme&lt;/strong&gt;&lt;br/&gt;
+        How well the game interprets the theme. The more creative the interpretation that still reasonably matches the theme, the higher the game&#x27;s score in this category.
+      &lt;/li&gt;
+&lt;li&gt;
+&lt;strong&gt;Polish&lt;/strong&gt;&lt;br/&gt;
+        How little bugs/exploits there are, and overall polish/whether the game feels complete.
+      &lt;/li&gt;
+&lt;/ul&gt;
+",An inclusive winter Game Jam targeted towards both beginner and advanced game developers. ,,"
+&lt;div class=&quot;row&quot;&gt;
+&lt;div class=&quot;small-12 columns&quot;&gt;
+&lt;section class=&quot;row text-content content-section&quot; id=&quot;main&quot;&gt;
+&lt;section class=&quot;large-12 columns&quot; role=&quot;main&quot;&gt;
+&lt;p&gt;&lt;span&gt;Winter Melon Jam 2024 Rules&lt;/span&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;span style=&quot;       text-decoration: none;  &quot;&gt;Submit during the alloted time slot (December 27th 5:00 PM UTC - December 30th 4:59 PM UTC) to &lt;a href=&quot;https://itch.io/jam/winter-melonjam-2023&quot; title=&quot;https://itch.io/jam/wmj2024&quot;&gt;Itch&lt;/a&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;span style=&quot;       text-decoration: none;  &quot;&gt;&lt;span&gt;&lt;span&gt;To be eligible for a prize, you must provide an adequate explanation for how your game fits the theme when submitting your game. You must also fulfill the requirements for your division OR lower. No smurfing.&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;&lt;span style=&quot;       text-decoration: none;  &quot;&gt;&lt;span&gt;&lt;span&gt;Any digital project that is not malware may be submitted. Keep in mind, however, that the judging criteria may limit your success if you do not submit a game that fits the theme announced at the beginning of the jam. &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;&lt;span style=&quot;       text-decoration: none;  &quot;&gt;&lt;span&gt;&lt;span&gt;All submissions must be developed during the allotted time slot. However, you are free to use any assets (music, 3d models, etc.) and tools (game engines, graphic design programs, etc.) that you made yourself or are given permission to use by the creators, such as through a creative commons license, an open-source license, or a purchase. If you choose to do so, you must mention this in your submission. Judges may take points off or award points based on pre-made assets.&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;&lt;span style=&quot;       text-decoration: none;  &quot;&gt;&lt;span&gt;&lt;span&gt;Participants may work alone, or form teams of up to 4 members in order to work on their submission. Participants can unofficially be in multiple teams, but cannot win prizes more than once per jam-- participants must choose one team to sign on with. &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;&lt;span style=&quot;       text-decoration: none;  &quot;&gt;&lt;span&gt;&lt;span&gt;The Cupertino Game Development Club reserves the right to not consider any uploaded games for prizes if the content does not follow the theme or is offensive or unsuitable. This includes but is not limited to: games with harmful or prejudicial themes related to gender, sexual orientation, age, ability, appearance, ethnicity, national origin, citizenship, or religion.&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;&lt;span style=&quot;       text-decoration: none;  &quot;&gt;&lt;span&gt;&lt;span&gt;You may use any engines or tools at your disposal except for generative AI. No AI art, code, music, or any other assets is allowed.&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;&lt;span style=&quot;       text-decoration: none;  &quot;&gt;&lt;span&gt;&lt;span&gt;Participants who do not adhere to the rules above may have their submission canceled, or even banned from all future game jams hosted by the Cupertino Game Development Club.&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/section&gt;
+&lt;/section&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+","
+&lt;div class=&quot;row&quot;&gt;
+&lt;div class=&quot;small-12 columns&quot;&gt;
+&lt;section class=&quot;row text-content content-section&quot; id=&quot;main&quot;&gt;
+&lt;section class=&quot;large-12 columns&quot; role=&quot;main&quot;&gt;
+&lt;h4 id=&quot;contact-us-in-our-discord-server&quot;&gt;Contact us in our Discord server!&lt;/h4&gt;
+&lt;p&gt;Includes many tutorials and members searching for team members! (We desperately need programmers, sound designers, and game designers!) Here is the link: &lt;a href=&quot;https://discord.gg/uYmNuZymJ2&quot;&gt;https://discord.gg/uYmNuZymJ2&lt;/a&gt;&lt;/p&gt;
+&lt;/section&gt;
+&lt;/section&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+",2024-12-27,30-12-2024,[],[],[],[]
+22129,Fitch Codeathon - Creating A Fleet Management Portal For UCAN Chicago,UBS Tower (Floor 23),upcoming,//d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/003/004/471/datas/medium_square.png,Fitch Codeathon - Creating A Fleet Management Portal For UCAN Chicago (22129),https://fitch-code4cause-2024-chicago.devpost.com/,Upcoming,"Dec 16 - 18, 2024","Web, Social Good","$<span data-currency-value>3,750</span>",51,False,FitchGroup,False,https://fitch-code4cause-2024-chicago.devpost.com/project-gallery,https://fitch-code4cause-2024-chicago.devpost.com/challenges/start_a_submission,True,UIC Students residing in Chicagoland,False,https://d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/003/004/471/datas/original.png,https://d112y698adiu2z.cloudfront.net/photos/production/challenge_background_images/003/004/469/datas/original.jpg,https://d112y698adiu2z.cloudfront.net/photos/production/challenge_photos/003/004/470/datas/original.png,"&lt;h4 id=&quot;about-the-challenge&quot; class=&quot;h2-title&quot;&gt;About the challenge&lt;/h4&gt;
+&lt;p&gt;We are excited to present our project for the Devpost hackathon: a website designed to handle rental management for UCAN Chicago, a non-profit organization dedicated to empowering youth and families to build strong foundations for the future.&lt;/p&gt;
+&lt;p&gt;UCAN Chicago&#39;s mission is to support and guide individuals through transformative experiences, focusing on areas such as trauma recovery, education, and housing. Our website aims to streamline their rental management processes, making it easier for staff, tenants, and donors to interact efficiently.&lt;/p&gt;
+&lt;p&gt;Key features of our rental management website include:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;strong&gt;Tenant Management&lt;/strong&gt;: A user-friendly interface for managing tenant information and rental agreements.&lt;/li&gt;
+&lt;li&gt;
+&lt;strong&gt;Maintenance Requests&lt;/strong&gt;: A system for tenants to submit requests and for staff to track and manage these requests.&lt;/li&gt;
+&lt;li&gt;
+&lt;strong&gt;Communication Tools&lt;/strong&gt;: Built-in messaging features to facilitate communication between tenants and UCAN staff.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Our goal is to enhance UCAN Chicago&#39;s operational efficiency, allowing them to focus more on their core mission of supporting the community.&lt;/p&gt;
+&lt;p&gt;Join us in this challenge to make a meaningful impact by leveraging technology to improve rental management for a deserving non-profit organization.&lt;/p&gt;","
+&lt;div class=&quot;section-title bold&quot;&gt;
+&lt;h3 class=&quot;subheader section-title-left&quot;&gt;
+      Judging Criteria
+    &lt;/h3&gt;
+&lt;span class=&quot;section-title-line&quot;&gt;&lt;/span&gt;
+&lt;/div&gt;
+&lt;ul class=&quot;no-bullet&quot;&gt;
+&lt;li&gt;
+&lt;strong&gt;Website&lt;/strong&gt;&lt;br/&gt;
+        Website needs to run locally
+      &lt;/li&gt;
+&lt;/ul&gt;
+",Create a website to help UCAN staff manage their fleet,"
+&lt;div class=&quot;section-title bold&quot;&gt;
+&lt;h3 class=&quot;subheader section-title-left&quot;&gt;
+          Requirements
+        &lt;/h3&gt;
+&lt;span class=&quot;section-title-line&quot;&gt;&lt;/span&gt;
+&lt;/div&gt;
+&lt;div&gt;
+&lt;h4&gt;What to Build&lt;/h4&gt;
+&lt;p&gt;When participating in a hackathon to build a website, there are several key components and goals you should aim to achieve to ensure your project is both functional and impactful. Here&#x27;s a general guide on what to build and the end goals you should aim for:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Landing Page:&lt;/strong&gt;
+&lt;ol&gt;
+&lt;li&gt;An attractive and informative homepage that clearly explains the purpose of the website.&lt;/li&gt;
+&lt;li&gt;Easy navigation to other sections of the site.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;User Authentication:&lt;/strong&gt;
+&lt;ol&gt;
+&lt;li&gt;Secure user registration and login system.&lt;/li&gt;
+&lt;li&gt;Roles-based access (e.g., admin, user).&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Dashboard:&lt;/strong&gt;
+&lt;ol&gt;
+&lt;li&gt;A user-friendly dashboard for different user roles.&lt;/li&gt;
+&lt;li&gt;Admin dashboard for managing fleet, requests.&lt;/li&gt;
+&lt;li&gt;User dashboard for submitting rental requests, and accessing rental details.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4&gt;End Goals:&lt;/h4&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Functionality:&lt;/strong&gt;
+&lt;ol&gt;
+&lt;li&gt;The website should be fully functional with all key features working as intended.&lt;/li&gt;
+&lt;li&gt;Ensure that the user experience is smooth and intuitive.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;User Experience:&lt;/strong&gt;
+&lt;ol&gt;
+&lt;li&gt;Focus on creating an excellent user experience with easy navigation and clear instructions.&lt;/li&gt;
+&lt;li&gt;Gather feedback from potential users to make necessary improvements.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Impact:&lt;/strong&gt;
+&lt;ol&gt;
+&lt;li&gt;The website should significantly improve the operational efficiency of UCAN Chicago.&lt;/li&gt;
+&lt;li&gt;It should help the organization manage rentals more effectively, allowing them to focus on their mission.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4&gt;What to Submit&lt;/h4&gt;
+&lt;ol&gt;
+&lt;li&gt;A URL to public GitHub repo that will contain the following:&lt;br/&gt;
+&lt;ol&gt;
+&lt;li&gt;Wireframes mockups, Figma designs or storyboards for the application&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;A Presentation video explaining how your team went about solving the problem and a demo of your designs and user flow included in the same video. The presentation video will need to be uploaded to YouTube and the public link shared via email with the organizers&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+","
+&lt;div class=&quot;row&quot;&gt;
+&lt;div class=&quot;small-12 columns&quot;&gt;
+&lt;section class=&quot;row text-content content-section&quot; id=&quot;main&quot;&gt;
+&lt;section class=&quot;large-12 columns&quot; role=&quot;main&quot;&gt;
+&lt;h4 id=&quot;dates&quot;&gt;DATES:&lt;/h4&gt;
+&lt;p&gt;16th - 18th December 2024 (inclusive)&lt;/p&gt;
+&lt;h4 id=&quot;eligibility&quot;&gt;ELIGIBILITY:&lt;/h4&gt;
+&lt;p&gt;&lt;span&gt;UIC enrolled undergraduates only. Student&#x27;s registration should be done with &quot;@&lt;/span&gt;&lt;span&gt;uic.edu&lt;/span&gt;&lt;span&gt;&quot; email address&lt;/span&gt;&lt;/p&gt;
+&lt;h4 id=&quot;project-and-submission-requirements&quot;&gt;PROJECT AND SUBMISSION REQUIREMENTS: &lt;/h4&gt;
+&lt;p&gt;Covered in &#x27;What to Submit&#x27;&lt;/p&gt;
+&lt;h4 id=&quot;judging-criteria-and-winner-selection&quot;&gt;JUDGING CRITERIA AND WINNER SELECTION: &lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;completeness of the project&lt;/li&gt;
+&lt;li&gt;ease of configuration and maintenance&lt;/li&gt;
+&lt;li&gt;code quality&lt;/li&gt;
+&lt;li&gt;focus on security&lt;/li&gt;
+&lt;li&gt;collaboration between team members&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/section&gt;
+&lt;/section&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+","
+&lt;div class=&quot;row&quot;&gt;
+&lt;div class=&quot;small-12 columns&quot;&gt;
+&lt;section class=&quot;row text-content content-section&quot; id=&quot;main&quot;&gt;
+&lt;section class=&quot;large-12 columns&quot; role=&quot;main&quot;&gt;
+&lt;h4 id=&quot;introduction&quot;&gt;INTRODUCTION&lt;/h4&gt;
+&lt;p&gt;&lt;span&gt;Since the challenge is around building a web application that is also portable across mobile devces&lt;/span&gt;, we will be leveraging the AWS cloud platform to provide participants with development environments using &lt;a href=&quot;https://aws.amazon.com/pm/cloud9/?trk=c23f93f3-180b-454d-9e69-c8f3ea8dd266&amp;amp;sc_channel=ps&amp;amp;s_kwcid=AL!4422!10!71262332806221!71262858997491&amp;amp;ef_id=82850de742b11ffb22dd6ba96df44579:G:s&quot;&gt;AWS Cloud9&lt;/a&gt; and &lt;a href=&quot;https://docs.docker.com/compose&quot;&gt;Docker Compose&lt;/a&gt; for the duration of the Codeathon, to enable teams to build their applications quickly using the tech stacks of their choice like Python, React, JavaScript, .Net, Java  etc.&lt;/p&gt;
+&lt;h4 id=&quot;tools-and-technologies&quot;&gt;TOOLS AND TECHNOLOGIES&lt;/h4&gt;
+&lt;p&gt;Fitch and Amazon will provide an AWS VirtualMachine so all participants are able to participate from day one without the need to set up a development environment on their laptops from scratch.&lt;/p&gt;
+&lt;p&gt;Teams are free to build the application using the tech web/mobile stack of their choice and one in which they will be the most productive. However, mentors will mainly be able to offer support for React, Javascript, Java (SpringBoot), Python and .Net&lt;/p&gt;
+&lt;/section&gt;
+&lt;/section&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+",2024-12-16,18-12-2024,[],[],[],[]
+22493,NinjaHacks,Online,upcoming,//d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/003/041/059/datas/medium_square.png,NinjaHacks (22493),https://ninjahacks-26014.devpost.com/,Upcoming,"Dec 07 - 15, 2024","Beginner Friendly, Robotic Process Automation, Social Good","$<span data-currency-value>294,712</span>",75,False,Ninjabotics,False,https://ninjahacks-26014.devpost.com/project-gallery,https://ninjahacks-26014.devpost.com/challenges/start_a_submission,False,,False,https://d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/003/041/059/datas/original.png,https://d112y698adiu2z.cloudfront.net/photos/production/challenge_background_images/003/041/065/datas/original.png,https://d112y698adiu2z.cloudfront.net/photos/production/challenge_photos/003/041/063/datas/original.png,&lt;p&gt;&lt;span&gt;NinjaHacks is a virtual hackathon hosted by the members of the FTC team NinjaHacks. Students from the ages of 13-18 in middle school or high school can participate. Any level of experience is welcome. There will be many workshops to help members understand and submit projects for each category. Join our Discord server for more updates.&lt;/span&gt;&lt;/p&gt;,"
+&lt;div class=&quot;section-title bold&quot;&gt;
+&lt;h3 class=&quot;subheader section-title-left&quot;&gt;
+      Judging Criteria
+    &lt;/h3&gt;
+&lt;span class=&quot;section-title-line&quot;&gt;&lt;/span&gt;
+&lt;/div&gt;
+&lt;ul class=&quot;no-bullet&quot;&gt;
+&lt;li&gt;
+&lt;strong&gt;TBD&lt;/strong&gt;&lt;br/&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+","A fully virtual, beginner-friendly hackathon for students in middle and high school hosted by students from FTC Team 26014 Ninjabotics.","
+&lt;div class=&quot;section-title bold&quot;&gt;
+&lt;h3 class=&quot;subheader section-title-left&quot;&gt;
+          Requirements
+        &lt;/h3&gt;
+&lt;span class=&quot;section-title-line&quot;&gt;&lt;/span&gt;
+&lt;/div&gt;
+&lt;div&gt;
+&lt;h4&gt;TOPIC: SOCIAL GOOD&lt;br/&gt;&lt;br/&gt;THEMES:&lt;/h4&gt;
+&lt;p&gt;Robotic Automation Pitch: Create a video/pitch on a industry that would be benifited by robotic automation and why. This challenge involves NO CODING.&lt;/p&gt;
+&lt;p&gt;Creative Project: Code any Website/Application that you would like to present around social good.&lt;/p&gt;
+&lt;p&gt;A SURPRISE Category which will be revealed the day of the opening ceremony related to robotics.&lt;/p&gt;
+&lt;/div&gt;
+","
+&lt;div class=&quot;row&quot;&gt;
+&lt;div class=&quot;small-12 columns&quot;&gt;
+&lt;section class=&quot;row text-content content-section&quot; id=&quot;main&quot;&gt;
+&lt;section class=&quot;large-12 columns&quot; role=&quot;main&quot;&gt;
+&lt;p&gt;Dates:&lt;/p&gt;
+&lt;p&gt;December 7th, 2024 - December 15th, 2024&lt;/p&gt;
+&lt;p&gt;Eligibility:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Must be under the age of 18. If you are found to be over 18, then you will be automatically disqualified.&lt;/li&gt;
+&lt;li&gt;No more than 5 people are allowed to be on any given team.&lt;/li&gt;
+&lt;li&gt;To participate in this Hackathon, you must read and agree to our code of conduct (coming soon).&lt;/li&gt;
+&lt;li&gt;You must be in the Discord server by the start of the Hackathon for further communication.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Project and Submission Requirements:&lt;/p&gt;
+&lt;p&gt;To be announced later.&lt;/p&gt;
+&lt;p&gt;Prizes:&lt;/p&gt;
+&lt;p&gt;Prizes will be announced at a later date.&lt;/p&gt;
+&lt;p&gt;Judging Criteria and Winner Selection:&lt;/p&gt;
+&lt;p&gt;The judging criteria and winner selection process will be disclosed later, with a focus on assessing innovation, creativity, and technical excellence. Stay tuned for more information!&lt;/p&gt;
+&lt;/section&gt;
+&lt;/section&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+","
+&lt;div class=&quot;row&quot;&gt;
+&lt;div class=&quot;small-12 columns&quot;&gt;
+&lt;section class=&quot;row text-content content-section&quot; id=&quot;main&quot;&gt;
+&lt;section class=&quot;large-12 columns&quot; role=&quot;main&quot;&gt;
+&lt;/section&gt;
+&lt;/section&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+",2024-12-07,15-12-2024,[],[],[],[]

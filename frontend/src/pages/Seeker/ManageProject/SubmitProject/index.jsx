@@ -16,7 +16,7 @@ import fetchSkillApikey from "../../../../utils/fetchSkillApiKey";
 import { IoIosClose } from "react-icons/io";
 import extractId from "../../../../utils/extractId";
 
-function AddProject() {
+function SubmitProject() {
   const inputBox = useRef();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -186,12 +186,7 @@ function AddProject() {
       }
       if (project?.tryoutLinks) {
         project.tryoutLinks?.forEach((element) => {
-          const id = uuidv4();
-          setValue(`field_${id}`, element);
-          setTryoutLinks((prev) => {
-            if (prev[0].name === "") return [{ id, name: element }];
-            return [...prev, { id, name: element }];
-          });
+          setTryoutLinks((prev) => [...prev, { id: uuidv4(), name: element }]);
         });
       }
       dispatch(resetSuccessAction());
@@ -567,4 +562,4 @@ function AddProject() {
   );
 }
 
-export default AddProject;
+export default SubmitProject;

@@ -75,6 +75,9 @@ export class HackathonDocument {
   headerTitleImage: string;
 
   @Prop()
+  headerImgBackground: string;
+
+  @Prop()
   mainDescription: string;
 
   @Prop()
@@ -125,7 +128,7 @@ export class HackathonDocument {
   @Prop()
   prizes: Prize[];
 
-  @Prop({ type: Types.ObjectId, ref: 'User', required: true })
+  @Prop({ type: Types.ObjectId, ref: 'User' })
   user: Types.ObjectId;
 }
 export const HackathonSchema = SchemaFactory.createForClass(HackathonDocument);

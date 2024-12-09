@@ -17,6 +17,8 @@ import { UpdateHackathonCommand } from 'src/hackathon/application/commands/updat
 import { DeleteHackathonCommand } from 'src/hackathon/application/commands/delete-hackathon/delete-hackathon.command';
 import { GetHackathonsQuery } from 'src/hackathon/application/queries/get-hackathons/get-hackathons.query';
 import { GetAllRegisterUsersQuery } from 'src/hackathon/application/queries/get-all-register-users/get-all-register-users.query';
+import { SeedDataHackathonCommand } from 'src/hackathon/application/commands/seed-data-hackathon/seed-data-hackathon.command';
+import { SearchFilterHackathonsQuery } from 'src/hackathon/application/queries/search-filter-hackathons/search-filter-hackathons.query';
 
 @Controller('hackathons')
 export class HackathonController {
@@ -28,6 +30,33 @@ export class HackathonController {
   @Get()
   async getAllHackathons(@Query('page') page: number) {
     return await this.queryBus.execute(new GetHackathonsQuery(page));
+  }
+
+  @Get()
+  async searchFilterHackathons(
+    @Query('search') search: string,
+    @Query('location') location: string[],
+    @Query('status') status: string[],
+    @Query('length') length: string[],
+    @Query('tags') tags: string[],
+    @Query('host') host: string,
+    @Query('sort') sort: string,
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
+  ) {
+    return await this.queryBus.execute(
+      new SearchFilterHackathonsQuery({
+        search,
+        location,
+        status,
+        length,
+        tags,
+        host,
+        sort,
+        page,
+        limit,
+      }),
+    );
   }
 
   @Get(':id')
@@ -77,6 +106,12 @@ export class HackathonController {
       new DeleteHackathonCommand({ id: id }),
     );
 
+    return result;
+  }
+
+  @Get('seed-data/hackathons')
+  async seedDataHackathon(): Promise<string> {
+    const result = this.commandBus.execute(new SeedDataHackathonCommand());
     return result;
   }
 }

@@ -27,6 +27,7 @@ function MyProject() {
       dispatch(resetSuccessAction());
       setItemProject(projects);
     }
+    console.log("🚀 ~ useEffect ~ projects:", projects);
   }, [isSuccessUD]);
   return (
     <div className="px-60 max-lg:px-2 py-5 ">
@@ -45,6 +46,7 @@ function MyProject() {
                   isWinner={false}
                   votes={card?.votes ?? 0}
                   comments={card?.comments ?? 0}
+                  link={`/Seeker/project/manage-project/!imptHktid_12762_${card._id}`}
                 />
               ))}
             </div>

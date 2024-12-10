@@ -18,6 +18,11 @@ import {
 } from 'src/user/infrastructure/database/schemas';
 import { GetHackathonsHandler } from './application/queries/get-hackathons/get-hackathons.handler';
 import { GetAllRegisterUsersHandler } from './application/queries/get-all-register-users/get-all-register-users.handler';
+import { GetProjectsHandler } from './application/queries/get-projects-hackathon/get-projects.handler';
+import {
+  ProjectDocument,
+  ProjectSchema,
+} from 'src/project/infrastructure/database/schemas';
 
 @Module({
   imports: [
@@ -25,6 +30,7 @@ import { GetAllRegisterUsersHandler } from './application/queries/get-all-regist
     MongooseModule.forFeature([
       { name: HackathonDocument.name, schema: HackathonSchema },
       { name: UserDocument.name, schema: UserSchema },
+      { name: ProjectDocument.name, schema: ProjectSchema },
     ]),
   ],
   controllers: [HackathonController],
@@ -32,6 +38,7 @@ import { GetAllRegisterUsersHandler } from './application/queries/get-all-regist
     { provide: HACKATHON_REPOSITORY, useClass: MongooseHackathonRepository },
     GetHackathonHandler,
     GetHackathonsHandler,
+    GetProjectsHandler,
     GetAllRegisterUsersHandler,
     CreateHackathonHandler,
     UpdateHackathonHandler,

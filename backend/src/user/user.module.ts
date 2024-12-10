@@ -27,6 +27,10 @@ import {
 } from 'src/hackathon/infrastructure/database/schemas';
 import { HACKATHON_REPOSITORY } from 'src/hackathon/domain/repositories/hackathon.repository';
 import { MongooseHackathonRepository } from 'src/hackathon/infrastructure/database/repositories/mongoose-hackathon.repository';
+import {
+  ProjectDocument,
+  ProjectSchema,
+} from 'src/project/infrastructure/database/schemas';
 @Module({
   imports: [
     CqrsModule,
@@ -36,6 +40,7 @@ import { MongooseHackathonRepository } from 'src/hackathon/infrastructure/databa
     MongooseModule.forFeature([
       { name: HackathonDocument.name, schema: HackathonSchema },
       { name: UserDocument.name, schema: UserSchema },
+      { name: ProjectDocument.name, schema: ProjectSchema },
     ]),
   ],
   controllers: [UserController, AuthController],

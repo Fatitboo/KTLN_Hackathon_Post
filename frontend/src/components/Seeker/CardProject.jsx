@@ -3,7 +3,15 @@ import { BiCommentDetail } from "react-icons/bi";
 import { BsFillHeartFill } from "react-icons/bs";
 import { tagWinner } from "../../assets/images";
 
-const CardProject = ({ title, description, image, isWinner, imgUser }) => {
+const CardProject = ({
+  title,
+  description,
+  image,
+  isWinner,
+  imgUser,
+  votes,
+  comments,
+}) => {
   return (
     <div className="relative cursor-pointer max-w-xs bg-white border border-gray-300 rounded-sm hover:shadow-md">
       {isWinner && (
@@ -35,10 +43,11 @@ const CardProject = ({ title, description, image, isWinner, imgUser }) => {
           </div>
           <div className="flex items-center text-gray-500 text-sm">
             <div className="mr-3 flex items-center">
-              <BsFillHeartFill className="h-3"></BsFillHeartFill>25
+              <BsFillHeartFill className="h-3"></BsFillHeartFill>
+              {votes}
             </div>
             <div className="flex items-center">
-              <BiCommentDetail className="h-3" /> 4
+              <BiCommentDetail className="h-3" /> {comments}
             </div>
           </div>
         </div>

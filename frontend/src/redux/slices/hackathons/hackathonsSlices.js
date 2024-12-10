@@ -28,6 +28,32 @@ export const getAllHackathons = createAsyncThunk(
     }
   }
 );
+//get all hackathons
+export const singleHackathon = createAsyncThunk(
+  "hackathons/singleHackathon",
+  async (payload, { rejectWithValue, getState, dispatch }) => {
+    try {
+      // const user = getState()?.users;
+      // const { userAuth } = user;
+      // // http call
+      // const config = {
+      //     headers: {
+      //         Authorization: `Bearer ${userAuth?.user?.token}`,
+      //         'Content-Type': 'application/json',
+      //     },
+      // };
+      console.log(`${baseUrl}/${apiPrefix}/${payload}`);
+      const { data } = await axios.get(`${baseUrl}/${apiPrefix}/${payload}`);
+      console.log(data);
+      return data;
+    } catch (error) {
+      if (!error?.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
 //create hackathon id
 export const creatHackathonId = createAsyncThunk(
   "hackathons/createHackathonId",
@@ -140,6 +166,18 @@ const hackathonsSlices = createSlice({
         state.hackathons = action?.payload;
       }),
       builder.addCase(getAllHackathons.rejected, (state, action) => {
+        state.loading = false;
+        state.appErr = action?.payload?.message;
+      }),
+      //get all vacancies
+      builder.addCase(singleHackathon.pending, (state, action) => {
+        state.loading = true;
+      }),
+      builder.addCase(singleHackathon.fulfilled, (state, action) => {
+        state.loading = false;
+        state.hackathon = action?.payload;
+      }),
+      builder.addCase(singleHackathon.rejected, (state, action) => {
         state.loading = false;
         state.appErr = action?.payload?.message;
       }),

@@ -21,6 +21,7 @@ import BrowerHackathons from "../BrowerHackathons";
 import BrowerParticipants from "../BrowerParticipants";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import RecommendTeamChat from "../../../components/Seeker/RecommendTeamChat";
 
 function HackathonDetail() {
   const { id, type } = useParams();
@@ -498,6 +499,10 @@ function HackathonDetail() {
 
             <div className="col-span-1"></div>
           </div>
+        </div>
+        //recommend team hackathons
+        <div className="fixed bottom-12 right-12 z-10">
+          <RecommendTeamChat />
         </div>
       </div>
     </>

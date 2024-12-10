@@ -27,6 +27,7 @@ import {
 } from "../pages/Seeker";
 import {
   DashboardCompany,
+  HackathonCorDetail,
   HostHackathon,
   ManageHackathon,
 } from "../pages/Company";
@@ -157,8 +158,8 @@ const corRoutes = [
     layout: LayoutNoSidebar,
   },
   {
-    path: "/Organizer/manage-hackathons/:id",
-    component: HackathonDetail,
+    path: "/Organizer/manage-hackathons/:id/:type",
+    component: HackathonCorDetail,
     layout: LayoutNoSidebar,
   },
 ];

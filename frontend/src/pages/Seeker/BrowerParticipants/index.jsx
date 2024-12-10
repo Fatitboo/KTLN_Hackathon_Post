@@ -4,8 +4,10 @@ import "slick-carousel/slick/slick-theme.css";
 import HackathonItem from "../../../components/Seeker/HackathonItem";
 import SearchInput from "../../../components/Seeker/SearchInput";
 import ParticipantItem from "../../../components/Seeker/ParticipantItem";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 
-function BrowerParticipants() {
+function BrowerParticipants({ hackathonId }) {
   const specializes = [
     {
       id: 1,
@@ -75,6 +77,20 @@ function BrowerParticipants() {
       quantity: 10,
     },
   ];
+
+  const [participants, setParticipants] = useState([]);
+
+  useEffect(() => {
+    if (!hackathonId) return;
+    fetch(
+      "http://localhost:3000/api/v1/hackathons/register-users/" + hackathonId
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        setParticipants(result);
+      })
+      .catch((error) => console.log("error", error));
+  }, [hackathonId]);
 
   return (
     <>
@@ -185,11 +201,11 @@ function BrowerParticipants() {
               </div>
             </div>
             <div className="mt-8">
-              {[1, 2, 3, 4, 4, 5].map(() => {
+              {participants.map((item) => {
                 return (
                   <>
                     <div className="my-6">
-                      <ParticipantItem />
+                      <ParticipantItem props={item} />
                     </div>
                   </>
                 );

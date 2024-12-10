@@ -114,7 +114,7 @@ export default function OptimizeContentPopup({ message }) {
               onChange={(e) => {
                 setRequest(e.target.value);
               }}
-              className="h-10 w-full  px-2 text-sm pr-10 scroll-hidden py-2"
+              className="h-10 w-full px-2 text-sm pr-10 scroll-hidden py-2"
             ></textarea>
             <button
               data-view-setting

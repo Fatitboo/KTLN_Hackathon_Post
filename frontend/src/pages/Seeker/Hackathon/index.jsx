@@ -2,6 +2,7 @@ import { useParams, Outlet } from "react-router-dom";
 import { backgroundSearch } from "../../../assets/images";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import RecommendTeamChat from "../../../components/Seeker/RecommendTeamChat";
 import SubNavbarHackathon from "../../../components/Navbar/SubNavbar";
 
 function HackathonDetail() {
@@ -53,6 +54,10 @@ function HackathonDetail() {
         </div>
         <div className=" max-lg:px-2 py-5 min-h-60 ">
           <Outlet context={{ item, myProject, id }} />
+        </div>
+        //recommend team hackathons
+        <div className="fixed bottom-12 right-12 z-10">
+          <RecommendTeamChat />
         </div>
       </div>
     </>

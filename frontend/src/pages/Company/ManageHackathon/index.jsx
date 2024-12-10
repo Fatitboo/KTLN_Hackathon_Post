@@ -319,7 +319,7 @@ function ManageHackathon() {
                                   <div className="">
                                     <div className="list-none flex relative item-center justify-center">
                                       <Link
-                                        to={`/Hackathon-detail/${item?._id}/overview`}
+                                        to={`/Organizer/manage-hackathons/${item?._id}/overview`}
                                         className="list-none relative mr-2 bg-[#f5f7fc] border rounded-md border-[#e9ecf9] px-1 pt-1 hover:bg-[#5f86e9] hover:text-white"
                                       >
                                         <LiaEyeSolid fontSize={18} />

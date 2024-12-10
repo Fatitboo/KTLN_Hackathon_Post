@@ -20,6 +20,11 @@ import { GetHackathonsHandler } from './application/queries/get-hackathons/get-h
 import { GetAllRegisterUsersHandler } from './application/queries/get-all-register-users/get-all-register-users.handler';
 import { SeedDataHackathonHandler } from './application/commands/seed-data-hackathon/seed-data-hackathon.handler';
 import { SearchFilterHackathonsHandler } from './application/queries/search-filter-hackathons/search-filter-hackathons.handler';
+import { GetProjectsHandler } from './application/queries/get-projects-hackathon/get-projects.handler';
+import {
+  ProjectDocument,
+  ProjectSchema,
+} from 'src/project/infrastructure/database/schemas';
 
 @Module({
   imports: [
@@ -27,6 +32,7 @@ import { SearchFilterHackathonsHandler } from './application/queries/search-filt
     MongooseModule.forFeature([
       { name: HackathonDocument.name, schema: HackathonSchema },
       { name: UserDocument.name, schema: UserSchema },
+      { name: ProjectDocument.name, schema: ProjectSchema },
     ]),
   ],
   controllers: [HackathonController],
@@ -34,6 +40,7 @@ import { SearchFilterHackathonsHandler } from './application/queries/search-filt
     { provide: HACKATHON_REPOSITORY, useClass: MongooseHackathonRepository },
     GetHackathonHandler,
     GetHackathonsHandler,
+    GetProjectsHandler,
     GetAllRegisterUsersHandler,
     SeedDataHackathonHandler,
     SearchFilterHackathonsHandler,

@@ -1,7 +1,7 @@
 import { defaultAvt } from "../../assets/images";
 import { FaTags } from "react-icons/fa6";
 
-const ParticipantItem = () => {
+const ParticipantItem = ({ props }) => {
   return (
     <>
       <div className="border border-gray-200 rounded-sm p-5">
@@ -10,20 +10,26 @@ const ParticipantItem = () => {
           <div className="flex justify-between flex-1">
             <div className="">
               <div className="flex space-x-4 items-center">
-                <div>Nguyen Van Phat</div>
+                <div>{props?.name}</div>
                 <div className="flex items-center space-x-1 rounded-full h-fit px-2 py-1 text-sm text-gray-500 bg-gray-100">
                   <FaTags className="mr-2" />
-                  Full-stack developer
+                  {props?.settingRecommend?.specialty}
                 </div>
               </div>
               <div className="flex text-xs text-gray-400 mt-3 space-x-4">
-                <div>0 PROJECTS</div>
-                <div>0 FOLLOWER</div>
-                <div>1 ACHIVEMENT</div>
+                <div>{props?.numProjects} PROJECTS</div>
+                <div>{props?.numFollows} FOLLOWER</div>
+                <div>{props?.numAchiements} ACHIVEMENT</div>
               </div>
             </div>
             <div className="rounded-full h-fit px-2 py-1 border text-sm text-gray-500 border-r-gray-100">
-              Has a team
+              {props?.status === "had_team"
+                ? "Has a team"
+                : props?.status === "working_solo"
+                ? "Working solo"
+                : props?.status === "finding_teamate"
+                ? "Finding teamate"
+                : "Unknow"}
             </div>
           </div>
         </div>
@@ -32,7 +38,7 @@ const ParticipantItem = () => {
           <div>
             <div className=" uppercase ml-1 my-2 ">Skills</div>
             <div className="flex flex-wrap">
-              {["figma", "research", "ux", "ui", "ooux"].map((item) => {
+              {props?.settingRecommend?.skills?.map((item) => {
                 return (
                   <>
                     <div className="text-xs mr-2 mt-1 bg-gray-100 text-gray-500 rounded-full px-2 py-1">
@@ -44,20 +50,9 @@ const ParticipantItem = () => {
             </div>
           </div>
           <div>
-            <div className=" uppercase ml-1 my-2">Skills</div>
+            <div className=" uppercase ml-1 my-2">Interest</div>
             <div className="flex flex-wrap">
-              {[
-                "Beginner Friendly",
-                "Communication",
-                "Design",
-                "E-commerce/Retail",
-                "Education",
-                "Gaming",
-                "Health",
-                "Lifehacks",
-                "Low/No Code",
-                "Mobile",
-              ].map((item) => {
+              {props?.settingRecommend?.interestedIn?.map((item) => {
                 return (
                   <>
                     <div className="text-xs mr-2 mt-1 bg-gray-100 text-gray-500 rounded-full px-2 py-1">

@@ -5,6 +5,7 @@ import { HackathonDocument } from '../schemas';
 import { Model } from 'mongoose';
 import { NotFoundException } from '@nestjs/common';
 import { UserDocument } from 'src/user/infrastructure/database/schemas';
+import { ProjectDocument } from 'src/project/infrastructure/database/schemas';
 
 export class MongooseHackathonRepository implements HackathonRepository {
   constructor(
@@ -13,7 +14,36 @@ export class MongooseHackathonRepository implements HackathonRepository {
 
     @InjectModel(UserDocument.name)
     private readonly userModel: Model<UserDocument>,
+
+    @InjectModel(ProjectDocument.name)
+    private readonly projectDocument: Model<ProjectDocument>,
   ) {}
+
+  async findAllProject(id: string, type: string, page: number): Promise<any[]> {
+    const existingHackathon = await this.hackathonModel.findById(id).exec();
+    if (!existingHackathon.registedTeams) return null;
+
+    const submittions = existingHackathon.registedTeams;
+    const rs: any[] = [];
+    for (let index = 0; index < submittions.length; index++) {
+      const element = submittions[index];
+      const pId = element._id;
+      const p = await this.projectDocument.findById(pId);
+      if (!p) continue;
+      const owner = await this.userModel.findById(p.owner);
+      if (!owner) continue;
+      rs.push({
+        id: p._id,
+        projectTitle: p.projectTitle,
+        thumnailImage: p.thumnailImage,
+        tagLine: p.tagline,
+        owner: { uId: owner._id, name: owner.fullname, avatar: owner.avatar },
+        createdBy: p.createdByUsername,
+      });
+    }
+    return rs;
+  }
+
   async findAllRegisterUser(id: string, page: number): Promise<any[]> {
     const existingHackathon = await this.hackathonModel.findById(id).exec();
     if (!existingHackathon.registerUsers) return null;

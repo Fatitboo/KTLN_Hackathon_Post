@@ -1,17 +1,25 @@
 import { useParams, Link } from "react-router-dom";
+import { CustomButton } from "../../../../components";
+import HackathonInfo from "../../../../components/Seeker/HackathonInfo";
+import CardProject from "../../../../components/Seeker/CardProject";
+import SearchInput from "../../../../components/Seeker/SearchInput";
+import { BrowerHackathons } from "../../../Seeker";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { singleHackathon } from "../../../../redux/slices/hackathons/hackathonsSlices";
 import {
   backgroundSearch,
   defaultAvt,
   imgDefaultProject,
-} from "../../../assets/images";
-import { CustomButton } from "../../../components";
-import HackathonInfo from "../../../components/Seeker/HackathonInfo";
-import CardProject from "../../../components/Seeker/CardProject";
-import SearchInput from "../../../components/Seeker/SearchInput";
-import BrowerHackathons from "../BrowerHackathons";
+} from "../../../../assets/images";
+import BrowerParticipants from "../../../Seeker/BrowerParticipants";
+import { LiaEyeSolid } from "react-icons/lia";
+import { BiPencil } from "react-icons/bi";
+import { CiDollar } from "react-icons/ci";
 
-function HackathonDetail() {
+function HackathonCorDetail() {
   const { id, type } = useParams();
+  const dispatch = useDispatch();
   const item = {
     name: "Seam Miniapp Challenge",
     organization_name: "Seam",
@@ -193,6 +201,23 @@ function HackathonDetail() {
       isWinner: true,
     },
   ];
+  const [projectGallery, setProjectGallery] = useState([]);
+  const { hackathon } = useSelector((state) => state.hackathons);
+  useEffect(() => {
+    if (!id) return;
+    dispatch(singleHackathon(id));
+  }, [id]);
+
+  useEffect(() => {
+    if (type == "project-gallery" || type == "teams") {
+      fetch(`http://localhost:3000/api/v1/hackathons/${id}/${type}`)
+        .then((response) => response.json())
+        .then((result) => {
+          setProjectGallery(result);
+        })
+        .catch((error) => console.log("error", error));
+    }
+  }, [type]);
   return (
     <>
       <div>
@@ -203,12 +228,12 @@ function HackathonDetail() {
           }}
         >
           <div className="px-60 max-lg:px-2">
-            <img src={item.image} alt={item.name} />
+            <img src={hackathon?.headerTitleImage} alt={item.name} />
           </div>
           <div className=" flex bg-gray-400 opacity-70 py-3 mt-3 text-white text-normal">
             <div className="px-60 max-lg:px-2 ">
               <Link
-                to={`/Hackathon-detail/${id}/overview`}
+                to={`/Organizer/manage-hackathons/${id}/overview`}
                 className={`py-4 px-4 hover:underline ${
                   type === "overview" ? "text-black opacity-100 bg-white" : ""
                 }`}
@@ -216,15 +241,15 @@ function HackathonDetail() {
                 Overview
               </Link>
               <Link
-                to={`/Hackathon-detail/${id}/my-project`}
+                to={`/Organizer/manage-hackathons/${id}/teams`}
                 className={`py-4 px-4 hover:underline ${
-                  type === "my-project" ? "text-black opacity-100 bg-white" : ""
+                  type === "teams" ? "text-black opacity-100 bg-white" : ""
                 }`}
               >
-                MyProject
+                Teams
               </Link>
               <Link
-                to={`/Hackathon-detail/${id}/participants`}
+                to={`/Organizer/manage-hackathons/${id}/participants`}
                 className={`py-4 px-4 hover:underline ${
                   type === "participants"
                     ? "text-black opacity-100 bg-white"
@@ -234,7 +259,7 @@ function HackathonDetail() {
                 Participants
               </Link>
               <Link
-                to={`/Hackathon-detail/${id}/resourses`}
+                to={`/Organizer/manage-hackathons/${id}/resourses`}
                 className={`py-4 px-4 hover:underline ${
                   type === "resourses" ? "text-black opacity-100 bg-white" : ""
                 }`}
@@ -242,7 +267,7 @@ function HackathonDetail() {
                 Resourses
               </Link>
               <Link
-                to={`/Hackathon-detail/${id}/rules`}
+                to={`/Organizer/manage-hackathons/${id}/rules`}
                 className={`py-4 px-4 hover:underline ${
                   type === "rules" ? "text-black opacity-100 bg-white" : ""
                 }`}
@@ -250,7 +275,7 @@ function HackathonDetail() {
                 Rules
               </Link>
               <Link
-                to={`/Hackathon-detail/${id}/project-gallery`}
+                to={`/Organizer/manage-hackathons/${id}/project-gallery`}
                 className={`py-4 px-4 hover:underline ${
                   type === "project-gallery"
                     ? "text-black opacity-100 bg-white"
@@ -260,7 +285,7 @@ function HackathonDetail() {
                 Project gallery
               </Link>
               <Link
-                to={`/Hackathon-detail/${id}/updates`}
+                to={`/Organizer/manage-hackathons/${id}/updates`}
                 className={`py-4 px-4 hover:underline ${
                   type === "updates" ? "text-black opacity-100 bg-white" : ""
                 }`}
@@ -268,7 +293,7 @@ function HackathonDetail() {
                 Updates
               </Link>
               <Link
-                to={`/Hackathon-detail/${id}/discussions`}
+                to={`/Organizer/manage-hackathons/${id}/discussions`}
                 className={`py-4 px-4 hover:underline ${
                   type === "discussions"
                     ? "text-black opacity-100 bg-white"
@@ -284,8 +309,10 @@ function HackathonDetail() {
           <div className="px-60 max-lg:px-2 py-5 bg-gray-100">
             <div className="grid grid-cols-3 max-lg:grid-cols-1 gap-10">
               <div className="col-span-2">
-                <h2 className="font-semibold mt-5">{item.name}</h2>
-                <p className="text-xl mt-5 h-16">{item.desc}</p>
+                <h2 className="font-semibold mt-5">
+                  {hackathon?.hackathonName}
+                </h2>
+                <p className="text-xl mt-5 h-16">{hackathon?.tagline}</p>
                 <div className="grid grid-cols-5">
                   <div className="col-span-1">
                     <CustomButton
@@ -308,7 +335,7 @@ function HackathonDetail() {
                       </ul>
                     </div>
                     <Link
-                      to={`/Hackathon-detail/${id}/rules`}
+                      to={`/Organizer/manage-hackathons/${id}/rules`}
                       className="font-normal mt-5 text-blue-600"
                     >
                       View all rules
@@ -322,36 +349,101 @@ function HackathonDetail() {
             </div>
           </div>
         )}
-        {type === "my-project" && (
+        {type === "teams" && (
           <>
             <div className="px-60 max-lg:px-2 py-5 ">
-              <div className="grid grid-cols-3 max-lg:grid-cols-1 gap-10">
-                <div className="col-span-2">
-                  <h2 className="font-semibold mt-5">My hackathon projects</h2>
-                  <div>
-                    <div className="my-5 grid grid-cols-3 max-md:grid-cols-1 gap-6">
-                      {[...myProject, ...myProject].map((card, index) => (
-                        <CardProject
-                          key={index}
-                          title={card.title}
-                          description={card.description}
-                          image={imgDefaultProject}
-                          imgUser={defaultAvt}
-                          isWinner={card.isWinner}
-                          votes={card.votes}
-                          comments={card.comments}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                </div>
-                <div className="col-span-1 text-sm mt-2">
-                  <div>
-                    <CustomButton
-                      title="Join hackathon"
-                      containerStyles="my-4  bg-blue-600 w-fit font-medium text-white py-2 px-5 focus:outline-none hover:bg-blue-500 rounded-sm text-base border border-blue-600"
-                    />
-                    <HackathonInfo />
+              <div className="col-span-2">
+                <h2 className="font-semibold mt-5 mb-5">Manage teams</h2>
+                <div>
+                  <div className="gap-6">
+                    <table className="relative w-full overflow-y-hidden overflow-x-hidden rounded-md mb-8 bg-white border-0 ">
+                      <thead className="bg-[#f5f7fc] color-white border-transparent border-0 w-full">
+                        <tr className="w-full">
+                          <th className="relative text-[#3a60bf] font-medium py-6 text-base text-left w-4/12 pl-5 ">
+                            Team name
+                          </th>
+                          <th className="relative text-[#3a60bf] font-medium py-6 text-base text-left w-2/12">
+                            Project
+                          </th>
+                          <th className="relative text-[#3a60bf] font-medium py-6 text-base text-left w-2/12">
+                            Member
+                          </th>
+                          <th className="relative text-[#3a60bf] font-medium py-6 text-base text-left w-2/12">
+                            Owner
+                          </th>
+                          <th className="relative text-[#3a60bf] font-medium py-6 text-base text-left w-2/12">
+                            Actions
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {[...projectGallery, ...projectGallery]?.map(
+                          (item, index) => {
+                            return (
+                              <tr
+                                key={index}
+                                className="relative border-b border-solid border-[#ecedf2] w-full hover:bg-[#f4f2f2] cursor-pointer px-5  "
+                              >
+                                <td className="relative pl-5 py-5 font-normal text-base w-3/12">
+                                  <div className="mb-0 relative h-16 gap-2 flex flex-row items-center">
+                                    {/* <span className="absolute l-0 t-0 w-10">
+                                                                        <img src={item.logoProject} className="inline-block max-w-full h-auto align-middle" alt="logo" />
+                                                                    </span> */}
+
+                                    <div>
+                                      <div className="font-medium text-md text-ellipsis mb-1 line-clamp-2 ">
+                                        {item?.teamName}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </td>
+                                <td className="font-light  w-1/12">
+                                  <div className="font-medium text-md text-ellipsis mb-1 line-clamp-2 ">
+                                    {item?.projectTitle}
+                                  </div>
+                                </td>
+                                <td className="font-semibold text-blue-700 w-1/12">
+                                  <div className="flex h-full items-center">
+                                    <div className="mr-1">
+                                      {item?.createdBy?.length ?? 0}
+                                    </div>
+                                  </div>
+                                </td>
+                                <td className="text-center w-[20%] font-semibold text-gray-700 text-base">
+                                  <div className="line-clamp-3 w-full flex items-center gap-1">
+                                    <img
+                                      src={item?.owner?.avatar}
+                                      className="w-5 h-5 rounded-full"
+                                    />
+                                    {item?.owner?.name}
+                                  </div>
+                                </td>
+                                <td>
+                                  <div className="">
+                                    <div className="list-none flex relative item-center justify-center">
+                                      <Link
+                                        to={`/Organizer/manage-hackathons/${item?._id}/overview`}
+                                        className="list-none relative mr-2 bg-[#f5f7fc] border rounded-md border-[#e9ecf9] px-1 pt-1 hover:bg-[#5f86e9] hover:text-white"
+                                      >
+                                        <LiaEyeSolid fontSize={18} />
+                                      </Link>
+
+                                      <li
+                                        className="list-none relative bg-[#f5f7fc] border rounded-md border-[#e9ecf9] px-1 pt-1 hover:bg-[#ce3e37] hover:text-white"
+                                        onClick={() => {
+                                          setSelectedId(item?._id);
+                                          handleDeleteProject(item);
+                                        }}
+                                      ></li>
+                                    </div>
+                                  </div>
+                                </td>
+                              </tr>
+                            );
+                          }
+                        )}
+                      </tbody>
+                    </table>
                   </div>
                 </div>
               </div>
@@ -369,26 +461,28 @@ function HackathonDetail() {
                   />
                 </div>
                 <div className="my-5 grid grid-cols-4 max-md:grid-cols-1 gap-6">
-                  {[...myProject, ...myProject, ...myProject].map(
-                    (card, index) => (
-                      <CardProject
-                        key={index}
-                        title={card.title}
-                        description={card.description}
-                        image={imgDefaultProject}
-                        imgUser={defaultAvt}
-                        isWinner={card.isWinner}
-                        votes={card.votes}
-                        comments={card.comments}
-                      />
-                    )
-                  )}
+                  {[
+                    ...projectGallery,
+                    ...projectGallery,
+                    ...projectGallery,
+                  ].map((card, index) => (
+                    <CardProject
+                      key={index}
+                      title={card.projectTitle}
+                      description={card.tagLine}
+                      image={card.thumnailImage}
+                      imgUser={defaultAvt}
+                      isWinner={Math.random() < 0.5}
+                      votes={Math.floor(Math.random() * 21)}
+                      comments={Math.floor(Math.random() * 11)}
+                    />
+                  ))}
                 </div>
               </div>
             </div>
           </>
         )}
-        {type === "participants" && <BrowerHackathons />}
+        {type === "participants" && <BrowerParticipants hackathonId={id} />}
         <div className="px-60 max-lg:px-2 py-5 ">
           <div className="grid grid-cols-3 max-lg:grid-cols-1 gap-10">
             <div className="col-span-2 text-gray-600 " id="generated-script">
@@ -450,4 +544,4 @@ function HackathonDetail() {
   );
 }
 
-export default HackathonDetail;
+export default HackathonCorDetail;

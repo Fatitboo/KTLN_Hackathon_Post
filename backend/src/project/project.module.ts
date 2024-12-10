@@ -22,6 +22,7 @@ import {
   HackathonSchema,
 } from 'src/hackathon/infrastructure/database/schemas';
 import { GetProjectRegisteredHackathonHandler } from './application/queries/get-projec-registered-hackathon/get-project-registered-hackathon.handler';
+import { SearchFilterProjectsHandler } from './application/queries/search-filter-project/search-filter-project.handler';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { GetProjectRegisteredHackathonHandler } from './application/queries/get-
     UpdateProjectHandler,
     DeleteProjectHandler,
     GetProjectRegisteredHackathonHandler,
+    SearchFilterProjectsHandler,
   ],
 })
 export class ProjectModule {}

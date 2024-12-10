@@ -17,6 +17,9 @@ import { DeleteProjectCommand } from 'src/project/application/commands/delete-pr
 import { GetProjectsQuery } from 'src/project/application/queries/get-projects/get-projects.query';
 import { UpdateProjectDTO } from '../dto/update-project.dto';
 import { GetProjectRegisteredHackathonQuery } from 'src/project/application/queries/get-projec-registered-hackathon/get-project-registered-hackathon.query';
+import { FilterProjectsDto } from '../dto/search-filter-projects.dto';
+import { SearchFilterHackathonsQuery } from 'src/hackathon/application/queries/search-filter-hackathons/search-filter-hackathons.query';
+import { SearchFilterProjectsQuery } from 'src/project/application/queries/search-filter-project/search-filter-project.query';
 
 @Controller('projects')
 export class ProjectController {
@@ -28,6 +31,13 @@ export class ProjectController {
   @Get()
   async getAllProjects(@Query('page') page: number) {
     return await this.queryBus.execute(new GetProjectsQuery(page));
+  }
+
+  @Post('search')
+  async search(@Body() filterDto: FilterProjectsDto) {
+    return await this.queryBus.execute(
+      new SearchFilterProjectsQuery(filterDto),
+    );
   }
 
   @Get(':id')

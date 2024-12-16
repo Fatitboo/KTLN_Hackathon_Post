@@ -134,6 +134,7 @@ function Register() {
             </CustomButton> */}
             <div className="flex items-center gap-3">
               <GoogleLogin
+                text="Sign up with Google"
                 onSuccess={handleSuccess}
                 onError={() => alert("Google Login Failed")}
               />

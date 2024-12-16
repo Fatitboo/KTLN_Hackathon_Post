@@ -72,7 +72,7 @@ export class UserDocument {
   @Prop({ required: false })
   hashRefreshToken: string;
 
-  @Prop({ type: [{ type: Types.ObjectId, ref: 'Hackathon' }] })
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'HackathonDocument' }] })
   registerHackathons: Types.ObjectId[];
 
   @Prop()

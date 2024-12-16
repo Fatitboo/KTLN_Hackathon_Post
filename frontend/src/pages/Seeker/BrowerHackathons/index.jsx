@@ -5,83 +5,55 @@ import { ArrowRightIcon } from "@heroicons/react/20/solid";
 import HackathonItem from "../../../components/Seeker/HackathonItem";
 import { data_popular } from "../../../utils/data_hackathon";
 import SearchInput from "../../../components/Seeker/SearchInput";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-const hackathons = [
-  {
-    name: "Student Mental Health Hackathon",
-    location: "Online",
-    currency: "$",
-    price: 0,
-    participants: 7,
-    organizer: "RaahimFarhan",
-    period: "Jun 23 - Jul 01, 2023",
-    invite: "False",
-    tags: "['Beginner Friendly', 'Gaming', 'Open Ended']",
-    logo_link:
-      "https://d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/002/514/731/datas/medium_square.png",
-    item_id: "item-00001",
-    start_date: "2023-06-23",
-    end_date: "2023-07-01",
-  },
-  {
-    name: "Encode Justice NY Hackathon",
-    location: "Brooklyn Public Library",
-    currency: "$",
-    price: 0,
-    participants: 3,
-    organizer: "Encode Justice New York",
-    period: "Jul 01, 2023",
-    invite: "False",
-    tags: "['Beginner Friendly', 'Education', 'Low/No Code']",
-    logo_link:
-      "https://d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/002/509/489/datas/medium_square.png",
-    item_id: "item-00027",
-    start_date: "2023-07-01",
-    end_date: "2023-07-08",
-  },
-  {
-    name: "InfoCamp",
-    location: "Online",
-    currency: "₹",
-    price: 7000,
-    participants: 30,
-    organizer: "Skill Pulse",
-    period: "Jun 24 - Jul 01, 2023",
-    invite: "False",
-    tags: "['Beginner Friendly', 'Communication', 'Mobile']",
-    logo_link:
-      "https://d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/002/512/612/datas/medium_square.png",
-    item_id: "item-00003",
-    start_date: "2023-06-24",
-    end_date: "2023-07-01",
-  },
-  {
-    name: "Hackspree 1.0",
-    location: "Online",
-    currency: "$",
-    price: 0,
-    participants: 27,
-    organizer: "The HackSpree Community",
-    period: "Jun 17 - Jul 15, 2023",
-    invite: "False",
-    tags: "['Beginner Friendly', 'Open Ended', 'Social Good']",
-    logo_link:
-      "https://d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/002/509/438/datas/medium_square.png",
-    item_id: "item-00004",
-    start_date: "2023-06-17",
-    end_date: "2023-07-15",
-  },
-];
-function BrowerHackathons() {
-  const [showMoreTags, setShowMoreTags] = useState(false);
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getAllHackathonsSeeker,
+  resetValue,
+} from "../../../redux/slices/hackathons/hackathonsSlices";
+import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
+import { LoadingComponent } from "../../../components";
 
+function BrowerHackathons() {
+  const dispatch = useDispatch();
+  const limit = 10;
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(10);
+  const [totalPages, setTotalPage] = useState(1);
+  let [currentHackathons, setCurrentHackathons] = useState([]);
+  let { loading, hackathonsSeeker, isSuccess } = useSelector(
+    (state) => state.hackathons
+  );
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showMoreTags, setShowMoreTags] = useState(false);
   const toggleShowMore = () => {
     setShowMoreTags(!showMoreTags);
   };
+  useEffect(() => {
+    dispatch(getAllHackathonsSeeker({ page, limit: 10 }));
+  }, [page]);
+
+  const handlePageChange = (newPage) => {
+    if (newPage > 0 && newPage <= totalPages) {
+      setPage(newPage);
+    }
+  };
+  const handleSearch = () => {
+    dispatch(getAllHackathonsSeeker({ page, limit: 10, search: searchTerm }));
+  };
+  useEffect(() => {
+    if (isSuccess) {
+      setCurrentHackathons(hackathonsSeeker.data);
+      setTotal(hackathonsSeeker?.total);
+      setTotalPage(Math.ceil(hackathonsSeeker?.total / limit));
+      dispatch(resetValue({ key: "isSuccess", value: false }));
+    }
+  }, [isSuccess]);
   return (
     <>
       <></>
+      {loading && <LoadingComponent />}
       <div className=" h-40 flex items-center justify-center  bg-[#0b4540] text-white text-center font-bold">
         <h1>Join the world's best online and in-person hackathons</h1>
       </div>
@@ -208,11 +180,17 @@ function BrowerHackathons() {
           </div>
           <div className="col-span-9 max-md:col-span-1 pl-5 pb-5">
             <div className="">
-              <SearchInput />
+              <SearchInput
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}
+                handleSearch={handleSearch}
+              />
             </div>
             {/* Title */}
             <div className="flex justify-between items-center text-sm mt-10">
-              <dic className="text-gray-600">Showing 9387 hackathons</dic>
+              <div className="text-gray-600">
+                Showing {currentHackathons.length ?? 10} hackathons of {total}
+              </div>
               <div className="flex items-center">
                 <div className="mr-3 font-medium">Sort:</div>
                 <div className="flex items-center border border-gray-300 p-3">
@@ -236,29 +214,29 @@ function BrowerHackathons() {
               </div>
             </div>
             <div className="mt-8">
-              {(hackathons || []).map((hackathon, index) => {
+              {(currentHackathons || []).map((hackathon, index) => {
                 return (
-                  <>
-                    <div className="my-6">
-                      <Link to="/Hackathon-detail/1234125/overview">
-                        <HackathonItem
-                          id={index}
-                          startDate={hackathon.start_date}
-                          endDate={hackathon.end_date}
-                          themes={hackathon.tags}
-                          organization={hackathon.organizer}
-                          period={hackathon.period}
-                          title={hackathon.name}
-                          isExtended={true}
-                          isFeature={index % 2 === 0 ? true : false}
-                          location={hackathon.location}
-                          prizes={`${hackathon.currency} ${hackathon.price}`}
-                          participants={hackathon.participants}
-                          imageHackthon={hackathon.logo_link}
-                        />
-                      </Link>
-                    </div>
-                  </>
+                  <div key={hackathon?._id} className="my-6">
+                    <Link to={`/Hackathon-detail/${hackathon?._id}/overview`}>
+                      <HackathonItem
+                        id={hackathon?._id}
+                        startDate={hackathon?.submissions?.start}
+                        endDate={hackathon?.submissions?.deadline}
+                        themes={hackathon.hackathonTypes}
+                        organization={hackathon?.hostName}
+                        period={hackathon.period}
+                        title={hackathon?.hackathonName}
+                        isExtended={true}
+                        isFeature={index % 2 === 0 ? true : false}
+                        location={hackathon.location}
+                        prizes={`${hackathon?.prizeCurrency ?? "$"} ${
+                          hackathon?.prizes[0]?.cashValue ?? 1000
+                        }`}
+                        participants={hackathon?.registerUsers?.length ?? 0}
+                        imageHackthon={hackathon?.thumbnail}
+                      />
+                    </Link>
+                  </div>
                 );
               })}
             </div>
@@ -266,11 +244,35 @@ function BrowerHackathons() {
         </div>
       </div>
       <></>
-      <div className="flex items-center justify-center">
+      {/* <div className="flex items-center justify-center">
         <CustomButton
           title="View all hackathons"
           containerStyles="bg-blue-600 w-fit font-medium text-white py-2 px-5 focus:outline-none hover:bg-blue-500 rounded-sm text-base border border-blue-600"
         />
+      </div> */}
+      {/* Pagination Controls */}
+      <div className="flex items-center justify-center mt-5">
+        <button
+          disabled={page === 1}
+          onClick={() => handlePageChange(page - 1)}
+          className="w-10 h-10 flex items-center justify-center bg-lightGray rounded-sm mr-4 list-none"
+        >
+          <BsChevronLeft />
+        </button>
+        {/* <span style={{ margin: "0 10px" }}>
+          Page {page} of {totalPages}
+        </span> */}
+        <span style={{ margin: "0 10px" }}>
+          Page {page} of {totalPages}
+        </span>
+
+        <button
+          disabled={page === totalPages}
+          onClick={() => handlePageChange(page + 1)}
+          className="w-10 h-10 flex items-center justify-center bg-lightGray rounded-sm mr-4 list-none"
+        >
+          <BsChevronRight />
+        </button>
       </div>
       {/*  */}
     </>

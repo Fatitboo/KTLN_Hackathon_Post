@@ -12,9 +12,13 @@ const CardProject = ({
   imgUser,
   votes,
   comments,
+  id,
 }) => {
   return (
-    <div className="relative cursor-pointer max-w-xs bg-white border border-gray-300 rounded-sm hover:shadow-md">
+    <Link
+      to={`/Seeker/project/${id}`}
+      className="relative cursor-pointer max-w-xs bg-white border border-gray-300 rounded-sm hover:shadow-md"
+    >
       {isWinner && (
         <img
           src={tagWinner}
@@ -22,7 +26,7 @@ const CardProject = ({
         />
       )}
       <div className="">
-        <img src={image} alt={title} className="h-48 w-full" />
+        <img src={image} alt={title} className="h-52 w-full" />
         <div className=" px-2 h-16">
           <h3 className="mt-2 text-base font-semibold line-clamp-1">{title}</h3>
           <p className="mt-1 text-gray-600 line-clamp-2 italic text-sm">
@@ -53,7 +57,7 @@ const CardProject = ({
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 

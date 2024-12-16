@@ -13,9 +13,6 @@ export class GetAllRegisterUsersHandler
   ) {}
 
   async execute(query: GetAllRegisterUsersQuery): Promise<any> {
-    return await this.hackathonRepository.findAllRegisterUser(
-      query.id,
-      query.page,
-    );
+    return await this.hackathonRepository.findAllRegisterUser(query.props);
   }
 }

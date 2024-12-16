@@ -17,12 +17,10 @@ export class SearchFilterHackathonsHandler
   async execute(qr: SearchFilterHackathonsQuery): Promise<any> {
     const { search, location, status, length, tags, host, sort, page, limit } =
       qr.props;
-    const query: any = {
-      $or: [],
-    };
+    const query: any = {};
     const orQuery: any = [];
     // Search
-    if (search) {
+    if (search && search !== '') {
       orQuery.push({ hackathonName: { $regex: search, $options: 'i' } });
       orQuery.push({ tagline: { $regex: search, $options: 'i' } });
       orQuery.push({ hostName: { $regex: search, $options: 'i' } });
@@ -31,79 +29,79 @@ export class SearchFilterHackathonsHandler
     if (location?.length) {
       query.hackathonTypes = { $in: location };
     }
-    const today = moment().startOf('day').toDate();
-    if (status?.length) {
-      const arr = status.map((s) => {
-        if (s === 'Upcoming') {
-          return { 'submissions.start': { $gt: today } };
-        } else if (s === 'Open') {
-          return {
-            'submissions.start': { $lte: today },
-            'submissions.deadline': { $gte: today },
-          };
-        } else if (s === 'Ended') {
-          return { 'submissions.deadline': { $lt: today } };
-        }
-      });
-      orQuery.push(...arr);
-    }
-    if (length?.length) {
-      const arr = length.map((l) => {
-        if (l === '1–6 days') {
-          return {
-            $expr: {
-              $lte: [
-                { $subtract: ['$submissions.deadline', '$submissions.start'] },
-                6 * 24 * 60 * 60 * 1000, // 6 days in milliseconds
-              ],
-            },
-          };
-        } else if (l === '1–4 weeks') {
-          return {
-            $expr: {
-              $and: [
-                {
-                  $gt: [
-                    {
-                      $subtract: [
-                        '$submissions.deadline',
-                        '$submissions.start',
-                      ],
-                    },
-                    6 * 24 * 60 * 60 * 1000,
-                  ],
-                },
-                {
-                  $lte: [
-                    {
-                      $subtract: [
-                        '$submissions.deadline',
-                        '$submissions.start',
-                      ],
-                    },
-                    28 * 24 * 60 * 60 * 1000,
-                  ],
-                },
-              ],
-            },
-          };
-        } else if (l === '1+ month') {
-          return {
-            $expr: {
-              $gt: [
-                { $subtract: ['$submissions.deadline', '$submissions.start'] },
-                28 * 24 * 60 * 60 * 1000,
-              ],
-            },
-          };
-        }
-      });
-      orQuery.push(...arr);
-    }
-    // Length
-    if (length?.length) {
-      query.length = { $in: length };
-    }
+    // const today = moment().startOf('day').toDate();
+    // if (status?.length) {
+    //   const arr = status.map((s) => {
+    //     if (s === 'Upcoming') {
+    //       return { 'submissions.start': { $gt: today } };
+    //     } else if (s === 'Open') {
+    //       return {
+    //         'submissions.start': { $lte: today },
+    //         'submissions.deadline': { $gte: today },
+    //       };
+    //     } else if (s === 'Ended') {
+    //       return { 'submissions.deadline': { $lt: today } };
+    //     }
+    //   });
+    //   orQuery.push(...arr);
+    // }
+    // if (length?.length) {
+    //   const arr = length.map((l) => {
+    //     if (l === '1–6 days') {
+    //       return {
+    //         $expr: {
+    //           $lte: [
+    //             { $subtract: ['$submissions.deadline', '$submissions.start'] },
+    //             6 * 24 * 60 * 60 * 1000, // 6 days in milliseconds
+    //           ],
+    //         },
+    //       };
+    //     } else if (l === '1–4 weeks') {
+    //       return {
+    //         $expr: {
+    //           $and: [
+    //             {
+    //               $gt: [
+    //                 {
+    //                   $subtract: [
+    //                     '$submissions.deadline',
+    //                     '$submissions.start',
+    //                   ],
+    //                 },
+    //                 6 * 24 * 60 * 60 * 1000,
+    //               ],
+    //             },
+    //             {
+    //               $lte: [
+    //                 {
+    //                   $subtract: [
+    //                     '$submissions.deadline',
+    //                     '$submissions.start',
+    //                   ],
+    //                 },
+    //                 28 * 24 * 60 * 60 * 1000,
+    //               ],
+    //             },
+    //           ],
+    //         },
+    //       };
+    //     } else if (l === '1+ month') {
+    //       return {
+    //         $expr: {
+    //           $gt: [
+    //             { $subtract: ['$submissions.deadline', '$submissions.start'] },
+    //             28 * 24 * 60 * 60 * 1000,
+    //           ],
+    //         },
+    //       };
+    //     }
+    //   });
+    //   orQuery.push(...arr);
+    // }
+    // // Length
+    // if (length?.length) {
+    //   query.length = { $in: length };
+    // }
 
     // Tags
     if (tags?.length) {
@@ -114,7 +112,9 @@ export class SearchFilterHackathonsHandler
     if (host) {
       query.hostName = host;
     }
-    query.$or = orQuery;
+    if (orQuery.length > 0) {
+      query.$or = orQuery;
+    }
 
     // Sorting
     const sortOptions: any = {};
@@ -130,6 +130,19 @@ export class SearchFilterHackathonsHandler
       .find(query)
       .sort(sortOptions)
       .skip(skip)
+      .select([
+        '_id',
+        'hackathonTypes',
+        'prizes',
+        'hackathonName',
+        'hostName',
+        'isPublished',
+        'thumbnail',
+        'submissions',
+        'prizeCurrency',
+        'registerUsers',
+        'tagline',
+      ])
       .limit(limit)
       .exec();
 

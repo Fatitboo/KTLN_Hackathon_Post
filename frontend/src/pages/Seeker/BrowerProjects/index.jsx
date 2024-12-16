@@ -7,14 +7,36 @@ import MultiSelectDropdown from "../../../components/Seeker/MultiSelectDropdown"
 import CardProject from "../../../components/Seeker/CardProject";
 import { defaultAvt, imgDefaultProject } from "../../../assets/images";
 import { useEffect, useMemo, useState } from "react";
-import { PaginationButtons } from "../../../components";
+import { LoadingComponent, PaginationButtons } from "../../../components";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getAllProjects,
+  resetValue,
+} from "../../../redux/slices/projects/projectsSlices";
+import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
 
 function BrowerProjects() {
-  const [itemPerPage, setItemPerPage] = useState(8);
-  const [currentPage, setCurrentPage] = useState(0);
-  const [pages, setPages] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const dispatch = useDispatch();
+  const limit = 10;
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(10);
+  const [totalPages, setTotalPage] = useState(1);
+  let [currentProjects, setCurrentProjects] = useState([]);
 
+  let { loading, projects, isSuccess } = useSelector((state) => state.projects);
+  const handlePageChange = (newPage) => {
+    if (newPage > 0 && newPage <= totalPages) {
+      setPage(newPage);
+    }
+  };
+  const handleSearch = () => {
+    dispatch(getAllProjects({ page, limit: 10, searchKeyword: searchTerm }));
+  };
+  useEffect(() => {
+    dispatch(getAllProjects({ page, limit: 10 }));
+  }, [page]);
   const options = [
     { value: "All", label: "All" },
     { value: "Beginner Friendly", label: "Beginner Friendly" },
@@ -109,15 +131,18 @@ function BrowerProjects() {
     []
   );
   useEffect(() => {
-    setPages([
-      ...cards.slice(
-        currentPage * itemPerPage,
-        (currentPage + 1) * itemPerPage
-      ),
-    ]);
-  }, [currentPage, itemPerPage, cards]);
+    if (isSuccess) {
+      setCurrentProjects(projects.data);
+      setTotal(projects?.total);
+      setTotalPage(Math.ceil(projects?.total / limit));
+      dispatch(resetValue({ key: "isSuccess", value: false }));
+    }
+    console.log("🚀 ~ useEffect ~ projects:", projects);
+  }, [isSuccess]);
   return (
     <>
+      {loading && <LoadingComponent />}
+
       <div className="py-10 px-60 flex h-40 bg-[#0b4540] w-full text-white text-center font-bold items-center justify-between">
         <h1>Explore projects from Portfolios and hackathons</h1>
         <CustomButton
@@ -135,6 +160,9 @@ function BrowerProjects() {
                 <SearchInput
                   btnText={"Search projects"}
                   textPlaceholder={"Find projects ... "}
+                  searchTerm={searchTerm}
+                  setSearchTerm={setSearchTerm}
+                  handleSearch={handleSearch}
                 />
               </div>
               <div className=" max-md:mt-1 mt-5">
@@ -218,12 +246,13 @@ function BrowerProjects() {
                 </div>
               </div>
               <div className="my-5 grid grid-cols-4 max-md:grid-cols-1 gap-6">
-                {pages.map((card, index) => (
+                {(currentProjects || []).map((card, index) => (
                   <CardProject
+                    id={card?._id}
                     key={index}
-                    title={card.title}
-                    description={card.description}
-                    image={imgDefaultProject}
+                    title={card?.projectTitle}
+                    description={card?.tagline}
+                    image={card?.thumnailImage || imgDefaultProject}
                     imgUser={defaultAvt}
                     isWinner={card.isWinner}
                     votes={card.votes}
@@ -235,12 +264,28 @@ function BrowerProjects() {
           </div>
         </div>
         <></>
-        <div className="list-none mt-10 flex items-center justify-center">
-          <PaginationButtons
-            totalPages={cards.length / itemPerPage}
-            currentPage={currentPage}
-            setCurrentPage={setCurrentPage}
-          />
+        <div className="flex items-center justify-center mt-5">
+          <button
+            disabled={page === 1}
+            onClick={() => handlePageChange(page - 1)}
+            className="w-10 h-10 flex items-center justify-center bg-lightGray rounded-sm mr-4 list-none"
+          >
+            <BsChevronLeft />
+          </button>
+          {/* <span style={{ margin: "0 10px" }}>
+                  Page {page} of {totalPages}
+                </span> */}
+          <span style={{ margin: "0 10px" }}>
+            Page {page} of {totalPages}
+          </span>
+
+          <button
+            disabled={page === totalPages}
+            onClick={() => handlePageChange(page + 1)}
+            className="w-10 h-10 flex items-center justify-center bg-lightGray rounded-sm mr-4 list-none"
+          >
+            <BsChevronRight />
+          </button>
         </div>
         {/*  */}
       </div>

@@ -144,7 +144,7 @@ function NavbarUser({ user }) {
           </div>
           <ul className="hidden lg:flex gap-10 text-base list-none">
             <li>
-              <Link to="/Seeker/products">Products</Link>
+              <Link to="/Seeker/brower-products">Products</Link>
             </li>
             <li>
               <Link to="/Seeker/brower-hackathons">Hackathons</Link>

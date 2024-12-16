@@ -28,6 +28,72 @@ export const getAllHackathons = createAsyncThunk(
     }
   }
 );
+
+export const getAllHackathonsSeeker = createAsyncThunk(
+  "hackathons/getAllHackathonsSeeker",
+  async (payload, { rejectWithValue, getState, dispatch }) => {
+    try {
+      const params = {
+        page: 1,
+        limit: 10,
+      };
+      if (payload.search) params.search = payload.search;
+      if (payload.page) params.page = payload.page;
+      if (payload.limit) params.limit = payload.limit;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        params,
+      };
+
+      const { data } = await axios.get(
+        `${baseUrl}/${apiPrefix}/search`,
+        config
+      );
+      return data;
+    } catch (error) {
+      if (!error?.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
+export const getAllRegisteredUsersHackathon = createAsyncThunk(
+  "hackathons/getAllRegisteredUsersHackathon",
+  async (payload, { rejectWithValue, getState, dispatch }) => {
+    try {
+      const params = {
+        page: 1,
+        limit: 10,
+      };
+      if (payload.search) params.search = payload.search;
+      if (payload.status) params.status = payload.status;
+      if (payload.skills) params.skills = payload.skills;
+      if (payload.page) params.page = payload.page;
+      if (payload.limit) params.limit = payload.limit;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        params,
+      };
+
+      const { data } = await axios.get(
+        `${baseUrl}/${apiPrefix}/register-users/${payload.id}`,
+        config
+      );
+      return data;
+    } catch (error) {
+      if (!error?.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
 //get all hackathons
 export const singleHackathon = createAsyncThunk(
   "hackathons/singleHackathon",
@@ -157,7 +223,7 @@ const hackathonsSlices = createSlice({
     },
   },
   extraReducers: (builder) => {
-    //get all vacancies
+    //get all hackathons
     builder.addCase(getAllHackathons.pending, (state, action) => {
       state.loading = true;
     }),
@@ -169,7 +235,45 @@ const hackathonsSlices = createSlice({
         state.loading = false;
         state.appErr = action?.payload?.message;
       }),
-      //get all vacancies
+      //get all hackathons seeker
+      builder.addCase(getAllHackathonsSeeker.pending, (state, action) => {
+        state.loading = true;
+        state.isSuccess = false;
+      }),
+      builder.addCase(getAllHackathonsSeeker.fulfilled, (state, action) => {
+        state.loading = false;
+        state.hackathonsSeeker = action?.payload;
+        state.isSuccess = true;
+      }),
+      builder.addCase(getAllHackathonsSeeker.rejected, (state, action) => {
+        state.loading = false;
+        state.appErr = action?.payload?.message;
+        state.isSuccess = false;
+      }),
+      builder.addCase(
+        getAllRegisteredUsersHackathon.pending,
+        (state, action) => {
+          state.loading = true;
+          state.isSuccess = false;
+        }
+      ),
+      builder.addCase(
+        getAllRegisteredUsersHackathon.fulfilled,
+        (state, action) => {
+          state.loading = false;
+          state.registerUsers = action?.payload;
+          state.isSuccess = true;
+        }
+      ),
+      builder.addCase(
+        getAllRegisteredUsersHackathon.rejected,
+        (state, action) => {
+          state.loading = false;
+          state.appErr = action?.payload?.message;
+          state.isSuccess = false;
+        }
+      ),
+      //
       builder.addCase(singleHackathon.pending, (state, action) => {
         state.loading = true;
       }),

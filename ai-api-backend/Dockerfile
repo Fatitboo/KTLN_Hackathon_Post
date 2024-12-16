@@ -7,7 +7,7 @@ WORKDIR /app
 # Copy requirements file and install dependencies
 COPY requirements.txt .
 RUN pip install -r requirements.txt
-
+RUN pip install flask pymongo
 RUN python -m nltk.downloader stopwords
 
 # Copy the rest of the application code

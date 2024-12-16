@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 const SubNavbarHackathon = ({ id, type }) => {
   return (
-    <div className=" flex bg-gray-800 opacity-90 py-3 mt-3 text-white text-normal">
+    <div className=" flex bg-gray-800 opacity-90 py-3 mt-3 -mb-3  text-white text-normal">
       <div className="px-60 max-lg:px-2 ">
         <Link
           to={`/Hackathon-detail/${id}/overview`}

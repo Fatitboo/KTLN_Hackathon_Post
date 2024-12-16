@@ -15,6 +15,8 @@ const HackathonInfo = ({
   organization,
   themes,
   location,
+  end,
+  start,
 }) => {
   function convertTagsToArray(tagsStr) {
     // Loại bỏ dấu ngoặc đơn đầu và cuối, sau đó tách chuỗi thành mảng
@@ -33,14 +35,11 @@ const HackathonInfo = ({
       <div className="bg-white rounded-sm py-2 border border-gray-300">
         <div className="py-3 px-5">
           <div className="text-white bg-[#21a196] rounded py-1.5 px-4 mr-6 w-fit">
-            <li>
-              {" "}
-              {isOpen === "ended" ? "Ended" : calculateTimeLeft("2024-12-01")}
-            </li>
+            <div> {calculateTimeLeft(end)}</div>
           </div>
 
           <div className="font-medium my-2">Deadline</div>
-          <div>13 thg 11, 2024 @ 8:00am</div>
+          <div>{end} @ 8:00am</div>
         </div>
         <div className=" border-t border-gray-200 py-3 px-5">
           <div className="flex font-light items-center">
@@ -85,26 +84,22 @@ const HackathonInfo = ({
           </div>
           <div className="flex items-center mt-3">
             <BsCalendar2Fill className="text-gray-700 mr-3" />
-            <div className=" text-gray-700 text-sm">
-              {"Jun 17 - Jul 15, 2023"}
-            </div>
+            <div className=" text-gray-700 text-sm">{`${start} - ${end}`}</div>
           </div>
           <div className="flex  mt-3 ">
             <BsTagsFill className="text-gray-700 mr-2 mt-2 " />
             <div className="flex flex-wrap">
-              {[
-                ...(themes
-                  ? convertTagsToArray(themes)
-                  : ["Beginner Friendly", "Low code", "Web"]),
-              ].map((item) => {
-                return (
-                  <>
-                    <div className="rounded-[3px] bg-blue-50 px-3 py-1 text-blue-700 text-sm my-1 mr-2">
-                      {item}
-                    </div>
-                  </>
-                );
-              })}
+              {[...(themes ?? ["Beginner Friendly", "Low code", "Web"])].map(
+                (item) => {
+                  return (
+                    <>
+                      <div className="rounded-[3px] bg-blue-50 px-3 py-1 text-blue-700 text-sm my-1 mr-2">
+                        {item}
+                      </div>
+                    </>
+                  );
+                }
+              )}
             </div>
           </div>
         </div>

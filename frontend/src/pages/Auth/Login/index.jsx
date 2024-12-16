@@ -49,18 +49,16 @@ function Login() {
 
   useEffect(() => {
     if (userAuth) {
-      if (userAuth?.user?.isVerify) {
-        if (userAuth?.user?.isActive) {
-          if (userAuth?.user?.userType.includes("seeker")) {
-            if (userAuth?.user?.isSetPersionalSetting) {
-              navigate("/");
-            } else {
-              navigate("/setting-recommend");
-            }
+      if (userAuth?.user?.isActive) {
+        if (userAuth?.user?.userType.includes("seeker")) {
+          if (userAuth?.user?.isSetPersionalSetting) {
+            navigate("/");
+          } else {
+            navigate("/setting-recommend");
           }
-          if (userAuth?.user?.userType.includes("admin")) {
-            navigate("/Admin");
-          }
+        }
+        if (userAuth?.user?.userType.includes("admin")) {
+          navigate("/Admin");
         }
       }
     }
@@ -128,12 +126,13 @@ function Login() {
               </CustomButton> */}
               <div className="flex items-center gap-3">
                 <GoogleLogin
+                  text="Log in with Google"
                   onSuccess={handleSuccess}
                   onError={() => alert("Google Login Failed")}
                 />
                 <CustomButton
                   onClick={handleLoginGithub}
-                  title={"Sign up with GitHub"}
+                  title={"Log in with GitHub"}
                   containerStyles={
                     "flex justify-center py-2 rounded text-sm  items-center border border-[#ccc] w-[210px] px-2 my-5"
                   }

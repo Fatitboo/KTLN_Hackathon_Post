@@ -17,8 +17,8 @@ export enum TEAM_STATUS {
 }
 
 export class RegisterUser {
-  @Prop({ type: [String] })
-  userId: string[];
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'UserDocument' }] })
+  userId: Types.ObjectId[];
 
   @Prop({ type: String, enum: TEAM_STATUS, required: true })
   status: TEAM_STATUS;
@@ -50,10 +50,10 @@ export class HackathonDocument {
   @Prop({ type: [RegisterUser], default: [] })
   registerUsers: RegisterUser[];
 
-  @Prop({ type: [{ type: Types.ObjectId, ref: 'Project' }] })
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'ProjectDocument' }] })
   submitions: Types.ObjectId[];
 
-  @Prop({ type: [{ type: Types.ObjectId, ref: 'Project' }] })
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'ProjectDocument' }] })
   registedTeams: Types.ObjectId[];
 
   @Prop()

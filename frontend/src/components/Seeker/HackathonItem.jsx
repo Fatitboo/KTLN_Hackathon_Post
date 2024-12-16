@@ -24,6 +24,7 @@ const HackathonItem = ({
   isManagedByDevpost,
   themes,
   isOpen,
+  tagline,
 }) => {
   function convertTagsToArray(tagsStr) {
     // Loại bỏ dấu ngoặc đơn đầu và cuối, sau đó tách chuỗi thành mảng
@@ -64,16 +65,14 @@ const HackathonItem = ({
                 className="shadow-md min-h-[100px]"
               />
             </div>
-            <div className="col-span-3  py-5 px-4  font-semibold ">
+            <div className="col-span-3  py-5 pl-2 pr-1  font-semibold ">
               <h3 className={`${isExtended ? "line-clamp-2" : "line-clamp-1"}`}>
                 {title}
               </h3>
               <div className="flex font-light mt-4 text-xs items-center ">
-                <div className="text-white bg-[#21a196] rounded-full py-1.5 px-4 mr-6 flex items-center">
-                  <div className="w-1 h-1 rounded-full bg-white mr-3" />
-                  <div className="font-medium text-sm">
-                    {" "}
-                    {isOpen === "ended" ? "Ended" : calculateTimeLeft(endDate)}
+                <div className="text-white bg-[#21a196] rounded-full py-1.5 px-2 mr-4 flex items-center">
+                  <div className="font-medium text-sm ">
+                    {calculateTimeLeft(endDate)}
                   </div>
                 </div>
                 <div className="flex items-center text-sm">
@@ -111,12 +110,12 @@ const HackathonItem = ({
                   </div>
                   <div className="flex items-center mt-3">
                     <BsCalendar2Fill className="text-gray-700 mr-3" />
-                    <div className=" text-gray-700 text-sm">{period}</div>
+                    <div className=" text-gray-700 text-sm">{`${startDate} - ${endDate}`}</div>
                   </div>
                   <div className="flex items-start mt-3 ">
                     <BsTagsFill className="text-gray-700 mr-2 mt-2 w-8" />
                     <div className="flex flex-wrap">
-                      {[...(convertTagsToArray(themes) || [])].map((item) => {
+                      {[...(themes || [])].map((item) => {
                         return (
                           <>
                             <div className="rounded-[3px] bg-blue-50 px-3 py-1 text-blue-700 text-sm my-1 mr-2">

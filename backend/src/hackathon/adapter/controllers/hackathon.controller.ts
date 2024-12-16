@@ -33,7 +33,7 @@ export class HackathonController {
     return await this.queryBus.execute(new GetHackathonsQuery(page));
   }
 
-  @Get()
+  @Get('/search')
   async searchFilterHackathons(
     @Query('search') search: string,
     @Query('location') location: string[],
@@ -90,11 +90,29 @@ export class HackathonController {
   @Get('register-users/:id')
   async getAllRegisterUserHackathon(
     @Param('id') id: string,
-    @Query('page') page: number,
+    @Query('search') search: string,
+    @Query('specialty') specialty: string,
+    @Query('status') status: string,
+    @Query('skills') skills: string[],
+    @Query('interestedIn') interestedIn: string[],
+    @Query('sort') sort: string,
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
   ): Promise<any[]> {
     if (id == null) throw new Error('Id is empty');
+    console.log('🚀 ~ HackathonController ~ id:', id);
     const result = this.queryBus.execute(
-      new GetAllRegisterUsersQuery(id, page),
+      new GetAllRegisterUsersQuery({
+        id,
+        search,
+        specialty,
+        status,
+        skills,
+        interestedIn,
+        sort,
+        page,
+        limit,
+      }),
     );
 
     return result;

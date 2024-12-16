@@ -42,7 +42,7 @@ function ProjectDetail() {
   return (
     <>
       <div>
-        <div className="bg-teal-900 text-white text-center py-10 rounded-lg px-60">
+        <div className="bg-teal-900 text-white text-center py-10  px-60">
           <h1 className="text-4xl font-bold mb-2">
             {item?.projectTitle ?? "Unitied"}
           </h1>
@@ -65,10 +65,13 @@ function ProjectDetail() {
             </button>
           </div>
         </div>
-        <div className="px-60 pt-5">
+        <div className="px-60 pt-5 flex">
           <div className="border-blue-500 border-b-4 w-24">
             <h1 className="text-3xl font-medium mb-2 ">STORY</h1>
           </div>
+          <a href="#update" className=" w-24 ml-10">
+            <h1 className="text-3xl font-medium mb-2 ">UPDATE</h1>
+          </a>
         </div>
         <hr />
         <div className="px-60 max-lg:px-2 py-5 ">
@@ -111,7 +114,7 @@ function ProjectDetail() {
               </div>
 
               {/* Try It Out Section */}
-              <div className="mb-8">
+              <div className="mb-8 flex-col flex">
                 <h2 className="text-xl font-bold mb-4">Try it out</h2>
                 {(item?.tryoutLinks || []).map((item, index) => {
                   return (
@@ -121,7 +124,7 @@ function ProjectDetail() {
                         href={item}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-blue-600 hover:underline"
+                        className="text-blue-600 hover:underline "
                       >
                         {item}
                       </a>
@@ -134,7 +137,7 @@ function ProjectDetail() {
               <div className="my-8">
                 <div className="flex items-center gap-4 mb-4">
                   <button className="flex items-center gap-2 bg-teal-600 text-white py-2 px-4 rounded-md hover:bg-teal-700">
-                    <span>❤️</span> Like {likes}
+                    <span>❤️</span> Like {10}
                   </button>
                   <div className="flex -space-x-3 items-center">
                     {/* Example avatars */}
@@ -155,9 +158,11 @@ function ProjectDetail() {
               <hr />
               {/* Updates Section */}
               <div>
-                <h2 className="text-xl font-bold my-4">Updates</h2>
+                <h2 id="update" className="text-xl font-bold my-4">
+                  Updates
+                </h2>
                 <div className="space-y-4">
-                  {comments.map((comment, index) => (
+                  {[].map((comment, index) => (
                     <div
                       key={index}
                       className="bg-white p-4 rounded-md shadow-md"

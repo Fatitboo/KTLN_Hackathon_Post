@@ -3,7 +3,7 @@ import { CustomButton } from "../../../../components";
 import HackathonInfo from "../../../../components/Seeker/HackathonInfo";
 
 function Overview() {
-  const { item, id } = useOutletContext();
+  const { item, id, isRegistered } = useOutletContext();
 
   const decodeHTML = (html) => {
     const txt = document.createElement("textarea");
@@ -16,16 +16,27 @@ function Overview() {
       <div className="px-60 max-lg:px-2 py-5  bg-gray-100">
         <div className="grid grid-cols-3 max-lg:grid-cols-1 gap-10">
           <div className="col-span-2">
-            <h2 className="font-semibold mt-5">{item?.title}</h2>
-            <p className="text-xl mt-5 h-16">{item?.challenge_description}</p>
+            <h2 className="font-semibold mt-5">{item?.hackathonName}</h2>
+            <p className="text-xl mt-5 h-16">{item?.tagline}</p>
             <div className="grid grid-cols-5">
               <div className="col-span-1">
-                <Link to={`/Hackathon-detail/${id}/register`}>
-                  <CustomButton
-                    title="Join hackathon"
-                    containerStyles="bg-blue-600 w-fit font-medium text-white py-2 px-5 focus:outline-none hover:bg-blue-500 rounded-sm text-base border border-blue-600"
-                  />
-                </Link>
+                {isRegistered === true ? (
+                  <>
+                    <Link to={`/Hackathon-detail/${id}/my-project`}>
+                      <CustomButton
+                        title="Edit your project"
+                        containerStyles="bg-blue-600 w-fit font-medium text-white py-2 px-5 focus:outline-none hover:bg-blue-500 rounded-sm text-base border border-blue-600"
+                      />
+                    </Link>
+                  </>
+                ) : (
+                  <Link to={`/Hackathon-detail/${id}/register`}>
+                    <CustomButton
+                      title="Join hackathon"
+                      containerStyles="bg-blue-600 w-fit font-medium text-white py-2 px-5 focus:outline-none hover:bg-blue-500 rounded-sm text-base border border-blue-600"
+                    />
+                  </Link>
+                )}
               </div>
               <div className="text-sm ml-10 col-span-4 ">
                 <div className="font-bold mb-2">Who can participate</div>
@@ -49,7 +60,12 @@ function Overview() {
             </div>
           </div>
           <div className="col-span-1 text-sm mt-2">
-            <HackathonInfo />
+            <HackathonInfo
+              themes={item?.hackathonTypes}
+              organization={item?.hostName}
+              start={item?.submissions?.start}
+              end={item?.submissions?.deadline}
+            />
           </div>
         </div>
       </div>
@@ -60,16 +76,16 @@ function Overview() {
               <div
                 className="mb-6"
                 dangerouslySetInnerHTML={{
-                  __html: decodeHTML(item?.description),
+                  __html: decodeHTML(item?.mainDescription),
                 }}
               ></div>
               <div
-                className="mb-6"
+                className="mb-6 lowercase"
                 dangerouslySetInnerHTML={{
-                  __html: decodeHTML(item?.challenge_description),
+                  __html: decodeHTML(item?.submissionDescription),
                 }}
               ></div>
-              <div
+              {/* <div
                 className="mb-6"
                 dangerouslySetInnerHTML={{
                   __html: decodeHTML(item?.challenge_requirements),
@@ -80,7 +96,7 @@ function Overview() {
                 dangerouslySetInnerHTML={{
                   __html: decodeHTML(item?.judging_criteria),
                 }}
-              ></div>
+              ></div> */}
             </div>
           </div>
         </div>

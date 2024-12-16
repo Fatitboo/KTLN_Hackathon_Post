@@ -22,7 +22,7 @@ function Resourses() {
             <div
               className="mb-6"
               dangerouslySetInnerHTML={{
-                __html: decodeHTML(item?.resources_section),
+                __html: decodeHTML(item?.resourceDescription),
               }}
             ></div>
           </div>

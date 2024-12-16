@@ -54,6 +54,7 @@ import ProjectDetail from "../pages/Seeker/ManageProject/ProjectDetail";
 import ManageProject from "../pages/Seeker/ManageProject";
 import ManageTeam from "../pages/Seeker/ManageProject/ManageTeam";
 import SubmitProject from "../pages/Seeker/ManageProject/SubmitProject";
+import BrowserProducts from "../pages/Seeker/BrowserProducts";
 
 const publicRoutes = [
   // User Layout
@@ -167,11 +168,11 @@ const seekerRoutes = [
     component: MyProfile,
     layout: LayoutHasSidebar,
   },
-  // {
-  //   path: "/Seeker/project/:projectId/edit",
-  //   component: AddProject,
-  //   layout: LayoutNoSidebar,
-  // },
+  {
+    path: "/Seeker/brower-products",
+    component: BrowserProducts,
+    layout: LayoutNoSidebar,
+  },
   {
     path: "/Seeker/project/manage-project/:projectId",
     component: ManageProject,

@@ -9,8 +9,13 @@ export const getAllProjects = createAsyncThunk(
   "project/getAllProjects",
   async (payload, { rejectWithValue, getState, dispatch }) => {
     try {
-      const user = getState()?.users;
-      const { userAuth } = user;
+      const params = {
+        page: 1,
+        limit: 10,
+      };
+      if (payload.searchKeyword) params.searchKeyword = payload.searchKeyword;
+      if (payload.page) params.page = payload.page;
+      if (payload.limit) params.limit = payload.limit;
       // http call
       const config = {
         headers: {
@@ -18,7 +23,12 @@ export const getAllProjects = createAsyncThunk(
         },
       };
 
-      const { data } = await axios.get(`${baseUrl}/${apiPrefix}`, config);
+      const { data } = await axios.post(
+        `${baseUrl}/${apiPrefix}/search`,
+        params,
+        config
+      );
+      console.log("🚀 ~ data:", data);
       return data;
     } catch (error) {
       if (!error?.response) {
@@ -127,6 +137,7 @@ export const getProjectRegisteredToHackathonAction = createAsyncThunk(
       const { data } = await axios.get(
         `${baseUrl}/${apiPrefix}/${userAuth?.user?.id}/${payload.hackathonId}`
       );
+      console.log("🚀 ~ data:", data);
       return data;
     } catch (error) {
       if (!error?.response) {
@@ -200,15 +211,15 @@ export const getProjectSingle = createAsyncThunk(
   "projects/getProjectSingle",
   async (productId, { rejectWithValue, getState, dispatch }) => {
     try {
-      const user = getState()?.users;
-      const { userAuth } = user;
-      // http call
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        withCredentials: true,
-      };
+      // const user = getState()?.users;
+      // const { userAuth } = user;
+      // // http call
+      // const config = {
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   withCredentials: true,
+      // };
 
       const { data } = await axios.get(
         `${baseUrl}/${apiPrefix}/${productId}`,
@@ -375,6 +386,11 @@ export function setValueSuccess(value) {
     dispatch(projectsSlices.actions.setValueSuccess(value));
   };
 }
+export function resetValue(value) {
+  return function resetValue(dispatch, getState) {
+    dispatch(projectsSlices.actions.resetValue(value));
+  };
+}
 const projectsSlices = createSlice({
   name: "projects",
   initialState: {
@@ -396,19 +412,26 @@ const projectsSlices = createSlice({
       state.isSuccess = action.payload;
       state.isSuccessUD = action.payload;
     },
+
+    resetValue: (state, action) => {
+      state[action.payload.key] = action.payload.value;
+    },
   },
   extraReducers: (builder) => {
     //get all projects
     builder.addCase(getAllProjects.pending, (state, action) => {
       state.loading = true;
+      state.isSuccess = false;
     }),
       builder.addCase(getAllProjects.fulfilled, (state, action) => {
         state.loading = false;
-        state.projects = action?.payload?.projects;
+        state.projects = action?.payload;
+        state.isSuccess = true;
       }),
       builder.addCase(getAllProjects.rejected, (state, action) => {
         state.loading = false;
         state.appErr = action?.payload?.message;
+        state.isSuccess = false;
       }),
       //get all projects user
       builder.addCase(getAllProjectsUser.pending, (state, action) => {

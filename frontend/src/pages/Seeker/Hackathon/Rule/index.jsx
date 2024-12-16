@@ -22,7 +22,7 @@ function Rule() {
             <div
               className="mb-6"
               dangerouslySetInnerHTML={{
-                __html: decodeHTML(item?.rule_section),
+                __html: decodeHTML(item?.ruleDescription),
               }}
             ></div>
           </div>

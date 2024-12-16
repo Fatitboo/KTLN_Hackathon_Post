@@ -16,7 +16,7 @@ export class DeleteHackathonHandler
   ) {}
 
   async execute(command: DeleteHackathonCommand) {
-    const { id } = command.props;
+    const { id, userId } = command.props;
 
     const hackObj = await this.hackathonRepository.findById(id);
 
@@ -24,7 +24,7 @@ export class DeleteHackathonHandler
       throw new NotFoundException(`Hackathon with ID ${id} not found.`);
     }
 
-    const message = await this.hackathonRepository.delete(id);
+    const message = await this.hackathonRepository.delete(userId, id);
 
     return { data: message };
   }

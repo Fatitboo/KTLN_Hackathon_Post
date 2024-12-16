@@ -119,8 +119,8 @@ export class HackathonDocument {
   @Prop()
   criteria: Criteria[];
 
-  @Prop()
-  winnersAnnounced: string;
+  @Prop({ type: Date })
+  winnersAnnounced: Date;
 
   @Prop()
   prizeCurrency: string;

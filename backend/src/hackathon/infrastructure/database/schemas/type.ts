@@ -1,5 +1,6 @@
 import { Prop } from '@nestjs/mongoose';
 import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
+import { Date } from 'mongoose';
 
 export class Range {
   @Prop({ required: true })
@@ -34,12 +35,11 @@ export class Task {
 }
 
 export class Submission {
-  @Prop({ required: true })
-  start: string;
+  @Prop({ required: true, type: Date })
+  start: Date;
 
-  @Prop({ required: true })
-  @IsString()
-  deadline: string;
+  @Prop({ required: true, type: Date })
+  deadline: Date;
 
   @Prop({ required: true })
   @IsString()
@@ -55,13 +55,12 @@ export class Submission {
 }
 
 export class DateRange {
-  @Prop()
+  @Prop({ type: Date })
   @IsNumber()
-  start: string;
+  start: Date;
 
-  @Prop()
-  @IsNumber()
-  end: string;
+  @Prop({ type: Date })
+  end: Date;
 }
 
 export class Judges {

@@ -12,7 +12,11 @@ function HackathonPrize({ formSubmit, formId, config }) {
 
   const onSubmitForm = (e) => {
     e.preventDefault();
-    formSubmit(inputValues);
+    const data = {
+      ...inputValues,
+      winnersAnnounced: new Date(inputValues.winnersAnnounced),
+    };
+    formSubmit(data);
   };
 
   const currencyList = [

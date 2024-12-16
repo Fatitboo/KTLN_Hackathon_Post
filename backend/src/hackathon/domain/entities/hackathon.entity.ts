@@ -63,8 +63,8 @@ class Task {
 
 export class Submission {
   constructor(
-    public start: string,
-    public deadline: string,
+    public start: Date,
+    public deadline: Date,
     public note: string,
     public isUploadFile: boolean,
     public isUploadVideo: boolean,

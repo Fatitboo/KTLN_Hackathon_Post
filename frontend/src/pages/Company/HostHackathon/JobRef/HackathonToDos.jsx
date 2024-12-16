@@ -23,7 +23,7 @@ function HackathonToDos({ formId, formSubmit, config }) {
 
   const [inputValues, setInputValues] = useState({
     communityChatLink: "",
-    submissions: [],
+    tasks: [],
   });
 
   const TitleDescription = (title, description) => {
@@ -43,7 +43,7 @@ function HackathonToDos({ formId, formSubmit, config }) {
   const onChangeValueTask = (type, value, index) => {
     setInputValues({
       ...inputValues,
-      submissions: inputValues.submissions.map((item, i) => {
+      tasks: inputValues.tasks.map((item, i) => {
         return i == index ? { ...item, [type]: value } : { ...item };
       }),
     });
@@ -84,7 +84,7 @@ function HackathonToDos({ formId, formSubmit, config }) {
               "Additional actions",
               "Add up to 3 additional actions for participants to help them create a great submission e.g. 'Download SDK' or 'Signup for a dev account'."
             )}
-            {inputValues.submissions.map((item, index) => {
+            {inputValues.tasks.map((item, index) => {
               return (
                 <div
                   key={item.id}
@@ -103,7 +103,7 @@ function HackathonToDos({ formId, formSubmit, config }) {
                       filterValueSelected={(value) => {
                         setInputValues({
                           ...inputValues,
-                          submissions: inputValues.submissions.map((i) =>
+                          tasks: inputValues.tasks.map((i) =>
                             i.id == item.id
                               ? { ...i, type: value.name }
                               : { ...i }
@@ -136,11 +136,11 @@ function HackathonToDos({ formId, formSubmit, config }) {
                     width={"20px"}
                     height={"20px"}
                     onClick={() => {
-                      let newList = [...inputValues.submissions];
+                      let newList = [...inputValues.tasks];
                       newList.splice(index, 1);
                       setInputValues({
                         ...inputValues,
-                        submissions: [...newList],
+                        tasks: [...newList],
                       });
                     }}
                     className="mt-8 cursor-pointer ml-4"
@@ -151,7 +151,7 @@ function HackathonToDos({ formId, formSubmit, config }) {
             <div
               className="text-blue-600 font-bold cursor-pointer mt-1"
               onClick={() => {
-                const newArr = [...inputValues.submissions];
+                const newArr = [...inputValues.tasks];
                 newArr.push({
                   id: Date.now(),
                   type: "",
@@ -160,7 +160,7 @@ function HackathonToDos({ formId, formSubmit, config }) {
                 });
                 setInputValues({
                   ...inputValues,
-                  submissions: newArr,
+                  tasks: newArr,
                 });
               }}
             >

@@ -10,11 +10,13 @@ import { useSelector } from "react-redux";
 
 function Layout({ user, role }) {
   const location = useLocation();
+  console.log(user, role);
   if (!user)
     return (
       <Navigate to="/user-auth/login" state={{ from: location }} replace />
     );
   else {
+    return <Outlet />;
     if (user?.userType?.includes(role)) {
       return <Outlet />;
     } else {

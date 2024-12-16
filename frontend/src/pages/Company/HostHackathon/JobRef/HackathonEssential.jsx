@@ -57,6 +57,7 @@ function HackathonEssential({ formSubmit, formId, config }) {
 
   const onSubmitForm = (e) => {
     e.preventDefault();
+    console.log(inputValues);
     formSubmit(inputValues);
   };
 

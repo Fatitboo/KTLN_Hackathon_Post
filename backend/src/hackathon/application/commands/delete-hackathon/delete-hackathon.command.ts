@@ -1,4 +1,5 @@
 export class DeleteHackathonCommandProps {
+  userId: string;
   id: string;
 }
 

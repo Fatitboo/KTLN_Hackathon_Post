@@ -59,8 +59,8 @@ export const creatHackathonId = createAsyncThunk(
   "hackathons/createHackathonId",
   async (payload, { rejectWithValue, getState, dispatch }) => {
     try {
-      // const user = getState()?.users;
-      // const { userAuth } = user;
+      const user = getState()?.users;
+      const { userAuth } = user;
       // // http call
       // const config = {
       //     headers: {
@@ -70,7 +70,7 @@ export const creatHackathonId = createAsyncThunk(
       // };
 
       const { data } = await axios.post(
-        `${baseUrl}/${apiPrefix}/671a5d4ce7e9496444c1697a`,
+        `${baseUrl}/${apiPrefix}/${userAuth?.user?.id}`,
         payload
       );
       return data;
@@ -125,7 +125,7 @@ export const deleteHackathonComponent = createAsyncThunk(
         },
       };
       const { data } = await axios.delete(
-        `${baseUrl}/${apiPrefix}/${payload.id}`,
+        `${baseUrl}/${apiPrefix}/${userAuth?.user?.id}/delete/${payload.id}`,
         config
       );
       return data;

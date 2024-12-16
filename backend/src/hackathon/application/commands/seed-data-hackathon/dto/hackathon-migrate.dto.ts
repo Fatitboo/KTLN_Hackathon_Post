@@ -238,12 +238,13 @@ function getRandomEducationLevel(type?: string): string {
 
   return type === 'judge' ? judgesTypes[randomIndex2] : levels[randomIndex];
 }
-function convertDateFormat(dateString: string): string {
+function convertDateFormat(dateString: string): Date {
   // Tách chuỗi ngày thành các phần
   const [day, month, year] = dateString.split('-');
 
   // Trả về định dạng mới
-  return `${year}-${month}-${day}`;
+  return new Date(Number(year), Number(month) - 1, Number(day));
+  // return `${year}-${month}-${day}`;
 }
 function createRandomJudge() {
   const judge = {

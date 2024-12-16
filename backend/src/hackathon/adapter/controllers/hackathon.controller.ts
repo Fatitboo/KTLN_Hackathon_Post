@@ -80,6 +80,7 @@ export class HackathonController {
     @Body() hackathon: UpdateHackathonDTO,
   ): Promise<Hackathon> {
     if (id == null) throw new Error('Id is empty');
+    console.log(hackathon);
     const result = this.commandBus.execute(
       new UpdateHackathonCommand({ id: id, hackathon: hackathon }),
     );
@@ -112,11 +113,14 @@ export class HackathonController {
     return result;
   }
 
-  @Delete(':id')
-  async deleteHackathon(@Param('id') id: string): Promise<string> {
+  @Delete(':userId/delete/:id')
+  async deleteHackathon(
+    @Param('userId') userId: string,
+    @Param('id') id: string,
+  ): Promise<string> {
     if (id == null) throw new Error('Id is empty');
     const result = this.commandBus.execute(
-      new DeleteHackathonCommand({ id: id }),
+      new DeleteHackathonCommand({ userId: userId, id: id }),
     );
 
     return result;

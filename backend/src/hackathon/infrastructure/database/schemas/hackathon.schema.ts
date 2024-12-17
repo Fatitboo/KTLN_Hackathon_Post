@@ -130,5 +130,8 @@ export class HackathonDocument {
 
   @Prop({ type: Types.ObjectId, ref: 'User' })
   user: Types.ObjectId;
+
+  @Prop({ default: false })
+  block: boolean;
 }
 export const HackathonSchema = SchemaFactory.createForClass(HackathonDocument);

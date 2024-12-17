@@ -29,6 +29,7 @@ export class Hackathon {
     public winnersAnnounced: string,
     public prizeCurrency: string,
     public prizes: Prize[],
+    public block: boolean,
   ) {}
   setId(id: string) {
     this.id = id;

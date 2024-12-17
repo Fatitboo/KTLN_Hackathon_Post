@@ -84,8 +84,8 @@ export class UpdateHackathonHandler
         : existingHackathon.winnersAnnounced,
       prizeCurrency: hackathon.prizeCurrency ?? existingHackathon.prizeCurrency,
       prizes: hackathon.prizes ?? existingHackathon.prizes,
+      block: hackathon.block ?? existingHackathon.block,
     };
-    console.log(updatedHackathon);
 
     // Gọi repository để lưu lại cập nhật
     const result = await this.hackathonRepository.update(id, updatedHackathon);

@@ -36,6 +36,7 @@ export class UpdateUserHandler implements ICommandHandler<UpdateUserCommand> {
           fullname: command.props.fullname,
           bio: command.props.bio,
           socialLinks: command.props.socialLinks,
+          isActive: command.props.isActive,
         });
         return {
           fullname: profileUpdatedUser._props.fullname,

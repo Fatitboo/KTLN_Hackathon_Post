@@ -20,6 +20,12 @@ export class MongooseUserRepository implements UserRepository {
     @InjectModel(HackathonDocument.name)
     private readonly hackathonModel: Model<HackathonDocument>,
   ) {}
+
+  async findAll(page: number): Promise<any> {
+    const users = await this.userModel.find().lean().exec();
+    if (!users) return [];
+    return users;
+  }
   searchUser(
     registeredHackathonId?: string,
     searchQuery?: string,

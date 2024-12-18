@@ -85,6 +85,7 @@ export class UpdateHackathonHandler
       prizeCurrency: hackathon.prizeCurrency ?? existingHackathon.prizeCurrency,
       prizes: hackathon.prizes ?? existingHackathon.prizes,
       block: hackathon.block ?? existingHackathon.block,
+      location: hackathon.location ?? existingHackathon.location,
     };
 
     // Gọi repository để lưu lại cập nhật

@@ -24,6 +24,7 @@ import {
   USER_REPOSITORY,
   UserRepository,
 } from 'src/user/domain/repositories/user.repository';
+import { GetUsersQuery } from 'src/user/application/queries/get-users/get-users.query';
 
 @Controller('users')
 export class UserController {
@@ -42,6 +43,11 @@ export class UserController {
         ...body,
       }),
     );
+  }
+
+  @Get()
+  async getAllUsers(@Query('page') page: number) {
+    return await this.queryBus.execute(new GetUsersQuery(page));
   }
 
   @Post('/register-hackathon/:userId')

@@ -392,7 +392,7 @@ function ManageHackathonsAdmin() {
                   </table>
                   <div className="list-none mt-10 flex items-center justify-center mb-4">
                     <PaginationButtons
-                      totalPages={currentHackathons.length / 10}
+                      totalPages={currentHackathons?.length / 10}
                       currentPage={currentPage}
                       setCurrentPage={setCurrentPage}
                     />

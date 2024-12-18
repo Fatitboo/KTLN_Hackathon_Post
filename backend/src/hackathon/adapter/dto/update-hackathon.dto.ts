@@ -122,4 +122,7 @@ export class UpdateHackathonDTO {
 
   @IsOptional()
   block?: boolean;
+
+  @IsOptional()
+  location?: string;
 }

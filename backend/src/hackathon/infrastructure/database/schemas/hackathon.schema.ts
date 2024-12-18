@@ -133,5 +133,8 @@ export class HackathonDocument {
 
   @Prop({ default: false })
   block: boolean;
+
+  @Prop()
+  location: string;
 }
 export const HackathonSchema = SchemaFactory.createForClass(HackathonDocument);

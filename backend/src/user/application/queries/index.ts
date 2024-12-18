@@ -1,2 +1,3 @@
 import { GetUserDetailQueryHandler } from './get-user-detail/get-user-detail.handler';
-export default [GetUserDetailQueryHandler];
+import { GetUsersHandler } from './get-users/get-users.handler';
+export default [GetUserDetailQueryHandler, GetUsersHandler];

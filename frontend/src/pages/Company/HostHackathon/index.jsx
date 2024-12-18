@@ -83,7 +83,7 @@ function HostHackathon() {
   ];
   const jobRef = [
     <HackathonEssential
-      formSubmit={updateHackathon}
+      formSubmit={nextJobRef}
       flag={0}
       formId={formId[0]}
       key={0}

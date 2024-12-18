@@ -10,6 +10,7 @@ export class UpdateUserCommandProps {
   bio?: string;
   socialLinks?: SocialLink[];
   settingRecommend?: SettingRecommend;
+  isActive?: boolean;
   id: string;
 }
 export class UpdateUserCommand {

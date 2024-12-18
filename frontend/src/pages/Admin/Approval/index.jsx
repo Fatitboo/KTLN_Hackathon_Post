@@ -83,7 +83,6 @@ function ManageHackathonsAdmin() {
   };
 
   const handleSearch = (e) => {
-    console.log(e);
     setCurrentHackathons(
       hackathons.filter(
         (item) =>

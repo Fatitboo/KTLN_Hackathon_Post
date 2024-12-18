@@ -1,5 +1,5 @@
 import { AiOutlineSearch } from "react-icons/ai";
-import { ComboBox } from "../../../components";
+import { ComboBox, PaginationButtons } from "../../../components";
 import { BiPencil } from "react-icons/bi";
 import { LiaEyeSolid, LiaTrashAltSolid } from "react-icons/lia";
 import { Link, useNavigate } from "react-router-dom";
@@ -14,6 +14,7 @@ import {
   getAllHackathons,
   resetValue,
 } from "../../../redux/slices/hackathons/hackathonsSlices";
+import Swal from "sweetalert2";
 
 const listItemCbb = [
   { id: 1, name: "All", value: "All" },
@@ -29,6 +30,7 @@ function ManageHackathon() {
   const navigate = useNavigate();
   let [selectId, setSelectedId] = useState();
   let [currentHackathons, setCurrentHackathons] = useState([]);
+  let [currentPage, setCurrentPage] = useState([]);
   let {
     loading,
     hackathons,
@@ -89,7 +91,19 @@ function ManageHackathon() {
   };
 
   const handleDeleteProject = (item) => {
-    dispatch(deleteHackathonComponent({ id: item._id }));
+    Swal.fire({
+      title: `Confirm Delete`,
+      text: `Are you sure you want to delete this organizer?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Confirm",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        dispatch(deleteHackathonComponent({ id: item._id }));
+      }
+    });
   };
 
   return (
@@ -262,136 +276,151 @@ function ManageHackathon() {
                               </tr>
                             );
                           })
-                        : currentHackathons?.map((item, index) => {
-                            return (
-                              <tr
-                                key={index}
-                                className="relative border-b border-solid border-[#ecedf2] w-full hover:bg-[#f4f2f2] cursor-pointer px-5  "
-                              >
-                                <td className="relative pl-5 py-5 font-normal text-base w-3/12">
-                                  <div className="mb-0 relative h-16 gap-2 flex flex-row items-center">
-                                    {/* <span className="absolute l-0 t-0 w-10">
+                        : currentHackathons
+                            ?.slice(currentPage * 10, (currentPage + 1) * 10)
+                            .map((item, index) => {
+                              return (
+                                <tr
+                                  key={index}
+                                  className="relative border-b border-solid border-[#ecedf2] w-full hover:bg-[#f4f2f2] cursor-pointer px-5  "
+                                >
+                                  <td className="relative pl-5 py-5 font-normal text-base w-3/12">
+                                    <div className="mb-0 relative h-16 gap-2 flex flex-row items-center">
+                                      {/* <span className="absolute l-0 t-0 w-10">
                                                                         <img src={item.logoProject} className="inline-block max-w-full h-auto align-middle" alt="logo" />
                                                                     </span> */}
-                                    <div className="w-12 h-12">
-                                      <img
-                                        src={item.thumbnail}
-                                        className="w-full h-full"
-                                        alt="description of image"
-                                      />
-                                    </div>
-                                    <div>
-                                      <div className="font-medium text-md text-ellipsis mb-1 line-clamp-2 ">
-                                        {item.hackathonName}
+                                      <div className="w-12 h-12">
+                                        <img
+                                          src={item.thumbnail}
+                                          className="w-full h-full"
+                                          alt="description of image"
+                                        />
                                       </div>
-                                      <div className="flex font-light text-sm">
-                                        {item.update_at.split("T")[0]}{" "}
-                                        {item.update_at.split("T")[1]}
+                                      <div>
+                                        <div className="font-medium text-md text-ellipsis mb-1 line-clamp-2 ">
+                                          {item.hackathonName}
+                                        </div>
+                                        <div className="flex font-light text-sm">
+                                          {item.update_at.split("T")[0]}{" "}
+                                          {item.update_at.split("T")[1]}
+                                        </div>
                                       </div>
                                     </div>
-                                  </div>
-                                </td>
-                                <td className="font-light text-white w-1/12">
-                                  <div className="items-center bg-[#00B69B] rounded-full flex justify-center font-semibold w-24">
-                                    <div className="mr-1">
-                                      {item.isPublished ? "Online" : "Offline"}
+                                  </td>
+                                  <td className="font-light text-white w-1/12">
+                                    <div className="items-center bg-[#00B69B] rounded-full flex justify-center font-semibold w-24">
+                                      <div className="mr-1">
+                                        {item.isPublished
+                                          ? "Online"
+                                          : "Offline"}
+                                      </div>
                                     </div>
-                                  </div>
-                                </td>
-                                <td className="font-semibold text-blue-700 w-1/12">
-                                  <div className="flex h-full items-center">
-                                    <div className="mr-1">{item.applyFor}</div>
-                                  </div>
-                                </td>
-                                <td className="text-center w-[20%] font-semibold text-gray-700 text-base">
-                                  <div className="line-clamp-3 w-full">
-                                    {item.tagline}
-                                  </div>
-                                </td>
-                                <td className="text-center w-[14%] font-semibold text-gray-700 text-base">
-                                  <div className="flex flex-col items-center">
-                                    {item.hackathonTypes.map((type, index) => (
-                                      <span key={index}>#{type} </span>
-                                    ))}
-                                  </div>
-                                </td>
-                                <td>
-                                  <div className="">
-                                    <div className="list-none flex relative item-center justify-center">
-                                      <Link
-                                        to={`/Organizer/manage-hackathons/${item?._id}/overview`}
-                                        className="list-none relative mr-2 bg-[#f5f7fc] border rounded-md border-[#e9ecf9] px-1 pt-1 hover:bg-[#5f86e9] hover:text-white"
-                                      >
-                                        <LiaEyeSolid fontSize={18} />
-                                      </Link>
-                                      <Link
-                                        to={`/Organizer/update-project/${item?.projectId}`}
-                                        className="list-none relative mr-2 bg-[#f5f7fc] border rounded-md border-[#e9ecf9] px-1 pt-1 hover:bg-[#278646] hover:text-white"
-                                      >
-                                        <button>
-                                          {" "}
-                                          <BiPencil fontSize={18} />{" "}
-                                        </button>
-                                      </Link>
-                                      {item?.status === "waitPayment" && (
+                                  </td>
+                                  <td className="font-semibold text-blue-700 w-1/12">
+                                    <div className="flex h-full items-center">
+                                      <div className="mr-1">
+                                        {item.applyFor}
+                                      </div>
+                                    </div>
+                                  </td>
+                                  <td className="text-center w-[20%] font-semibold text-gray-700 text-base">
+                                    <div className="line-clamp-3 w-full">
+                                      {item.tagline}
+                                    </div>
+                                  </td>
+                                  <td className="text-center w-[14%] font-semibold text-gray-700 text-base">
+                                    <div className="flex flex-col items-center">
+                                      {item.hackathonTypes.map(
+                                        (type, index) => (
+                                          <span key={index}>#{type} </span>
+                                        )
+                                      )}
+                                    </div>
+                                  </td>
+                                  <td>
+                                    <div className="">
+                                      <div className="list-none flex relative item-center justify-center">
+                                        <Link
+                                          to={`/Organizer/manage-hackathons/${item?._id}/overview`}
+                                          className="list-none relative mr-2 bg-[#f5f7fc] border rounded-md border-[#e9ecf9] px-1 pt-1 hover:bg-[#5f86e9] hover:text-white"
+                                        >
+                                          <LiaEyeSolid fontSize={18} />
+                                        </Link>
+                                        <Link
+                                          to={`/Organizer/update-project/${item?.projectId}`}
+                                          className="list-none relative mr-2 bg-[#f5f7fc] border rounded-md border-[#e9ecf9] px-1 pt-1 hover:bg-[#278646] hover:text-white"
+                                        >
+                                          <button>
+                                            {" "}
+                                            <BiPencil fontSize={18} />{" "}
+                                          </button>
+                                        </Link>
+                                        {item?.status === "waitPayment" && (
+                                          <li
+                                            className={`opacity-100 cursor-pointer hover:bg-[#278646] hover:text-white relative mr-2 bg-[#f5f7fc] border rounded-md border-[#e9ecf9] px-1 pt-1 `}
+                                            onClick={() => {
+                                              // handlePaymentProject(item);
+                                            }}
+                                          >
+                                            <div>
+                                              {" "}
+                                              <CiDollar
+                                                fontSize={18}
+                                                strokeWidth={0.5}
+                                              />{" "}
+                                            </div>
+                                          </li>
+                                        )}
                                         <li
-                                          className={`opacity-100 cursor-pointer hover:bg-[#278646] hover:text-white relative mr-2 bg-[#f5f7fc] border rounded-md border-[#e9ecf9] px-1 pt-1 `}
+                                          className="list-none relative bg-[#f5f7fc] border rounded-md border-[#e9ecf9] px-1 pt-1 hover:bg-[#ce3e37] hover:text-white"
                                           onClick={() => {
-                                            // handlePaymentProject(item);
+                                            setSelectedId(item?._id);
+                                            handleDeleteProject(item);
                                           }}
                                         >
-                                          <div>
-                                            {" "}
-                                            <CiDollar
-                                              fontSize={18}
-                                              strokeWidth={0.5}
-                                            />{" "}
-                                          </div>
-                                        </li>
-                                      )}
-                                      <li
-                                        className="list-none relative bg-[#f5f7fc] border rounded-md border-[#e9ecf9] px-1 pt-1 hover:bg-[#ce3e37] hover:text-white"
-                                        onClick={() => {
-                                          setSelectedId(item?._id);
-                                          handleDeleteProject(item);
-                                        }}
-                                      >
-                                        <button>
-                                          {loadingDelete &&
-                                          item?._id === selectId ? (
-                                            <svg
-                                              className="right-1 animate-spin h-5 w-5 text-white"
-                                              xmlns="http://www.w3.org/2000/svg"
-                                              fill="white"
-                                              viewBox="0 0 24 24"
-                                            >
-                                              <circle
-                                                className="opacity-0"
-                                                cx="12"
-                                                cy="12"
-                                                r="10"
-                                                stroke="white"
-                                                strokeWidth="4"
-                                              ></circle>
-                                              <path
-                                                className="opacity-90"
+                                          <button>
+                                            {loadingDelete &&
+                                            item?._id === selectId ? (
+                                              <svg
+                                                className="right-1 animate-spin h-5 w-5 text-white"
+                                                xmlns="http://www.w3.org/2000/svg"
                                                 fill="white"
-                                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                              ></path>
-                                            </svg>
-                                          ) : (
-                                            <LiaTrashAltSolid fontSize={18} />
-                                          )}
-                                        </button>
-                                      </li>
+                                                viewBox="0 0 24 24"
+                                              >
+                                                <circle
+                                                  className="opacity-0"
+                                                  cx="12"
+                                                  cy="12"
+                                                  r="10"
+                                                  stroke="white"
+                                                  strokeWidth="4"
+                                                ></circle>
+                                                <path
+                                                  className="opacity-90"
+                                                  fill="white"
+                                                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                                ></path>
+                                              </svg>
+                                            ) : (
+                                              <LiaTrashAltSolid fontSize={18} />
+                                            )}
+                                          </button>
+                                        </li>
+                                      </div>
                                     </div>
-                                  </div>
-                                </td>
-                              </tr>
-                            );
-                          })}
+                                  </td>
+                                </tr>
+                              );
+                            })}
                     </tbody>
                   </table>
+                  <div className="list-none mt-10 flex items-center justify-center mb-4">
+                    <PaginationButtons
+                      totalPages={currentHackathons?.length / 10}
+                      currentPage={currentPage}
+                      setCurrentPage={setCurrentPage}
+                    />
+                  </div>
                 </div>
               </div>
             </div>

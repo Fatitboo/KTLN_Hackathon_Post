@@ -6,7 +6,7 @@ import HackathonItem from "../../../components/Seeker/HackathonItem";
 import { data_popular } from "../../../utils/data_hackathon";
 import SearchInput from "../../../components/Seeker/SearchInput";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getAllHackathonsSeeker,
@@ -18,6 +18,8 @@ import { LoadingComponent } from "../../../components";
 function BrowerHackathons() {
   const dispatch = useDispatch();
   const limit = 10;
+  const location = useLocation();
+  const { state } = location;
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(10);
   const [totalPages, setTotalPage] = useState(1);
@@ -25,13 +27,14 @@ function BrowerHackathons() {
   let { loading, hackathonsSeeker, isSuccess } = useSelector(
     (state) => state.hackathons
   );
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState(state?.searchTerm ?? "");
   const [showMoreTags, setShowMoreTags] = useState(false);
   const toggleShowMore = () => {
     setShowMoreTags(!showMoreTags);
   };
+
   useEffect(() => {
-    dispatch(getAllHackathonsSeeker({ page, limit: 10 }));
+    dispatch(getAllHackathonsSeeker({ page, limit: 10, search: searchTerm }));
   }, [page]);
 
   const handlePageChange = (newPage) => {

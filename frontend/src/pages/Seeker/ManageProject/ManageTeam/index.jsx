@@ -1,10 +1,12 @@
-import { useParams, Link, useNavigate } from "react-router-dom";
+import {
+  useParams,
+  Link,
+  useNavigate,
+  useOutletContext,
+} from "react-router-dom";
 import { CustomButton, TextInput } from "../../../../components";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import FroalaEditor from "react-froala-wysiwyg";
-import { CgClose } from "react-icons/cg";
-import { v4 as uuidv4 } from "uuid";
 import { defaultAvt, imgDefaultProject } from "../../../../assets/images";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -12,10 +14,11 @@ import {
   resetSuccessAction,
   updateProject,
 } from "../../../../redux/slices/projects/projectsSlices";
-import fetchSkillApikey from "../../../../utils/fetchSkillApiKey";
 import { IoIosClose } from "react-icons/io";
 import extractId from "../../../../utils/extractId";
 import baseUrl from "../../../../utils/baseUrl";
+import axios from "axios";
+import Swal from "sweetalert2";
 
 function ManageTeam() {
   const inputBox = useRef();
@@ -24,11 +27,12 @@ function ManageTeam() {
   const { projectId } = useParams();
   const [spin, setSpin] = useState(false);
   const [skills, setSkills] = useState([]);
-  const [galaryList, setGalaryList] = useState([]);
   const [listSkillApi, setListSkillApi] = useState([]);
-  const [fileThumnail, setFileThumnail] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const { hackathonId } = useOutletContext();
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const { project, isSuccess } = useSelector((store) => store.projects);
-  const [tryoutLinks, setTryoutLinks] = useState([{ id: uuidv4(), name: "" }]);
+
   const [teammates, setTeammates] = useState([
     { fullname: "Nguyễn Văn Phát", email: "@Fatitboo" },
   ]);
@@ -43,7 +47,6 @@ function ManageTeam() {
     const pl = {
       teamName: data.teamName,
     };
-    console.log("🚀 ~ onSubmit ~ pl:", pl);
 
     dispatch(
       updateProject({
@@ -54,8 +57,6 @@ function ManageTeam() {
       })
     );
   };
-  const [searchTerm, setSearchTerm] = useState("");
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -67,9 +68,10 @@ function ManageTeam() {
 
   useEffect(() => {
     if (debouncedSearchTerm) {
-      fetchDataSkill("email", "67386091dc5db4aea4e96603", searchTerm);
+      fetchDataSkill("email", "", searchTerm);
     }
   }, [debouncedSearchTerm]);
+
   const fetchDataSkill = (searchTerm, hackathonId, value) => {
     if (value === "") {
       setListSkillApi([]);
@@ -84,11 +86,84 @@ function ManageTeam() {
       fetch(`${baseUrl}/api/v1/users/search?${params}`)
         .then((response) => response.json())
         .then((result) => {
-          console.log(result);
-          setListSkillApi([...result]);
+          const arr = [...result, { email: value }];
+
+          setListSkillApi(arr);
           setSpin(false);
         })
         .catch((error) => console.log("error", error));
+    }
+  };
+
+  const handleCheckMail = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const v = { hackathonId, emails: skills };
+    const { data } = await axios.post(
+      `${baseUrl}/api/v1/projects/${extractId({
+        type: "projectId",
+        str: projectId,
+      })}/check-invite-list`,
+      v,
+      {}
+    );
+    if (data.registedAndHasTeam.length > 0) {
+      Swal.fire({
+        title: "User had team in this Hackathon!",
+        text:
+          data.registedAndHasTeam.join(", ") +
+          " had team registed to this Hackathon. Please remove them",
+        confirmButtonText: "OK",
+        icon: "error",
+        allowOutsideClick: false,
+        confirmButtonColor: "#3085d6",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          return;
+        }
+      });
+    } else {
+      Swal.fire({
+        title:
+          data.noAccount.length > 0
+            ? "User dont have account in our Platform!"
+            : "Do you want to invite them",
+        text:
+          data.noAccount.length > 0
+            ? data.noAccount.join(", ") +
+              " dont have account in our Platform. Do you want to invite them?"
+            : "Do you want to invite them?",
+        confirmButtonText: "OK",
+        icon: "info",
+        allowOutsideClick: false,
+        confirmButtonColor: "#3085d6",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          /* empty */
+          const { data } = await axios.post(
+            `${baseUrl}/api/v1/projects/${extractId({
+              type: "projectId",
+              str: projectId,
+            })}/send-mail-invite`,
+            v,
+            {}
+          );
+          if (data === "ok") {
+            Swal.fire({
+              title: "Send mail successfully!",
+              text: "Send mail successfully. Please wait for them accepting",
+              confirmButtonText: "OK",
+              icon: "success",
+              allowOutsideClick: false,
+              confirmButtonColor: "#3085d6",
+            }).then((result) => {
+              if (result.isConfirmed) {
+                return;
+              }
+            });
+          }
+        }
+      });
     }
   };
 
@@ -178,7 +253,7 @@ function ManageTeam() {
                         type="text"
                         ref={inputBox}
                         placeholder={
-                          "Input your skills, languages, databases, APIs and other tools."
+                          "Input email of user you want to add to team."
                         }
                         onBlur={(e) => e.stopPropagation()}
                         onChange={(e) => setSearchTerm(e.target.value)}
@@ -210,7 +285,7 @@ function ManageTeam() {
                     ) : null}
                   </div>
                   <button
-                    onClick={() => {}}
+                    onClick={handleCheckMail}
                     style={{
                       padding: "8px 10px",
                       marginLeft: "20px",
@@ -252,7 +327,7 @@ function ManageTeam() {
                 </div>
               </div>
 
-              <div className="my-5">
+              {/* <div className="my-5">
                 <p className="mb-2">Secret invite link</p>
                 <div
                   style={{ display: "flex", alignItems: "center", gap: "10px" }}
@@ -281,10 +356,10 @@ function ManageTeam() {
                     Copy
                   </button>
                 </div>
-              </div>
+              </div> */}
             </div>
 
-            <div className="w-[1/3] flex items-center">
+            <div className="w-[1/3] flex items-center mt-20">
               <CustomButton
                 // isDisable={loading}
                 title={"Save and continue"}

@@ -55,6 +55,7 @@ import ManageProject from "../pages/Seeker/ManageProject";
 import ManageTeam from "../pages/Seeker/ManageProject/ManageTeam";
 import SubmitProject from "../pages/Seeker/ManageProject/SubmitProject";
 import BrowserProducts from "../pages/Seeker/BrowserProducts";
+import AutoRegisterToHackathon from "../pages/Seeker/Hackathon/AutoRegister";
 
 const publicRoutes = [
   // User Layout
@@ -146,6 +147,10 @@ const publicRoutes = [
       {
         path: "register",
         element: RegisterToHackathon,
+      },
+      {
+        path: "auto-register",
+        element: AutoRegisterToHackathon,
       },
     ],
   },

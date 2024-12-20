@@ -17,83 +17,25 @@ import { useSelector } from "react-redux";
 import SearchInput from "../../../components/Seeker/SearchInput";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
-const hackathons = [
-  {
-    name: "Student Mental Health Hackathon",
-    location: "Online",
-    currency: "$",
-    price: 0,
-    participants: 7,
-    organizer: "RaahimFarhan",
-    period: "Jun 23 - Jul 01, 2023",
-    invite: "False",
-    tags: "['Beginner Friendly', 'Gaming', 'Open Ended']",
-    logo_link:
-      "https://d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/002/514/731/datas/medium_square.png",
-    item_id: "item-00001",
-    start_date: "2023-06-23",
-    end_date: "2023-07-01",
-  },
-  {
-    name: "Encode Justice NY Hackathon",
-    location: "Brooklyn Public Library",
-    currency: "$",
-    price: 0,
-    participants: 3,
-    organizer: "Encode Justice New York",
-    period: "Jul 01, 2023",
-    invite: "False",
-    tags: "['Beginner Friendly', 'Education', 'Low/No Code']",
-    logo_link:
-      "https://d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/002/509/489/datas/medium_square.png",
-    item_id: "item-00027",
-    start_date: "2023-07-01",
-    end_date: "2023-07-08",
-  },
-  {
-    name: "InfoCamp",
-    location: "Online",
-    currency: "₹",
-    price: 7000,
-    participants: 30,
-    organizer: "Skill Pulse",
-    period: "Jun 24 - Jul 01, 2023",
-    invite: "False",
-    tags: "['Beginner Friendly', 'Communication', 'Mobile']",
-    logo_link:
-      "https://d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/002/512/612/datas/medium_square.png",
-    item_id: "item-00003",
-    start_date: "2023-06-24",
-    end_date: "2023-07-01",
-  },
-  {
-    name: "Hackspree 1.0",
-    location: "Online",
-    currency: "$",
-    price: 0,
-    participants: 27,
-    organizer: "The HackSpree Community",
-    period: "Jun 17 - Jul 15, 2023",
-    invite: "False",
-    tags: "['Beginner Friendly', 'Open Ended', 'Social Good']",
-    logo_link:
-      "https://d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/002/509/438/datas/medium_square.png",
-    item_id: "item-00004",
-    start_date: "2023-06-17",
-    end_date: "2023-07-15",
-  },
-];
+import { Link, useNavigate } from "react-router-dom";
+
 function Home() {
   const storeData = useSelector((store) => store.users);
   const [recommendHackathons, setRecommendHackathons] = useState([]);
   const user = storeData?.userAuth?.user;
+  const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
+
   const getRecommend = async () => {
     const { data } = await axios.get(
       "http://localhost:5001/recommend-cb?user_id=671b64262b605334688d5f77&byModel=hd"
     );
     console.log("🚀 ~ getRecommend ~ data:", data);
     setRecommendHackathons(data);
+  };
+  const handleSearch = () => {
+    const data = { searchTerm };
+    navigate("/Seeker/brower-hackathons", { state: data });
   };
   useEffect(() => {
     getRecommend();
@@ -142,7 +84,13 @@ function Home() {
               </div>
 
               {/* Search Box */}
-              <SearchInput />
+              <div className="">
+                <SearchInput
+                  searchTerm={searchTerm}
+                  setSearchTerm={setSearchTerm}
+                  handleSearch={handleSearch}
+                />
+              </div>
 
               {/* Popula Search */}
               <div className="mt-10 w-full ">
@@ -186,7 +134,13 @@ function Home() {
 
       {user && (
         <div className="px-96 max-md:px-4">
-          <SearchInput />
+          <div className="">
+            <SearchInput
+              searchTerm={searchTerm}
+              setSearchTerm={setSearchTerm}
+              handleSearch={handleSearch}
+            />
+          </div>
         </div>
       )}
       <></>

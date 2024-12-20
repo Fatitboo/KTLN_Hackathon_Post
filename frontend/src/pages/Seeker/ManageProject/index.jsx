@@ -4,35 +4,36 @@ import { backgroundSearch, imgDefaultProject } from "../../../assets/images";
 import Stepper from "../../../components/Stepper";
 import { useEffect, useState } from "react";
 import extractId from "../../../utils/extractId";
+import { useDispatch, useSelector } from "react-redux";
+import { singleHackathon } from "../../../redux/slices/hackathons/hackathonsSlices";
 
 const ManageProject = () => {
   const { projectId } = useParams();
   // projectId = !imptHktid_hackathonId_projectId
+  const dispatch = useDispatch();
+
   const currentPathname = window.location.pathname; // Lấy pathname
-  console.log(currentPathname);
   const [item, setItem] = useState(null);
   const [statePage, setStatePage] = useState(1);
+  const { hackathon } = useSelector((state) => state.hackathons);
+
   useEffect(() => {
     if (projectId !== undefined) {
       const hackathonId = extractId({ type: "hackathonId", str: projectId });
       // const prjId = extractId({type: 'projectId', str: projectId})
-      if (hackathonId === "12762") {
-        setItem({
-          img_bg: backgroundSearch,
-          image: imgDefaultProject,
-          name: "test",
-          id: projectId,
-          type: "my-project",
-        });
-      }
+      if (hackathonId) dispatch(singleHackathon(hackathonId));
     }
   }, [projectId]);
+  useEffect(() => {
+    if (hackathon) {
+      setItem({ ...hackathon, type: "my-project" });
+    }
+  }, [hackathon]);
   useEffect(() => {
     if (currentPathname) {
       const arr = currentPathname.split("/");
 
       const lastE = arr[arr.length - 1];
-      console.log("🚀 ~ useEffect ~ lastE:", lastE);
       if (lastE === "manage-team") {
         setStatePage(1);
       }
@@ -50,14 +51,16 @@ const ManageProject = () => {
         <div
           className="flex flex-col py-5 bg-no-repeat bg-cover"
           style={{
-            backgroundImage: `url(${item?.img_bg ?? backgroundSearch})`,
+            backgroundImage: `url(${
+              item?.headerImgBackground ?? backgroundSearch
+            })`,
           }}
         >
           <div className="px-60 max-lg:px-2 ">
             {item ? (
               <img
-                src={item?.image}
-                alt={item?.name}
+                src={item?.headerTitleImage}
+                alt={item?.hackathonName}
                 className="max-h-40 min-w-full"
               />
             ) : (
@@ -71,13 +74,18 @@ const ManageProject = () => {
               </div>
             )}
           </div>
-          {item && <SubNavbarHackathon id={item?.id} type={item?.type} />}
+          {item && <SubNavbarHackathon id={item?._id} type={item?.type} />}
         </div>
         <div className=" max-lg:px-2 py-5 min-h-60 ">
           <div className="px-60">
             <Stepper currentStep={statePage} id={projectId} />
           </div>
-          <Outlet />
+          <Outlet
+            context={{
+              hackathonId: extractId({ type: "hackathonId", str: projectId }),
+              projectId,
+            }}
+          />
         </div>
       </div>
     </>

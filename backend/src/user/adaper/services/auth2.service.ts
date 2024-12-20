@@ -6,6 +6,7 @@ import * as crypto from 'crypto';
 import { UserDocument } from 'src/user/infrastructure/database/schemas';
 import { sendEmail } from 'src/user/domain/services/email.service';
 import { templateHTML } from 'src/user/infrastructure/constants/template-email';
+import * as jwt from 'jsonwebtoken';
 
 @Injectable()
 export class Auth2Service {
@@ -119,5 +120,15 @@ export class Auth2Service {
 
     user.password = await bcrypt.hash(newPassword, 10);
     await user.save();
+  }
+  private readonly secretKey = 'saketqi4hrtq3478twqe';
+
+  generateTokenInvite(params: any): string {
+    const payload = { ...params };
+    return jwt.sign(payload, this.secretKey, { expiresIn: '7d' }); // Token valid trong 7 ngày.
+  }
+
+  extractPayload(token: string) {
+    return jwt.verify(token, this.secretKey);
   }
 }

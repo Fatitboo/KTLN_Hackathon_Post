@@ -61,5 +61,6 @@ import { MongooseProjectRepository } from 'src/project/infrastructure/database/r
     GoogleStrategy,
     Auth2Service,
   ],
+  exports: [Auth2Service],
 })
 export class UserModule {}

@@ -196,8 +196,8 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ description: 'logout' })
   async logout(@Request() request: any, @Param('id') id: string) {
-    // const { user } = request;
-    // console.log('🚀 ~ AuthController ~ logout ~ user:', user);
+    const { user } = request;
+    console.log('🚀 ~ AuthController ~ logout ~ user:', user);
 
     const cookie = this.authenticationService.getCookieForLogOut(id);
     request.res.setHeader('Set-Cookie', cookie);

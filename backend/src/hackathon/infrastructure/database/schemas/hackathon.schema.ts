@@ -18,7 +18,7 @@ export enum TEAM_STATUS {
 
 export class RegisterUser {
   @Prop({ type: [{ type: Types.ObjectId, ref: 'UserDocument' }] })
-  userId: Types.ObjectId[];
+  userId: Types.ObjectId;
 
   @Prop({ type: String, enum: TEAM_STATUS, required: true })
   status: TEAM_STATUS;

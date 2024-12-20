@@ -51,10 +51,24 @@ function Login() {
     if (userAuth) {
       if (userAuth?.user?.isActive) {
         if (userAuth?.user?.userType.includes("seeker")) {
-          if (userAuth?.user?.isSetPersionalSetting) {
-            navigate("/");
+          var registerInfo = JSON.parse(localStorage.getItem("registerInfo"));
+          console.log("🚀 ~ useEffect ~ token:", registerInfo);
+          if (registerInfo) {
+            if (registerInfo.email === userAuth?.user?.email) {
+              navigate(
+                `/Hackathon-detail/${
+                  registerInfo.hackathonId
+                }/auto-register?token=${
+                  registerInfo.token
+                }&email=${encodeURIComponent(registerInfo.email)}`
+              );
+            }
           } else {
-            navigate("/setting-recommend");
+            if (userAuth?.user?.isSetPersionalSetting) {
+              navigate("/");
+            } else {
+              navigate("/setting-recommend");
+            }
           }
         }
         if (userAuth?.user?.userType.includes("admin")) {

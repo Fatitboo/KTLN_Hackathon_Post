@@ -26,7 +26,9 @@ export class MongooseUserRepository implements UserRepository {
     searchTerm?: string,
   ): Promise<any> {
     const query: any = {
-      registerHackathons: new Types.ObjectId(registeredHackathonId),
+      ...(registeredHackathonId !== ''
+        ? { registerHackathons: new Types.ObjectId(registeredHackathonId) }
+        : {}),
       $or: [],
     };
     const orQuery: any = [];

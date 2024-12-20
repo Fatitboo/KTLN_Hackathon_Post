@@ -4,7 +4,7 @@ import SearchInput from "../../../../components/Seeker/SearchInput";
 import { defaultAvt, imgDefaultProject } from "../../../../assets/images";
 
 function ProjectGallery() {
-  const { myProject } = useOutletContext();
+  const { myProject, id } = useOutletContext();
 
   return (
     <>

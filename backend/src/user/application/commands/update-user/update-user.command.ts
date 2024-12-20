@@ -9,6 +9,11 @@ export class UpdateUserCommandProps {
   avatar?: string;
   bio?: string;
   socialLinks?: SocialLink[];
+  address?: string;
+  linkedinLink?: string;
+  facebookLink?: string;
+  githubLink?: string;
+  dob?: string;
   settingRecommend?: SettingRecommend;
   id: string;
 }

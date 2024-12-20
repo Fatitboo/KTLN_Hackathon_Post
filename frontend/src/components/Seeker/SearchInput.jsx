@@ -9,7 +9,7 @@ const SearchInput = ({
   handleSearch,
 }) => {
   const handleSearchChange = (event) => {
-    console.log("Search term:", event.target.value); // Hiển thị giá trị nhập vào
+    setSearchTerm(event.target.value);
   };
   return (
     <>

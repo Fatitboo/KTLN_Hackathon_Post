@@ -1,14 +1,35 @@
-import { Link, useOutletContext } from "react-router-dom";
+import { Link, useNavigate, useOutletContext } from "react-router-dom";
 import { CustomButton } from "../../../../components";
 import HackathonInfo from "../../../../components/Seeker/HackathonInfo";
+import Swal from "sweetalert2";
 
 function Overview() {
-  const { item, id, isRegistered } = useOutletContext();
-
+  const { item, id, isRegistered, user } = useOutletContext();
+  const navigate = useNavigate();
   const decodeHTML = (html) => {
     const txt = document.createElement("textarea");
     txt.innerHTML = html;
     return txt.value;
+  };
+  const handleNavigatePage = (to) => {
+    if (to === "register" && !user) {
+      Swal.fire({
+        title: "Please login!",
+        text: "You need to login to register hackathon.",
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+        showCancelButton: true,
+        icon: "info",
+        allowOutsideClick: false,
+        confirmButtonColor: "#3085d6",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate("/user-auth/login");
+        }
+      });
+    } else {
+      navigate(`/Hackathon-detail/${id}/${to}`);
+    }
   };
 
   return (
@@ -19,26 +40,24 @@ function Overview() {
             <h2 className="font-semibold mt-5">{item?.hackathonName}</h2>
             <p className="text-xl mt-5 h-16">{item?.tagline}</p>
             <div className="grid grid-cols-5">
-              <div className="col-span-1">
+              <div className="col-span-2">
                 {isRegistered === true ? (
                   <>
-                    <Link to={`/Hackathon-detail/${id}/my-project`}>
-                      <CustomButton
-                        title="Edit your project"
-                        containerStyles="bg-blue-600 w-fit font-medium text-white py-2 px-5 focus:outline-none hover:bg-blue-500 rounded-sm text-base border border-blue-600"
-                      />
-                    </Link>
-                  </>
-                ) : (
-                  <Link to={`/Hackathon-detail/${id}/register`}>
                     <CustomButton
-                      title="Join hackathon"
+                      onClick={() => handleNavigatePage(`my-project`)}
+                      title="Edit your project"
                       containerStyles="bg-blue-600 w-fit font-medium text-white py-2 px-5 focus:outline-none hover:bg-blue-500 rounded-sm text-base border border-blue-600"
                     />
-                  </Link>
+                  </>
+                ) : (
+                  <CustomButton
+                    onClick={() => handleNavigatePage(`register`)}
+                    title="Join hackathon"
+                    containerStyles="bg-blue-600 w-fit font-medium text-white py-2 px-5 focus:outline-none hover:bg-blue-500 rounded-sm text-base border border-blue-600"
+                  />
                 )}
               </div>
-              <div className="text-sm ml-10 col-span-4 ">
+              <div className="text-sm ml-10 col-span-3 ">
                 <div className="font-bold mb-2">Who can participate</div>
                 <div className="grid grid-cols-2 gap-5 mb-4">
                   <ul>

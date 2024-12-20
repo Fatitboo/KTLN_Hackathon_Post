@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Outlet, Navigate, Route, Routes, useLocation } from "react-router-dom";
 import {
   publicRoutes,
@@ -27,22 +26,12 @@ function Layout({ user, role }) {
       );
     }
   }
-  // return user ? (
-  //   <Outlet />
-  // ) : (
-  //   <Navigate to="/user-auth/login" state={{ from: location }} replace />
-  // );
 }
 
 function App() {
   const storeData = useSelector((store) => store.users);
 
   const user = storeData?.userAuth?.user;
-  // const user = {
-  //   token: "xx",
-  //   isVerify: true,
-  //   userType: "seeker",
-  // };
 
   return (
     <main>

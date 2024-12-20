@@ -39,6 +39,7 @@ export interface UserProps {
   settingRecommend?: SettingRecommend;
   socialLinks?: SocialLink[];
   bio?: string;
+  address?: string;
 }
 export class User {
   constructor(public _props: UserProps) {}

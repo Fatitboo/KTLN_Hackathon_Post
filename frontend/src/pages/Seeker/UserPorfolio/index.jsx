@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { defaultAvt, imgDefaultProject } from "../../../assets/images";
 import { CustomButton, Modal } from "../../../components";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import HackathonInfo from "../../../components/Seeker/HackathonInfo";
 import CardProject from "../../../components/Seeker/CardProject";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserProfileAction } from "../../../redux/slices/users/usersSlices";
 import { AskToAddProject } from "../../../components/Modal/askToAddProject";
+import HackathonItem from "../../../components/Seeker/HackathonItem";
 
 function UserPorfolio() {
   const { id, type } = useParams();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [uProfile, setUProfile] = useState({});
   const [openAskToAddProject, setOpenAskToAddProject] = useState(false);
 
@@ -47,8 +49,8 @@ function UserPorfolio() {
       {/* Header */}
       <div className="bg-blue-100  px-60 h-40" />
       <div className="px-60 -mt-12">
-        <div className="flex ">
-          <div className="flex items-center flex-col space-y-2">
+        <div className="grid-cols-5 grid ">
+          <div className="flex items-center col-span-1 flex-col  space-y-2">
             <img
               sizes="w-32"
               src={uProfile?.avatar || defaultAvt}
@@ -57,6 +59,9 @@ function UserPorfolio() {
             />
             <div className="flex items-center justify-center">
               <CustomButton
+                onClick={() => {
+                  navigate("/Seeker/my-profile");
+                }}
                 title="Edit info & Setting"
                 containerStyles="bg-blue-600 w-fit font-medium text-white py-1 px-2 focus:outline-none hover:bg-blue-500 rounded-sm text-sm border border-blue-600"
               />
@@ -69,19 +74,19 @@ function UserPorfolio() {
               />
             </div>
           </div>
-          <div className="mt-2 mx-10">
+          <div className="mt-2 mx-10 col-span-4">
             <div className="text-3xl font-medium">{uProfile?.fullname}</div>
             <p className="text-gray-500 text-base mt-5">
               Student at the University of Waterloo
             </p>
             <div className="flex space-x-4 mt-2 text-blue-500">
-              <a className="cursor-pointer" href={uProfile?.socialLinks?.link}>
+              <a className="cursor-pointer" href={uProfile?.bio}>
                 Website
               </a>
-              <a className="cursor-pointer" href={uProfile?.socialLinks?.link}>
+              <a className="cursor-pointer" href={uProfile?.githubLink}>
                 GitHub
               </a>
-              <a className="cursor-pointer" href={uProfile?.socialLinks?.link}>
+              <a className="cursor-pointer" href={uProfile?.linkedinLink}>
                 LinkedIn
               </a>
             </div>
@@ -121,12 +126,12 @@ function UserPorfolio() {
           </div>
         </div>
       </div>
-      <div className="bg-gray-100 mt-5">
-        <div className="px-60 py-10">
+      <div className="bg-gray-100 min-h-[500px] mt-5 ">
+        <div className="px-60 py-10 ">
           <div className="flex space-x-10">
             {[
-              "2 Projects",
-              "3 Hackathons",
+              `${uProfile?.projects?.length} Projects`,
+              `${uProfile?.registerHackathons?.length} Hackathons`,
               "5 Achievements",
               "6 Followers",
               "6 Following",
@@ -158,18 +163,68 @@ function UserPorfolio() {
                         id !== undefined ? "grid-cols-4" : "grid-cols-3"
                       }  max-w-60:grid-cols-3 max-md:grid-cols-1 gap-6`}
                     >
-                      {[...myProject, ...myProject].map((card, index) => (
+                      {(uProfile?.projects || []).map((card, index) => (
                         <CardProject
                           key={index}
-                          title={card.title}
-                          description={card.description}
-                          image={imgDefaultProject}
+                          id={card._id}
+                          title={card?.projectTitle}
+                          description={card?.tagline}
+                          image={card?.thumnailImage ?? imgDefaultProject}
                           imgUser={defaultAvt}
                           isWinner={card.isWinner}
                           votes={card.votes}
                           comments={card.comments}
                         />
                       ))}
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+          <div className="mt-10 ">
+            {type === "Hackathons" && (
+              <>
+                <div className=" max-lg:grid-cols-1 gap-10">
+                  <div>
+                    <div
+                      className={`my-5 grid mr-20 max-w-60:grid-cols-3 max-md:grid-cols-1 gap-6`}
+                    >
+                      {(
+                        (uProfile?.registerHackathons || []).filter(
+                          (i) => i._id !== null
+                        ) || []
+                      ).map((hackathon, index) => {
+                        return (
+                          <>
+                            <div className="my-6" key={hackathon._id}>
+                              <Link
+                                to={`/Hackathon-detail/${hackathon._id}/overview`}
+                              >
+                                <HackathonItem
+                                  id={hackathon?._id}
+                                  startDate={hackathon?.submissions?.start}
+                                  endDate={hackathon?.submissions?.deadline}
+                                  themes={hackathon.hackathonTypes}
+                                  organization={hackathon?.hostName}
+                                  period={hackathon.period}
+                                  title={hackathon?.hackathonName}
+                                  isExtended={false}
+                                  isFeature={index % 2 === 0 ? true : false}
+                                  location={hackathon.location}
+                                  prizes={`${hackathon?.prizeCurrency ?? "$"} ${
+                                    hackathon?.prizes[0]?.cashValue ?? 1000
+                                  }`}
+                                  participants={
+                                    hackathon?.registerUsers?.length ?? 0
+                                  }
+                                  imageHackthon={hackathon?.thumbnail}
+                                />
+                              </Link>
+                            </div>
+                          </>
+                        );
+                      })}
                     </div>
                   </div>
                 </div>

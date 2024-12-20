@@ -100,7 +100,6 @@ export class HackathonController {
     @Query('limit') limit: number = 10,
   ): Promise<any[]> {
     if (id == null) throw new Error('Id is empty');
-    console.log('🚀 ~ HackathonController ~ id:', id);
     const result = this.queryBus.execute(
       new GetAllRegisterUsersQuery({
         id,

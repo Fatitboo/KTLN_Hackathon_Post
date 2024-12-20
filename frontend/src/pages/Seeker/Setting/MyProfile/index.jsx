@@ -8,163 +8,74 @@ import { useEffect, useState } from "react";
 import {
   getUserProfileAction,
   resetSuccessAction,
-  // updateAvatarAction,
+  updateUserAction,
 } from "../../../../redux/slices/users/usersSlices";
 import { AiFillExclamationCircle } from "react-icons/ai";
 import { useForm } from "react-hook-form";
-import CustomeCbbAddress from "../../../../components/Organizer/CustomeCbbAddress";
 import { ToastContainer, toast } from "react-toastify";
+import { defaultAvt } from "../../../../assets/images";
 
 function MyProfile() {
   const dispatch = useDispatch();
+  const [errImg, setErrImg] = useState(null);
   const [uProfile, setUProfile] = useState({});
-  const [adrSelected, setAdrSelected] = useState({});
+  const [loading2, setLoading] = useState(false);
+  const [fileThumnail, setFileThumnail] = useState(null);
+  const storeData = useSelector((store) => store?.users);
   const notify = (type, message) => toast(message, { type: type });
-
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    formState: { errors },
-  } = useForm({ mode: "onChange" });
+  const { register, handleSubmit, setValue } = useForm({ mode: "onChange" });
+  const { userProfile, loading, appErr, isSuccess, isSuccessUpd } = storeData;
 
   const onSubmitInfo = (data) => {
     const dt = {
+      updateType: "profile_user",
       fullname: data.fullname,
-      email: data.email,
+      bio: data.bio,
+      linkedinLink: data.linkedinLink,
+      facebookLink: data.facebookLink,
+      githubLink: data.githubLink,
+      address: data.address,
       dob: data.dob,
-      website: data.website,
-      description: data.description,
-      expectSalary: data.expectSalary,
-      actions: 3,
-    };
-    console.log(data);
-    // dispatch(updateUserProfileAction(dt));
-  };
-  const onSubmitAddress = (data) => {
-    const dt = {
-      country: "Việt Nam",
-      province: adrSelected.province,
-      district: adrSelected.district,
-      addressDetail: data?.addressDetail ?? "",
-      ward: adrSelected.ward,
-      actions: 2,
     };
     console.log(dt);
-    // dispatch(updateUserProfileAction(dt));
+    dispatch(updateUserAction(dt));
   };
-  const onSubmitSocialLink = (data) => {
-    const dt = {
-      fbLink: data.facebook,
-      twLink: data.twitter,
-      lkLink: data.linkedin,
-      insLink: data.instagram,
-      actions: 1,
-    };
-    console.log(data);
-    // dispatch(updateUserProfileAction(dt));
-  };
-  const [errImg, setErrImg] = useState(null);
   useEffect(() => {
     dispatch(
       getUserProfileAction({
-        getType: "profile_user",
+        getType: "all",
         getBy: "id",
       })
     );
   }, []);
 
-  const storeData = useSelector((store) => store?.users);
-  const { userProfile, loading, appErr, isSuccess, isSuccessUpd } = storeData;
-  useEffect(() => {
-    if (isSuccess) {
-      dispatch(getUserProfileAction());
-    }
-  }, [isSuccess]);
   useEffect(() => {
     if (isSuccessUpd) {
+      dispatch(
+        getUserProfileAction({
+          getType: "all",
+          getBy: "id",
+        })
+      );
       dispatch(resetSuccessAction());
       notify("success", "Update user profile successfully!");
     }
   }, [isSuccessUpd]);
+
   useEffect(() => {
     setUProfile({ ...userProfile });
+    console.log("🚀 ~ useEffect ~ userProfile:", userProfile);
+    setFileThumnail(userProfile?.avatar);
     setValue("fullname", userProfile?.fullname);
-    // setValue("phone", userProfile?.phoneNumber);
     setValue("email", userProfile?.email);
-    // setValue("expectSalary", userProfile?.expectSalary);
-    // setValue("dob", convertDate(userProfile?.dayOfBirth));
-    // setValue("description", userProfile?.description);
-    // setValue("website", userProfile?.website);
-    // // setValue('province', userProfile?.address?.province);
-    // // setValue('district', userProfile?.address?.district);
-    // // setValue('country', userProfile?.address?.country);
-    // setValue("addressDetail", userProfile?.address?.addressDetail);
-    // // setValue('ward', userProfile?.address?.ward);
-    // if (userProfile?.address) {
-    //   setAdrSelected({
-    //     province: userProfile?.address?.province,
-    //     district: userProfile?.address?.district,
-    //     ward: userProfile?.address?.ward,
-    //   });
-    // } else {
-    //   setAdrSelected({
-    //     province: "",
-    //     district: "",
-    //     ward: "",
-    //   });
-    // }
-    // setValue("facebook", userProfile?.fbLink);
-    // setValue("twitter", userProfile?.twLink);
-    // setValue("linkedin", userProfile?.lkLink);
-    // setValue("instagram", userProfile?.insLink);
+    setValue("dob", convertDate(userProfile?.dob));
+    setValue("address", userProfile?.address);
+    setValue("bio", userProfile?.bio);
+    setValue("facebookLink", userProfile?.facebookLink);
+    setValue("linkedinLink", userProfile?.linkedinLink);
+    setValue("githubLink", userProfile?.githubLink);
   }, [userProfile]);
-  const filterProvince = (e) => {
-    fetch(districtApi(e.code))
-      .then((res) => res.json())
-      .then((json) => {
-        setDistrict(json.districts);
-        if (adrSelected.district) adrSelected.district = "";
-        if (adrSelected.ward) adrSelected.ward = "";
-        adrSelected.province = e.name;
 
-        setAdrSelected({ ...adrSelected });
-      });
-  };
-
-  const filterDistrict = (e) => {
-    fetch(wardApi(e.code))
-      .then((res) => res.json())
-      .then((json) => {
-        setWard(json.wards);
-        if (adrSelected.ward) adrSelected.ward = "";
-        adrSelected.district = e.name;
-
-        setAdrSelected({ ...adrSelected });
-      });
-  };
-  const handleUpdateAvatar = (e) => {
-    const file = e.target.files[0];
-    const maxSize = 5 * 1024 * 1024;
-    setErrImg(null);
-    if (file.size > maxSize) {
-      setErrImg("File size exceeds the maximum allowed size (5MB).");
-      return;
-    }
-    // Kiểm tra định dạng tệp
-    const allowedFormats = [".jpg", ".jpeg", ".png"];
-    const fileExtension = "." + file.name.split(".").pop().toLowerCase();
-    if (!allowedFormats.includes(fileExtension)) {
-      setErrImg("Invalid file format. Allowed formats are .jpg, .jpeg, .png.");
-      return;
-    }
-    const avatar = {
-      file: file,
-      publicId: userProfile?.avatar?.publicId ?? "",
-    };
-
-    // dispatch(updateAvatarAction(avatar));
-  };
   const convertDate = (tt) => {
     const date = new Date(tt);
 
@@ -177,45 +88,40 @@ function MyProfile() {
     const formattedDate = `${year}-${month}-${day}`;
     return formattedDate;
   };
-  const provinceApi = "https://provinces.open-api.vn/api/";
-  const districtApi = (code) =>
-    `https://provinces.open-api.vn/api/p/${code}?depth=2`;
-  const wardApi = (code) =>
-    `https://provinces.open-api.vn/api/d/${code}?depth=2`;
-  const [provinces, setProvince] = useState([]);
-  const [districts, setDistrict] = useState([]);
-  const [wards, setWard] = useState([]);
 
-  useEffect(() => {
-    fetch(provinceApi)
-      .then((res) => res.json())
-      .then((json) => {
-        setProvince(json);
-        if (userProfile?.address) {
-          const code = Array.from(json).find(
-            (item) => item.name === userProfile?.address?.province
-          )?.code;
-          code &&
-            fetch(districtApi(code))
-              .then((res) => res.json())
-              .then((json) => {
-                const code = Array.from(json.districts).find(
-                  (item) => item.name === userProfile?.address?.district
-                )?.code;
-                setDistrict(json.districts);
-                code &&
-                  fetch(wardApi(code))
-                    .then((res) => res.json())
-                    .then((json) => {
-                      setWard(json.wards);
-                    });
-              });
-        } else {
-          setDistrict([]);
-          setWard([]);
+  const handleUpdateAvt = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setLoading(true);
+      const rs = await uploadImageFromLocalFiles({ file });
+      dispatch(updateUserAction({ updateType: "avatar", avatar: rs.url }));
+      setLoading(false);
+    }
+  };
+
+  const uploadImageFromLocalFiles = async ({ file }) => {
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", "upload_audio"); // Set this in your Cloudinary dashboard
+
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/dvnxdtrzn/auto/upload`,
+        {
+          method: "POST",
+          body: formData,
         }
-      });
-  }, [userProfile]);
+      );
+
+      const data = await response.json();
+      return data;
+
+      // return uploadUrls;
+    } catch (error) {
+      console.error("Error uploading image::", error);
+    }
+  };
+
   return (
     <div className="px-32 pb-10 pt-16">
       {/* Start title of page  */}
@@ -230,26 +136,23 @@ function MyProfile() {
         </div>
       </div>
       <div className="flex flex-wrap">
-        <div className="max-w-full pt-3 w-full">
-          <form
-            onSubmit={handleSubmit(onSubmitInfo)}
-            className="relative  mb-8 bg-white  max-w-full pt-1 shrink-0 w-full"
-          >
+        <form
+          className="max-w-full pt-3 w-full"
+          onSubmit={handleSubmit(onSubmitInfo)}
+        >
+          <div className="relative  mb-8 bg-white  max-w-full pt-1 shrink-0 w-full">
             <div className=" font-medium text-base mr-8">My photo </div>
             <div className="relative pt-3">
               <div className="  mb-8 pb-4 border-b border-solid border-[#f1f3f7]">
                 <div className="flex items-end">
                   <div className="relative flex items-end ">
                     <img
-                      src={
-                        userProfile?.avatar ??
-                        "https://i.pinimg.com/564x/16/3e/39/163e39beaa36d1f9a061b0f0c5669750.jpg"
-                      }
+                      src={fileThumnail ?? defaultAvt}
                       alt="avt"
                       className="w-[120px] border rounded-full"
                     />
                     <input
-                      onChange={(e) => handleUpdateAvatar(e)}
+                      onChange={(e) => handleUpdateAvt(e)}
                       type="file"
                       name="attachment"
                       accept="image/*"
@@ -296,17 +199,6 @@ function MyProfile() {
                       styles="bg-[#f0f5f7]"
                     />
                   </div>
-                  <div className="px-1">
-                    <TextInput
-                      value={uProfile?.expectSalary}
-                      name="expectSalary"
-                      register={register("expectSalary")}
-                      type="text"
-                      label="Bio"
-                      placeholder="100"
-                      styles="bg-[#f0f5f7]"
-                    />
-                  </div>
 
                   <div className="px-1">
                     <TextInput
@@ -321,6 +213,17 @@ function MyProfile() {
                     />
                   </div>
                   <div className="px-1">
+                    <TextInput
+                      name="addres"
+                      value={userProfile?.address}
+                      register={register("address")}
+                      type="text"
+                      label="Address"
+                      placeholder="..."
+                      styles="bg-[#f0f5f7]"
+                    />
+                  </div>
+                  <div className="px-1">
                     <label
                       htmlFor="dob"
                       className="block leading-8 text-gray-900 font-medium"
@@ -329,7 +232,7 @@ function MyProfile() {
                     </label>
                     <div className="relative mt-1 rounded-md shadow-sm ">
                       <input
-                        defaultValue={convertDate(uProfile?.dayOfBirth)}
+                        defaultValue={convertDate(uProfile?.dob)}
                         type="date"
                         {...register("dob")}
                         name="dob"
@@ -341,20 +244,17 @@ function MyProfile() {
                 </div>
               </div>
             </div>
-          </form>
+          </div>
           <div className="relative  max-w-full pt-1 shrink-0 w-full">
             <div className="font-medium text-3xl  mr-8">Social Network</div>
             <div className="relative pt-3">
-              <form
-                onSubmit={handleSubmit(onSubmitSocialLink)}
-                className="relative"
-              >
+              <div className="relative">
                 <div className="grid grid-cols-2 gap-5">
                   <div className="px-1 ">
                     <TextInput
-                      name="Github"
-                      value={uProfile?.facebook}
-                      register={register("facebook")}
+                      name="githubLink"
+                      value={uProfile?.githubLink}
+                      register={register("githubLink")}
                       type="text"
                       label="Github"
                       placeholder="www.Github.com/Nguyenvana"
@@ -363,20 +263,20 @@ function MyProfile() {
                   </div>
                   <div className="px-1 ">
                     <TextInput
-                      name="twitter"
-                      value={uProfile?.twitter}
-                      register={register("twitter")}
+                      name="facebookLink"
+                      value={uProfile?.facebookLink}
+                      register={register("facebookLink")}
                       type="text"
-                      label="Twitter"
-                      placeholder="www.twitter.com/@Nguyenvana"
+                      label="Facebook"
+                      placeholder="www.facebook.com/@Nguyenvana"
                       styles="bg-[#f0f5f7]"
                     />
                   </div>
                   <div className="px-1 ">
                     <TextInput
-                      name="linkedin"
-                      value={uProfile?.linkedin}
-                      register={register("linkedin")}
+                      name="linkedinLink"
+                      value={uProfile?.linkedinLink}
+                      register={register("linkedinLink")}
                       type="text"
                       label="Linkedin"
                       placeholder="www.linkedin.com/Nguyenvana"
@@ -385,9 +285,9 @@ function MyProfile() {
                   </div>
                   <div className="px-1 ">
                     <TextInput
-                      name="Website"
-                      value={uProfile?.instagram}
-                      register={register("instagram")}
+                      name="bio"
+                      value={uProfile?.bio}
+                      register={register("bio")}
                       type="text"
                       label="Website"
                       placeholder="www.Website.com/Nguyenvana"
@@ -395,77 +295,28 @@ function MyProfile() {
                     />
                   </div>
                 </div>
-              </form>
+              </div>
             </div>
           </div>
           <div className="relative mt-5 max-w-full pt-1 shrink-0 w-full">
-            <div className="text-3xl font-medium  mr-8">Location</div>
-            <div className="relative pt-3">
-              <form
-                onSubmit={handleSubmit(onSubmitAddress)}
-                className="relative"
-              >
-                <div className="grid grid-cols-2 gap-5">
-                  <div className="">
-                    <CustomeCbbAddress
-                      listItem={provinces}
-                      labelItemSelected={adrSelected.province}
-                      placeHolder={"Select province"}
-                      label={"Province"}
-                      filterValueSelected={filterProvince}
-                    />
-                  </div>
-                  <div className="">
-                    <CustomeCbbAddress
-                      listItem={districts}
-                      labelItemSelected={adrSelected.district}
-                      placeHolder={"Select district"}
-                      label={"District"}
-                      filterValueSelected={filterDistrict}
-                    />
-                  </div>
-                  <div className="">
-                    <CustomeCbbAddress
-                      listItem={wards}
-                      labelItemSelected={adrSelected.ward}
-                      placeHolder={"Select ward"}
-                      label={"Ward"}
-                      filterValueSelected={(e) => {
-                        setAdrSelected((prev) => ({ ...prev, ward: e.name }));
-                      }}
-                    />
-                  </div>
-                  <div className=" ">
-                    <TextInput
-                      name="addressDetail"
-                      value={userProfile?.address?.addressDetail}
-                      register={register("addressDetail")}
-                      type="text"
-                      label="Address Detail"
-                      placeholder="..."
-                      styles="bg-[#f0f5f7]"
-                    />
-                  </div>
-
-                  {loading ? (
-                    <CustomButton
-                      isDisable={loading}
-                      title={"Loading..."}
-                      containerStyles="text-blue-600 justify-center w-[50%] flex py-2 px-4 mb-6 focus:outline-none hover:bg-blue-700 hover:text-white rounded-sm text-base border border-blue-600"
-                    />
-                  ) : (
-                    <CustomButton
-                      isDisable={loading}
-                      type={"Submit"}
-                      title={"Save changes"}
-                      containerStyles="text-blue-600 justify-center w-[50%] flex py-2 px-4 mb-6 focus:outline-none hover:bg-blue-700 hover:text-white rounded-sm text-base border border-blue-600"
-                    />
-                  )}
-                </div>
-              </form>
+            <div className="grid grid-cols-2 gap-5">
+              {loading ? (
+                <CustomButton
+                  isDisable={loading}
+                  title={"Loading..."}
+                  containerStyles="text-blue-600 justify-center w-[50%] flex py-2 px-4 mb-6 focus:outline-none hover:bg-blue-700 hover:text-white rounded-sm text-base border border-blue-600"
+                />
+              ) : (
+                <CustomButton
+                  isDisable={loading}
+                  type={"Submit"}
+                  title={"Save changes"}
+                  containerStyles="text-blue-600 justify-center w-[50%] flex py-2 px-4 mb-6 focus:outline-none hover:bg-blue-700 hover:text-white rounded-sm text-base border border-blue-600"
+                />
+              )}
             </div>
           </div>
-        </div>
+        </form>
       </div>
     </div>
   );

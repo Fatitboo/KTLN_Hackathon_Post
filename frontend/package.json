@@ -47,6 +47,7 @@
     "recharts": "^2.8.0",
     "slick-carousel": "^1.8.1",
     "sweetalert2": "^11.10.1",
+    "swiper": "^11.1.15",
     "uuid": "^9.0.1"
   },
   "devDependencies": {

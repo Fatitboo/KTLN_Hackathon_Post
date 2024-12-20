@@ -221,10 +221,7 @@ export const getProjectSingle = createAsyncThunk(
       //   withCredentials: true,
       // };
 
-      const { data } = await axios.get(
-        `${baseUrl}/${apiPrefix}/${productId}`,
-        config
-      );
+      const { data } = await axios.get(`${baseUrl}/${apiPrefix}/${productId}`);
       return data;
     } catch (error) {
       if (!error?.response) {

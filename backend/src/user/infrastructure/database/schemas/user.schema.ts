@@ -1,16 +1,12 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
-import { SocialType, UserType } from 'src/user/domain/entities/user.entity';
+import { UserType } from 'src/user/domain/entities/user.entity';
 export class SettingRecommend {
   specialty?: string;
   skills?: string[];
   interestedIn?: string[];
   occupation?: string;
   currentLevel?: string;
-}
-export class SocialLink {
-  type: SocialType;
-  url: string;
 }
 // user
 @Schema({
@@ -27,13 +23,13 @@ export class UserDocument {
   @Prop({ required: true })
   password: string;
 
-  @Prop({ type: [{ type: Types.ObjectId, ref: 'Hackathon' }] })
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'HackathonDocument' }] })
   hackathons: Types.ObjectId[];
 
-  @Prop({ type: [{ type: Types.ObjectId, ref: 'Project' }] })
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'ProjectDocument' }] })
   projects: Types.ObjectId[];
 
-  @Prop({ type: [{ type: Types.ObjectId, ref: 'Blog' }] })
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'BlogDocument' }] })
   blogs: Types.ObjectId[];
 
   @Prop({ required: true })
@@ -58,7 +54,19 @@ export class UserDocument {
   bio?: string;
 
   @Prop({ required: false })
-  socialLinks?: SocialLink[];
+  facebookLink?: string;
+
+  @Prop({ required: false })
+  githubLink?: string;
+
+  @Prop({ required: false })
+  linkedinLink?: string;
+
+  @Prop({ required: false })
+  address?: string;
+
+  @Prop({ required: false })
+  dob?: Date;
 
   @Prop({ required: true })
   userType: UserType[];

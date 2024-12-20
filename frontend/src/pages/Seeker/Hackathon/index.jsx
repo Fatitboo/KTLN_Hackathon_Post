@@ -24,7 +24,7 @@ function HackathonDetail() {
   useEffect(() => {
     if (hackathon) {
       console.log("🚀 ~ useEffect ~ hackathon:", hackathon);
-      if (hackathon?.registerUsers?.find((item) => item.id === user.id))
+      if (hackathon?.registerUsers?.find((item) => item?.userId === user?.id))
         setIsRegistered(true);
       setItemHackathon(hackathon);
     }
@@ -69,7 +69,7 @@ function HackathonDetail() {
           <SubNavbarHackathon id={id} type={type} />
         </div>
         <div className=" max-lg:px-2 py-5 min-h-60 ">
-          <Outlet context={{ item, myProject, id, isRegistered }} />
+          <Outlet context={{ item, myProject, id, isRegistered, user }} />
         </div>
         {/* //recommend team hackathons */}
         <div className="fixed bottom-12 right-12 z-10">

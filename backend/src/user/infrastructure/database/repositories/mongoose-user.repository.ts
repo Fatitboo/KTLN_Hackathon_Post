@@ -159,6 +159,7 @@ export class MongooseUserRepository implements UserRepository {
       isSetPersionalSetting: user.isSetPersionalSetting,
       settingRecommend: user.settingRecommend,
       socialLinks: user.socialLinks,
+      address: user.address,
     });
   }
 }

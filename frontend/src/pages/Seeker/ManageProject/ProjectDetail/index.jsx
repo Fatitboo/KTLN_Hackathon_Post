@@ -11,7 +11,10 @@ import {
   getProjectSingle,
   resetSuccessAction,
 } from "../../../../redux/slices/projects/projectsSlices";
-
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/navigation";
+import { Navigation, Autoplay } from "swiper/modules";
 function ProjectDetail() {
   const { projectId } = useParams();
   const dispatch = useDispatch();
@@ -75,6 +78,57 @@ function ProjectDetail() {
         </div>
         <hr />
         <div className="px-60 max-lg:px-2 py-5 ">
+          <div className="w-[60%] ">
+            <Swiper
+              modules={[Navigation, Autoplay]}
+              slidesPerView={1}
+              navigation
+              autoplay={{ delay: 3000, disableOnInteraction: false }}
+              loop
+              spaceBetween={30}
+              className="rounded-lg overflow-hidden flex mx-auto"
+            >
+              {/* Slide 1: Image */}
+              {(item?.galary || []).map((i, index) => {
+                if (i?.url.includes("youtube")) {
+                  const a = i?.url?.split("/");
+                  const cc = a[a.length - 1];
+                  const id = cc?.split("=")[1];
+                  return (
+                    <SwiperSlide>
+                      <div className="flex flex-col items-center">
+                        <iframe
+                          key={index}
+                          width={500}
+                          height="315"
+                          src={"https://www.youtube.com/embed/" + id}
+                          title="YouTube video player"
+                          frameborder="0"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                          allowfullscreen
+                        ></iframe>
+                        <div className=" text-black text-xl text-center py-2">
+                          <p>{i?.caption}</p>
+                        </div>
+                      </div>
+                    </SwiperSlide>
+                  );
+                } else {
+                  return (
+                    <SwiperSlide>
+                      <div className="flex flex-col items-center">
+                        <img width="315" src={i?.url} key={index} />
+                        <div className=" text-black text-xl text-center py-2">
+                          <p>{i?.caption}</p>
+                        </div>
+                      </div>
+                    </SwiperSlide>
+                  );
+                }
+              })}
+            </Swiper>
+            <div></div>
+          </div>
           <div className="grid grid-cols-3 max-lg:grid-cols-1 gap-10">
             <div className="col-span-2">
               <div className=" text-gray-600 " id="generated-script">
@@ -92,7 +146,7 @@ function ProjectDetail() {
                 <h2 className="text-xl font-bold mb-4">Built With</h2>
                 <div className="flex flex-wrap gap-2">
                   {(
-                    item?.buildWith ?? [
+                    item?.builtWith ?? [
                       "adobe",
                       "c#",
                       "illustrator",

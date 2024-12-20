@@ -6,12 +6,17 @@ import {
 } from '../../../domain/repositories/user.repository';
 import { Inject } from '@nestjs/common';
 import { ExceptionsService } from 'src/shared/infrastructure/exceptions/exceptions.service';
+import { UserDocument } from 'src/user/infrastructure/database/schemas';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 
 @CommandHandler(UpdateUserCommand)
 export class UpdateUserHandler implements ICommandHandler<UpdateUserCommand> {
   constructor(
     @Inject(USER_REPOSITORY) private readonly userRepository: UserRepository,
     private readonly exceptionsService: ExceptionsService,
+    @InjectModel(UserDocument.name)
+    private readonly userModel: Model<UserDocument>,
   ) {}
 
   async execute(command: UpdateUserCommand) {
@@ -24,30 +29,38 @@ export class UpdateUserHandler implements ICommandHandler<UpdateUserCommand> {
 
     switch (updateType) {
       case 'setting_recommend':
-        const updatedUser = await this.userRepository.updateById(id, {
+        const updatedUser = await this.userModel.findByIdAndUpdate(id, {
           settingRecommend: {
             ...command.props.settingRecommend,
           },
           isSetPersionalSetting: true,
         });
-        return { settingRecommend: updatedUser._props.settingRecommend };
+        return { settingRecommend: updatedUser.settingRecommend };
       case 'profile_user':
-        const profileUpdatedUser = await this.userRepository.updateById(id, {
+        const profileUpdatedUser = await this.userModel.findByIdAndUpdate(id, {
           fullname: command.props.fullname,
           bio: command.props.bio,
-          socialLinks: command.props.socialLinks,
+          linkedinLink: command.props.linkedinLink,
+          facebookLink: command.props.facebookLink,
+          githubLink: command.props.githubLink,
+          address: command.props.address,
+          dob: command.props.dob,
         });
         return {
-          fullname: profileUpdatedUser._props.fullname,
-          bio: profileUpdatedUser._props.bio,
-          socialLinks: profileUpdatedUser._props.socialLinks,
+          fullname: profileUpdatedUser.fullname,
+          bio: profileUpdatedUser.bio,
+          linkedinLink: profileUpdatedUser.linkedinLink,
+          facebookLink: profileUpdatedUser.facebookLink,
+          githubLink: profileUpdatedUser.githubLink,
+          address: profileUpdatedUser.address,
+          dob: profileUpdatedUser.dob,
         };
       case 'avatar':
-        const avatarUpdatedUser = await this.userRepository.updateById(id, {
+        const avatarUpdatedUser = await this.userModel.findByIdAndUpdate(id, {
           avatar: command.props.avatar,
         });
         return {
-          avatar: avatarUpdatedUser._props.avatar,
+          avatar: avatarUpdatedUser.avatar,
         };
       default:
         this.exceptionsService.badRequestException({

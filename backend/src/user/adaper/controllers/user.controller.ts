@@ -24,6 +24,9 @@ import {
   USER_REPOSITORY,
   UserRepository,
 } from 'src/user/domain/repositories/user.repository';
+import { UserDocument } from 'src/user/infrastructure/database/schemas';
+import { Model } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
 
 @Controller('users')
 export class UserController {
@@ -31,6 +34,8 @@ export class UserController {
     private readonly commandBus: CommandBus,
     private readonly queryBus: QueryBus,
     @Inject(USER_REPOSITORY) private readonly userRepository: UserRepository,
+    @InjectModel(UserDocument.name)
+    private readonly userModel: Model<UserDocument>,
   ) {}
 
   @Post('/update-user/:id')

@@ -117,10 +117,10 @@ function AddProject() {
       } else setFileThumnail(rs.url);
     }
   };
+
   // Hàm xử lý thay đổi caption
   const handleCaptionChange = (url, newCaption) => {
     setGalaryList((prevFiles) => {
-      console.log("🚀 ~ handleCaptionChange ~ prevFiles:", prevFiles);
       return prevFiles.map((file) =>
         file.url === url ? { ...file, caption: newCaption } : file
       );

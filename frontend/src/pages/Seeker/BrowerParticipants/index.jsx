@@ -89,7 +89,7 @@ function BrowerParticipants({ hackathonId }) {
   const dispatch = useDispatch();
   const limit = 10;
   const [page, setPage] = useState(1);
-  const [total, setTotal] = useState(10);
+  const [total, setTotal] = useState(0);
   const [totalPages, setTotalPage] = useState(1);
   const [participants, setParticipants] = useState([]);
   let { loading, registerUsers, isSuccess } = useSelector(
@@ -216,7 +216,7 @@ function BrowerParticipants({ hackathonId }) {
             </div>
             {/* Title */}
             <div className="flex justify-between items-center text-sm mt-10">
-              <dic className="text-gray-600">Showing 9387 participants</dic>
+              <dic className="text-gray-600">Showing {total} participants</dic>
               <div className="flex items-center">
                 <div className="mr-3 font-medium">Sort:</div>
                 <div className="flex items-center border border-gray-300 p-3">

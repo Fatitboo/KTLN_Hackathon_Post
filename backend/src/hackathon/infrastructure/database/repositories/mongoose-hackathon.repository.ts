@@ -204,14 +204,25 @@ export class MongooseHackathonRepository implements HackathonRepository {
     return updatedHackathon;
   }
 
-  async delete(id: string): Promise<string> {
+  async delete(userId: string, id: string): Promise<string> {
     const existingHackathon = await this.hackathonModel.findById(id);
 
     if (!existingHackathon) {
       throw new NotFoundException(`Hackathon with ID ${id} not found.`);
     }
 
+    const existingUser = await this.userModel.findById(userId);
+
+    if (!existingUser) {
+      throw new NotFoundException(`User with ID ${userId} not found.`);
+    }
+
     await this.hackathonModel.findByIdAndDelete(id);
+    await this.userModel.findByIdAndUpdate(
+      userId,
+      { $pull: { hackathons: new Types.ObjectId(id) } },
+      { new: true },
+    );
 
     return 'Delete successfully';
   }

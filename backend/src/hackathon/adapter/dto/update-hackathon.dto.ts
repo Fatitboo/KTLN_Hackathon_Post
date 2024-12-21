@@ -119,4 +119,10 @@ export class UpdateHackathonDTO {
 
   @IsOptional()
   prizes?: Prize[];
+
+  @IsOptional()
+  block?: boolean;
+
+  @IsOptional()
+  location?: string;
 }

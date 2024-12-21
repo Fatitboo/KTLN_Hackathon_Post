@@ -67,7 +67,7 @@ function Login() {
             if (userAuth?.user?.isSetPersionalSetting) {
               navigate("/");
             } else {
-              navigate("/setting-recommend");
+              navigate("/setting-recommend", { state: { isFromLogin: true } });
             }
           }
         }

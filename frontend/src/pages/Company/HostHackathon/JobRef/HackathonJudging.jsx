@@ -26,8 +26,11 @@ function HackathonJudging({ formSubmit, formId, config }) {
     const data = {
       ...inputValues,
       judges: uploadedJudges,
+      judgingPeriod: {
+        start: new Date(inputValues.judgingPeriod.start),
+        end: new Date(inputValues.judgingPeriod.end),
+      },
     };
-    console.log(data);
     formSubmit(data);
   };
 

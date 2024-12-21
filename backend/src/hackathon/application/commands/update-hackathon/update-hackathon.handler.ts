@@ -26,38 +26,67 @@ export class UpdateHackathonHandler
     }
 
     // Cập nhật các thuộc tính mới từ command
-    const updatedHackathon = new Hackathon(
-      id,
-      hackathon.hackathonName ?? existingHackathon.hackathonName,
-      hackathon.tagline ?? existingHackathon.tagline,
-      hackathon.managerMail ?? existingHackathon.managerMail,
-      hackathon.hostName ?? existingHackathon.hostName,
-      hackathon.hackathonTypes ?? existingHackathon.hackathonTypes,
-      hackathon.applyFor ?? existingHackathon.applyFor,
-      hackathon.isPublished ?? existingHackathon.isPublished,
-      hackathon.participantAge ?? existingHackathon.participantAge,
-      hackathon.teamRequirement ?? existingHackathon.teamRequirement,
-      hackathon.thumbnail ?? existingHackathon.thumbnail,
-      hackathon.headerTitleImage ?? existingHackathon.headerTitleImage,
-      hackathon.mainDescription ?? existingHackathon.mainDescription,
-      hackathon.videoDescription ?? existingHackathon.videoDescription,
-      hackathon.submissionDescription ??
+    const updatedHackathon = {
+      id: id,
+      hackathonName: hackathon.hackathonName ?? existingHackathon.hackathonName,
+      tagline: hackathon.tagline ?? existingHackathon.tagline,
+      managerMail: hackathon.managerMail ?? existingHackathon.managerMail,
+      hostName: hackathon.hostName ?? existingHackathon.hostName,
+      hackathonTypes:
+        hackathon.hackathonTypes ?? existingHackathon.hackathonTypes,
+      applyFor: hackathon.applyFor ?? existingHackathon.applyFor,
+      isPublished: hackathon.isPublished ?? existingHackathon.isPublished,
+      participantAge:
+        hackathon.participantAge ?? existingHackathon.participantAge,
+      teamRequirement:
+        hackathon.teamRequirement ?? existingHackathon.teamRequirement,
+      thumbnail: hackathon.thumbnail ?? existingHackathon.thumbnail,
+      headerTitleImage:
+        hackathon.headerTitleImage ?? existingHackathon.headerTitleImage,
+      mainDescription:
+        hackathon.mainDescription ?? existingHackathon.mainDescription,
+      videoDescription:
+        hackathon.videoDescription ?? existingHackathon.videoDescription,
+      submissionDescription:
+        hackathon.submissionDescription ??
         existingHackathon.submissionDescription,
-      hackathon.ruleDescription ?? existingHackathon.ruleDescription,
-      hackathon.resourceDescription ?? existingHackathon.resourceDescription,
-      hackathon.communityChatLink ?? existingHackathon.communityChatLink,
-      hackathon.tasks ?? existingHackathon.tasks,
-      hackathon.subjectMailTitle ?? existingHackathon.subjectMailTitle,
-      hackathon.contentMailRegister ?? existingHackathon.contentMailRegister,
-      hackathon.submissions ?? existingHackathon.submissions,
-      hackathon.judgingType ?? existingHackathon.judgingType,
-      hackathon.judgingPeriod ?? existingHackathon.judgingPeriod,
-      hackathon.judges ?? existingHackathon.judges,
-      hackathon.criteria ?? existingHackathon.criteria,
-      hackathon.winnersAnnounced ?? existingHackathon.winnersAnnounced,
-      hackathon.prizeCurrency ?? existingHackathon.prizeCurrency,
-      hackathon.prizes ?? existingHackathon.prizes,
-    );
+      ruleDescription:
+        hackathon.ruleDescription ?? existingHackathon.ruleDescription,
+      resourceDescription:
+        hackathon.resourceDescription ?? existingHackathon.resourceDescription,
+      communityChatLink:
+        hackathon.communityChatLink ?? existingHackathon.communityChatLink,
+      tasks: hackathon.tasks ?? existingHackathon.tasks,
+      subjectMailTitle:
+        hackathon.subjectMailTitle ?? existingHackathon.subjectMailTitle,
+      contentMailRegister:
+        hackathon.contentMailRegister ?? existingHackathon.contentMailRegister,
+      submissions: hackathon.submissions
+        ? {
+            start: new Date(hackathon.submissions.start),
+            deadline: new Date(hackathon.submissions.deadline),
+            note: hackathon.submissions.note,
+            isUploadFile: hackathon.submissions.isUploadFile,
+            isUploadVideo: hackathon.submissions.isUploadVideo,
+          }
+        : existingHackathon.submissions,
+      judgingType: hackathon.judgingType ?? existingHackathon.judgingType,
+      judgingPeriod: hackathon.judgingPeriod
+        ? {
+            start: new Date(hackathon.judgingPeriod.start),
+            end: new Date(hackathon.judgingPeriod.start),
+          }
+        : existingHackathon.judgingPeriod,
+      judges: hackathon.judges ?? existingHackathon.judges,
+      criteria: hackathon.criteria ?? existingHackathon.criteria,
+      winnersAnnounced: hackathon.winnersAnnounced
+        ? new Date(hackathon.winnersAnnounced)
+        : existingHackathon.winnersAnnounced,
+      prizeCurrency: hackathon.prizeCurrency ?? existingHackathon.prizeCurrency,
+      prizes: hackathon.prizes ?? existingHackathon.prizes,
+      block: hackathon.block ?? existingHackathon.block,
+      location: hackathon.location ?? existingHackathon.location,
+    };
 
     // Gọi repository để lưu lại cập nhật
     const result = await this.hackathonRepository.update(id, updatedHackathon);

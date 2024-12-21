@@ -27,6 +27,7 @@ import {
 import { UserDocument } from 'src/user/infrastructure/database/schemas';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
+import { GetUsersQuery } from 'src/user/application/queries/get-users/get-users.query';
 
 @Controller('users')
 export class UserController {
@@ -47,6 +48,11 @@ export class UserController {
         ...body,
       }),
     );
+  }
+
+  @Get()
+  async getAllUsers(@Query('page') page: number) {
+    return await this.queryBus.execute(new GetUsersQuery(page));
   }
 
   @Post('/register-hackathon/:userId')

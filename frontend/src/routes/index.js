@@ -56,6 +56,7 @@ import ManageTeam from "../pages/Seeker/ManageProject/ManageTeam";
 import SubmitProject from "../pages/Seeker/ManageProject/SubmitProject";
 import BrowserProducts from "../pages/Seeker/BrowserProducts";
 import AutoRegisterToHackathon from "../pages/Seeker/Hackathon/AutoRegister";
+import ManageHackathonsAdmin from "../pages/Admin/Approval";
 
 const publicRoutes = [
   // User Layout
@@ -248,8 +249,8 @@ const AdminRoutes = [
     layout: LayoutHasSidebar,
   },
   {
-    path: "/Admin/approval-project",
-    component: Approval,
+    path: "/Admin/manage-hackathons",
+    component: ManageHackathonsAdmin,
     layout: LayoutHasSidebar,
   },
   {

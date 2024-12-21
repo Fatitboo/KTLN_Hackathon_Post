@@ -1,9 +1,10 @@
-import { CustomComboBox } from "../../../../components";
+import { CustomComboBox, TextInput } from "../../../../components";
 import { JobDetailImage } from "../../../../assets/images";
 import { useEffect, useState } from "react";
 
 import RadioButton from "../InputField/RadioButton";
 import CheckBox from "../InputField/CheckBox";
+import CustomeCbbAddress from "../../../../components/Organizer/CustomeCbbAddress";
 
 function HackathonEligibility({ formId, formSubmit, config }) {
   const listRangeTypes = [
@@ -26,23 +27,32 @@ function HackathonEligibility({ formId, formSubmit, config }) {
       min: "",
       max: "",
     },
+    location: "",
   });
 
   function handleSubmit(e) {
     e.preventDefault();
-    const data = inputsValues;
+    const data = { ...inputsValues };
     data.teamRequirement.min = Number(data.teamRequirement.min);
     data.teamRequirement.max =
       data.teamRequirement.max != "" ? Number(data.teamRequirement.max) : null;
     data.participantAge.min = Number(data.participantAge.min);
     data.participantAge.max =
       data.participantAge.max != "" ? Number(data.participantAge.max) : null;
+
+    if (data.location === "Offline")
+      data.location = `${detail}, ${adrSelected.ward}, ${adrSelected.district}, ${adrSelected.province}`;
     formSubmit(data);
   }
 
   const communityTypes = [
     { id: 1, name: "Public" },
     { id: 2, name: "Invite only" },
+  ];
+
+  const locationTypes = [
+    { id: 1, name: "Online" },
+    { id: 2, name: "Offline" },
   ];
 
   const TitleDescription = (title, description) => {
@@ -97,6 +107,73 @@ function HackathonEligibility({ formId, formSubmit, config }) {
         return "From";
     }
   };
+
+  const provinceApi = "https://provinces.open-api.vn/api/";
+  const districtApi = (code) =>
+    `https://provinces.open-api.vn/api/p/${code}?depth=2`;
+  const wardApi = (code) =>
+    `https://provinces.open-api.vn/api/d/${code}?depth=2`;
+  const [provinces, setProvince] = useState([]);
+  const [districts, setDistrict] = useState([]);
+  const [wards, setWard] = useState([]);
+  const [detail, setDetail] = useState("");
+  const [adrSelected, setAdrSelected] = useState({});
+
+  useEffect(() => {
+    fetch(provinceApi)
+      .then((res) => res.json())
+      .then((json) => {
+        setProvince(json);
+        // if (userProfile?.address) {
+        //   const code = Array.from(json).find(
+        //     (item) => item.name === userProfile?.address?.province
+        //   )?.code;
+        //   code &&
+        //     fetch(districtApi(code))
+        //       .then((res) => res.json())
+        //       .then((json) => {
+        //         const code = Array.from(json.districts).find(
+        //           (item) => item.name === userProfile?.address?.district
+        //         )?.code;
+        //         setDistrict(json.districts);
+        //         code &&
+        //           fetch(wardApi(code))
+        //             .then((res) => res.json())
+        //             .then((json) => {
+        //               setWard(json.wards);
+        //             });
+        //       });
+        // } else {
+        //   setDistrict([]);
+        //   setWard([]);
+        // }
+      });
+  }, []);
+
+  const filterProvince = (e) => {
+    fetch(districtApi(e.code))
+      .then((res) => res.json())
+      .then((json) => {
+        setDistrict(json.districts);
+        if (adrSelected.district) adrSelected.district = "";
+        if (adrSelected.ward) adrSelected.ward = "";
+        adrSelected.province = e.name;
+
+        setAdrSelected({ ...adrSelected });
+      });
+  };
+
+  const filterDistrict = (e) => {
+    fetch(wardApi(e.code))
+      .then((res) => res.json())
+      .then((json) => {
+        setWard(json.wards);
+        if (adrSelected.ward) adrSelected.ward = "";
+        adrSelected.district = e.name;
+
+        setAdrSelected({ ...adrSelected });
+      });
+  };
   return (
     <>
       <div>
@@ -135,6 +212,69 @@ function HackathonEligibility({ formId, formSubmit, config }) {
               label="Hackathon Community"
               require
             />
+
+            <div>
+              <RadioButton
+                listItem={locationTypes}
+                name="isRequire"
+                column={1}
+                filterValueChecked={(e) => {
+                  setInputValues({ ...inputsValues, location: e.name });
+                }}
+                label="Location"
+                description={
+                  "Let participants know about the place for organizing your hackathon"
+                }
+                require
+              />
+            </div>
+
+            {inputsValues.location === "Offline" && (
+              <div>
+                <div className="grid grid-cols-2 gap-5">
+                  <div className="">
+                    <CustomeCbbAddress
+                      listItem={provinces}
+                      labelItemSelected={adrSelected.province}
+                      placeHolder={"Select province"}
+                      label={"Province"}
+                      filterValueSelected={filterProvince}
+                    />
+                  </div>
+                  <div className="">
+                    <CustomeCbbAddress
+                      listItem={districts}
+                      labelItemSelected={adrSelected.district}
+                      placeHolder={"Select district"}
+                      label={"District"}
+                      filterValueSelected={filterDistrict}
+                    />
+                  </div>
+                  <div className="">
+                    <CustomeCbbAddress
+                      listItem={wards}
+                      labelItemSelected={adrSelected.ward}
+                      placeHolder={"Select ward"}
+                      label={"Ward"}
+                      filterValueSelected={(e) => {
+                        setAdrSelected((prev) => ({ ...prev, ward: e.name }));
+                      }}
+                    />
+                  </div>
+                  <div className=" ">
+                    <TextInput
+                      name="addressDetail"
+                      value={detail}
+                      onChange={(e) => setDetail(e.target.value)}
+                      type="text"
+                      label="Address Detail"
+                      placeholder="..."
+                      styles="bg-[#f0f5f7]"
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
 
             <div>
               {TitleDescription(

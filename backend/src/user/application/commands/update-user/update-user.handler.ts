@@ -45,6 +45,7 @@ export class UpdateUserHandler implements ICommandHandler<UpdateUserCommand> {
           githubLink: command.props.githubLink,
           address: command.props.address,
           dob: command.props.dob,
+          isActive: command.props.isActive,
         });
         return {
           fullname: profileUpdatedUser.fullname,

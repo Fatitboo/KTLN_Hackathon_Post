@@ -208,6 +208,29 @@ export const updateUserAction = createAsyncThunk(
     }
   }
 );
+
+// update profile seeker
+export const toggleBlockUserAction = createAsyncThunk(
+  "users/toggleBlockUserAction",
+  async (payload, { rejectWithValue, getState, dispatch }) => {
+    try {
+      const user = getState()?.users;
+      const { userAuth } = user;
+
+      console.log(payload.info);
+      const { data } = await customeAxios.post(
+        `${apiPrefixUsers}/update-user/${payload.id}`,
+        payload.info
+      );
+      return data;
+    } catch (error) {
+      if (!error?.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
 //change Password
 export const changePasswordAction = createAsyncThunk(
   "users/changePassword",
@@ -908,6 +931,23 @@ const usersSlices = createSlice({
         state.isSuccessUpd = true;
       }),
       builder.addCase(updateUserAction.rejected, (state, action) => {
+        state.loading = false;
+        state.appErr = action?.payload?.message;
+        state.isSuccessUpd = false;
+      }),
+      // update profile user
+      builder.addCase(toggleBlockUserAction.pending, (state, action) => {
+        state.loading = true;
+        state.appErr = undefined;
+        state.isSuccessUpd = false;
+      }),
+      builder.addCase(toggleBlockUserAction.fulfilled, (state, action) => {
+        state.loading = false;
+        state.userProfile = { ...state.userProfile, ...action?.payload };
+        state.appErr = undefined;
+        state.isSuccessUpd = true;
+      }),
+      builder.addCase(toggleBlockUserAction.rejected, (state, action) => {
         state.loading = false;
         state.appErr = action?.payload?.message;
         state.isSuccessUpd = false;

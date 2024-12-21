@@ -14,7 +14,12 @@ function HackathonSubmissions({ formId, formSubmit }) {
   });
   function handleSubmit(e) {
     e.preventDefault();
-    formSubmit({ submissions: inputValues });
+    const inputField = {
+      ...inputValues,
+      start: new Date(inputValues.start),
+      deadline: new Date(inputValues.deadline),
+    };
+    formSubmit({ submissions: inputField });
   }
 
   const onChange = (type, value) => {

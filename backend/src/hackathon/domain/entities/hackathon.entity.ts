@@ -29,6 +29,8 @@ export class Hackathon {
     public winnersAnnounced: string,
     public prizeCurrency: string,
     public prizes: Prize[],
+    public block: boolean,
+    public location: string,
   ) {}
   setId(id: string) {
     this.id = id;
@@ -63,8 +65,8 @@ class Task {
 
 export class Submission {
   constructor(
-    public start: string,
-    public deadline: string,
+    public start: Date,
+    public deadline: Date,
     public note: string,
     public isUploadFile: boolean,
     public isUploadVideo: boolean,

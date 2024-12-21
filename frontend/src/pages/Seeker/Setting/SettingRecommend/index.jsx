@@ -11,7 +11,7 @@ import { useForm } from "react-hook-form";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import fetchSkillApikey from "../../../../utils/fetchSkillApiKey";
 import { IoIosClose } from "react-icons/io";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const SettingHackathonRecommend = () => {
   const dispatch = useDispatch();
@@ -22,6 +22,8 @@ const SettingHackathonRecommend = () => {
     setValue,
     formState: { errors },
   } = useForm({ mode: "onChange" });
+  const location = useLocation();
+  const { state } = location;
   const onSubmit = (data) => {
     const updateUserProps = {
       updateType: "setting_recommend",
@@ -49,7 +51,9 @@ const SettingHackathonRecommend = () => {
         confirmButtonColor: "#3085d6",
       }).then(async (result) => {
         if (result.isConfirmed) {
-          navigate("/");
+          if (state.isFromLogin) {
+            navigate("/");
+          }
         }
       });
     }

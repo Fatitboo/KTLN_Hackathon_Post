@@ -9,6 +9,6 @@ export interface HackathonRepository {
   findAllProject(id: string, type: string, page: number): Promise<any[]>;
   findById(id: string): Promise<HackathonDocument | null>;
   create(userId: string): Promise<string>;
-  update(id: string, hackathon: Hackathon): Promise<HackathonDocument | null>;
-  delete(id: string): Promise<string>;
+  update(id: string, hackathon: any): Promise<HackathonDocument | null>;
+  delete(userId: string, id: string): Promise<string>;
 }

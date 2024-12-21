@@ -15,6 +15,7 @@ export class UpdateUserCommandProps {
   githubLink?: string;
   dob?: string;
   settingRecommend?: SettingRecommend;
+  isActive?: boolean;
   id: string;
 }
 export class UpdateUserCommand {

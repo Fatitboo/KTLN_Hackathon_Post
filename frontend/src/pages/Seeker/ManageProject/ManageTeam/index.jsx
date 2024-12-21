@@ -137,6 +137,8 @@ function ManageTeam() {
               " dont have account in our Platform. Do you want to invite them?"
             : "Do you want to invite them?",
         confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+        showCancelButton: true,
         icon: "info",
         allowOutsideClick: false,
         confirmButtonColor: "#3085d6",

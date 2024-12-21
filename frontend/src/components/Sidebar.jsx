@@ -81,7 +81,7 @@ function Sidebar({ user }) {
               )}
             >
               <Link
-                to="/Admin/approval-project"
+                to="/Admin/manage-hackathons"
                 onClick={() => dispatch(isActiveSidebarAction("Hackathons"))}
                 className="relative text-sm text-center p-3 flex items-center leading-7 font-normal  capitalize rounded-lg "
               >
@@ -101,7 +101,7 @@ function Sidebar({ user }) {
                 className="relative text-sm text-center p-3 flex items-center leading-7 font-normal  capitalize rounded-lg "
               >
                 <FiUsers className="relative mr-4 ml-4 text-2xl text-center " />
-                Manage Organizer
+                Manage User
               </Link>
             </div>
             {/* <div
@@ -144,7 +144,7 @@ function Sidebar({ user }) {
                 Occupations
               </Link>
             </div> */}
-            <div
+            {/* <div
               className={classNames(
                 isActive === "Reports" ? "bg-[#E9EFFB] text-blue-600" : "",
                 itemStyle
@@ -173,7 +173,7 @@ function Sidebar({ user }) {
                 <BsClockHistory className="relative mr-4 ml-4 text-2xl text-center " />
                 History Transactions
               </Link>
-            </div>
+            </div> */}
             <div
               className={classNames(
                 isActive === "Change password"

@@ -22,28 +22,24 @@ function UserPorfolio() {
     setUProfile({ ...userProfile });
   }, [userProfile]);
   useEffect(() => {
-    dispatch(
-      getUserProfileAction({
-        getType: "all",
-        getBy: "id",
-      })
-    );
-  }, []);
-  const myProject = [
-    {
-      title: "AI DataGraph",
-      description: "Data sharing network for AI model training on Metagraph.",
-      image: "https://via.placeholder.com/150",
-      isWinner: false,
-    },
-    {
-      title: "AutoSight",
-      description:
-        "Earn income while you drive. Autosight is a metaroboth-powered.",
-      image: "https://via.placeholder.com/150",
-      isWinner: true,
-    },
-  ];
+    if (id !== "my-porfolio") {
+      dispatch(
+        getUserProfileAction({
+          getType: "all",
+          getBy: "id",
+          id,
+        })
+      );
+    } else {
+      dispatch(
+        getUserProfileAction({
+          getType: "all",
+          getBy: "id",
+        })
+      );
+    }
+  }, [id]);
+
   return (
     <div>
       {/* Header */}

@@ -40,7 +40,19 @@ export class MongooseProjectRepository implements ProjectRepository {
   async findById(id: string): Promise<ProjectDocument | null> {
     const project = await this.projectModel
       .findById(id)
-      .populate({ path: 'owner', select: '_id email fullname avatar' })
+      .populate([
+        { path: 'owner', select: '_id email fullname avatar' },
+        {
+          path: 'createdBy',
+          model: 'UserDocument',
+          select: '_id email fullname avatar',
+        },
+        {
+          path: 'registeredToHackathon',
+          model: 'HackathonDocument',
+          select: '_id hackathonName hostName thumbnail',
+        },
+      ])
       .exec();
     if (!project) return null;
     return project;

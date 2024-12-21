@@ -290,6 +290,50 @@ export class ProjectController {
       };
     }
   }
+
+  @Post(':projectId/remove-member')
+  async removeMember(
+    @Param('projectId') projectId: string,
+    @Body() body: { hackathonId: string; ownerId: string; memberId: string },
+  ) {
+    const { ownerId, memberId, hackathonId } = body;
+    const project = await this.projectModel.findOne({
+      owner: new Types.ObjectId(ownerId),
+      id: projectId,
+    });
+    if (!project) throw new BadRequestException('Not found project');
+    const hackathon = await this.hackathonModel.findById(hackathonId);
+    if (!hackathon) throw new BadRequestException('Not found hackathon');
+
+    const userMember = await this.userModel.findById(memberId);
+    if (!userMember) throw new BadRequestException('Not found user');
+
+    // remove projects user
+    await this.userModel.findByIdAndUpdate(
+      memberId,
+      {
+        $pull: { projects: projectId },
+      },
+      { new: true },
+    );
+
+    // remove createBy in project
+    await this.projectModel.findByIdAndUpdate(
+      projectId,
+      {
+        $pull: { createdBy: memberId },
+      },
+      { new: true },
+    );
+
+    // change status of registered user => looking for teamate
+    await this.hackathonModel.updateOne(
+      { _id: hackathonId, 'registerUsers.userId': memberId },
+      { $set: { 'registerUsers.$.status': TEAM_STATUS.FINDING_TEAMATE } },
+    );
+
+    return memberId;
+  }
 }
 
 async function sendMailInviteUser(

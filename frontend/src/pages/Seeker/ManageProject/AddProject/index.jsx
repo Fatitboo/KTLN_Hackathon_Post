@@ -1,4 +1,9 @@
-import { useParams, Link, useNavigate } from "react-router-dom";
+import {
+  useParams,
+  Link,
+  useNavigate,
+  useOutletContext,
+} from "react-router-dom";
 import { CustomButton, TextInput } from "../../../../components";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -31,6 +36,8 @@ function AddProject() {
   const [taglineBinding, setTaglineBinding] = useState("");
   const [galaryList, setGalaryList] = useState([]);
   const [listSkillApi, setListSkillApi] = useState([]);
+  const { hackathonId } = useOutletContext();
+
   const [fileThumnail, setFileThumnail] = useState(null);
   const { project, isSuccess } = useSelector((store) => store.projects);
   const [tryoutLinks, setTryoutLinks] = useState([{ id: uuidv4(), name: "" }]);
@@ -72,7 +79,7 @@ function AddProject() {
         id: extractId({ str: projectId }),
         data: pl,
         navigate,
-        path: `/Hackathon-detail/12762/my-project`,
+        path: `/Hackathon-detail/${hackathonId}/my-project`,
       })
     );
   };

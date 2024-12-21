@@ -24,6 +24,12 @@ function ProjectDetail() {
   const getPrpjectDetail = async (id) => {
     dispatch(getProjectSingle(id));
   };
+  const [teammates, setTeammates] = useState([
+    { fullname: "Nguyễn Văn Phát", email: "@Fatitboo" },
+  ]);
+  const [registeredHackathon, setRegisteredHackathon] = useState([
+    { hackathonName: "Ai Hackathon", hostName: "@Google" },
+  ]);
   useEffect(() => {
     getPrpjectDetail(projectId);
   }, [projectId]);
@@ -31,6 +37,8 @@ function ProjectDetail() {
   useEffect(() => {
     if (isSuccess) {
       setItemProject(project);
+      setTeammates(project?.createdBy);
+      setRegisteredHackathon([project?.registeredToHackathon]);
       dispatch(resetSuccessAction());
     }
     console.log("🚀 ~ useEffect ~ project:", project);
@@ -103,9 +111,9 @@ function ProjectDetail() {
                           height="315"
                           src={"https://www.youtube.com/embed/" + id}
                           title="YouTube video player"
-                          frameborder="0"
+                          frameBorder="0"
                           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                          allowfullscreen
+                          allowFullScreen
                         ></iframe>
                         <div className=" text-black text-xl text-center py-2">
                           <p>{i?.caption}</p>
@@ -229,7 +237,91 @@ function ProjectDetail() {
               </div>
             </div>
 
-            <div className="col-span-1"></div>
+            <div className="col-span-1">
+              <div className=" w-full col-span-1 -mt-[250px]">
+                <div className="font-medium text-2xl uppercase mb-4">
+                  register to hackathon
+                </div>
+
+                <div style={{ listStyle: "none", padding: 0 }}>
+                  {registeredHackathon.map((hack, index) => (
+                    <Link
+                      to={`/Hackathon-detail/${hack?._id}/overview`}
+                      key={index}
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "10px",
+                          marginBottom: "10px",
+                        }}
+                      >
+                        <img
+                          src={hack?.thumbnail ?? defaultAvt}
+                          alt="avatar"
+                          style={{
+                            width: "80px",
+                            height: "80px",
+                            borderRadius: "3%",
+                            backgroundColor: "#ccc",
+                            border: "0.04px solid #ccc",
+                          }}
+                        />
+                        <div>
+                          <p style={{ margin: 0, fontSize: "20px" }}>
+                            {hack?.hackathonName}
+                          </p>
+                          <p style={{ margin: 0, color: "#888" }}>
+                            {hack?.hostName}
+                          </p>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+              <div className=" w-full col-span-1 mt-20">
+                <div className="font-medium text-2xl uppercase mb-4">
+                  current teammates
+                </div>
+
+                <div style={{ listStyle: "none", padding: 0 }}>
+                  {teammates.map((teammate, index) => (
+                    <Link
+                      to={`/Seeker-detail/${teammate?._id}/Projects`}
+                      key={index}
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "10px",
+                          marginBottom: "10px",
+                        }}
+                      >
+                        <img
+                          src={teammate?.avatar ?? defaultAvt}
+                          alt="avatar"
+                          style={{
+                            width: "40px",
+                            height: "40px",
+                            borderRadius: "50%",
+                            backgroundColor: "#ccc",
+                          }}
+                        />
+                        <div>
+                          <p style={{ margin: 0 }}>{teammate.fullname}</p>
+                          <p style={{ margin: 0, color: "#888" }}>
+                            {teammate.email}
+                          </p>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -20,12 +20,17 @@ import { GetAllRegisterUsersQuery } from 'src/hackathon/application/queries/get-
 import { GetProjectsQuery } from 'src/hackathon/application/queries/get-projects-hackathon/get-projects.query';
 import { SeedDataHackathonCommand } from 'src/hackathon/application/commands/seed-data-hackathon/seed-data-hackathon.command';
 import { SearchFilterHackathonsQuery } from 'src/hackathon/application/queries/search-filter-hackathons/search-filter-hackathons.query';
+import { InjectModel } from '@nestjs/mongoose';
+import { HackathonDocument } from 'src/hackathon/infrastructure/database/schemas';
+import { Model } from 'mongoose';
 
 @Controller('hackathons')
 export class HackathonController {
   constructor(
     private readonly commandBus: CommandBus,
     private readonly queryBus: QueryBus,
+    @InjectModel(HackathonDocument.name)
+    private readonly hackathonModel: Model<HackathonDocument>,
   ) {}
 
   @Get()
@@ -115,6 +120,17 @@ export class HackathonController {
     );
 
     return result;
+  }
+
+  @Post('by-ids')
+  async getHackathonsByIds(@Body() body: { hackathonLeans: any[] }) {
+    return await this.hackathonModel
+      .find({
+        hackathonIntegrateId: {
+          $in: body.hackathonLeans.map((item) => item.hackathon_id),
+        },
+      })
+      .exec();
   }
 
   @Get('/:id/:type')

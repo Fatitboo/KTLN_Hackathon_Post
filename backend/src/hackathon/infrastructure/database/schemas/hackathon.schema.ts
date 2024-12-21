@@ -39,6 +39,9 @@ export class HackathonDocument {
   tagline: string;
 
   @Prop()
+  hackathonIntegrateId: number;
+
+  @Prop()
   managerMail: string;
 
   @Prop()

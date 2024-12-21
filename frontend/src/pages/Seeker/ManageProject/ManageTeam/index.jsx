@@ -19,6 +19,7 @@ import extractId from "../../../../utils/extractId";
 import baseUrl from "../../../../utils/baseUrl";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { CgClose } from "react-icons/cg";
 
 function ManageTeam() {
   const inputBox = useRef();
@@ -32,7 +33,9 @@ function ManageTeam() {
   const { hackathonId } = useOutletContext();
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const { project, isSuccess } = useSelector((store) => store.projects);
+  const storeData = useSelector((store) => store.users);
 
+  const user = storeData?.userAuth?.user;
   const [teammates, setTeammates] = useState([
     { fullname: "Nguyễn Văn Phát", email: "@Fatitboo" },
   ]);
@@ -177,11 +180,7 @@ function ManageTeam() {
   useEffect(() => {
     if (isSuccess) {
       console.log("🚀 ~ AddProject ~ project:", project);
-      setTeammates((prev) => {
-        const arr = [];
-        arr.push({ ...project?.owner });
-        return arr;
-      });
+      setTeammates(project?.createdBy);
       setValue("teamName", project?.teamName);
 
       dispatch(resetSuccessAction());
@@ -213,121 +212,122 @@ function ManageTeam() {
           />
         </div>
         <div className=" py-5 grid grid-cols-3 gap-20">
-          <div className="mt-4 w-full col-span-2 ">
-            <div className="mb-5">
-              <div className="block text-base font-medium text-gray-700">
-                Invite teammates
-              </div>
-              <div className="text-sm text-[#6F6F6F] italic my-3">
-                Either share the link below privately with your teammates or
-                send an invite link via email
-              </div>
-              <div className="relative ">
-                <div className="flex items-center">
-                  <div
-                    tabIndex={0}
-                    onChange={() => setListSkillApi([])}
-                    className={`relative flex flex-row gap-1 flex-wrap items-center w-full bg-white focus:bg-white focus:border-gray-900 text-base shadow-sm rounded-sm pl-5 py-1 text-gray-900 border border-gray-300 placeholder:text-gray-400 sm:text-base sm:leading-8`}
-                  >
-                    {skills?.map((item, index) => {
-                      return (
-                        <div
-                          key={index}
-                          className="flex flex-row items-center rounded gap-1 bg-gray-100 py-1 px-2 text-sm h-8"
-                        >
-                          <div className="whitespace-nowrap">{item}</div>
+          {project?.owner?._id === user.id ? (
+            <div className="mt-4 w-full col-span-2 ">
+              <div className="mb-5">
+                <div className="block text-base font-medium text-gray-700">
+                  Invite teammates
+                </div>
+                <div className="text-sm text-[#6F6F6F] italic my-3">
+                  Either share the link below privately with your teammates or
+                  send an invite link via email
+                </div>
+                <div className="relative ">
+                  <div className="flex items-center">
+                    <div
+                      tabIndex={0}
+                      onChange={() => setListSkillApi([])}
+                      className={`relative flex flex-row gap-1 flex-wrap items-center w-full bg-white focus:bg-white focus:border-gray-900 text-base shadow-sm rounded-sm pl-5 py-1 text-gray-900 border border-gray-300 placeholder:text-gray-400 sm:text-base sm:leading-8`}
+                    >
+                      {skills?.map((item, index) => {
+                        return (
                           <div
-                            className="cursor-pointer"
-                            onClick={() =>
-                              setSkills(skills.filter((i) => i != item))
-                            }
+                            key={index}
+                            className="flex flex-row items-center rounded gap-1 bg-gray-100 py-1 px-2 text-sm h-8"
                           >
-                            <IoIosClose />
+                            <div className="whitespace-nowrap">{item}</div>
+                            <div
+                              className="cursor-pointer"
+                              onClick={() =>
+                                setSkills(skills.filter((i) => i != item))
+                              }
+                            >
+                              <IoIosClose />
+                            </div>
                           </div>
-                        </div>
-                      );
-                    })}
-                    <div className="flex"></div>
-                    <div className="flex-1 ">
-                      <input
-                        type="text"
-                        ref={inputBox}
-                        placeholder={
-                          "Input email of user you want to add to team."
-                        }
-                        onBlur={(e) => e.stopPropagation()}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className={`min-w-5 w-full block focus:outline-none bg-white  focus:bg-white text-base  rounded-md pr-5 text-gray-900 border-gray-300 placeholder:text-gray-400 sm:text-base sm:leading-8`}
-                      />
-                    </div>
+                        );
+                      })}
+                      <div className="flex"></div>
+                      <div className="flex-1 ">
+                        <input
+                          type="text"
+                          ref={inputBox}
+                          placeholder={
+                            "Input email of user you want to add to team."
+                          }
+                          onBlur={(e) => e.stopPropagation()}
+                          onChange={(e) => setSearchTerm(e.target.value)}
+                          className={`min-w-5 w-full block focus:outline-none bg-white  focus:bg-white text-base  rounded-md pr-5 text-gray-900 border-gray-300 placeholder:text-gray-400 sm:text-base sm:leading-8`}
+                        />
+                      </div>
 
-                    {spin ? (
-                      <svg
-                        className="absolute right-1 animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="white"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="white"
-                          strokeWidth="4"
-                        ></circle>
-                        <path
-                          className="opacity-75"
-                          fill="#cccccc"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                      </svg>
-                    ) : null}
+                      {spin ? (
+                        <svg
+                          className="absolute right-1 animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="white"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="white"
+                            strokeWidth="4"
+                          ></circle>
+                          <path
+                            className="opacity-75"
+                            fill="#cccccc"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          ></path>
+                        </svg>
+                      ) : null}
+                    </div>
+                    <button
+                      onClick={handleCheckMail}
+                      style={{
+                        padding: "8px 10px",
+                        marginLeft: "20px",
+                        backgroundColor: "#f0f0f0",
+                        border: "1px solid #ccc",
+                        borderRadius: "2px",
+                        cursor: "pointer",
+                        width: "170px",
+                      }}
+                    >
+                      Send email
+                    </button>
                   </div>
-                  <button
-                    onClick={handleCheckMail}
+                  <div
+                    className="relative z-100"
                     style={{
-                      padding: "8px 10px",
-                      marginLeft: "20px",
-                      backgroundColor: "#f0f0f0",
-                      border: "1px solid #ccc",
-                      borderRadius: "2px",
-                      cursor: "pointer",
-                      width: "170px",
+                      visibility:
+                        listSkillApi.length === 0 ? "collapse" : "visible",
                     }}
                   >
-                    Send email
-                  </button>
-                </div>
-                <div
-                  className="relative z-100"
-                  style={{
-                    visibility:
-                      listSkillApi.length === 0 ? "collapse" : "visible",
-                  }}
-                >
-                  <div className="border mt-1 rounded overflow-auto absolute w-full max-h-56">
-                    {listSkillApi.map((item, index) => {
-                      return (
-                        <div
-                          onClick={() => {
-                            !skills.includes(item.email) &&
-                              setSkills([...skills, item.email]);
-                            inputBox.current.value = "";
-                            setListSkillApi([]);
-                          }}
-                          key={index}
-                          className={`hover:bg-[#eef1f2] z-20  block focus:outline-none bg-white focus:bg-white text-base shadow-sm py-2 pl-5 pr-5 text-gray-90 placeholder:text-gray-400 sm:text-base sm:leading-8 cursor-pointer`}
-                        >
-                          {item.email}
-                        </div>
-                      );
-                    })}
+                    <div className="border mt-1 rounded overflow-auto absolute w-full max-h-56">
+                      {listSkillApi.map((item, index) => {
+                        return (
+                          <div
+                            onClick={() => {
+                              !skills.includes(item.email) &&
+                                setSkills([...skills, item.email]);
+                              inputBox.current.value = "";
+                              setListSkillApi([]);
+                            }}
+                            key={index}
+                            className={`hover:bg-[#eef1f2] z-20  block focus:outline-none bg-white focus:bg-white text-base shadow-sm py-2 pl-5 pr-5 text-gray-90 placeholder:text-gray-400 sm:text-base sm:leading-8 cursor-pointer`}
+                          >
+                            {item.email}
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* <div className="my-5">
+                {/* <div className="my-5">
                 <p className="mb-2">Secret invite link</p>
                 <div
                   style={{ display: "flex", alignItems: "center", gap: "10px" }}
@@ -357,30 +357,34 @@ function ManageTeam() {
                   </button>
                 </div>
               </div> */}
-            </div>
+              </div>
 
-            <div className="w-[1/3] flex items-center mt-20">
-              <CustomButton
-                // isDisable={loading}
-                title={"Save and continue"}
-                type={"submit"}
-                containerStyles={
-                  "bg-[#3c65f5] focus:bg-[#05264e] w-fit py-2 pl-5 pr-5 rounded flex justify-center items-center text-white mb-3"
-                }
-              />
-              <div
-                onClick={() => {}}
-                className="cursor-pointer text-blue-600 ml-10"
-              >
-                Cancel
+              <div className="w-[1/3] flex items-center mt-20">
+                <CustomButton
+                  // isDisable={loading}
+                  title={"Save and continue"}
+                  type={"submit"}
+                  containerStyles={
+                    "bg-[#3c65f5] focus:bg-[#05264e] w-fit py-2 pl-5 pr-5 rounded flex justify-center items-center text-white mb-3"
+                  }
+                />
+                <div
+                  onClick={() => {}}
+                  className="cursor-pointer text-blue-600 ml-10"
+                >
+                  Cancel
+                </div>
               </div>
             </div>
-          </div>
+          ) : (
+            <></>
+          )}
           <div className="mt-5 w-full col-span-1">
             <div className="font-medium text-base">Current teammates</div>
             <div className="text-sm text-[#6F6F6F] italic my-3">
-              Only the project creator, <strong>Nguyễn Văn Phát</strong>, can
-              remove team members.
+              Only the project creator,{" "}
+              <strong>{project?.owner?.fullname}</strong>, can remove team
+              members.
             </div>
             <div style={{ listStyle: "none", padding: 0 }}>
               {teammates.map((teammate, index) => (
@@ -407,6 +411,11 @@ function ManageTeam() {
                     <p style={{ margin: 0 }}>{teammate.fullname}</p>
                     <p style={{ margin: 0, color: "#888" }}>{teammate.email}</p>
                   </div>
+                  {project?.owner?._id === user.id && (
+                    <div>
+                      <CgClose />
+                    </div>
+                  )}
                 </div>
               ))}
             </div>

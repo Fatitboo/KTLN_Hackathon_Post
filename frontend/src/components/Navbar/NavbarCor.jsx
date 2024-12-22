@@ -13,6 +13,7 @@ import {
   creatHackathonId,
   resetValue,
 } from "../../redux/slices/hackathons/hackathonsSlices";
+import { LogoImage } from "../../assets/images";
 function MenuList({ user, onClick }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -116,13 +117,17 @@ function NavbarCor({ user }) {
     <>
       {(loading || hackathons?.loadingCreate) && <LoadingComponent />}
       <div className="fixed top-0 l-0 r-0 t-0 w-full bg-[#f7fdfd] z-50 shadow">
-        <nav className="container mx-auto flex items-center justify-between p-5">
+        <nav className="container mx-auto flex items-center justify-between py-4">
           <div>
             <Link
               to="/Organizer/dashboard"
               className="text-black font-bold text-xl"
             >
-              <span className="text-[#4880FF]">Hacka</span>dev
+              <div>
+                <div className="text-blue-600 font-bold text-xl">
+                  <img src={LogoImage} alt="" className="" />
+                </div>
+              </div>
             </Link>
           </div>
 
@@ -137,7 +142,7 @@ function NavbarCor({ user }) {
                   onClick={() => {
                     dispatch(creatHackathonId());
                   }}
-                  className="text-sm text-bold text-center font-bold p-3 flex items-center leading-7 rounded-lg "
+                  className="text-sm text-bold text-center font-bold p-2 flex items-center leading-7"
                 >
                   Host a hackathon
                 </Link>
@@ -154,18 +159,20 @@ function NavbarCor({ user }) {
               </div>
               <div className="w-[1px] h-[30px] bg-[#c3c3c3] mr-4"></div>
             </div>
-            {!user?.token ? (
-              <Link to="/user-auth/login">
-                <CustomButton
-                  title="Sign In"
-                  containerStyles="text-blue-600 py-1.5 px-5 focus:outline-none hover:bg-blue-700 hover:text-white rounded-full text-base border border-blue-600"
-                />
-              </Link>
-            ) : (
-              <div>
-                <MenuList user={user} />
-              </div>
-            )}
+            <div className="mt-2">
+              {!user?.email ? (
+                <Link to="/user-auth/login">
+                  <CustomButton
+                    title="Sign In"
+                    containerStyles="text-blue-600 py-1.5 px-5 focus:outline-none hover:bg-blue-700 hover:text-white rounded-full text-base border border-blue-600"
+                  />
+                </Link>
+              ) : (
+                <div>
+                  <MenuList user={user} />
+                </div>
+              )}
+            </div>
           </div>
         </nav>
         {/* {user && !user.isVerify && <div className="bg-red-500 border-l-4 border-yellow-400 p-1">

@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 
-const MultiSelectDropdown = ({ options }) => {
+const MultiSelectDropdown = ({
+  options,
+  setSelectedOptions,
+  selectedOptions,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOptions, setSelectedOptions] = useState(["All"]);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);

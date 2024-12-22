@@ -63,12 +63,12 @@ function Login() {
                 }&email=${encodeURIComponent(registerInfo.email)}`
               );
             }
+          }
+
+          if (userAuth?.user?.isSetPersionalSetting) {
+            navigate("/");
           } else {
-            if (userAuth?.user?.isSetPersionalSetting) {
-              navigate("/");
-            } else {
-              navigate("/setting-recommend", { state: { isFromLogin: true } });
-            }
+            navigate("/setting-recommend", { state: { isFromLogin: true } });
           }
         }
         if (userAuth?.user?.userType.includes("admin")) {

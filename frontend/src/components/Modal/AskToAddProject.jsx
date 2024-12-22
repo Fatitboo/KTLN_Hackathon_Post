@@ -118,15 +118,14 @@ export const AskToAddProject = ({ setopenReport, isAddProject }) => {
       ) : (
         <div>
           <div className="flex ">
-            <div className="flex ">
+            {/* <div className="flex ">
               <CustomButton
                 title="Import from github"
                 containerStyles="bg-[#0b8510] w-[148px] font-medium text-white py-1 px-2 focus:outline-none hover:bg-blue-500 rounded-sm text-sm border border-blue-600"
               />
-            </div>
-            <div className="text-sm font-light ml-5">
-              Save time by importing your project name, tagline, and README from
-              GitHub.
+            </div> */}
+            <div className="text-sm font-light">
+              Please input name of project which you want to create.
             </div>
           </div>
           <form className="mt-4 w-full" onSubmit={handleSubmit(onSubmit)}>

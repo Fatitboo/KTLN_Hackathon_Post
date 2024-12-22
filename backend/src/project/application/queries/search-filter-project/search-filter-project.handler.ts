@@ -2,7 +2,7 @@ import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { SearchFilterProjectsQuery } from './search-filter-project.query';
 import { ProjectDocument } from 'src/project/infrastructure/database/schemas';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 
 @QueryHandler(SearchFilterProjectsQuery)
 export class SearchFilterProjectsHandler
@@ -22,6 +22,7 @@ export class SearchFilterProjectsHandler
       notHadPrizes,
       tags,
       hackathonId,
+      sortOption,
       page = 1,
       limit = 10,
     } = query.props;
@@ -56,8 +57,9 @@ export class SearchFilterProjectsHandler
     }
 
     if (hackathonId) {
-      filter.registeredToHackathon = hackathonId;
+      filter.registeredToHackathon = new Types.ObjectId(hackathonId);
     }
+    console.log('🚀 ~ execute ~ filter:', filter);
 
     const total = await this.projectModel.countDocuments(filter); // Tổng số lượng dự án
     const skip = (page - 1) * limit;

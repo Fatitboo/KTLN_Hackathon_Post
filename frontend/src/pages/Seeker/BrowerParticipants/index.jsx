@@ -12,7 +12,7 @@ import {
 } from "../../../redux/slices/hackathons/hackathonsSlices";
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
 import { LoadingComponent } from "../../../components";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 function BrowerParticipants({ hackathonId }) {
   const { id } = useParams();
@@ -239,9 +239,13 @@ function BrowerParticipants({ hackathonId }) {
               {participants.map((item) => {
                 return (
                   <>
-                    <div className="my-6" key={item?._id}>
+                    <Link
+                      to={`/Seeker-detail/${item?._id}/Projects`}
+                      className="my-6"
+                      key={item?._id}
+                    >
                       <ParticipantItem props={item} />
-                    </div>
+                    </Link>
                   </>
                 );
               })}

@@ -10,36 +10,40 @@ import {
 export class FilterProjectsDto {
   @IsOptional()
   @IsString()
-  searchKeyword?: string; // Tìm kiếm theo tên, tiêu đề hoặc tagline
+  searchKeyword?: string;
 
   @IsOptional()
   @IsBoolean()
-  withDemoVideos?: boolean; // Filter theo video demo
+  withDemoVideos?: boolean;
 
   @IsOptional()
   @IsBoolean()
-  withGallery?: boolean; // Filter theo gallery
+  withGallery?: boolean;
 
   @IsOptional()
   @IsBoolean()
-  winnersOnly?: boolean; // Chỉ hiển thị project có giải thưởng
+  winnersOnly?: boolean;
 
   @IsOptional()
   @IsBoolean()
-  notHadPrizes?: boolean; // Chỉ hiển thị project không có giải thưởng
+  notHadPrizes?: boolean;
 
   @IsOptional()
   @IsArray()
-  tags?: string[]; // Filter theo tags (danh sách)
+  tags?: string[];
 
   @IsOptional()
   @IsString()
-  hackathonId?: string; // Lọc theo hackathon
+  hackathonId?: string;
+
+  @IsOptional()
+  @IsString()
+  sortOption?: string;
 
   @IsOptional()
   @IsNumber()
   @Min(1)
-  page?: number = 1; // Mặc định là trang 1
+  page?: number = 1;
 
   @IsOptional()
   @IsNumber()

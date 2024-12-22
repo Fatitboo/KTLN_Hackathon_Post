@@ -43,7 +43,12 @@ function Sidebar({ user }) {
     dispatch(logoutUserAction(navigate));
     // window.location.href = "/user-auth/login";
   };
-
+  const handleSwitchToSeeker = () => {
+    var getUserAuth = JSON.parse(localStorage.getItem("userInfo"));
+    getUserAuth.user.userType = ["seeker"];
+    localStorage.setItem("userInfo", JSON.stringify(getUserAuth));
+    window.location.href = "/Seeker-detail/my-porfolio/Projects";
+  };
   useEffect(() => {
     if (isSuccess) {
       dispatch(setValueSuccess(false));
@@ -203,84 +208,7 @@ function Sidebar({ user }) {
               </div>
             </div>
           </div>
-        ) : user?.userType?.includes("seeker") ? (
-          <div className="relative w-full l-0 m-0 p-0">
-            <div
-              className={classNames(
-                isActive === "My porfolio" ? "bg-[#E9EFFB] text-blue-600" : "",
-                itemStyle
-              )}
-            >
-              <Link
-                onClick={() => dispatch(isActiveSidebarAction("My porfolio"))}
-                to="/Seeker-detail/my-porfolio/Projects"
-                className="relative text-sm text-center p-3  flex items-center leading-7 font-normal  capitalize rounded-lg "
-              >
-                <LiaHomeSolid className="relative mr-4 ml-4 text-2xl text-center " />
-                My porfolio
-              </Link>
-            </div>
-            <div
-              className={classNames(
-                isActive === "My Profile" ? "bg-[#E9EFFB] text-blue-600" : "",
-                itemStyle
-              )}
-            >
-              <Link
-                onClick={() => dispatch(isActiveSidebarAction("My Profile"))}
-                to="/Seeker/my-profile"
-                className="relative text-sm text-center p-3 flex items-center leading-7 font-normal  capitalize rounded-lg "
-              >
-                <MdOutlineFactCheck className="relative mr-4 ml-4 text-2xl text-center " />
-                Edit Profile
-              </Link>
-            </div>
-            <div
-              className={classNames(
-                isActive === "My Resume" ? "bg-[#E9EFFB] text-blue-600" : "",
-                itemStyle
-              )}
-            >
-              <Link
-                onClick={() => dispatch(isActiveSidebarAction("My Resume"))}
-                to="/Seeker/setting-recommend"
-                className="relative text-sm text-center p-3 flex items-center leading-7 font-normal  capitalize rounded-lg "
-              >
-                <FiUsers className="relative mr-4 ml-4 text-2xl text-center " />
-                Edit recommend
-              </Link>
-            </div>
-
-            <div
-              className={classNames(
-                isActive === "Change password"
-                  ? "bg-[#E9EFFB] text-blue-600"
-                  : "",
-                itemStyle
-              )}
-            >
-              <Link
-                onClick={() =>
-                  dispatch(isActiveSidebarAction("Change password"))
-                }
-                to="/user-auth/change-password"
-                className="relative text-sm text-center p-3 flex items-center leading-7 font-normal  capitalize rounded-lg "
-              >
-                <MdReportGmailerrorred className="relative mr-4 ml-4 text-2xl text-center " />
-                Change password
-              </Link>
-            </div>
-            <div className={itemStyle}>
-              <div
-                onClick={handleLogout}
-                className="cursor-pointer relative text-sm text-center p-3 flex items-center leading-7 font-normal  capitalize rounded-lg "
-              >
-                <AiOutlineLogout className="relative mr-4 ml-4 text-2xl text-center " />
-                Logout
-              </div>
-            </div>
-          </div>
-        ) : (
+        ) : user?.userType?.includes("organizer") ? (
           <div className="relative w-full l-0 m-0 p-0">
             <div
               className={classNames(
@@ -369,13 +297,89 @@ function Sidebar({ user }) {
                 itemStyle
               )}
             >
-              <Link
-                onClick={() => dispatch(isActiveSidebarAction("Find Seeker"))}
-                // to="/Organizer/find-seeker"
+              <div
+                onClick={handleSwitchToSeeker}
                 className="relative text-sm text-center p-3 flex items-center leading-7 font-normal  capitalize rounded-lg "
               >
                 <MdAccessibility className="relative mr-4 ml-4 text-2xl text-center " />
-                Setting
+                Switch to Seeker
+              </div>
+            </div>
+            <div className={itemStyle}>
+              <div
+                onClick={handleLogout}
+                className="cursor-pointer relative text-sm text-center p-3 flex items-center leading-7 font-normal  capitalize rounded-lg "
+              >
+                <AiOutlineLogout className="relative mr-4 ml-4 text-2xl text-center " />
+                Logout
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="relative w-full l-0 m-0 p-0">
+            <div
+              className={classNames(
+                isActive === "My porfolio" ? "bg-[#E9EFFB] text-blue-600" : "",
+                itemStyle
+              )}
+            >
+              <Link
+                onClick={() => dispatch(isActiveSidebarAction("My porfolio"))}
+                to="/Seeker-detail/my-porfolio/Projects"
+                className="relative text-sm text-center p-3  flex items-center leading-7 font-normal  capitalize rounded-lg "
+              >
+                <LiaHomeSolid className="relative mr-4 ml-4 text-2xl text-center " />
+                My porfolio
+              </Link>
+            </div>
+            <div
+              className={classNames(
+                isActive === "My Profile" ? "bg-[#E9EFFB] text-blue-600" : "",
+                itemStyle
+              )}
+            >
+              <Link
+                onClick={() => dispatch(isActiveSidebarAction("My Profile"))}
+                to="/Seeker/my-profile"
+                className="relative text-sm text-center p-3 flex items-center leading-7 font-normal  capitalize rounded-lg "
+              >
+                <MdOutlineFactCheck className="relative mr-4 ml-4 text-2xl text-center " />
+                Edit Profile
+              </Link>
+            </div>
+            <div
+              className={classNames(
+                isActive === "My Resume" ? "bg-[#E9EFFB] text-blue-600" : "",
+                itemStyle
+              )}
+            >
+              <Link
+                onClick={() => dispatch(isActiveSidebarAction("My Resume"))}
+                to="/Seeker/setting-recommend"
+                className="relative text-sm text-center p-3 flex items-center leading-7 font-normal  capitalize rounded-lg "
+              >
+                <FiUsers className="relative mr-4 ml-4 text-2xl text-center " />
+                Edit recommend
+              </Link>
+            </div>
+
+            <div
+              className={classNames(
+                isActive === "Change password"
+                  ? "bg-[#E9EFFB] text-blue-600"
+                  : "",
+                itemStyle
+              )}
+            >
+              <Link
+                onClick={() =>
+                  dispatch(isActiveSidebarAction("Change password"))
+                }
+                to="/user-auth/change-password"
+                className="relative text-sm text-center p-3 flex items-center leading-7 font-normal  capitalize rounded-lg "
+              >
+                <MdReportGmailerrorred className="relative mr-4 ml-4 text-2xl text-center " />
+                Change password
               </Link>
             </div>
             <div className={itemStyle}>

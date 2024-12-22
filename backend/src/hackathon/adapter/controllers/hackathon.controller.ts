@@ -123,15 +123,51 @@ export class HackathonController {
     return result;
   }
 
-  @Post('by-ids')
+  @Post('search/by-ids')
   async getHackathonsByIds(@Body() body: { hackathonLeans: any[] }) {
-    return await this.hackathonModel
+    let recommendHackathons = [];
+
+    if (body.hackathonLeans.length === 0) {
+      recommendHackathons = await this.hackathonModel
+        .find()
+        .sort({ registerUsers: -1 })
+        .limit(10)
+        .exec();
+    } else {
+      recommendHackathons = await this.hackathonModel
+        .find({
+          hackathonIntegrateId: {
+            $in: body.hackathonLeans.map((item) => item.hackathon_id),
+          },
+        })
+        .sort({ registerUsers: -1 })
+        .limit(10)
+        .exec();
+    }
+    const onlines = await this.hackathonModel
       .find({
-        hackathonIntegrateId: {
-          $in: body.hackathonLeans.map((item) => item.hackathon_id),
+        location: {
+          $in: ['Online'],
         },
       })
+      .sort({ registerUsers: -1 })
+      .limit(4)
       .exec();
+    const inPerson = await this.hackathonModel
+      .find({
+        location: {
+          $nin: ['Online'],
+        },
+      })
+      .sort({ registerUsers: -1 })
+      .limit(4)
+      .exec();
+
+    return {
+      recommendHackathons,
+      onlines,
+      inPerson,
+    };
   }
 
   @Get('/:id/:type')

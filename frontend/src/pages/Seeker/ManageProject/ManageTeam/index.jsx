@@ -172,6 +172,68 @@ function ManageTeam() {
     }
   };
 
+  const handleRemoveMember = async (memberId) => {
+    Swal.fire({
+      title: "Do you want to remove!",
+      text: "Do you want to remove this member",
+      confirmButtonText: "OK",
+      cancelButtonText: "Cancel",
+      showCancelButton: true,
+      icon: "warning",
+      allowOutsideClick: false,
+      confirmButtonColor: "#3085d6",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        console.log("🚀 ~ handleRemoveMember ~ isConfirmed:", projectId);
+        await axios
+          .post(
+            `${baseUrl}/api/v1/projects/${extractId({
+              type: "projectId",
+              str: projectId,
+            })}/remove-member`,
+            {
+              hackathonId,
+              ownerId: project?.owner?._id,
+              memberId,
+            }
+          )
+          .then((response) => {
+            const { data } = response;
+            setTeammates((prev) => {
+              return prev.filter((item) => item._id !== data);
+            });
+          })
+          .then(() => {
+            Swal.fire({
+              title: "Remove successfully",
+              text: "Member had removed to the team.",
+              confirmButtonText: "OK",
+              icon: "info",
+              allowOutsideClick: false,
+              confirmButtonColor: "#3085d6",
+            }).then((result) => {
+              if (result.isConfirmed) {
+                return;
+              }
+            });
+          })
+          .catch(() => {
+            Swal.fire({
+              title: "Error",
+              text: "It has error when remove member. Please try again",
+              confirmButtonText: "OK",
+              icon: "info",
+              allowOutsideClick: false,
+              confirmButtonColor: "#3085d6",
+            }).then((result) => {
+              if (result.isConfirmed) {
+                return;
+              }
+            });
+          });
+      }
+    });
+  };
   useEffect(() => {
     if (projectId !== undefined) {
       const prjId = extractId({ type: "projectId", str: projectId });
@@ -395,29 +457,38 @@ function ManageTeam() {
                   style={{
                     display: "flex",
                     alignItems: "center",
+                    justifyContent: "space-between",
                     gap: "10px",
                     marginBottom: "10px",
                   }}
                 >
-                  <img
-                    src={teammate?.avatar ?? defaultAvt}
-                    alt="avatar"
-                    style={{
-                      width: "40px",
-                      height: "40px",
-                      borderRadius: "50%",
-                      backgroundColor: "#ccc",
-                    }}
-                  />
-                  <div>
-                    <p style={{ margin: 0 }}>{teammate.fullname}</p>
-                    <p style={{ margin: 0, color: "#888" }}>{teammate.email}</p>
-                  </div>
-                  {project?.owner?._id === user.id && (
+                  <div className="flex justify-between items-center">
+                    <img
+                      src={teammate?.avatar ?? defaultAvt}
+                      alt="avatar"
+                      style={{
+                        width: "40px",
+                        height: "40px",
+                        borderRadius: "50%",
+                        backgroundColor: "#ccc",
+                      }}
+                    />
                     <div>
-                      <CgClose />
+                      <p style={{ margin: 0 }}>{teammate.fullname}</p>
+                      <p style={{ margin: 0, color: "#888" }}>
+                        {teammate.email}
+                      </p>
                     </div>
-                  )}
+                  </div>
+                  {project?.owner?._id === user.id &&
+                    teammate._id !== project?.owner?._id && (
+                      <div
+                        className="p-2 cursor-pointer"
+                        onClick={() => handleRemoveMember(teammate._id)}
+                      >
+                        <CgClose />
+                      </div>
+                    )}
                 </div>
               ))}
             </div>

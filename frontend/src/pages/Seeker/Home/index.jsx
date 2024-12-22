@@ -18,20 +18,51 @@ import SearchInput from "../../../components/Seeker/SearchInput";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import baseUrl from "../../../utils/baseUrl";
 
 function Home() {
   const storeData = useSelector((store) => store.users);
   const [recommendHackathons, setRecommendHackathons] = useState([]);
+  const [onlines, setOnlines] = useState([]);
+  const [inPersons, setInPersons] = useState([]);
   const user = storeData?.userAuth?.user;
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
 
   const getRecommend = async () => {
-    const { data } = await axios.get(
-      "http://localhost:5001/recommend-cb?user_id=671b64262b605334688d5f77&byModel=hd"
-    );
-    console.log("🚀 ~ getRecommend ~ data:", data);
-    setRecommendHackathons(data);
+    axios
+      .get(
+        `http://localhost:5001/recommend-cb?user_id=${
+          user?.id || "671b64262b605334688d5f77"
+        }&byModel=hd`
+      )
+      .then((response) => {
+        const array = response.data;
+        console.log("🚀 ~ ).then ~ data:", array);
+        setRecommendHackathons(array);
+        axios
+          .post(`${baseUrl}/api/v1/hackathons/search/by-ids`, {
+            hackathonLeans: array,
+          })
+          .then((response) => {
+            const obj = response.data;
+            setRecommendHackathons(obj?.recommendHackathons);
+            setOnlines(obj?.onlines);
+            setInPersons(obj?.inPerson);
+          });
+      })
+      .catch(() => {
+        axios
+          .post(`${baseUrl}/api/v1/hackathons/search/by-ids`, {
+            hackathonLeans: [],
+          })
+          .then((response) => {
+            const obj = response.data;
+            setRecommendHackathons(obj?.recommendHackathons);
+            setOnlines(obj?.onlines);
+            setInPersons(obj?.inPerson);
+          });
+      });
   };
   const handleSearch = () => {
     const data = { searchTerm };
@@ -161,25 +192,26 @@ function Home() {
                 (hackathon, index) => {
                   return (
                     <>
-                      <div className="my-6" key={hackathon.hackathon_id}>
+                      <div className="my-6" key={index}>
                         <Link
                           to={`/Hackathon-detail/${hackathon.hackathon_id}/overview`}
                         >
                           <HackathonItem
-                            isOpen={hackathon.open_state}
-                            id={hackathon.hackathon_id}
-                            startDate={hackathon.start_date}
-                            endDate={hackathon.submission_period_dates}
-                            themes={hackathon.themes}
-                            organization={hackathon.organization_name}
-                            period={hackathon.submission_period_dates}
-                            title={hackathon.title}
+                            id={hackathon?._id}
+                            startDate={hackathon?.submissions?.start}
+                            endDate={hackathon?.submissions?.deadline}
+                            themes={hackathon.hackathonTypes}
+                            organization={hackathon?.hostName}
+                            period={hackathon.period}
                             isExtended={false}
-                            isFeature={hackathon.featured}
-                            location={hackathon.displayed_location}
-                            prizes={hackathon.prize_amount}
-                            participants={hackathon.registrations_count}
-                            imageHackthon={hackathon.img_avt}
+                            title={hackathon?.hackathonName}
+                            isFeature={index % 2 === 0 ? true : false}
+                            location={hackathon.location}
+                            prizes={`${hackathon?.prizeCurrency ?? "$"} ${
+                              hackathon?.prizes[0]?.cashValue ?? 1000
+                            }`}
+                            participants={hackathon?.registerUsers?.length ?? 0}
+                            imageHackthon={hackathon?.thumbnail}
                           />
                         </Link>
                       </div>
@@ -247,6 +279,9 @@ function Home() {
       <></>
       <div className="flex items-center justify-center">
         <CustomButton
+          onClick={() => {
+            navigate("/Seeker/brower-hackathons");
+          }}
           title="View all hackathons"
           containerStyles="bg-blue-600 w-fit font-medium text-white py-2 px-5 focus:outline-none hover:bg-blue-500 rounded-sm text-base border border-blue-600"
         />
@@ -265,27 +300,28 @@ function Home() {
             />
           </div>
           <div className="grid grid-cols-2 max-md:grid-cols-1 gap-5 max-md:gap-1 max-md:px-4 px-60">
-            {(recommendHackathons.filter((i) => i.id !== null) || []).map(
+            {(onlines.filter((i) => i.id !== null) || []).map(
               (hackathon, index) => {
                 return (
                   <>
                     <div className="my-6" key={hackathon.hackathon_id}>
                       <Link to={`/Hackathon-detail/${hackathon.id}/overview`}>
                         <HackathonItem
-                          isOpen={hackathon.open_state}
-                          id={hackathon.hackathon_id}
-                          startDate={hackathon.start_date}
-                          endDate={hackathon.submission_period_dates}
-                          themes={hackathon.themes}
-                          organization={hackathon.organization_name}
-                          period={hackathon.submission_period_dates}
-                          title={hackathon.title}
+                          id={hackathon?._id}
+                          startDate={hackathon?.submissions?.start}
+                          endDate={hackathon?.submissions?.deadline}
+                          themes={hackathon.hackathonTypes}
+                          organization={hackathon?.hostName}
+                          period={hackathon.period}
+                          title={hackathon?.hackathonName}
                           isExtended={false}
-                          isFeature={true}
-                          location={hackathon.displayed_location}
-                          prizes={hackathon.prize_amount}
-                          participants={hackathon.registrations_count}
-                          imageHackthon={hackathon.img_avt}
+                          isFeature={index % 2 === 0 ? true : false}
+                          location={hackathon.location}
+                          prizes={`${hackathon?.prizeCurrency ?? "$"} ${
+                            hackathon?.prizes[0]?.cashValue ?? 1000
+                          }`}
+                          participants={hackathon?.registerUsers?.length ?? 0}
+                          imageHackthon={hackathon?.thumbnail}
                         />
                       </Link>
                     </div>
@@ -306,27 +342,28 @@ function Home() {
             />
           </div>
           <div className="grid grid-cols-2 max-md:grid-cols-1 gap-5 max-md:gap-1 max-md:px-4 px-60">
-            {(recommendHackathons.filter((i) => i.id !== null) || []).map(
+            {(inPersons.filter((i) => i.id !== null) || []).map(
               (hackathon, index) => {
                 return (
                   <>
                     <div className="my-6" key={hackathon.hackathon_id}>
                       <Link to={`/Hackathon-detail/${hackathon.id}/overview`}>
                         <HackathonItem
-                          isOpen={hackathon.open_state}
-                          id={hackathon.hackathon_id}
-                          startDate={hackathon.start_date}
-                          endDate={hackathon.submission_period_dates}
-                          themes={hackathon.themes}
-                          organization={hackathon.organization_name}
-                          period={hackathon.submission_period_dates}
-                          title={hackathon.title}
+                          id={hackathon?._id}
+                          startDate={hackathon?.submissions?.start}
+                          endDate={hackathon?.submissions?.deadline}
+                          themes={hackathon.hackathonTypes}
+                          organization={hackathon?.hostName}
+                          period={hackathon.period}
+                          title={hackathon?.hackathonName}
                           isExtended={false}
-                          isFeature={true}
-                          location={hackathon.displayed_location}
-                          prizes={hackathon.prize_amount}
-                          participants={hackathon.registrations_count}
-                          imageHackthon={hackathon.img_avt}
+                          isFeature={index % 2 === 0 ? true : false}
+                          location={hackathon.location}
+                          prizes={`${hackathon?.prizeCurrency ?? "$"} ${
+                            hackathon?.prizes[0]?.cashValue ?? 1000
+                          }`}
+                          participants={hackathon?.registerUsers?.length ?? 0}
+                          imageHackthon={hackathon?.thumbnail}
                         />
                       </Link>
                     </div>

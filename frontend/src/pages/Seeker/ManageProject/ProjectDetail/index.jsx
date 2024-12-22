@@ -27,9 +27,7 @@ function ProjectDetail() {
   const [teammates, setTeammates] = useState([
     { fullname: "Nguyễn Văn Phát", email: "@Fatitboo" },
   ]);
-  const [registeredHackathon, setRegisteredHackathon] = useState([
-    { hackathonName: "Ai Hackathon", hostName: "@Google" },
-  ]);
+  const [registeredHackathon, setRegisteredHackathon] = useState([]);
   useEffect(() => {
     getPrpjectDetail(projectId);
   }, [projectId]);
@@ -38,9 +36,15 @@ function ProjectDetail() {
     if (isSuccess) {
       setItemProject(project);
       setTeammates(project?.createdBy);
-      setRegisteredHackathon([project?.registeredToHackathon]);
+      setRegisteredHackathon(
+        project?.registeredToHackathon ? [project?.registeredToHackathon] : []
+      );
       dispatch(resetSuccessAction());
     }
+    console.log(
+      "🚀 ~ useEffect ~ project?.registeredToHackathon:",
+      project?.registeredToHackathon
+    );
     console.log("🚀 ~ useEffect ~ project:", project);
   }, [isSuccess]);
 
@@ -49,7 +53,23 @@ function ProjectDetail() {
     txt.innerHTML = html;
     return txt.value;
   };
+  function getQueryParams(url) {
+    // Tách phần query string từ URL
+    const queryString = url.split("?")[1];
+    if (!queryString) return {};
 
+    // Tách từng cặp key=value
+    const queryPairs = queryString.split("&");
+    const queryParams = {};
+
+    // Xử lý từng cặp và lưu vào object
+    queryPairs.forEach((pair) => {
+      const [key, value] = pair.split("=");
+      queryParams[decodeURIComponent(key)] = decodeURIComponent(value || "");
+    });
+
+    return queryParams;
+  }
   return (
     <>
       <div>
@@ -99,9 +119,6 @@ function ProjectDetail() {
               {/* Slide 1: Image */}
               {(item?.galary || []).map((i, index) => {
                 if (i?.url.includes("youtube")) {
-                  const a = i?.url?.split("/");
-                  const cc = a[a.length - 1];
-                  const id = cc?.split("=")[1];
                   return (
                     <SwiperSlide>
                       <div className="flex flex-col items-center">
@@ -109,7 +126,10 @@ function ProjectDetail() {
                           key={index}
                           width={500}
                           height="315"
-                          src={"https://www.youtube.com/embed/" + id}
+                          src={
+                            "https://www.youtube.com/embed/" +
+                            getQueryParams(i?.url)?.v
+                          }
                           title="YouTube video player"
                           frameBorder="0"
                           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -238,49 +258,51 @@ function ProjectDetail() {
             </div>
 
             <div className="col-span-1">
-              <div className=" w-full col-span-1 -mt-[250px]">
-                <div className="font-medium text-2xl uppercase mb-4">
-                  register to hackathon
-                </div>
+              {registeredHackathon.length > 0 && (
+                <div className=" w-full col-span-1 -mt-[250px]">
+                  <div className="font-medium text-2xl uppercase mb-4">
+                    register to hackathon
+                  </div>
 
-                <div style={{ listStyle: "none", padding: 0 }}>
-                  {registeredHackathon.map((hack, index) => (
-                    <Link
-                      to={`/Hackathon-detail/${hack?._id}/overview`}
-                      key={index}
-                    >
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "10px",
-                          marginBottom: "10px",
-                        }}
+                  <div style={{ listStyle: "none", padding: 0 }}>
+                    {registeredHackathon.map((hack, index) => (
+                      <Link
+                        to={`/Hackathon-detail/${hack?._id}/overview`}
+                        key={index}
                       >
-                        <img
-                          src={hack?.thumbnail ?? defaultAvt}
-                          alt="avatar"
+                        <div
                           style={{
-                            width: "80px",
-                            height: "80px",
-                            borderRadius: "3%",
-                            backgroundColor: "#ccc",
-                            border: "0.04px solid #ccc",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "10px",
+                            marginBottom: "10px",
                           }}
-                        />
-                        <div>
-                          <p style={{ margin: 0, fontSize: "20px" }}>
-                            {hack?.hackathonName}
-                          </p>
-                          <p style={{ margin: 0, color: "#888" }}>
-                            {hack?.hostName}
-                          </p>
+                        >
+                          <img
+                            src={hack?.thumbnail ?? defaultAvt}
+                            alt="avatar"
+                            style={{
+                              width: "80px",
+                              height: "80px",
+                              borderRadius: "3%",
+                              backgroundColor: "#ccc",
+                              border: "0.04px solid #ccc",
+                            }}
+                          />
+                          <div>
+                            <p style={{ margin: 0, fontSize: "20px" }}>
+                              {hack?.hackathonName}
+                            </p>
+                            <p style={{ margin: 0, color: "#888" }}>
+                              {hack?.hostName}
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                    </Link>
-                  ))}
+                      </Link>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
               <div className=" w-full col-span-1 mt-20">
                 <div className="font-medium text-2xl uppercase mb-4">
                   current teammates

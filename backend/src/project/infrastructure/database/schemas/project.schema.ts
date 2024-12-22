@@ -61,7 +61,7 @@ export class ProjectDocument {
   @Prop({ type: [UpdateItem] })
   updates: UpdateItem[];
 
-  @Prop({ type: Types.ObjectId, ref: 'UserDocument', required: true })
+  @Prop({ type: Types.ObjectId, ref: 'UserDocument' })
   owner: Types.ObjectId;
 }
 export const ProjectSchema = SchemaFactory.createForClass(ProjectDocument);

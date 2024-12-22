@@ -2,11 +2,12 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Hackathon } from 'src/hackathon/domain/entities/hackathon.entity';
 import { HackathonRepository } from 'src/hackathon/domain/repositories/hackathon.repository';
 import { HackathonDocument } from '../schemas';
-import { Model, Types } from 'mongoose';
+import { Model, PipelineStage, Types } from 'mongoose';
 import { NotFoundException } from '@nestjs/common';
 import { UserDocument } from 'src/user/infrastructure/database/schemas';
 import { ProjectDocument } from 'src/project/infrastructure/database/schemas';
 import { GetAllRegisterUsersQueryProps } from 'src/hackathon/application/queries/get-all-register-users/get-all-register-users.query';
+import { InteractionDocument } from '../schemas/interaction.schema';
 
 export class MongooseHackathonRepository implements HackathonRepository {
   constructor(
@@ -18,6 +19,9 @@ export class MongooseHackathonRepository implements HackathonRepository {
 
     @InjectModel(ProjectDocument.name)
     private readonly projectDocument: Model<ProjectDocument>,
+
+    @InjectModel(InteractionDocument.name)
+    private readonly interactionModel: Model<InteractionDocument>,
   ) {}
 
   async findAllProject(id: string, type: string, page: number): Promise<any[]> {
@@ -48,37 +52,6 @@ export class MongooseHackathonRepository implements HackathonRepository {
   async findAllRegisterUser(
     props: GetAllRegisterUsersQueryProps,
   ): Promise<any> {
-    // const existingHackathon = await this.hackathonModel
-    //   .findById(props.id)
-    //   .populate({
-    //     path: 'registerUsers.userId',
-    //     model: 'UserDocument',
-    //     select: 'email fullname settingRecommend',
-    //   })
-    //   .exec();
-    // if (!existingHackathon.registerUsers) return null;
-    // return existingHackathon.registerUsers;
-    // const registerUsers = existingHackathon.registerUsers;
-    // const rs: any[] = [];
-    // for (let index = 0; index < registerUsers.length; index++) {
-    //   const element = registerUsers[index];
-    //   const uId = element.userId;
-    //   const u = await this.userModel.findById(uId);
-    //   if (!u) continue;
-    //   const timestamp: number = Date.now();
-    //   rs.push({
-    //     userId: u._id.toString(),
-    //     name: u.fullname,
-    //     email: u.email,
-    //     avatar: u.avatar,
-    //     numProjects: u.projects.length,
-    //     numFollows: parseInt(timestamp.toString().slice(-2)),
-    //     numAchiements: parseInt(timestamp.toString().slice(6, 8)),
-    //     settingRecommend: u.settingRecommend,
-    //     status: element.status,
-    //   });
-    // }
-    // return rs;
     const {
       id,
       search,
@@ -96,7 +69,7 @@ export class MongooseHackathonRepository implements HackathonRepository {
         path: 'registerUsers.userId',
         model: 'UserDocument',
         select:
-          'email fullname settingRecommend avatar projects followBy achievement',
+          'email fullname settingRecommend avatar projects followBy achievement _id',
       })
       .lean();
 
@@ -116,7 +89,7 @@ export class MongooseHackathonRepository implements HackathonRepository {
         return false;
       }
       // Kiểm tra status
-      if (status && registerUser.status !== status) {
+      if (status && status.includes(registerUser.status.toString())) {
         return false;
       }
 
@@ -163,9 +136,23 @@ export class MongooseHackathonRepository implements HackathonRepository {
     return hackathons;
   }
 
-  async findById(id: string): Promise<HackathonDocument | null> {
+  async findById(
+    id: string,
+    userId?: string | undefined,
+  ): Promise<HackathonDocument | null> {
     const hackathon = await this.hackathonModel.findById(id).lean().exec();
     if (!hackathon) return null;
+    if (hackathon.hackathonIntegrateId && userId) {
+      const u = await this.userModel.findById(userId).lean().exec();
+      if (u) {
+        await this.interactionModel.create({
+          user_id: new Types.ObjectId(userId),
+          hackathon: hackathon._id,
+          hackathon_id: hackathon.hackathonIntegrateId,
+          interaction_type: 'view',
+        });
+      }
+    }
     return hackathon;
   }
 
@@ -175,9 +162,16 @@ export class MongooseHackathonRepository implements HackathonRepository {
     if (!existingUser) {
       throw new NotFoundException(`User with ID ${userId} not found.`);
     }
+    const max = await this.hackathonModel
+      .findOne({})
+      .sort({ hackathonIntegrateId: -1 }) // Sort by hackathonIntegrateId in descending order
+      .select('hackathonIntegrateId') // Select only the field
+      .lean();
 
+    const nextHackathonIntegrateId = (max?.hackathonIntegrateId || 0) + 1;
     const createHackathon = new this.hackathonModel({
       user: userId,
+      hackathonIntegrateId: nextHackathonIntegrateId,
     });
 
     const hackObj = await createHackathon.save();

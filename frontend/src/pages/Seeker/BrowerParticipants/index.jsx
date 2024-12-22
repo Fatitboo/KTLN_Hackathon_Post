@@ -119,10 +119,11 @@ function BrowerParticipants({ hackathonId }) {
   useEffect(() => {
     if (isSuccess) {
       setParticipants(registerUsers.data);
-      setTotal(registerUsers?.total);
-      setTotalPage(Math.ceil(registerUsers?.total / limit));
+      setTotal(parseInt(registerUsers?.total));
+      setTotalPage(Math.ceil(parseInt(registerUsers?.total) / limit));
       dispatch(resetValue({ key: "isSuccess", value: false }));
     }
+    console.log("🚀 ~ useEffect ~ registerUsers:", registerUsers);
   }, [isSuccess]);
   return (
     <>
@@ -236,17 +237,13 @@ function BrowerParticipants({ hackathonId }) {
               </div>
             </div>
             <div className="mt-8">
-              {participants.map((item) => {
+              {participants.map((item, index) => {
                 return (
-                  <>
-                    <Link
-                      to={`/Seeker-detail/${item?._id}/Projects`}
-                      className="my-6"
-                      key={item?._id}
-                    >
+                  <div className="my-6" key={index}>
+                    <Link to={`/Seeker-detail/${item?.userId._id}/Projects`}>
                       <ParticipantItem props={item} />
                     </Link>
-                  </>
+                  </div>
                 );
               })}
             </div>

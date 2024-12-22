@@ -11,6 +11,6 @@ export class GetHackathonHandler implements IQueryHandler<GetHackathonQuery> {
   ) {}
 
   async execute(query: GetHackathonQuery): Promise<any> {
-    return await this.hackathonRepository.findById(query.id);
+    return await this.hackathonRepository.findById(query.id, query.userId);
   }
 }

@@ -1,3 +1,3 @@
 export class SeedDataHackathonCommand {
-  constructor() {}
+  constructor(public readonly props: { type: string }) {}
 }

@@ -131,7 +131,7 @@ export class HackathonDocument {
   @Prop()
   prizes: Prize[];
 
-  @Prop({ type: Types.ObjectId, ref: 'User' })
+  @Prop({ type: Types.ObjectId, ref: 'UserDocument' })
   user: Types.ObjectId;
 
   @Prop({ default: false })

@@ -9,6 +9,7 @@ import {
   TEAM_STATUS,
 } from 'src/hackathon/infrastructure/database/schemas';
 import { ProjectDocument } from 'src/project/infrastructure/database/schemas';
+import { InteractionDocument } from 'src/hackathon/infrastructure/database/schemas/interaction.schema';
 
 @Injectable()
 export class MongooseUserRepository implements UserRepository {
@@ -19,6 +20,8 @@ export class MongooseUserRepository implements UserRepository {
     private readonly projectModel: Model<ProjectDocument>,
     @InjectModel(HackathonDocument.name)
     private readonly hackathonModel: Model<HackathonDocument>,
+    @InjectModel(InteractionDocument.name)
+    private readonly interactionModel: Model<InteractionDocument>,
   ) {}
 
   async findAll(page: number): Promise<any> {
@@ -101,7 +104,15 @@ export class MongooseUserRepository implements UserRepository {
       existingUser.projects.push(prjObj._id);
       existingHackathon.registedTeams.push(prjObj._id);
     }
-
+    if (existingHackathon.hackathonIntegrateId && userId) {
+      await this.interactionModel.create({
+        user_id: new Types.ObjectId(userId),
+        hackathon: existingHackathon._id,
+        hackathon_id: existingHackathon.hackathonIntegrateId,
+        status: isHadTeam,
+        interaction_type: 'join',
+      });
+    }
     await existingUser.save();
     await existingHackathon.save();
     return {

@@ -99,17 +99,23 @@ export const singleHackathon = createAsyncThunk(
   "hackathons/singleHackathon",
   async (payload, { rejectWithValue, getState, dispatch }) => {
     try {
-      // const user = getState()?.users;
-      // const { userAuth } = user;
-      // // http call
-      // const config = {
-      //     headers: {
-      //         Authorization: `Bearer ${userAuth?.user?.token}`,
-      //         'Content-Type': 'application/json',
-      //     },
-      // };
-      console.log(`${baseUrl}/${apiPrefix}/${payload}`);
-      const { data } = await axios.get(`${baseUrl}/${apiPrefix}/${payload}`);
+      const user = getState()?.users;
+      const { userAuth } = user;
+      // http call
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+      if (userAuth) {
+        console.log("🚀 ~ userAuth:", userAuth);
+        config.params = { userId: userAuth?.user?.id };
+      }
+
+      const { data } = await axios.get(
+        `${baseUrl}/${apiPrefix}/${payload}`,
+        config
+      );
       console.log(data);
       return data;
     } catch (error) {

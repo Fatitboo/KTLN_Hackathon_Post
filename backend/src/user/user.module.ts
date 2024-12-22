@@ -33,6 +33,10 @@ import {
 } from 'src/project/infrastructure/database/schemas';
 import { PROJECT_REPOSITORY } from 'src/project/domain/repositories/project.repository';
 import { MongooseProjectRepository } from 'src/project/infrastructure/database/repositories/mongoose-project.repository';
+import {
+  InteractionDocument,
+  InterationSchema,
+} from 'src/hackathon/infrastructure/database/schemas/interaction.schema';
 @Module({
   imports: [
     CqrsModule,
@@ -43,6 +47,7 @@ import { MongooseProjectRepository } from 'src/project/infrastructure/database/r
       { name: HackathonDocument.name, schema: HackathonSchema },
       { name: UserDocument.name, schema: UserSchema },
       { name: ProjectDocument.name, schema: ProjectSchema },
+      { name: InteractionDocument.name, schema: InterationSchema },
     ]),
   ],
   controllers: [UserController, AuthController],

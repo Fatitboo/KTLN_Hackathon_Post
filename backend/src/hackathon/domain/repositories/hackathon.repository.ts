@@ -7,7 +7,10 @@ export interface HackathonRepository {
   findAll(page: number): Promise<HackathonDocument[]>;
   findAllRegisterUser(props: GetAllRegisterUsersQueryProps): Promise<any>;
   findAllProject(id: string, type: string, page: number): Promise<any[]>;
-  findById(id: string): Promise<HackathonDocument | null>;
+  findById(
+    id: string,
+    userId?: string | undefined,
+  ): Promise<HackathonDocument | null>;
   create(userId: string): Promise<string>;
   update(id: string, hackathon: any): Promise<HackathonDocument | null>;
   delete(userId: string, id: string): Promise<string>;

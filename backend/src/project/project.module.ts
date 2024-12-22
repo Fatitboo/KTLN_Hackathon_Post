@@ -24,6 +24,10 @@ import {
 import { GetProjectRegisteredHackathonHandler } from './application/queries/get-projec-registered-hackathon/get-project-registered-hackathon.handler';
 import { SearchFilterProjectsHandler } from './application/queries/search-filter-project/search-filter-project.handler';
 import { UserModule } from 'src/user/user.module';
+import {
+  InteractionDocument,
+  InterationSchema,
+} from 'src/hackathon/infrastructure/database/schemas/interaction.schema';
 
 @Module({
   imports: [
@@ -33,6 +37,7 @@ import { UserModule } from 'src/user/user.module';
       { name: ProjectDocument.name, schema: ProjectSchema },
       { name: HackathonDocument.name, schema: HackathonSchema },
       { name: UserDocument.name, schema: UserSchema },
+      { name: InteractionDocument.name, schema: InterationSchema },
     ]),
   ],
   controllers: [ProjectController],

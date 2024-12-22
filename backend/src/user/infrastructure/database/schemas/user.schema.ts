@@ -20,6 +20,9 @@ export class UserDocument {
   @Prop({ unique: true, required: true })
   email: string;
 
+  @Prop()
+  username: string;
+
   @Prop({ required: true })
   password: string;
 
@@ -85,6 +88,9 @@ export class UserDocument {
 
   @Prop()
   tokenVerify: string;
+
+  @Prop({ type: Object })
+  achievements: object;
 
   @Prop()
   expiredDateTokenVerify: Date;

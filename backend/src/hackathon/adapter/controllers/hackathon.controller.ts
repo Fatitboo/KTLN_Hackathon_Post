@@ -66,8 +66,8 @@ export class HackathonController {
   }
 
   @Get(':id')
-  async getHackathon(@Param('id') id: string) {
-    return await this.queryBus.execute(new GetHackathonQuery(id));
+  async getHackathon(@Param('id') id: string, @Query('userId') userId: string) {
+    return await this.queryBus.execute(new GetHackathonQuery(id, userId));
   }
 
   @Post(':userId')
@@ -97,8 +97,8 @@ export class HackathonController {
   async getAllRegisterUserHackathon(
     @Param('id') id: string,
     @Query('search') search: string,
-    @Query('specialty') specialty: string,
-    @Query('status') status: string,
+    @Query('specialty') specialty: string[],
+    @Query('status') status: string[],
     @Query('skills') skills: string[],
     @Query('interestedIn') interestedIn: string[],
     @Query('sort') sort: string,
@@ -195,9 +195,11 @@ export class HackathonController {
     return result;
   }
 
-  @Get('seed-data/hackathons')
-  async seedDataHackathon(): Promise<string> {
-    const result = this.commandBus.execute(new SeedDataHackathonCommand());
+  @Get('seed/seed-data/:type')
+  async seedDataHackathon(@Param('type') type: string): Promise<string> {
+    const result = this.commandBus.execute(
+      new SeedDataHackathonCommand({ type }),
+    );
     return result;
   }
 }

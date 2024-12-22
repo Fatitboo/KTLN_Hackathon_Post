@@ -25,6 +25,10 @@ import {
   ProjectDocument,
   ProjectSchema,
 } from 'src/project/infrastructure/database/schemas';
+import {
+  InteractionDocument,
+  InterationSchema,
+} from './infrastructure/database/schemas/interaction.schema';
 
 @Module({
   imports: [
@@ -33,6 +37,7 @@ import {
       { name: HackathonDocument.name, schema: HackathonSchema },
       { name: UserDocument.name, schema: UserSchema },
       { name: ProjectDocument.name, schema: ProjectSchema },
+      { name: InteractionDocument.name, schema: InterationSchema },
     ]),
   ],
   controllers: [HackathonController],

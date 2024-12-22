@@ -23,7 +23,12 @@ function MenuList({ user, onClick }) {
     dispatch(logoutUserAction(navigate));
     // window.location.href = "/user-auth/login";
   };
-
+  const handleSwitchRole = () => {
+    var getUserAuth = JSON.parse(localStorage.getItem("userInfo"));
+    getUserAuth.user.userType.push("organizer");
+    localStorage.setItem("userInfo", JSON.stringify(getUserAuth));
+    window.location.href = "/Organizer/dashboard";
+  };
   return (
     <div>
       <Menu as="div" className="inline-block text-left text-blue-600">
@@ -74,17 +79,17 @@ function MenuList({ user, onClick }) {
               </Menu.Item>
               <Menu.Item>
                 {({ active }) => (
-                  <Link
-                    to={"/Seeker/my-profile"}
+                  <div
+                    onClick={handleSwitchRole}
                     className={`${
                       active ? "bg-blue-500 text-white" : "text-gray-900"
                     } group flex w-full items-center rounded-sm p-2 text-sm`}
                   >
-                    {"Setting"}
-                  </Link>
+                    {"Host Hackathon"}
+                  </div>
                 )}
               </Menu.Item>
-              <Menu.Item>
+              {/* <Menu.Item>
                 {({ active }) => (
                   <Link
                     to={"/Seeker/dashboard"}
@@ -95,7 +100,7 @@ function MenuList({ user, onClick }) {
                     {"Help"}
                   </Link>
                 )}
-              </Menu.Item>
+              </Menu.Item> */}
               <Menu.Item>
                 {({ active }) => (
                   <div

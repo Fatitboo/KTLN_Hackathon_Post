@@ -31,7 +31,8 @@ export class GetUserDetailQueryHandler
       {
         path: 'projects',
         model: 'ProjectDocument',
-        select: 'thumnailImage tagline projectTitle projectNameId _id',
+        select:
+          'thumnailImage tagline projectTitle projectNameId _id registeredToHackathon',
       },
     ]);
     switch (getType) {

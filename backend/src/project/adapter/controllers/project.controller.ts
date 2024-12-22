@@ -11,6 +11,7 @@ import {
   Put,
   Query,
   UseGuards,
+  ConflictException,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Project } from 'src/project/domain/entities/project.entity';
@@ -63,6 +64,34 @@ export class ProjectController {
     return await this.queryBus.execute(
       new SearchFilterProjectsQuery(filterDto),
     );
+  }
+
+  @Post('search-tags')
+  async searchTags(@Body() body: { type: string }) {
+    console.log('🚀 ~ ProjectController ~ searchTags ~ type:', body.type);
+    let result;
+    if (body.type === 'hackathon') {
+      result = await this.hackathonModel.aggregate([
+        { $unwind: '$hackathonTypes' },
+        { $group: { _id: '$hackathonTypes' } },
+        { $project: { _id: 0, value: '$_id', label: '$_id' } },
+      ]);
+    }
+    if (body.type === 'project') {
+      result = await this.projectModel.aggregate([
+        { $unwind: '$builtWith' },
+        { $group: { _id: '$builtWith' } },
+        { $project: { _id: 0, value: '$_id', label: '$_id' } },
+      ]);
+    }
+    if (body.type === 'user') {
+      result = await this.userModel.aggregate([
+        { $unwind: '$settingRecommend.skills' },
+        { $group: { _id: '$settingRecommend.skills' } },
+        { $project: { _id: 0, value: '$_id', label: '$_id' } },
+      ]);
+    }
+    return [{ value: 'All', label: 'All' }, ...result];
   }
 
   @Get(':id')
@@ -228,7 +257,6 @@ export class ProjectController {
     const existingHackathon = await this.hackathonModel.findById(hackathonId);
     if (!existingHackathon)
       throw new BadRequestException('Not found hackathon');
-
     await Promise.all(
       emails.map(async (email) => {
         const user = await this.userModel.findOne({ email });
@@ -270,6 +298,20 @@ export class ProjectController {
     if (!existingHackathon)
       throw new BadRequestException('Not found hackathon');
     const userId = existingUser._id.toString();
+
+    // check number of team
+    const currentNum = project.createdBy.length;
+    let isOk = true;
+    const teamRequirement = existingHackathon.teamRequirement;
+    if (teamRequirement) {
+      if (currentNum >= teamRequirement.max && teamRequirement.isRequire) {
+        isOk = false;
+      }
+    }
+    if (!isOk)
+      throw new ConflictException(
+        'This team is full. Please ask another team to join. ',
+      );
     /**
      * check status
      * isRegister to this Hackathon
@@ -341,8 +383,8 @@ export class ProjectController {
   ) {
     const { ownerId, memberId, hackathonId } = body;
     const project = await this.projectModel.findOne({
-      owner: new Types.ObjectId(ownerId),
-      id: projectId,
+      owner: ownerId,
+      _id: new Types.ObjectId(projectId),
     });
     if (!project) throw new BadRequestException('Not found project');
     const hackathon = await this.hackathonModel.findById(hackathonId);
@@ -355,7 +397,7 @@ export class ProjectController {
     await this.userModel.findByIdAndUpdate(
       memberId,
       {
-        $pull: { projects: projectId },
+        $pull: { projects: new Types.ObjectId(projectId) },
       },
       { new: true },
     );
@@ -364,7 +406,7 @@ export class ProjectController {
     await this.projectModel.findByIdAndUpdate(
       projectId,
       {
-        $pull: { createdBy: memberId },
+        $pull: { createdBy: new Types.ObjectId(memberId) },
       },
       { new: true },
     );

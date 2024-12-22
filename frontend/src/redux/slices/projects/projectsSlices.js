@@ -14,8 +14,20 @@ export const getAllProjects = createAsyncThunk(
         limit: 10,
       };
       if (payload.searchKeyword) params.searchKeyword = payload.searchKeyword;
+      if (payload.hackathonId) params.hackathonId = payload.hackathonId;
       if (payload.page) params.page = payload.page;
       if (payload.limit) params.limit = payload.limit;
+      if (payload.withDemoVideos)
+        params.withDemoVideos = payload.withDemoVideos;
+      if (payload.withGallery) params.withGallery = payload.withGallery;
+      if (payload.sortOption) params.sortOption = payload.sortOption;
+      if (payload.selectedTags) {
+        if (payload.selectedTags[0] === "All") {
+          params.tags = [];
+        } else {
+          params.tags = payload.selectedTags;
+        }
+      }
       // http call
       const config = {
         headers: {
@@ -29,6 +41,24 @@ export const getAllProjects = createAsyncThunk(
         config
       );
       console.log("🚀 ~ data:", data);
+      return data;
+    } catch (error) {
+      if (!error?.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
+//get all projects
+export const getAllTags = createAsyncThunk(
+  "project/getAllTags",
+  async (payload, { rejectWithValue, getState, dispatch }) => {
+    try {
+      const { data } = await axios.post(`${baseUrl}/${apiPrefix}/search-tags`, {
+        type: "project",
+      });
       return data;
     } catch (error) {
       if (!error?.response) {
@@ -114,7 +144,7 @@ export const createProject = createAsyncThunk(
         config
       );
       if (payload.navigate) {
-        payload.navigate(`/Seeker/project/${data?.projectId}/edit`);
+        payload.navigate(`/Seeker/project/manage-project/${data?.projectId}`);
       }
       return data;
     } catch (error) {
@@ -402,6 +432,7 @@ const projectsSlices = createSlice({
     loadingCR: false,
     projectsAdmin: [],
     projectparticipants: [],
+    tags: [],
   },
   reducers: {
     setValueSuccess: (state, action) => {
@@ -429,6 +460,18 @@ const projectsSlices = createSlice({
         state.loading = false;
         state.appErr = action?.payload?.message;
         state.isSuccess = false;
+      }),
+      //get all projects
+      builder.addCase(getAllTags.pending, (state, action) => {
+        state.loading = true;
+      }),
+      builder.addCase(getAllTags.fulfilled, (state, action) => {
+        state.loading = false;
+        state.tags = action?.payload;
+      }),
+      builder.addCase(getAllTags.rejected, (state, action) => {
+        state.loading = false;
+        state.appErr = action?.payload?.message;
       }),
       //get all projects user
       builder.addCase(getAllProjectsUser.pending, (state, action) => {

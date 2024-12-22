@@ -47,13 +47,27 @@ const CardProject = ({
               );
             })}
           </div>
-          <div className="flex items-center text-gray-500 text-sm">
-            <div className="mr-3 flex items-center">
-              <BsFillHeartFill className="h-3"></BsFillHeartFill>
-              {votes}
+          <div className=" mt-4 flex justify-between p-2 bg-gray-100 align-bottom">
+            <div className="flex -space-x-2 ">
+              <img
+                className="w-6 h-6 rounded-full border-2 border-white"
+                src={imgUser}
+                alt="User 1"
+              />
+              <img
+                className="w-6 h-6 rounded-full border-2 border-white"
+                src={imgUser}
+                alt="User 2"
+              />
             </div>
-            <div className="flex items-center">
-              <BiCommentDetail className="h-3" /> {comments}
+            <div className="flex items-center text-gray-500 text-sm">
+              <div className="mr-3 flex items-center">
+                <BsFillHeartFill className="h-3"></BsFillHeartFill>
+                {votes}
+              </div>
+              <div className="flex items-center">
+                <BiCommentDetail className="h-3" /> {comments}
+              </div>
             </div>
           </div>
         </div>

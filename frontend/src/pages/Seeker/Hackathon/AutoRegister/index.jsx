@@ -47,22 +47,57 @@ function AutoRegisterToHackathon() {
       })
       .catch((e) => {
         const { data } = e.response;
+        if (
+          data.message === "This team is full. Please ask another team to join."
+        ) {
+          Swal.fire({
+            title: "This team is full.",
+            text: data.message,
+            confirmButtonText: "OK",
+            icon: "info",
+            allowOutsideClick: false,
+            confirmButtonColor: "#3085d6",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              localStorage.removeItem("registerInfo");
 
-        Swal.fire({
-          title: data.message,
-          text: "You had registered to this Hackathon.",
-          confirmButtonText: "OK",
-          icon: "info",
-          allowOutsideClick: false,
-          confirmButtonColor: "#3085d6",
-        }).then((result) => {
-          if (result.isConfirmed) {
-            localStorage.removeItem("registerInfo");
+              navigate(`/Seeker/brower-hackathons`);
+            }
+          });
+          return;
+        } else if (
+          data.message === "This user has join a team in this Hackathon"
+        ) {
+          Swal.fire({
+            title: data.message,
+            text: "You had registered to this Hackathon.",
+            confirmButtonText: "OK",
+            icon: "info",
+            allowOutsideClick: false,
+            confirmButtonColor: "#3085d6",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              localStorage.removeItem("registerInfo");
 
-            navigate(`/Seeker/brower-hackathons`);
-          }
-        });
-        return;
+              navigate(`/Seeker/brower-hackathons`);
+            }
+          });
+          return;
+        } else {
+          Swal.fire({
+            title: "Error",
+            text: "Has error when register. Please try again",
+            confirmButtonText: "OK",
+            icon: "info",
+            allowOutsideClick: false,
+            confirmButtonColor: "#3085d6",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              navigate(`/Seeker/brower-hackathons`);
+            }
+          });
+          return;
+        }
       });
   };
   useEffect(() => {

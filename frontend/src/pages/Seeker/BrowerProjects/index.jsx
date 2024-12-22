@@ -12,6 +12,7 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getAllProjects,
+  getAllTags,
   resetValue,
 } from "../../../redux/slices/projects/projectsSlices";
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
@@ -24,29 +25,40 @@ function BrowerProjects() {
   const [total, setTotal] = useState(10);
   const [totalPages, setTotalPage] = useState(1);
   let [currentProjects, setCurrentProjects] = useState([]);
-
-  let { loading, projects, isSuccess } = useSelector((state) => state.projects);
+  const [selectedTags, setSelectedTags] = useState(["All"]);
+  const [withDemoVideos, setWithDemoVideos] = useState(false);
+  const [withGallery, setWithGallery] = useState(false);
+  const [sortOption, setSortOption] = useState("Newest");
+  let { loading, projects, isSuccess, tags } = useSelector(
+    (state) => state.projects
+  );
   const handlePageChange = (newPage) => {
     if (newPage > 0 && newPage <= totalPages) {
       setPage(newPage);
     }
   };
+
   const handleSearch = () => {
-    dispatch(getAllProjects({ page, limit: 10, searchKeyword: searchTerm }));
+    dispatch(
+      getAllProjects({
+        page,
+        limit: 10,
+        searchKeyword: searchTerm,
+        withDemoVideos,
+        withGallery,
+        selectedTags,
+        sortOption,
+      })
+    );
   };
+
   useEffect(() => {
-    dispatch(getAllProjects({ page, limit: 10 }));
-  }, [page]);
-  const options = [
-    { value: "All", label: "All" },
-    { value: "Beginner Friendly", label: "Beginner Friendly" },
-    { value: "Social Good", label: "Social Good" },
-    { value: "Machine Learning/AI", label: "Machine Learning/AI" },
-    { value: "Open Ended", label: "Open Ended" },
-    { value: "Education", label: "Education" },
-    { value: "More 1", label: "More 1" },
-    { value: "More 2", label: "More 2" },
-  ];
+    handleSearch();
+  }, [page, withDemoVideos, withGallery, selectedTags, sortOption]);
+
+  useEffect(() => {
+    dispatch(getAllTags());
+  }, []);
 
   useEffect(() => {
     if (isSuccess) {
@@ -57,6 +69,16 @@ function BrowerProjects() {
     }
     console.log("🚀 ~ useEffect ~ projects:", projects);
   }, [isSuccess]);
+
+  const clearFilters = () => {
+    setSearchTerm("");
+    setSelectedTags([]);
+    setWithDemoVideos(false);
+    setWithGallery(false);
+    setSortOption("Newest");
+    setPage(1); // Reset về trang đầu tiên
+  };
+
   return (
     <>
       {loading && <LoadingComponent />}
@@ -85,10 +107,13 @@ function BrowerProjects() {
               </div>
               <div className=" max-md:mt-1 mt-5">
                 <div className="flex items-center">
-                  <div className="text-blue-600">Clear filters</div>
-                  <div className="ml-6 rounded-[3px] bg-blue-50 px-3 py-1 text-blue-700 text-sm my-1 mr-2">
-                    {2}
+                  <div
+                    className="text-blue-600 cursor-pointer"
+                    onClick={clearFilters}
+                  >
+                    Clear filters
                   </div>
+                  <div className="ml-6 rounded-[3px] bg-blue-50 px-3 py-1 text-blue-700 text-sm my-1 mr-2"></div>
                 </div>
                 <div className="grid grid-cols-4 max-md:grid-cols-1 text-sm text-gray-600 font-normal">
                   <div className="mb-4 ">
@@ -96,11 +121,21 @@ function BrowerProjects() {
                       Projects include
                     </div>
                     <label className="my-2 flex items-center space-x-2">
-                      <input type="checkbox" className="form-checkbox" />
+                      <input
+                        type="checkbox"
+                        className="form-checkbox"
+                        checked={withDemoVideos}
+                        onChange={() => setWithDemoVideos(!withDemoVideos)}
+                      />
                       <span>With demo videos</span>
                     </label>
                     <label className="my-2 flex items-center space-x-2">
-                      <input type="checkbox" className="form-checkbox" />
+                      <input
+                        type="checkbox"
+                        className="form-checkbox"
+                        checked={withGallery}
+                        onChange={() => setWithGallery(!withGallery)}
+                      />
                       <span>With a gallery</span>
                     </label>
                   </div>
@@ -116,48 +151,61 @@ function BrowerProjects() {
                     </label>
                     <label className="my-2 flex items-center space-x-2">
                       <input type="checkbox" className="form-checkbox" />
-                      <span>Not had prizes</span>
+                      <span>Joined Hacakthon</span>
                       <span className="w-2 h-2 rounded-full bg-teal-500"></span>
-                    </label>
-                  </div>
-                  {/* Length Section */}
-                  <div className="mb-4">
-                    <div className=" font-semibold mb-2 mt-5">Projects own</div>
-                    <label className="my-2 flex items-center space-x-2">
-                      <input type="checkbox" className="form-checkbox" />
-                      <span>My projects</span>
-                    </label>
-                    <label className="my-2 flex items-center space-x-2">
-                      <input type="checkbox" className="form-checkbox" />
-                      <span>My friend's projects</span>
                     </label>
                   </div>
 
                   {/* Interest Tags Section */}
-                  <div className="mb-4">
-                    <div className=" font-semibold mb-2 mt-5">Tags</div>
-                    <MultiSelectDropdown options={options} />
+                  <div className="mt-3">
+                    <div className="mb-4 flex items-center ">
+                      <div className=" font-semibold mr-3 ">Tags</div>
+                      <MultiSelectDropdown
+                        options={tags}
+                        setSelectedOptions={setSelectedTags}
+                        selectedOptions={selectedTags}
+                      />
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {(
+                        selectedTags ?? [
+                          "adobe",
+                          "c#",
+                          "illustrator",
+                          "javascript",
+                        ]
+                      ).map((item, index) => {
+                        return (
+                          <>
+                            <span
+                              index={index}
+                              className="bg-gray-200 px-4 py-1 text-sm "
+                            >
+                              {item}
+                            </span>
+                          </>
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
               </div>
               {/* Title */}
               <div className="flex justify-between items-center text-sm mt-2">
                 <dic className="text-gray-600">
-                  Showing 1 - 24 in {9387} projects
+                  Showing {currentProjects.length ?? 0} in {total} projects
                 </dic>
                 <div className="flex items-center">
                   <div className="mr-3 font-medium">Sort:</div>
                   <div className="flex items-center border border-gray-300 p-3">
                     <CustomButton
+                      onClick={() => setSortOption("Newest")}
                       title="Newest"
                       containerStyles="text-blue-600 mb-[2px] font-medium px-2 hover:text-blue-800 text-sm bg-transparent"
                     />
                     <CustomButton
                       title="Popular"
-                      containerStyles="text-blue-600 mb-[2px] font-medium px-2 hover:text-blue-800 text-sm bg-transparent"
-                    />
-                    <CustomButton
-                      title="Trending"
+                      onClick={() => setSortOption("Popular")}
                       containerStyles="text-blue-600 mb-[2px] font-medium px-2 hover:text-blue-800 text-sm bg-transparent"
                     />
                   </div>

@@ -79,7 +79,11 @@ function AddProject() {
         id: extractId({ str: projectId }),
         data: pl,
         navigate,
-        path: `/Hackathon-detail/${hackathonId}/my-project`,
+        path: projectId?.includes("!imptHktid_")
+          ? `/Seeker/project/manage-project/${extractId({
+              str: projectId,
+            })}/submit`
+          : "/Seeker-detail/my-porfolio/Projects",
       })
     );
   };

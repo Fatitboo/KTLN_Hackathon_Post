@@ -6,8 +6,8 @@ import HackathonInfo from "../../../components/Seeker/HackathonInfo";
 import CardProject from "../../../components/Seeker/CardProject";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserProfileAction } from "../../../redux/slices/users/usersSlices";
-import { AskToAddProject } from "../../../components/Modal/askToAddProject";
 import HackathonItem from "../../../components/Seeker/HackathonItem";
+import { AskToAddProject } from "../../../components/Modal/AskToAddProject";
 
 function UserPorfolio() {
   const { id, type } = useParams();
@@ -20,6 +20,7 @@ function UserPorfolio() {
   const { userProfile, loading, appErr, isSuccess, isSuccessUpd } = storeData;
   useEffect(() => {
     setUProfile({ ...userProfile });
+    console.log("🚀 ~ useEffect ~ userProfile:", userProfile);
   }, [userProfile]);
   useEffect(() => {
     if (id !== "my-porfolio") {
@@ -39,7 +40,9 @@ function UserPorfolio() {
       );
     }
   }, [id]);
-
+  const handleEditProject = (id) => {
+    navigate(`/Seeker/project/manage-project/${id}/manage-team`);
+  };
   return (
     <div>
       {/* Header */}
@@ -160,17 +163,31 @@ function UserPorfolio() {
                       }  max-w-60:grid-cols-3 max-md:grid-cols-1 gap-6`}
                     >
                       {(uProfile?.projects || []).map((card, index) => (
-                        <CardProject
-                          key={index}
-                          id={card._id}
-                          title={card?.projectTitle}
-                          description={card?.tagline}
-                          image={card?.thumnailImage ?? imgDefaultProject}
-                          imgUser={defaultAvt}
-                          isWinner={card.isWinner}
-                          votes={card.votes}
-                          comments={card.comments}
-                        />
+                        <div className="relative group">
+                          <CardProject
+                            key={index}
+                            id={card._id}
+                            title={card?.projectTitle}
+                            description={card?.tagline}
+                            image={card?.thumnailImage ?? imgDefaultProject}
+                            imgUser={defaultAvt}
+                            isWinner={true}
+                            votes={card.votes}
+                            comments={card.comments}
+                          />
+                          <button
+                            className="absolute top-3 right-3 hidden group-hover:flex items-center bg-blue-600 text-white px-2 py-1 rounded shadow-md text-sm"
+                            onClick={() =>
+                              handleEditProject(
+                                card?.registeredToHackathon
+                                  ? `!imptHktid_${card?.registeredToHackathon}_${card?._id}`
+                                  : card._id
+                              )
+                            }
+                          >
+                            Edit
+                          </button>
+                        </div>
                       ))}
                     </div>
                   </div>

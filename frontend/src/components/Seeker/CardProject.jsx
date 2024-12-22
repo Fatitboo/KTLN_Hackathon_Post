@@ -10,6 +10,7 @@ const CardProject = ({
   image,
   isWinner,
   imgUser,
+  member,
   votes,
   comments,
   id,
@@ -35,16 +36,16 @@ const CardProject = ({
         </div>
         <div className=" mt-4 flex justify-between p-2 bg-gray-100 align-bottom">
           <div className="flex -space-x-2 ">
-            <img
-              className="w-6 h-6 rounded-full border-2 border-white"
-              src={imgUser}
-              alt="User 1"
-            />
-            <img
-              className="w-6 h-6 rounded-full border-2 border-white"
-              src={imgUser}
-              alt="User 2"
-            />
+            {member.map((item) => {
+              return (
+                <img
+                  key={item._id}
+                  className="w-6 h-6 rounded-full border-2 border-white"
+                  src={item.avatar ?? imgUser}
+                  alt="User 1"
+                />
+              );
+            })}
           </div>
           <div className="flex items-center text-gray-500 text-sm">
             <div className="mr-3 flex items-center">

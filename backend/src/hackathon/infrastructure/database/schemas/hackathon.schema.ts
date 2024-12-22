@@ -14,6 +14,7 @@ export enum TEAM_STATUS {
   HAD_TEAM = 'had_team',
   WORKING_SOLO = 'working_solo',
   FINDING_TEAMATE = 'finding_teamate',
+  BLOCK = 'block',
 }
 
 export class RegisterUser {

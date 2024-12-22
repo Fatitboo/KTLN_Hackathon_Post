@@ -24,6 +24,7 @@ import {
 import { GetProjectRegisteredHackathonHandler } from './application/queries/get-projec-registered-hackathon/get-project-registered-hackathon.handler';
 import { SearchFilterProjectsHandler } from './application/queries/search-filter-project/search-filter-project.handler';
 import { UserModule } from 'src/user/user.module';
+import { GetMembersProjectHandler } from './application/queries/get-member-project/get-member-project.handler';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { UserModule } from 'src/user/user.module';
   providers: [
     { provide: PROJECT_REPOSITORY, useClass: MongooseProjectRepository },
     GetProjectHandler,
+    GetMembersProjectHandler,
     GetProjectsHandler,
     CreateProjectHandler,
     UpdateProjectHandler,

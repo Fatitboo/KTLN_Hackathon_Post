@@ -29,8 +29,8 @@ span {
 
 /* #18171D #212121 */
 li:hover {
-  font-weight: 700;
-  color: #1676cc;
+  /* font-weight: 700; */
+  /* color: #1676cc; */
 }
 
 body {
@@ -183,8 +183,8 @@ body {
     @apply text-xl;
   }
   li:hover {
-    @apply text-current;
-    @apply font-medium;
+    /* @apply text-current;
+    @apply font-medium; */
   }
   ol {
     list-style: decimal;

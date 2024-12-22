@@ -25,6 +25,7 @@ import {
   ProjectDocument,
   ProjectSchema,
 } from 'src/project/infrastructure/database/schemas';
+import { AwardHackathonHandler } from './application/commands/awarding-hackathon/awarding-hackathon.handler';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import {
     GetHackathonsHandler,
     GetProjectsHandler,
     GetAllRegisterUsersHandler,
+    AwardHackathonHandler,
     SeedDataHackathonHandler,
     SearchFilterHackathonsHandler,
     CreateHackathonHandler,

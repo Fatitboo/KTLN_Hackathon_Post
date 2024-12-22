@@ -19,6 +19,24 @@ export class MongooseHackathonRepository implements HackathonRepository {
     @InjectModel(ProjectDocument.name)
     private readonly projectDocument: Model<ProjectDocument>,
   ) {}
+  async award(hackathonId: string, hackathon: any) {
+    const updatePrizes = Array.of(hackathon.prizes).map((item) => {
+      if (item.winnerList)
+        return {
+          ...item,
+          winnerList: Array.of(item.winnerList).map((i) => i.id),
+        };
+      else return { ...item };
+    });
+
+    await this.hackathonModel
+      .findByIdAndUpdate(
+        hackathonId,
+        { prizes: updatePrizes },
+        { new: true, useFindAndModify: false },
+      )
+      .exec();
+  }
 
   async findAllProject(id: string, type: string, page: number): Promise<any[]> {
     const existingHackathon = await this.hackathonModel.findById(id).exec();
@@ -29,7 +47,11 @@ export class MongooseHackathonRepository implements HackathonRepository {
     for (let index = 0; index < submittions.length; index++) {
       const element = submittions[index];
       const pId = element._id;
-      const p = await this.projectDocument.findById(pId);
+      const p = await this.projectDocument.findById(pId).populate({
+        path: 'createdBy',
+        model: 'UserDocument',
+        select: '_id fullname avatar',
+      });
       if (!p) continue;
       const owner = await this.userModel.findById(p.owner);
       if (!owner) continue;
@@ -37,9 +59,12 @@ export class MongooseHackathonRepository implements HackathonRepository {
         id: p._id,
         projectTitle: p.projectTitle,
         thumnailImage: p.thumnailImage,
+        teamName: p.teamName ?? `Team ${p.owner.toString().substring(0, 5)}`,
         tagLine: p.tagline,
         owner: { uId: owner._id, name: owner.fullname, avatar: owner.avatar },
-        createdBy: p.createdByUsername,
+        createdByUsername: p.createdByUsername,
+        createdBy: p.createdBy,
+        block: p.block,
       });
     }
     return rs;

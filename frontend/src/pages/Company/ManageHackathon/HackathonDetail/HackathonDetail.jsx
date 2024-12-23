@@ -298,7 +298,14 @@ function HackathonCorDetail() {
   };
 
   const handleSaveWinner = () => {
-    console.log("DÔ");
+    const updateHackathon = currentHackathon.prizes.map((item) => {
+      if (item.winnerList)
+        return {
+          ...item,
+          winnerList: item.winnerList.map((i) => i.id),
+        };
+      else return { ...item };
+    });
     fetch(`http://localhost:3000/api/v1/hackathons/awarding/${id}`, {
       method: "POST",
       headers: {
@@ -306,7 +313,7 @@ function HackathonCorDetail() {
       },
       body: JSON.stringify({
         hackathon: {
-          winnerList: currentHackathon.winnerList,
+          prizes: updateHackathon,
         },
       }),
     })
@@ -597,7 +604,13 @@ function HackathonCorDetail() {
                       image={card.thumnailImage}
                       imgUser={defaultAvt}
                       member={card.createdBy}
-                      isWinner={Math.random() < 0.5}
+                      isWinner={currentHackathon.prizes
+                        .reduce(
+                          (acc, cur) =>
+                            cur.winnerList ? acc.concat(cur.winnerList) : acc,
+                          []
+                        )
+                        .includes(card.id)}
                       votes={Math.floor(Math.random() * 21)}
                       comments={Math.floor(Math.random() * 11)}
                     />
@@ -676,9 +689,7 @@ function HackathonCorDetail() {
               onClick={() => {
                 setSelectTeam([]);
                 setSelectPrize(null);
-                currentHackathon?.prizes?.map((item) => {
-                  item.winnerList = null;
-                });
+                setCurrentHackathon(hackathon);
                 setModal(false);
               }}
             >
@@ -730,10 +741,14 @@ function HackathonCorDetail() {
                       {item?.winnerList?.map((i) => {
                         return (
                           <div className="relative group ">
-                            <TeamProjectSmall props={i} />
+                            <TeamProjectSmall
+                              props={projectGallery.find(
+                                (proj) => proj.id == i
+                              )}
+                            />
                             <div
                               onClick={() => {
-                                let list = item.winnerList;
+                                let list = [...item.winnerList];
                                 if (list.length === 1) list = null;
                                 else list.splice(list.indexOf(i), 1);
                                 setCurrentHackathon({
@@ -764,9 +779,7 @@ function HackathonCorDetail() {
               onClick={() => {
                 setSelectTeam([]);
                 setSelectPrize(null);
-                currentHackathon?.prizes?.map((item) => {
-                  item.winnerList = null;
-                });
+                setCurrentHackathon(hackathon);
                 setModal(false);
               }}
             >

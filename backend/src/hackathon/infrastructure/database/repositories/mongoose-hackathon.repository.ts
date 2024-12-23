@@ -20,19 +20,10 @@ export class MongooseHackathonRepository implements HackathonRepository {
     private readonly projectDocument: Model<ProjectDocument>,
   ) {}
   async award(hackathonId: string, hackathon: any) {
-    const updatePrizes = Array.of(hackathon.prizes).map((item) => {
-      if (item.winnerList)
-        return {
-          ...item,
-          winnerList: Array.of(item.winnerList).map((i) => i.id),
-        };
-      else return { ...item };
-    });
-
     await this.hackathonModel
       .findByIdAndUpdate(
         hackathonId,
-        { prizes: updatePrizes },
+        { prizes: hackathon.hackathon.prizes },
         { new: true, useFindAndModify: false },
       )
       .exec();

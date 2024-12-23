@@ -39,7 +39,7 @@ const TeamProjectSmall = ({ props, select }) => {
         <div className="mt-1 flex justify-between p-2 bg-gray-100 align-bottom">
           <div className="line-clamp-1">{props?.teamName}</div>
           <div className="flex -space-x-2 ">
-            {props?.createdBy.map((item) => {
+            {props?.createdBy?.map((item) => {
               return (
                 <img
                   key={item._id}

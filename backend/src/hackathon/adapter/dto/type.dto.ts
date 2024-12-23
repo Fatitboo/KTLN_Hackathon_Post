@@ -63,5 +63,6 @@ export class Prize {
     public cashValue: string,
     public description: string,
     public numberWinningProject: number,
+    public winnerList: string,
   ) {}
 }

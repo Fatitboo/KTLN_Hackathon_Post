@@ -99,6 +99,7 @@ export class HackathonController {
     @Param('id') id: string,
     @Body() hackathon: UpdateHackathonDTO,
   ): Promise<string> {
+    console.log(id, hackathon);
     const result = this.commandBus.execute(
       new AwardHackathonCommand({ hackathonId: id, hackathon: hackathon }),
     );

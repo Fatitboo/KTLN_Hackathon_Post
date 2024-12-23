@@ -20,9 +20,11 @@ import baseUrl from "../../../../utils/baseUrl";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { CgClose } from "react-icons/cg";
+import SearchUser from "./SearchUser/SearchUser";
 
 function ManageTeam() {
   const inputBox = useRef();
+  const inputBoxReal = useRef("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { projectId } = useParams();
@@ -71,11 +73,12 @@ function ManageTeam() {
 
   useEffect(() => {
     if (debouncedSearchTerm) {
-      fetchDataSkill("email", "", searchTerm);
+      fetchDataSkill("all", "", searchTerm);
     }
   }, [debouncedSearchTerm]);
 
   const fetchDataSkill = (searchTerm, hackathonId, value) => {
+    inputBoxReal.current = value;
     if (value === "") {
       setListSkillApi([]);
     } else {
@@ -89,13 +92,55 @@ function ManageTeam() {
       fetch(`${baseUrl}/api/v1/users/search?${params}`)
         .then((response) => response.json())
         .then((result) => {
-          const arr = [...result, { email: value }];
+          if (result.length == 0) {
+            fetchSkillsAI(value);
+          }
+          const arr = [...result];
+          console.log(arr);
 
           setListSkillApi(arr);
           setSpin(false);
         })
         .catch((error) => console.log("error", error));
     }
+  };
+
+  const fetchSkillsAI = (value) => {
+    setSpin(true);
+    fetch(`http://127.0.0.1:5000/predict-skill`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        description: value,
+        threshold: 0.5,
+      }),
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        if (result.length >= 1) {
+          inputBoxReal.current = result[0].skill;
+          const params = new URLSearchParams({
+            searchTerm: "skills",
+            hackathonId: "",
+            searchQuery: result[0].skill,
+          }).toString();
+          fetch(`${baseUrl}/api/v1/users/search?${params}`)
+            .then((response) => response.json())
+            .then((result) => {
+              const arr = [...result];
+
+              setListSkillApi(arr);
+              setSpin(false);
+            })
+            .catch((error) => {
+              console.log("error", error);
+              setSpin(false);
+            });
+        }
+      })
+      .catch((error) => console.log("error", error));
   };
 
   const handleCheckMail = async (e) => {
@@ -383,7 +428,10 @@ function ManageTeam() {
                             key={index}
                             className={`hover:bg-[#eef1f2] z-20  block focus:outline-none bg-white focus:bg-white text-base shadow-sm py-2 pl-5 pr-5 text-gray-90 placeholder:text-gray-400 sm:text-base sm:leading-8 cursor-pointer`}
                           >
-                            {item.email}
+                            <SearchUser
+                              props={item}
+                              value={inputBoxReal.current}
+                            />
                           </div>
                         );
                       })}

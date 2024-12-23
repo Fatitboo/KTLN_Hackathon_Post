@@ -17,6 +17,7 @@ export class AwardHackathonHandler
 
   async execute(command: AwardHackathonCommand) {
     const { hackathonId, hackathon } = command.props;
+
     return {
       hackathonId: await this.hackathonRepository.award(hackathonId, hackathon),
     };

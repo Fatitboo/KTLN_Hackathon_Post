@@ -40,17 +40,47 @@ export class MongooseUserRepository implements UserRepository {
     const orQuery: any = [];
     // Thêm điều kiện tìm kiếm
     if (searchTerm === 'all') {
-      orQuery.push({ fullname: { $regex: searchQuery, $options: 'i' } });
-      orQuery.push({ email: { $regex: searchQuery, $options: 'i' } });
+      orQuery.push(
+        { fullname: { $regex: searchQuery, $options: 'i' } },
+        { email: { $regex: searchQuery, $options: 'i' } },
+        {
+          'settingRecommend.specialty': { $regex: searchQuery, $options: 'i' },
+        },
+        {
+          'settingRecommend.occupation': { $regex: searchQuery, $options: 'i' },
+        },
+        {
+          'settingRecommend.currentLevel': {
+            $regex: searchQuery,
+            $options: 'i',
+          },
+        },
+        {
+          'settingRecommend.skills': {
+            $elemMatch: { $regex: searchQuery, $options: 'i' }, // Điều kiện trong danh sách
+          },
+        },
+        {
+          'settingRecommend.interestedIn': {
+            $elemMatch: { $regex: searchQuery, $options: 'i' }, // Điều kiện trong danh sách
+          },
+        },
+      );
     }
-
+    if (searchTerm === 'skills') {
+      orQuery.push({
+        'settingRecommend.skills': {
+          $elemMatch: { $regex: searchQuery, $options: 'i' }, // Điều kiện trong danh sách
+        },
+      });
+    }
     if (searchTerm === 'email') {
       orQuery.push({ email: { $regex: searchQuery, $options: 'i' } });
     }
     query.$or = orQuery;
     return this.userModel
       .find(query)
-      .select('fullname email avatar isVerify') // Chọn các trường cần trả về
+      .select('fullname email avatar isVerify settingRecommend.skills') // Chọn các trường cần trả về
       .exec();
   }
   async addUserRegisterToHackathon(

@@ -12,7 +12,47 @@ import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import fetchSkillApikey from "../../../../utils/fetchSkillApiKey";
 import { IoIosClose } from "react-icons/io";
 import { useLocation, useNavigate } from "react-router-dom";
+export const hackathonTypes = [
+  "AR/VR",
+  "Beginner Friendly",
+  "Blockchain",
+  "Communication",
+  "Cybersecurity",
+  "Databases",
+  "Design",
+  "DevOps",
+  "E-commerce/Retail",
+  "Education",
+  "Enterprise",
+  "Fintech",
+  "Gaming",
+  "Health",
+  "IoT",
+  "Lifehacks",
+  "Low/No Code",
+  "Machine Learning/AI",
+  "Mobile",
+  "Music/Art",
+  "Open Ended",
+  "Productivity",
+  "Quantum",
+  "Robotic Process Automation",
+  "Social Good",
+  "Voice skills",
+  "Web",
+];
 
+export const specialties = [
+  "Full-stack developer",
+  "Front-end developer",
+  "Back-end developer",
+  "Mobile developer",
+  "Data scientist",
+  "Designer",
+  "Product manager",
+  "Business",
+  "Other",
+];
 const SettingHackathonRecommend = () => {
   const dispatch = useDispatch();
   const {
@@ -78,48 +118,9 @@ const SettingHackathonRecommend = () => {
 
   const [skills, setSkills] = useState([]);
   const [specialty, setSpecialty] = useState("");
-  const specialties = [
-    "Full-stack developer",
-    "Front-end developer",
-    "Back-end developer",
-    "Mobile developer",
-    "Data scientist",
-    "Designer",
-    "Product manager",
-    "Business",
-    "Other",
-  ];
+
   const inputBox = useRef();
 
-  const hackathonTypes = [
-    "AR/VR",
-    "Beginner Friendly",
-    "Blockchain",
-    "Communication",
-    "Cybersecurity",
-    "Databases",
-    "Design",
-    "DevOps",
-    "E-commerce/Retail",
-    "Education",
-    "Enterprise",
-    "Fintech",
-    "Gaming",
-    "Health",
-    "IoT",
-    "Lifehacks",
-    "Low/No Code",
-    "Machine Learning/AI",
-    "Mobile",
-    "Music/Art",
-    "Open Ended",
-    "Productivity",
-    "Quantum",
-    "Robotic Process Automation",
-    "Social Good",
-    "Voice skills",
-    "Web",
-  ];
   const [listSkillApi, setListSkillApi] = useState([]);
   const [spin, setSpin] = useState(false);
   const [occupation, setOccupation] = useState("");

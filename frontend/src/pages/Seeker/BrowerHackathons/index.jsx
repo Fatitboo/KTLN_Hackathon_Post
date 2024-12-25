@@ -14,6 +14,9 @@ import {
 } from "../../../redux/slices/hackathons/hackathonsSlices";
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
 import { LoadingComponent } from "../../../components";
+import { hackathonTypes } from "../Setting/SettingRecommend";
+import MultiSelectDropdown from "../../../components/Seeker/MultiSelectDropdown";
+import { getAllTags } from "../../../redux/slices/projects/projectsSlices";
 
 function BrowerHackathons() {
   const dispatch = useDispatch();
@@ -32,10 +35,27 @@ function BrowerHackathons() {
   const toggleShowMore = () => {
     setShowMoreTags(!showMoreTags);
   };
-
+  const [selectedLocations, setSelectedLocations] = useState([]);
+  const [selectedStatus, setSelectedStatus] = useState([]);
+  const [selectedLength, setSelectedLength] = useState([]);
+  const [selectedTags, setSelectedTags] = useState([]);
+  const [selectedHost, setSelectedHost] = useState(["All"]);
+  const [selectedSort, setSelectedSort] = useState("recently_added");
+  let { tags } = useSelector((state) => state.projects);
   useEffect(() => {
-    dispatch(getAllHackathonsSeeker({ page, limit: 10, search: searchTerm }));
-  }, [page]);
+    dispatch(getAllTags({ type: "hackathon" }));
+  }, []);
+  useEffect(() => {
+    handleSearch();
+  }, [
+    page,
+    selectedLocations,
+    selectedStatus,
+    selectedLength,
+    selectedTags,
+    selectedHost,
+    selectedSort,
+  ]);
 
   const handlePageChange = (newPage) => {
     if (newPage > 0 && newPage <= totalPages) {
@@ -43,7 +63,19 @@ function BrowerHackathons() {
     }
   };
   const handleSearch = () => {
-    dispatch(getAllHackathonsSeeker({ page, limit: 10, search: searchTerm }));
+    dispatch(
+      getAllHackathonsSeeker({
+        page,
+        limit: 10,
+        search: searchTerm,
+        selectedLocations,
+        selectedStatus,
+        selectedLength,
+        selectedTags,
+        selectedHost,
+        selectedSort,
+      })
+    );
   };
   useEffect(() => {
     if (isSuccess) {
@@ -53,6 +85,16 @@ function BrowerHackathons() {
       dispatch(resetValue({ key: "isSuccess", value: false }));
     }
   }, [isSuccess]);
+  const clearFilters = () => {
+    setSearchTerm("");
+    setSelectedLocations([]);
+    setSelectedStatus([]);
+    setSelectedTags([]);
+    setSelectedHost([]);
+    setSelectedSort("recently_added");
+    setPage(1); // Reset về trang đầu tiên
+    window.location.reload();
+  };
   return (
     <>
       <></>
@@ -66,9 +108,11 @@ function BrowerHackathons() {
         <div className="grid grid-cols-12 max-md:grid-cols-1 max-md:mt-1 gap-4 w-full h-full max-md:px-4 px-60">
           <div className="col-span-3 max-md:col-span-1 max-md:mt-1 mt-36">
             <div className="flex items-center">
-              <div className="text-blue-600">Clear filters</div>
-              <div className="ml-6 rounded-[3px] bg-blue-50 px-3 py-1 text-blue-700 text-sm my-1 mr-2">
-                {2}
+              <div
+                className="text-blue-600 cursor-pointer"
+                onClick={clearFilters}
+              >
+                Clear filters
               </div>
             </div>
             <div className="mt-5 text-sm text-gray-600 font-normal">
@@ -80,104 +124,156 @@ function BrowerHackathons() {
                 <div className="text-blue-600 ml-10 cursor-pointer">Update</div>
               </div>
               <div className="mb-4 ">
-                <div className=" font-semibold mb-2 mt-5">Location</div>
+                <div className="font-semibold mb-2 mt-5">Location</div>
                 <label className="my-2 flex items-center space-x-2">
-                  <input type="checkbox" className="form-checkbox" />
+                  <input
+                    type="checkbox"
+                    value="Online"
+                    onChange={(e) =>
+                      setSelectedLocations((prev) =>
+                        e.target.checked
+                          ? [...prev, e.target.value]
+                          : prev.filter((loc) => loc !== e.target.value)
+                      )
+                    }
+                  />{" "}
                   <span>Online</span>
                 </label>
                 <label className="my-2 flex items-center space-x-2">
-                  <input type="checkbox" className="form-checkbox" />
+                  <input
+                    type="checkbox"
+                    value="In-person"
+                    onChange={(e) =>
+                      setSelectedLocations((prev) =>
+                        e.target.checked
+                          ? [...prev, e.target.value]
+                          : prev.filter((loc) => loc !== e.target.value)
+                      )
+                    }
+                  />{" "}
                   <span>In-person</span>
                 </label>
               </div>
               {/* Status Section */}
               <div className="mb-4">
                 <div className=" font-semibold mb-2 mt-10">Status</div>
-                <label className="my-2 flex items-center space-x-2">
-                  <input type="checkbox" className="form-checkbox" />
-                  <span>Upcoming</span>
-                  <span className="w-2 h-2 rounded-full bg-orange-500"></span>
-                </label>
-                <label className="my-2 flex items-center space-x-2">
-                  <input type="checkbox" className="form-checkbox" />
-                  <span>Open</span>
-                  <span className="w-2 h-2 rounded-full bg-teal-500"></span>
-                </label>
-                <label className="my-2 flex items-center space-x-2">
-                  <input type="checkbox" className="form-checkbox" />
-                  <span>Ended</span>
-                  <span className="w-2 h-2 rounded-full bg-gray-500"></span>
-                </label>
-              </div>
-              {/* Length Section */}
-              <div className="mb-4">
-                <div className=" font-semibold mb-2 mt-10">Length</div>
-                <label className="my-2 flex items-center space-x-2">
-                  <input type="checkbox" className="form-checkbox" />
-                  <span>1–6 days</span>
-                </label>
-                <label className="my-2 flex items-center space-x-2">
-                  <input type="checkbox" className="form-checkbox" />
-                  <span>1–4 weeks</span>
-                </label>
-                <label className="my-2 flex items-center space-x-2">
-                  <input type="checkbox" className="form-checkbox" />
-                  <span>1+ month</span>
-                </label>
+                {["Upcoming", "Open", "Ended"].map((status) => (
+                  <label
+                    key={status}
+                    className="my-2 flex items-center space-x-2"
+                  >
+                    <input
+                      type="checkbox"
+                      value={status}
+                      className="form-checkbox mr-2"
+                      onChange={(e) =>
+                        setSelectedStatus((prev) =>
+                          e.target.checked
+                            ? [...prev, e.target.value]
+                            : prev.filter((s) => s !== e.target.value)
+                        )
+                      }
+                    />
+                    {status}
+                    <span
+                      className={`w-2 h-2 rounded-full ${
+                        status === "Upcoming"
+                          ? "bg-orange-500"
+                          : status === "Open"
+                          ? "bg-teal-500"
+                          : "bg-gray-500"
+                      } `}
+                    ></span>
+                  </label>
+                ))}
               </div>
 
               {/* Interest Tags Section */}
               <div className="mb-4">
                 <div className=" font-semibold mb-2 mt-10">Interest tags</div>
-                <label className="my-2 flex items-center space-x-2">
-                  <input type="checkbox" className="form-checkbox" />
-                  <span>Beginner Friendly</span>
-                </label>
-                <label className="my-2 flex items-center space-x-2">
-                  <input type="checkbox" className="form-checkbox" />
-                  <span>Social Good</span>
-                </label>
-                <label className="my-2 flex items-center space-x-2">
-                  <input type="checkbox" className="form-checkbox" />
-                  <span>Machine Learning/AI</span>
-                </label>
-                <label className="my-2 flex items-center space-x-2">
-                  <input type="checkbox" className="form-checkbox" />
-                  <span>Open Ended</span>
-                </label>
-                <label className="my-2 flex items-center space-x-2">
-                  <input type="checkbox" className="form-checkbox" />
-                  <span>Education</span>
-                </label>
+                {hackathonTypes
+                  .slice(0, Math.ceil((hackathonTypes.length * 1) / 2))
+                  .map((tag) => (
+                    <label
+                      key={tag}
+                      className="my-2 flex items-center space-x-2"
+                    >
+                      <input
+                        type="checkbox"
+                        value={tag}
+                        className="form-checkbox mr-2"
+                        onChange={(e) =>
+                          setSelectedTags((prev) =>
+                            e.target.checked
+                              ? [...prev, e.target.value]
+                              : prev.filter((t) => t !== e.target.value)
+                          )
+                        }
+                      />
+                      {tag}
+                    </label>
+                  ))}
 
                 {showMoreTags && (
                   <div>
                     {/* Hiển thị thêm các tag khác */}
-                    <label className="my-2 flex items-center space-x-2">
-                      <input type="checkbox" className="form-checkbox" />
-                      <span>More Tag 1</span>
-                    </label>
-                    <label className="my-2 flex items-center space-x-2">
-                      <input type="checkbox" className="form-checkbox" />
-                      <span>More Tag 2</span>
-                    </label>
-                    {/* Add more as needed */}
+                    {hackathonTypes
+                      .slice(Math.ceil((hackathonTypes.length * 1) / 2))
+                      .map((tag) => (
+                        <label
+                          key={tag}
+                          className="my-2 flex items-center space-x-2"
+                        >
+                          <input
+                            type="checkbox"
+                            value={tag}
+                            className="form-checkbox mr-2"
+                            onChange={(e) =>
+                              setSelectedTags((prev) =>
+                                e.target.checked
+                                  ? [...prev, e.target.value]
+                                  : prev.filter((t) => t !== e.target.value)
+                              )
+                            }
+                          />
+                          {tag}
+                        </label>
+                      ))}
                   </div>
                 )}
 
                 <button className="text-blue-500 mt-2" onClick={toggleShowMore}>
-                  {showMoreTags ? "Show less" : "Show more (23)"}
+                  {showMoreTags
+                    ? "Show less"
+                    : `Show more (${Math.ceil(
+                        (hackathonTypes.length * 1) / 2
+                      )})`}
                 </button>
               </div>
 
               {/* Host Section */}
               <div className="mb-4">
                 <div className=" font-semibold mb-2 mt-10">Host</div>
-                <select className="w-full p-2 border rounded-md">
-                  <option value="">Select host</option>
-                  <option value="host1">Host 1</option>
-                  <option value="host2">Host 2</option>
-                </select>
+                <MultiSelectDropdown
+                  options={tags}
+                  text={"Selected filter hosts"}
+                  setSelectedOptions={setSelectedHost}
+                  selectedOptions={selectedHost}
+                />
+                <div className="flex flex-wrap gap-2 mt-5">
+                  {(selectedHost ?? ["Google"]).map((item, index) => {
+                    return (
+                      <>
+                        <span
+                          index={index}
+                          className="bg-gray-200 px-4 py-1 text-sm "
+                        >
+                          {item}
+                        </span>
+                      </>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           </div>
@@ -198,19 +294,18 @@ function BrowerHackathons() {
                 <div className="mr-3 font-medium">Sort:</div>
                 <div className="flex items-center border border-gray-300 p-3">
                   <CustomButton
+                    onClick={() => setSelectedSort("relevant")}
                     title="Most relevant"
                     containerStyles="text-blue-600 mb-[2px] font-medium px-2 hover:text-blue-800 text-sm bg-transparent"
                   />
                   <CustomButton
+                    onClick={() => setSelectedSort("submission_date")}
                     title="Submission date"
                     containerStyles="text-blue-600 mb-[2px] font-medium px-2 hover:text-blue-800 text-sm bg-transparent"
                   />
                   <CustomButton
+                    onClick={() => setSelectedSort("recently_added")}
                     title="Recently added"
-                    containerStyles="text-blue-600 mb-[2px] font-medium px-2 hover:text-blue-800 text-sm bg-transparent"
-                  />
-                  <CustomButton
-                    title="Prize amount"
                     containerStyles="text-blue-600 mb-[2px] font-medium px-2 hover:text-blue-800 text-sm bg-transparent"
                   />
                 </div>

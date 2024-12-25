@@ -38,8 +38,24 @@ export const getAllHackathonsSeeker = createAsyncThunk(
         limit: 10,
       };
       if (payload.search) params.search = payload.search;
+      if (payload.selectedSort) params.sort = payload.selectedSort;
       if (payload.page) params.page = payload.page;
       if (payload.limit) params.limit = payload.limit;
+      if (payload.selectedLocations && payload.selectedLocations.length > 0)
+        params.location = payload.selectedLocations;
+      if (payload.selectedStatus && payload.selectedStatus.length > 0)
+        params.status = payload.selectedStatus;
+      if (payload.selectedLength && payload.selectedLength.length > 0)
+        params.length = payload.selectedLength;
+      if (payload.selectedTags && payload.selectedTags.length > 0)
+        params.tags = payload.selectedTags;
+      if (payload.selectedHost) {
+        if (payload.selectedHost[0] === "All") {
+          params.hosts = [];
+        } else {
+          params.hosts = payload.selectedHost;
+        }
+      }
       const config = {
         headers: {
           "Content-Type": "application/json",
@@ -71,9 +87,18 @@ export const getAllRegisteredUsersHackathon = createAsyncThunk(
       };
       if (payload.search) params.search = payload.search;
       if (payload.status) params.status = payload.status;
-      if (payload.skills) params.skills = payload.skills;
+      if (payload.specialty) params.specialty = payload.specialty;
+      if (payload.interestedIn) params.interestedIn = payload.interestedIn;
       if (payload.page) params.page = payload.page;
       if (payload.limit) params.limit = payload.limit;
+      if (payload.sort) params.sort = payload.sort;
+      if (payload.skills) {
+        if (payload.skills[0] === "All") {
+          params.skills = [];
+        } else {
+          params.skills = payload.skills;
+        }
+      }
       const config = {
         headers: {
           "Content-Type": "application/json",

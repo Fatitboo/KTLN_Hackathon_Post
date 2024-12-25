@@ -36,7 +36,7 @@ function MenuList({ user, onClick }) {
           <Menu.Button className="flex flex-row items-center  align-middle gap-2 w-full h-8 rounded-md bg-[#f7fdfd] md:px-2  text-sm font-medium text-slate-700 hover:bg-opacity-20 ">
             <img
               src={
-                user?.avatar?.fileUrl ??
+                user?.avatar ??
                 "https://i.pinimg.com/564x/16/3e/39/163e39beaa36d1f9a061b0f0c5669750.jpg"
               }
               alt="user profile"

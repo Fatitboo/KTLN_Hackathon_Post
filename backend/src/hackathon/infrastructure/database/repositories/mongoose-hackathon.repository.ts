@@ -59,6 +59,7 @@ export class MongooseHackathonRepository implements HackathonRepository {
       specialty,
       skills,
       interestedIn,
+      sort,
       page = 1,
       limit = 10,
     } = props;
@@ -69,7 +70,7 @@ export class MongooseHackathonRepository implements HackathonRepository {
         path: 'registerUsers.userId',
         model: 'UserDocument',
         select:
-          'email fullname settingRecommend avatar projects followBy achievement _id',
+          'email fullname settingRecommend avatar projects followBy achievement _id createdAt',
       })
       .lean();
 
@@ -80,32 +81,34 @@ export class MongooseHackathonRepository implements HackathonRepository {
     // Lọc registerUsers theo các điều kiện
     let filteredUsers = hackathon.registerUsers.filter((registerUser) => {
       const user = registerUser.userId as any;
-
-      // Kiểm tra name và email
       if (
         search &&
-        !user.fullname.toLowerCase().includes(search.toLowerCase())
+        !(
+          user.fullname.toLowerCase().includes(search.toLowerCase()) ||
+          user.email.toLowerCase().includes(search.toLowerCase())
+        )
       ) {
         return false;
       }
+
       // Kiểm tra status
-      if (status && status.includes(registerUser.status.toString())) {
+      if (status && !status.includes(registerUser.status.toString())) {
         return false;
       }
 
       // Kiểm tra specialty, skills và interestedIn
       const setting = user.settingRecommend || {};
-      if (specialty && setting.specialty !== specialty) {
+      if (specialty && !specialty.includes(setting.specialty)) {
         return false;
       }
 
-      if (skills && !skills.every((skill) => setting.skills?.includes(skill))) {
+      if (skills && !skills.some((skill) => setting.skills?.includes(skill))) {
         return false;
       }
 
       if (
         interestedIn &&
-        !interestedIn.every((interest) =>
+        !interestedIn.some((interest) =>
           setting.interestedIn?.includes(interest),
         )
       ) {
@@ -115,12 +118,35 @@ export class MongooseHackathonRepository implements HackathonRepository {
       return true;
     });
 
+    if (sort === 'newest') {
+      filteredUsers = filteredUsers.sort((a, b) => {
+        const dateA = new Date((a.userId as any).createdAt).getTime(); // Assuming `createdAt` exists for the user
+        const dateB = new Date((b.userId as any).createdAt).getTime();
+
+        return dateB - dateA; // Sort descending by created date (newest first)
+      });
+    } else if (sort === 'projects') {
+      filteredUsers = filteredUsers.sort((a, b) => {
+        const projectCountA = (a.userId as any).projects
+          ? (a.userId as any).projects.length
+          : 0; // Assuming `projects` is an array
+        const projectCountB = (b.userId as any).projects
+          ? (b.userId as any).projects.length
+          : 0;
+        return projectCountB - projectCountA; // Sort descending by project count (most projects first)
+      });
+    }
+
     // Thực hiện phân trang
     const total = filteredUsers.length; // Tổng số kết quả sau khi lọc
     const startIndex = (page - 1) * limit;
     const endIndex = page * limit;
 
     filteredUsers = filteredUsers.slice(startIndex, endIndex);
+    console.log(
+      '🚀 ~ MongooseHackathonRepository ~ filteredUsers:',
+      filteredUsers,
+    );
 
     return {
       data: filteredUsers,

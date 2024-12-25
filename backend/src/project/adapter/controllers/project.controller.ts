@@ -69,13 +69,13 @@ export class ProjectController {
   }
 
   @Post('search-tags')
-  async searchTags(@Body() body: { type: string }) {
+  async searchTags(@Body() body: { type: string; hackathonId?: string }) {
     console.log('🚀 ~ ProjectController ~ searchTags ~ type:', body.type);
     let result;
     if (body.type === 'hackathon') {
       result = await this.hackathonModel.aggregate([
-        { $unwind: '$hackathonTypes' },
-        { $group: { _id: '$hackathonTypes' } },
+        { $unwind: '$hostName' },
+        { $group: { _id: '$hostName' } },
         { $project: { _id: 0, value: '$_id', label: '$_id' } },
       ]);
     }
@@ -88,6 +88,11 @@ export class ProjectController {
     }
     if (body.type === 'user') {
       result = await this.userModel.aggregate([
+        {
+          $match: {
+            registerHackathons: new Types.ObjectId(body.hackathonId), // Check if the hackathonId is present in the registerHackathons array
+          },
+        },
         { $unwind: '$settingRecommend.skills' },
         { $group: { _id: '$settingRecommend.skills' } },
         { $project: { _id: 0, value: '$_id', label: '$_id' } },
@@ -386,21 +391,21 @@ export class ProjectController {
     } else {
       // Nếu chưa like, thì thêm vào likedBy
       project.likedBy.push(userId);
-    }
-    if (project.registeredToHackathon && userId) {
-      if (
-        (project.registeredToHackathon as any).hackathonIntegrateId &&
-        userId
-      ) {
-        await this.interactionModel.create({
-          user_id: new Types.ObjectId(userId),
-          hackathon: new Types.ObjectId(
-            (project.registeredToHackathon as any)._id,
-          ),
-          hackathon_id: (project.registeredToHackathon as any)
-            .hackathonIntegrateId,
-          interaction_type: 'like',
-        });
+      if (project.registeredToHackathon && userId) {
+        if (
+          (project.registeredToHackathon as any).hackathonIntegrateId &&
+          userId
+        ) {
+          await this.interactionModel.create({
+            user_id: new Types.ObjectId(userId),
+            hackathon: new Types.ObjectId(
+              (project.registeredToHackathon as any)._id,
+            ),
+            hackathon_id: (project.registeredToHackathon as any)
+              .hackathonIntegrateId,
+            interaction_type: 'like',
+          });
+        }
       }
     }
     await project.save();
@@ -432,31 +437,42 @@ export class ProjectController {
     }
 
     // Tìm bản cập nhật tương ứng
-    const update = project.updates.find((u) => u.id.toString() === updateId);
 
-    if (!update) {
-      project.updates.push({
-        id: uuidv4(),
-        update: updateStr,
-        user,
-        createdAt: new Date().toISOString(),
-        comments: comment
-          ? [
-              {
-                user: comment.user,
-                comment: comment.comment,
-                createdAt: new Date().toISOString(),
-              },
-            ]
-          : [],
-      });
+    if (!project.updates) {
+      project.updates = [
+        {
+          id: uuidv4(),
+          update: updateStr,
+          user,
+          createdAt: new Date().toISOString(),
+          comments: comment
+            ? [
+                {
+                  user: comment.user,
+                  comment: comment.comment,
+                  createdAt: new Date().toISOString(),
+                },
+              ]
+            : [],
+        },
+      ];
     } else {
       // Thêm comment vào update
-      update.comments.push({
-        user: comment.user,
-        comment: comment.comment,
-        createdAt: new Date().toISOString(),
-      });
+      if (project.updates[0].comments.length === 0) {
+        project.updates[0].comments = [
+          {
+            user: comment.user,
+            comment: comment.comment,
+            createdAt: new Date().toISOString(),
+          },
+        ];
+      } else {
+        project.updates[0].comments.push({
+          user: comment.user,
+          comment: comment.comment,
+          createdAt: new Date().toISOString(),
+        });
+      }
     }
     if (project.registeredToHackathon && user) {
       if ((project.registeredToHackathon as any).hackathonIntegrateId && user) {
@@ -471,7 +487,10 @@ export class ProjectController {
         });
       }
     }
-    await project.save();
+
+    await this.projectModel.findByIdAndUpdate(projectId, {
+      updates: project.updates,
+    });
     return project;
   }
 

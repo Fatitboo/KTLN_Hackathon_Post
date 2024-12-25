@@ -4,6 +4,7 @@ const MultiSelectDropdown = ({
   options,
   setSelectedOptions,
   selectedOptions,
+  text,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -40,12 +41,12 @@ const MultiSelectDropdown = ({
     <div className="dropdown relative inline-block">
       <button
         onClick={toggleDropdown}
-        className="bg-white border border-gray-200 text-black px-4 py-2 rounded-sm focus:outline-none"
+        className="bg-white border border-gray-200 text-black px-4 py-2 pr-10 rounded-sm focus:outline-none"
       >
-        Selected filter tags
+        {text ?? "Selected filter tags"}
       </button>
       {isOpen && (
-        <div className="absolute left-0 mt-2 w-48 h-40 overflow-y-auto  bg-white border border-gray-300 rounded-sm shadow-lg z-10">
+        <div className="absolute left-0 mt-2 w-48 h-60 overflow-y-auto  bg-white border border-gray-300 rounded-sm shadow-lg z-10">
           {options.map((option) => (
             <label
               key={option.value}

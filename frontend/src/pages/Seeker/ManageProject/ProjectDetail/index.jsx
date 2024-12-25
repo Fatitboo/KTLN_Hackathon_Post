@@ -4,26 +4,38 @@ import {
   defaultAvt,
   imgDefaultProject,
 } from "../../../../assets/images";
+import CustomButton from "../../../../components/CustomButton";
+
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  addCommentProject,
   getProjectSingle,
   resetSuccessAction,
+  toggleLikeProject,
 } from "../../../../redux/slices/projects/projectsSlices";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import { Navigation, Autoplay } from "swiper/modules";
+import { TextInput } from "../../../../components";
+import { useForm } from "react-hook-form";
+import Swal from "sweetalert2";
+import { toast, ToastContainer } from "react-toastify";
 function ProjectDetail() {
   const { projectId } = useParams();
   const dispatch = useDispatch();
   const projectSlice = useSelector((store) => store.projects);
-  const { isSuccess, project } = projectSlice;
+  const { isSuccess, project, isSuccessUD } = projectSlice;
+  const storeData = useSelector((store) => store.users);
+  const user = storeData?.userAuth?.user;
   const [item, setItemProject] = useState({});
   const getPrpjectDetail = async (id) => {
     dispatch(getProjectSingle(id));
   };
+  const notify = (type, message) => toast(message, { type: type });
+
   const [teammates, setTeammates] = useState([
     { fullname: "Nguyễn Văn Phát", email: "@Fatitboo" },
   ]);
@@ -31,7 +43,60 @@ function ProjectDetail() {
   useEffect(() => {
     getPrpjectDetail(projectId);
   }, [projectId]);
-
+  const { register, handleSubmit, setValue } = useForm({ mode: "onChange" });
+  const onSubmitInfo = (data) => {
+    if (!user) {
+      Swal.fire({
+        title: "Please login!",
+        text: "You need to login to register hackathon.",
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+        showCancelButton: true,
+        icon: "info",
+        allowOutsideClick: false,
+        confirmButtonColor: "#3085d6",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate("/user-auth/login");
+        }
+      });
+    } else {
+      if (data.comment === "") return;
+      else {
+        dispatch(
+          addCommentProject({ comment: data.comment, productId: projectId })
+        );
+      }
+    }
+  };
+  useEffect(() => {
+    if (isSuccessUD) {
+      getPrpjectDetail(projectId);
+      dispatch(resetSuccessAction());
+      setValue("comment", "");
+      notify("success", "Toogle Like successfully!");
+    }
+  }, [isSuccessUD]);
+  const handleToggleLike = () => {
+    if (!user) {
+      Swal.fire({
+        title: "Please login!",
+        text: "You need to login to register hackathon.",
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+        showCancelButton: true,
+        icon: "info",
+        allowOutsideClick: false,
+        confirmButtonColor: "#3085d6",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate("/user-auth/login");
+        }
+      });
+    } else {
+      dispatch(toggleLikeProject(projectId));
+    }
+  };
   useEffect(() => {
     if (isSuccess) {
       setItemProject(project);
@@ -41,10 +106,6 @@ function ProjectDetail() {
       );
       dispatch(resetSuccessAction());
     }
-    console.log(
-      "🚀 ~ useEffect ~ project?.registeredToHackathon:",
-      project?.registeredToHackathon
-    );
     console.log("🚀 ~ useEffect ~ project:", project);
   }, [isSuccess]);
 
@@ -73,6 +134,7 @@ function ProjectDetail() {
   return (
     <>
       <div>
+        <ToastContainer />
         <div className="bg-teal-900 text-white text-center py-10  px-60">
           <h1 className="text-4xl font-bold mb-2">
             {item?.projectTitle ?? "Unitied"}
@@ -82,18 +144,24 @@ function ProjectDetail() {
           </p>
 
           <div className="flex justify-center gap-4">
-            <button className="flex items-center gap-2 bg-teal-600 text-white py-2 px-4 rounded-sm hover:bg-teal-700 focus:outline-none">
+            <button
+              onClick={handleToggleLike}
+              className="flex items-center gap-2 bg-teal-600 text-white py-2 px-4 rounded-sm hover:bg-teal-700 focus:outline-none"
+            >
               <span role="img" aria-label="heart">
                 ❤️
               </span>{" "}
               Like {item?.likedBy?.length || 0}
             </button>
-            <button className="flex items-center gap-2 bg-blue-600 text-white py-2 px-4 rounded-sm hover:bg-blue-700 focus:outline-none">
+            <a
+              href="#update"
+              className="flex items-center gap-2 bg-blue-600 text-white py-2 px-4 rounded-sm hover:bg-blue-700 focus:outline-none"
+            >
               <span role="img" aria-label="comment">
                 💬
               </span>{" "}
-              Comment {"10"}
-            </button>
+              View Comments
+            </a>
           </div>
         </div>
         <div className="px-60 pt-5 flex">
@@ -119,17 +187,19 @@ function ProjectDetail() {
               {/* Slide 1: Image */}
               {(item?.galary || []).map((i, index) => {
                 if (i?.url.includes("youtube")) {
+                  let url;
+                  if (i?.url.includes("embed")) url = i?.url;
+                  else
+                    url =
+                      "https://www.youtube.com/embed/" +
+                      getQueryParams(i?.url)?.v;
                   return (
-                    <SwiperSlide>
-                      <div className="flex flex-col items-center">
+                    <SwiperSlide key={index}>
+                      <div className="flex flex-col items-center justify-center">
                         <iframe
-                          key={index}
                           width={500}
                           height="315"
-                          src={
-                            "https://www.youtube.com/embed/" +
-                            getQueryParams(i?.url)?.v
-                          }
+                          src={url}
                           title="YouTube video player"
                           frameBorder="0"
                           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -143,9 +213,9 @@ function ProjectDetail() {
                   );
                 } else {
                   return (
-                    <SwiperSlide>
-                      <div className="flex flex-col items-center">
-                        <img width="315" src={i?.url} key={index} />
+                    <SwiperSlide key={index}>
+                      <div className="flex flex-col items-center justify-center">
+                        <img width="315" src={i?.url} />
                         <div className=" text-black text-xl text-center py-2">
                           <p>{i?.caption}</p>
                         </div>
@@ -219,38 +289,83 @@ function ProjectDetail() {
               <div className="my-8">
                 <div className="flex items-center gap-4 mb-4">
                   <button className="flex items-center gap-2 bg-teal-600 text-white py-2 px-4 rounded-md hover:bg-teal-700">
-                    <span>❤️</span> Like {10}
+                    <span>❤️</span> Like {item?.likedBy?.length || 0}
                   </button>
-                  <div className="flex -space-x-3 items-center">
-                    {/* Example avatars */}
-                    <img
-                      className="w-8 h-8 rounded-full border-2 border-white"
-                      src={defaultAvt}
-                      alt="User 1"
-                    />
-                    <img
-                      className="w-8 h-8 rounded-full border-2 border-white"
-                      src={defaultAvt}
-                      alt="User 2"
-                    />
-                    <div className="text-gray-600 text-sm pl-5">+43 more</div>
-                  </div>
                 </div>
               </div>
               <hr />
               {/* Updates Section */}
-              <div>
+              <div className="">
                 <h2 id="update" className="text-xl font-bold my-4">
                   Updates
                 </h2>
                 <div className="space-y-4">
-                  {[].map((comment, index) => (
+                  {[...(item?.updates || [])].map((update, index) => (
                     <div
                       key={index}
-                      className="bg-white p-4 rounded-md shadow-md"
+                      className="bg-white p-4  rounded-md shadow-md flex flex-row"
                     >
-                      <h4 className="font-bold">{comment.name}</h4>
-                      <p className="text-gray-700">{comment.text}</p>
+                      <img
+                        className="w-20 h-20 rounded-full border-2 border-white mr-4"
+                        src={defaultAvt}
+                        alt="User 1"
+                      />
+                      <div>
+                        <p className="text-gray-700 mb-4">
+                          Owner Started this project at{" "}
+                          {new Date(update.createdAt).toLocaleDateString()}
+                        </p>
+                        <h4 className="text-base text-ellipsis line-clamp-3 ">
+                          {update?.update}
+                        </h4>
+                        <div className="mt-5 bg-gray-100 p-5">
+                          {[...(update?.comments || [])].map((cmt, index) => {
+                            return (
+                              <div key={index} className="flex flex-row my-4">
+                                <img
+                                  className="w-10 h-10 rounded-full border-2 border-white mr-4"
+                                  src={defaultAvt}
+                                  alt="User 1"
+                                />
+                                <div>
+                                  <div className="flex">
+                                    <div className="text-blue-700">
+                                      {cmt.user} -{" "}
+                                    </div>
+                                    {new Date(
+                                      cmt.createdAt
+                                    ).toLocaleDateString()}
+                                  </div>
+                                  <div>{cmt?.comment}</div>
+                                </div>
+                              </div>
+                            );
+                          })}
+                          <form onSubmit={handleSubmit(onSubmitInfo)}>
+                            <div className="flex flex-row mt-5">
+                              <img
+                                className="w-10 h-10 rounded-full border-2 border-white mr-4"
+                                src={user?.avatar ?? defaultAvt}
+                                alt="User 1"
+                              />
+                              <div className="-mt-8 w-full">
+                                <TextInput
+                                  name="comment"
+                                  register={register("comment")}
+                                  type="text"
+                                  placeHolder="Write a comment"
+                                  styles="bg-[#f0f5f7]"
+                                />
+                                <CustomButton
+                                  type={"Submit"}
+                                  title="Post comment"
+                                  containerStyles="bg-blue-600 mt-4 font-medium text-white py-2 px-5 focus:outline-none hover:bg-white hover:text-blue-700 rounded-sm text-base border border-blue-600"
+                                />
+                              </div>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
                     </div>
                   ))}
                 </div>

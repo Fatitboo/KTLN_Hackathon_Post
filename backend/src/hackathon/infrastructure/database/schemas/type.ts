@@ -1,6 +1,6 @@
 import { Prop } from '@nestjs/mongoose';
 import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
-import { Date } from 'mongoose';
+import { Date, Types } from 'mongoose';
 
 export class Range {
   @Prop({ required: true })
@@ -107,4 +107,7 @@ export class Prize {
   @Prop()
   @IsString()
   numberWinningProject: number;
+
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'ProjectDocument' }] })
+  winnerList: Types.ObjectId[];
 }

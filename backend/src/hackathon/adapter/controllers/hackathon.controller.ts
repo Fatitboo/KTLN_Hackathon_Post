@@ -23,6 +23,7 @@ import { SearchFilterHackathonsQuery } from 'src/hackathon/application/queries/s
 import { InjectModel } from '@nestjs/mongoose';
 import { HackathonDocument } from 'src/hackathon/infrastructure/database/schemas';
 import { Model } from 'mongoose';
+import { AwardHackathonCommand } from 'src/hackathon/application/commands/awarding-hackathon/awarding-hackathon.command';
 
 @Controller('hackathons')
 export class HackathonController {
@@ -88,6 +89,19 @@ export class HackathonController {
     console.log(hackathon);
     const result = this.commandBus.execute(
       new UpdateHackathonCommand({ id: id, hackathon: hackathon }),
+    );
+
+    return result;
+  }
+
+  @Post('awarding/:id')
+  async awardingHackathon(
+    @Param('id') id: string,
+    @Body() hackathon: UpdateHackathonDTO,
+  ): Promise<string> {
+    console.log(id, hackathon);
+    const result = this.commandBus.execute(
+      new AwardHackathonCommand({ hackathonId: id, hackathon: hackathon }),
     );
 
     return result;

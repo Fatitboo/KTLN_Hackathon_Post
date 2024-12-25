@@ -14,4 +14,5 @@ export interface HackathonRepository {
   create(userId: string): Promise<string>;
   update(id: string, hackathon: any): Promise<HackathonDocument | null>;
   delete(userId: string, id: string): Promise<string>;
+  award(hackathonId: string, hackathon: any): any;
 }

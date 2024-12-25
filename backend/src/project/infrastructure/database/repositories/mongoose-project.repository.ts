@@ -18,6 +18,19 @@ export class MongooseProjectRepository implements ProjectRepository {
     @InjectModel(UserDocument.name)
     private readonly userModel: Model<UserDocument>,
   ) {}
+  async findMembersProject(projectId: string): Promise<any> {
+    const project = await this.projectModel.findById(projectId).populate({
+      path: 'createdBy',
+      model: 'UserDocument',
+      select: '_id email fullname avatar settingRecommend',
+    });
+
+    if (!project) {
+      throw new Error('Project not found');
+    }
+
+    return project.createdBy;
+  }
   async findProjectRegisteredHackathon(
     userId: string,
     hackathonId: string,

@@ -28,6 +28,7 @@ import {
   resetValue,
   updateHackathonComponent,
 } from "../../../redux/slices/hackathons/hackathonsSlices";
+import Swal from "sweetalert2";
 
 function HostHackathon() {
   const params = useParams();
@@ -60,6 +61,12 @@ function HostHackathon() {
       dispatch(resetValue({ key: "isSuccessUD", value: false }));
       if (jobRefKey === 8) {
         navigate("/Organizer/manage-hackathons");
+        Swal.fire({
+          title: "Success",
+          text: "Create hackathon successfully!",
+          icon: "success",
+          confirmButtonColor: "#3085d6",
+        });
       }
       nextJobRef();
     }
@@ -83,7 +90,7 @@ function HostHackathon() {
   ];
   const jobRef = [
     <HackathonEssential
-      formSubmit={nextJobRef}
+      formSubmit={updateHackathon}
       flag={0}
       formId={formId[0]}
       key={0}

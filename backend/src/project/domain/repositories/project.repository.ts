@@ -8,6 +8,7 @@ export interface ProjectRepository {
     hackathonId: string,
   ): Promise<any[]>;
   findById(id: string): Promise<ProjectDocument | null>;
+  findMembersProject(id: string): Promise<any>;
   create(
     userId: string,
     title: string,

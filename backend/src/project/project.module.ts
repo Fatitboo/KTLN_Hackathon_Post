@@ -28,6 +28,7 @@ import {
   InteractionDocument,
   InterationSchema,
 } from 'src/hackathon/infrastructure/database/schemas/interaction.schema';
+import { GetMembersProjectHandler } from './application/queries/get-member-project/get-member-project.handler';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import {
   providers: [
     { provide: PROJECT_REPOSITORY, useClass: MongooseProjectRepository },
     GetProjectHandler,
+    GetMembersProjectHandler,
     GetProjectsHandler,
     CreateProjectHandler,
     UpdateProjectHandler,

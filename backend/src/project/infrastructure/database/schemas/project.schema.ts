@@ -63,5 +63,8 @@ export class ProjectDocument {
 
   @Prop({ type: Types.ObjectId, ref: 'UserDocument' })
   owner: Types.ObjectId;
+
+  @Prop({ type: Boolean, default: false })
+  block: boolean;
 }
 export const ProjectSchema = SchemaFactory.createForClass(ProjectDocument);

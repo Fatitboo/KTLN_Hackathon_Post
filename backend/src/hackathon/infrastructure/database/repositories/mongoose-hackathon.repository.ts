@@ -23,6 +23,15 @@ export class MongooseHackathonRepository implements HackathonRepository {
     @InjectModel(InteractionDocument.name)
     private readonly interactionModel: Model<InteractionDocument>,
   ) {}
+  async award(hackathonId: string, hackathon: any) {
+    await this.hackathonModel
+      .findByIdAndUpdate(
+        hackathonId,
+        { prizes: hackathon.hackathon.prizes },
+        { new: true, useFindAndModify: false },
+      )
+      .exec();
+  }
 
   async findAllProject(id: string, type: string, page: number): Promise<any[]> {
     const existingHackathon = await this.hackathonModel.findById(id).exec();
@@ -33,7 +42,11 @@ export class MongooseHackathonRepository implements HackathonRepository {
     for (let index = 0; index < submittions.length; index++) {
       const element = submittions[index];
       const pId = element._id;
-      const p = await this.projectDocument.findById(pId);
+      const p = await this.projectDocument.findById(pId).populate({
+        path: 'createdBy',
+        model: 'UserDocument',
+        select: '_id fullname avatar',
+      });
       if (!p) continue;
       const owner = await this.userModel.findById(p.owner);
       if (!owner) continue;
@@ -41,9 +54,12 @@ export class MongooseHackathonRepository implements HackathonRepository {
         id: p._id,
         projectTitle: p.projectTitle,
         thumnailImage: p.thumnailImage,
+        teamName: p.teamName ?? `Team ${p.owner.toString().substring(0, 5)}`,
         tagLine: p.tagline,
         owner: { uId: owner._id, name: owner.fullname, avatar: owner.avatar },
-        createdBy: p.createdByUsername,
+        createdByUsername: p.createdByUsername,
+        createdBy: p.createdBy,
+        block: p.block,
       });
     }
     return rs;

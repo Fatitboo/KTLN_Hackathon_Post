@@ -29,6 +29,7 @@ import {
   InteractionDocument,
   InterationSchema,
 } from './infrastructure/database/schemas/interaction.schema';
+import { AwardHackathonHandler } from './application/commands/awarding-hackathon/awarding-hackathon.handler';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import {
     GetHackathonsHandler,
     GetProjectsHandler,
     GetAllRegisterUsersHandler,
+    AwardHackathonHandler,
     SeedDataHackathonHandler,
     SearchFilterHackathonsHandler,
     CreateHackathonHandler,

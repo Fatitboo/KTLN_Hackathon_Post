@@ -38,6 +38,7 @@ import {
 import { JwtAuthGuard } from 'src/user/domain/common/guards/jwtAuth.guard';
 import { InteractionDocument } from 'src/hackathon/infrastructure/database/schemas/interaction.schema';
 import { v4 as uuidv4 } from 'uuid';
+import { GetMembersProjectQuery } from 'src/project/application/queries/get-member-project/get-member-project.query';
 
 @Controller('projects')
 export class ProjectController {
@@ -116,6 +117,11 @@ export class ProjectController {
     );
   }
 
+  @Get('get-members/:projectId/members')
+  async getMembersOfProject(@Param('projectId') projectId: string) {
+    return await this.queryBus.execute(new GetMembersProjectQuery(projectId));
+  }
+
   @Post(':userId')
   async createProject(
     @Param('userId') userId: string,
@@ -154,6 +160,43 @@ export class ProjectController {
     );
 
     return result;
+  }
+
+  @Post('block-project/:projectId/block')
+  async blockTeamProject(
+    @Param('projectId') projectId: string,
+    @Body() body: { block: boolean },
+  ): Promise<boolean> {
+    const { block } = body;
+    const project = await this.projectModel.findOneAndUpdate(
+      { _id: projectId },
+      { block: block },
+      { new: true },
+    );
+
+    if (!project) throw new BadRequestException('Not found project');
+
+    const hackathon = await this.hackathonModel.findById(
+      project.registeredToHackathon,
+    );
+
+    const registerUsers = hackathon.registerUsers;
+
+    registerUsers.forEach((item) => {
+      if (project.createdBy.includes(new Types.ObjectId(item.userId))) {
+        block
+          ? (item.status = TEAM_STATUS.BLOCK)
+          : (item.status = TEAM_STATUS.HAD_TEAM);
+      }
+    });
+
+    await this.hackathonModel.findOneAndUpdate(
+      { _id: hackathon._id },
+      { registerUsers: registerUsers },
+      { new: true },
+    );
+
+    return true;
   }
 
   @Post(':projectId/send-mail-invite')

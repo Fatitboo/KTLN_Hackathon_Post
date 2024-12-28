@@ -2,7 +2,7 @@ import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import { useEffect, useState } from "react";
 import { CustomButton } from "../../../../components";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import Swal from "sweetalert2";
 import {
   registerHackathonAction,
@@ -11,6 +11,7 @@ import {
 
 function RegisterToHackathon() {
   const [TeamStatus, setTeamStatus] = useState("");
+  const { id } = useOutletContext();
   const [isFirstChecked, setIsFirstChecked] = useState(false);
   const [isSecondChecked, setIsSecondChecked] = useState(false);
   const users = useSelector((store) => store.users);
@@ -40,7 +41,7 @@ function RegisterToHackathon() {
           break;
       }
       const payload = {
-        hackathonId: "67386091dc5db4aea4e96603",
+        hackathonId: id.toString(),
         additionalInfo: {
           status: b,
         },

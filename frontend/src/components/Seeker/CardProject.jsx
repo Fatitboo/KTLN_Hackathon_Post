@@ -36,7 +36,7 @@ const CardProject = ({
         </div>
         <div className=" mt-4 flex justify-between p-2 bg-gray-100 align-bottom">
           <div className="flex -space-x-2 ">
-            {member.map((item) => {
+            {member?.map((item) => {
               return (
                 <img
                   key={item._id}

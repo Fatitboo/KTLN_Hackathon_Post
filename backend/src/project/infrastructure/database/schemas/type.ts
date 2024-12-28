@@ -27,6 +27,10 @@ export class CommentItem {
 export class UpdateItem {
   @Prop()
   @IsString()
+  @IsOptional()
+  id?: string;
+
+  @Prop({})
   user: string;
 
   @Prop()

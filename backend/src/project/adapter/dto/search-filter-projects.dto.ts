@@ -26,7 +26,7 @@ export class FilterProjectsDto {
 
   @IsOptional()
   @IsBoolean()
-  notHadPrizes?: boolean;
+  joinHackathon?: boolean;
 
   @IsOptional()
   @IsArray()

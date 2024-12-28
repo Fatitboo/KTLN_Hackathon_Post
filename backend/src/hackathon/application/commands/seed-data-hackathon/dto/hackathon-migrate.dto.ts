@@ -6,6 +6,7 @@ export class HackathonMigrateDTO {
   tagline: string;
   managerMail: string;
   hostName: string;
+  hackathonIntegrateId: number;
   hackathonTypes: string[];
   // registerUsers: RegisterUser[];
   // submitions: Types.ObjectId[];
@@ -35,6 +36,7 @@ export class HackathonMigrateDTO {
   prizeCurrency: string;
   prizes: any[];
   // user: Types.ObjectId;
+  location: string;
 
   static fromCSVChunk(chunk: any): HackathonMigrateDTO {
     const dateObject = transformDate(chunk['end_date']);
@@ -42,6 +44,7 @@ export class HackathonMigrateDTO {
     return {
       hackathonName: chunk['title'],
       tagline: chunk['challenge_description'],
+      hackathonIntegrateId: parseInt(chunk['hackathon_id']),
       managerMail: generateRandomEmail(),
       hostName: chunk['organization_name'],
       hackathonTypes: convertTagsToArray(chunk['themes']),
@@ -52,8 +55,11 @@ export class HackathonMigrateDTO {
       isPublished: true,
       participantAge: {
         min: 13,
+        max: 24,
+        type: 'Range',
       },
       teamRequirement: {
+        type: 'Range',
         min: 2,
         max: 4,
         isRequire: true,
@@ -73,27 +79,28 @@ export class HackathonMigrateDTO {
       subjectMailTitle: 'Your hackathon harvest is here!🌾',
       contentMailRegister: `<table width="100%" border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; color: rgb(0, 0, 0); font-family: Arial, Helvetica, sans-serif; font-size: small; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 254, 254); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;" id="isPasted"><tbody style="box-sizing: border-box;"><tr style="box-sizing: border-box;"><td style="margin: 0px; box-sizing: border-box; padding-left: 15px; padding-top: 10px; text-align: center; width: 565px;"><h1 style='box-sizing: border-box; margin: 0px; color: rgb(51, 51, 51); direction: ltr; font-family: Arial, "Helvetica Neue", Helvetica, sans-serif; font-size: 18px; font-weight: 700; letter-spacing: normal; line-height: 21.6px; text-align: left;'><span style="box-sizing: border-box; word-break: break-word;">We're back with a fresh crop of opportunities for you to grow, learn, and win!</span></h1></td></tr></tbody></table><table width="100%" border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; color: rgb(0, 0, 0); font-family: Arial, Helvetica, sans-serif; font-size: small; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 254, 254); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; word-break: break-word;"><tbody style="box-sizing: border-box;"><tr style="box-sizing: border-box;"><td style="margin: 0px; box-sizing: border-box; padding-left: 15px; padding-right: 15px; padding-top: 15px;"><div style='box-sizing: border-box; color: rgb(51, 51, 51); direction: ltr; font-family: Arial, "Helvetica Neue", Helvetica, sans-serif; font-size: 15px; font-weight: 400; letter-spacing: 0px; line-height: 22.5px; text-align: left;'><p style="box-sizing: border-box; line-height: inherit; margin: 0px 0px 15px;">We rounded up some of the most exciting competitions happening right now — don't miss your chance to make your mark and win big.<img alt="🤩" draggable="false" src="blob:http://localhost:5173/afe8db9f-55b1-4426-957e-874ce5c4ca0c" style="height: 1.2em; width: 1.2em; box-sizing: border-box;" class="fr-fil fr-dib"></p><p style="box-sizing: border-box; line-height: inherit; margin: 0px 0px 15px;">Check out brand new hackathons from Atlassian, Google, Determined AI, and more.<img alt="👇" draggable="false" src="blob:http://localhost:5173/19509fe3-4239-4928-ae82-d040dbc1f8a9" style="height: 1.2em; width: 1.2em; box-sizing: border-box;" class="fr-fil fr-dib"></p><p style="box-sizing: border-box; line-height: inherit; margin: 0px 0px 15px;">Happy coding!</p><p style="box-sizing: border-box; line-height: inherit; margin: 0px;">-Devpost Team&nbsp;</p></div></td></tr></tbody></table>`,
       submissions: {
-        start: chunk['start_date'],
-        deadline: convertDateFormat(chunk['end_date']),
+        start: new Date(chunk['start_date']),
+        deadline: new Date(chunk['end_date']),
         note: `<p><span style='color: rgb(25, 35, 37); font-family: Circular, "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 700; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;' id="isPasted">Have you signed up for the Chrome Built-in AI Early Preview Program? Sign up to gain access to the documentation, stay up-to-date with the latest changes, and discover new APIs.</span></p>`,
         isUploadFile: true,
         isUploadVideo: true,
       },
       judgingType: getRandomEducationLevel('judge'),
       judgingPeriod: {
-        start: dateObject.start,
-        end: dateObject.end,
+        start: new Date(dateObject.start),
+        end: new Date(dateObject.end),
       },
       judges: generateRandomJudgesList(getRandom()),
       criteria: generateRandomCiteList(getRandom()),
       winnersAnnounced: dateObject.announcement,
       prizeCurrency: '$',
       prizes: getRandomPrizeList(),
+      location: chunk['displayed_location'],
       // user: Types.ObjectId,
     };
   }
 }
-function getRandomObjectList() {
+export function getRandomObjectList() {
   const labels = ['Home', 'About Us', 'Services', 'Contact', 'Blog'];
   const types = ['Page', 'Section', 'Article', 'Link', 'External'];
   const urls = [
@@ -120,7 +127,7 @@ function getRandomObjectList() {
 
   return objectList;
 }
-function getRandomPrizeList() {
+export function getRandomPrizeList() {
   const prizeNames = [
     'Best ‘Real-World’ App (Chrome Extension)',
     'Most Innovative App',
@@ -155,7 +162,7 @@ function getRandomPrizeList() {
 
   return prizeList;
 }
-function getRandomObject() {
+export function getRandomObject() {
   const titles = [
     'Functionality',
     'Performance',
@@ -180,41 +187,34 @@ function getRandomObject() {
     description: descriptions[randomIndex],
   };
 }
-function getRandom() {
+export function getRandom() {
   return Math.floor(Math.random() * 5) + 1;
 }
-function generateRandomEmail(): string {
-  const domains = ['gmail.com', 'yahoo.com', 'outlook.com', 'hotmail.com'];
-  const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
-  const nameLength = Math.floor(Math.random() * 10) + 5; // Tên email dài từ 5-15 ký tự
-  let username = '';
+export function generateRandomEmail(): string {
+  const mails = [
+    'vanphat16032003asd@gmail.com',
+    'ngxvanphat@gmail.com',
+    '21522448@gm.uit.edu.vn',
+    '21522402@gm.uit.edu.vn',
+  ];
 
-  // Tạo phần username ngẫu nhiên
-  for (let i = 0; i < nameLength; i++) {
-    const randomIndex = Math.floor(Math.random() * chars.length);
-    username += chars[randomIndex];
-  }
-
-  // Chọn domain ngẫu nhiên
-  const randomDomain = domains[Math.floor(Math.random() * domains.length)];
-
-  return `${username}@${randomDomain}`;
+  return mails[Math.floor(Math.random() * mails.length)];
 }
-function convertTagsToArray(tagsStr): string[] {
+export function convertTagsToArray(tagsStr): string[] {
   // Loại bỏ dấu ngoặc đơn đầu và cuối, sau đó tách chuỗi thành mảng
   const cleanedStr = tagsStr.replace(/[\[\]']/g, '').trim();
   const tagsArray = cleanedStr.split(',').map((tag) => tag.trim());
 
   return tagsArray;
 }
-function transformDate(dateStr) {
-  const inputDate = new Date(dateStr.split('-').reverse().join('-'));
+export function transformDate(dateStr) {
+  // const inputDate = new Date(dateStr.split('-').reverse().join('-'));
 
   function formatDate(date) {
     return date.toISOString().slice(0, 16);
   }
 
-  const startDate = new Date(inputDate);
+  const startDate = new Date(dateStr);
   startDate.setDate(startDate.getDate() + 1);
 
   const endDate = new Date(startDate);
@@ -229,7 +229,7 @@ function transformDate(dateStr) {
     announcement: formatDate(announcementDate),
   };
 }
-function getRandomEducationLevel(type?: string): string {
+export function getRandomEducationLevel(type?: string): string {
   const levels = ['College/University', 'Civic', 'High School'];
   const judgesTypes = ['ONLINE', 'OFFLINE'];
 
@@ -238,7 +238,7 @@ function getRandomEducationLevel(type?: string): string {
 
   return type === 'judge' ? judgesTypes[randomIndex2] : levels[randomIndex];
 }
-function convertDateFormat(dateString: string): Date {
+export function convertDateFormat(dateString: string): Date {
   // Tách chuỗi ngày thành các phần
   const [day, month, year] = dateString.split('-');
 
@@ -259,11 +259,11 @@ function createRandomJudge() {
 }
 
 // Hàm tạo danh sách ngẫu nhiên Judges
-function generateRandomJudgesList(count: number): any[] {
+export function generateRandomJudgesList(count: number): any[] {
   return Array.from({ length: count }, () => createRandomJudge());
 }
 
 // Hàm tạo danh sách ngẫu nhiên cite
-function generateRandomCiteList(count: number): any[] {
+export function generateRandomCiteList(count: number): any[] {
   return Array.from({ length: count }, () => getRandomObject());
 }

@@ -66,7 +66,7 @@ function MyProject() {
           )}
           <div>
             <div className="my-5 grid grid-cols-2 max-md:grid-cols-1 gap-6">
-              {[...(itemProject || [])].map((card, index) => (
+              {[...(itemProject ?? [])].map((card, index) => (
                 <CardProject
                   key={index}
                   id={card._id}
@@ -99,10 +99,14 @@ function MyProject() {
           )}
           <div>
             <HackathonInfo
+              prizes={`${item?.prizeCurrency ?? "$"} ${Math.floor(
+                Math.random() * 10000
+              )}`}
               themes={item?.hackathonTypes}
               organization={item?.hostName}
               start={item?.submissions?.start}
               end={item?.submissions?.deadline}
+              participants={item?.registerUsers?.length}
             />
           </div>
         </div>

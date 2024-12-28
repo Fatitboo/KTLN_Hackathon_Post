@@ -19,7 +19,7 @@ export class SearchFilterProjectsHandler
       withDemoVideos,
       withGallery,
       winnersOnly,
-      notHadPrizes,
+      joinHackathon,
       tags,
       hackathonId,
       sortOption,
@@ -46,10 +46,14 @@ export class SearchFilterProjectsHandler
       filter['galary.0'] = withGallery ? { $exists: true } : { $exists: false };
     }
 
+    if (joinHackathon !== undefined) {
+      filter['registeredToHackathon'] = joinHackathon
+        ? { $exists: true }
+        : { $exists: false };
+    }
+
     if (winnersOnly) {
       filter.isSubmmited = true;
-    } else if (notHadPrizes) {
-      filter.isSubmmited = false;
     }
 
     if (tags && tags.length > 0) {
@@ -59,13 +63,17 @@ export class SearchFilterProjectsHandler
     if (hackathonId) {
       filter.registeredToHackathon = new Types.ObjectId(hackathonId);
     }
-    console.log('🚀 ~ execute ~ filter:', filter);
+
+    const sortOptions: any = { createdAt: -1 };
+    if (sortOption === 'Popular') sortOptions._id = -1;
+    if (sortOption === 'Newest') sortOptions.createdAt = -1;
 
     const total = await this.projectModel.countDocuments(filter); // Tổng số lượng dự án
     const skip = (page - 1) * limit;
 
     const data = await this.projectModel
       .find(filter)
+      .sort(sortOptions)
       .skip(skip)
       .limit(limit)
       .exec();

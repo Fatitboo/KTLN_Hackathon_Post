@@ -28,6 +28,8 @@ function BrowerProjects() {
   const [selectedTags, setSelectedTags] = useState(["All"]);
   const [withDemoVideos, setWithDemoVideos] = useState(false);
   const [withGallery, setWithGallery] = useState(false);
+  const [winnersOnly, setWinnersOnly] = useState(false);
+  const [joinHackathon, setJoinHackathon] = useState(false);
   const [sortOption, setSortOption] = useState("Newest");
   let { loading, projects, isSuccess, tags } = useSelector(
     (state) => state.projects
@@ -42,22 +44,32 @@ function BrowerProjects() {
     dispatch(
       getAllProjects({
         page,
-        limit: 10,
+        limit: 12,
         searchKeyword: searchTerm,
         withDemoVideos,
         withGallery,
         selectedTags,
         sortOption,
+        winnersOnly,
+        joinHackathon,
       })
     );
   };
 
   useEffect(() => {
     handleSearch();
-  }, [page, withDemoVideos, withGallery, selectedTags, sortOption]);
+  }, [
+    page,
+    withDemoVideos,
+    withGallery,
+    selectedTags,
+    sortOption,
+    winnersOnly,
+    joinHackathon,
+  ]);
 
   useEffect(() => {
-    dispatch(getAllTags());
+    dispatch(getAllTags({ type: "project" }));
   }, []);
 
   useEffect(() => {
@@ -145,13 +157,23 @@ function BrowerProjects() {
                       Projects has prizes
                     </div>
                     <label className="my-2 flex items-center space-x-2">
-                      <input type="checkbox" className="form-checkbox" />
+                      <input
+                        type="checkbox"
+                        className="form-checkbox"
+                        checked={winnersOnly}
+                        onChange={() => setWinnersOnly(!winnersOnly)}
+                      />
                       <span>Winners only</span>
                       <span className="w-2 h-2 rounded-full bg-orange-500"></span>
                     </label>
                     <label className="my-2 flex items-center space-x-2">
-                      <input type="checkbox" className="form-checkbox" />
-                      <span>Joined Hacakthon</span>
+                      <input
+                        type="checkbox"
+                        className="form-checkbox"
+                        checked={joinHackathon}
+                        onChange={() => setJoinHackathon(!joinHackathon)}
+                      />
+                      <span>Joined Hackathon</span>
                       <span className="w-2 h-2 rounded-full bg-teal-500"></span>
                     </label>
                   </div>
@@ -166,7 +188,7 @@ function BrowerProjects() {
                         selectedOptions={selectedTags}
                       />
                     </div>
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-2 w-[600px]">
                       {(
                         selectedTags ?? [
                           "adobe",

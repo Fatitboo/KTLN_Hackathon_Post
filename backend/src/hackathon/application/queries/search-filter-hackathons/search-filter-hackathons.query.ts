@@ -4,7 +4,7 @@ export class SearchFilterHackathonsQueryProps {
   status?: string[];
   length?: string[];
   tags?: string[];
-  host?: string;
+  hosts?: string[];
   sort?: string;
   page?: number = 1;
   limit?: number = 10;

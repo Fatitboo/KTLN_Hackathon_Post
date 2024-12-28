@@ -194,7 +194,7 @@ function Home() {
                     <>
                       <div className="my-6" key={index}>
                         <Link
-                          to={`/Hackathon-detail/${hackathon.hackathon_id}/overview`}
+                          to={`/Hackathon-detail/${hackathon._id}/overview`}
                         >
                           <HackathonItem
                             id={hackathon?._id}
@@ -304,8 +304,8 @@ function Home() {
               (hackathon, index) => {
                 return (
                   <>
-                    <div className="my-6" key={hackathon.hackathon_id}>
-                      <Link to={`/Hackathon-detail/${hackathon.id}/overview`}>
+                    <div className="my-6" key={hackathon._id}>
+                      <Link to={`/Hackathon-detail/${hackathon._id}/overview`}>
                         <HackathonItem
                           id={hackathon?._id}
                           startDate={hackathon?.submissions?.start}
@@ -346,8 +346,8 @@ function Home() {
               (hackathon, index) => {
                 return (
                   <>
-                    <div className="my-6" key={hackathon.hackathon_id}>
-                      <Link to={`/Hackathon-detail/${hackathon.id}/overview`}>
+                    <div className="my-6" key={hackathon._id}>
+                      <Link to={`/Hackathon-detail/${hackathon._id}/overview`}>
                         <HackathonItem
                           id={hackathon?._id}
                           startDate={hackathon?.submissions?.start}

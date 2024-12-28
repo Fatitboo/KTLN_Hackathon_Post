@@ -39,7 +39,7 @@ const HackathonInfo = ({
           </div>
 
           <div className="font-medium my-2">Deadline</div>
-          <div>{end} @ 8:00am</div>
+          <div>{new Date(end).toLocaleDateString()} @ 8:00am</div>
         </div>
         <div className=" border-t border-gray-200 py-3 px-5">
           <div className="flex font-light items-center">
@@ -84,7 +84,11 @@ const HackathonInfo = ({
           </div>
           <div className="flex items-center mt-3">
             <BsCalendar2Fill className="text-gray-700 mr-3" />
-            <div className=" text-gray-700 text-sm">{`${start} - ${end}`}</div>
+            <div className=" text-gray-700 text-sm">{`${new Date(
+              start
+            ).toLocaleDateString()} - ${new Date(
+              end
+            ).toLocaleDateString()}`}</div>
           </div>
           <div className="flex  mt-3 ">
             <BsTagsFill className="text-gray-700 mr-2 mt-2 " />

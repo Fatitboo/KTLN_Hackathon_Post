@@ -10,8 +10,9 @@ import {
 } from "../../../../redux/slices/users/usersSlices";
 
 function RegisterToHackathon() {
+  const { item, id, isRegistered, user } = useOutletContext();
+
   const [TeamStatus, setTeamStatus] = useState("");
-  const { id } = useOutletContext();
   const [isFirstChecked, setIsFirstChecked] = useState(false);
   const [isSecondChecked, setIsSecondChecked] = useState(false);
   const users = useSelector((store) => store.users);
@@ -41,7 +42,7 @@ function RegisterToHackathon() {
           break;
       }
       const payload = {
-        hackathonId: id.toString(),
+        hackathonId: id,
         additionalInfo: {
           status: b,
         },
@@ -79,7 +80,7 @@ function RegisterToHackathon() {
               `/Seeker/project/manage-project/!imptHktid_12762_${registerRs.projectId}`
             );
           } else {
-            navigate(`/Hackathon-detail/${"12762"}`);
+            window.location.href = `/Hackathon-detail/${id}`;
           }
         }
       });

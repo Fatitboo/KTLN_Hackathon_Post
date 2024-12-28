@@ -80,10 +80,14 @@ function Overview() {
           </div>
           <div className="col-span-1 text-sm mt-2">
             <HackathonInfo
+              prizes={`${item?.prizeCurrency ?? "$"} ${Math.floor(
+                Math.random() * 10000
+              )}`}
               themes={item?.hackathonTypes}
               organization={item?.hostName}
               start={item?.submissions?.start}
               end={item?.submissions?.deadline}
+              participants={item?.registerUsers?.length}
             />
           </div>
         </div>

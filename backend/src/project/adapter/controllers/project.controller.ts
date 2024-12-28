@@ -35,8 +35,9 @@ import {
   HackathonDocument,
   TEAM_STATUS,
 } from 'src/hackathon/infrastructure/database/schemas';
-import { da } from '@faker-js/faker/.';
 import { JwtAuthGuard } from 'src/user/domain/common/guards/jwtAuth.guard';
+import { InteractionDocument } from 'src/hackathon/infrastructure/database/schemas/interaction.schema';
+import { v4 as uuidv4 } from 'uuid';
 import { GetMembersProjectQuery } from 'src/project/application/queries/get-member-project/get-member-project.query';
 
 @Controller('projects')
@@ -52,6 +53,8 @@ export class ProjectController {
     private readonly userModel: Model<UserDocument>,
     @InjectModel(HackathonDocument.name)
     private readonly hackathonModel: Model<HackathonDocument>,
+    @InjectModel(InteractionDocument.name)
+    private readonly interactionModel: Model<InteractionDocument>,
   ) {}
 
   @Get()
@@ -67,13 +70,13 @@ export class ProjectController {
   }
 
   @Post('search-tags')
-  async searchTags(@Body() body: { type: string }) {
+  async searchTags(@Body() body: { type: string; hackathonId?: string }) {
     console.log('🚀 ~ ProjectController ~ searchTags ~ type:', body.type);
     let result;
     if (body.type === 'hackathon') {
       result = await this.hackathonModel.aggregate([
-        { $unwind: '$hackathonTypes' },
-        { $group: { _id: '$hackathonTypes' } },
+        { $unwind: '$hostName' },
+        { $group: { _id: '$hostName' } },
         { $project: { _id: 0, value: '$_id', label: '$_id' } },
       ]);
     }
@@ -86,6 +89,11 @@ export class ProjectController {
     }
     if (body.type === 'user') {
       result = await this.userModel.aggregate([
+        {
+          $match: {
+            registerHackathons: new Types.ObjectId(body.hackathonId), // Check if the hackathonId is present in the registerHackathons array
+          },
+        },
         { $unwind: '$settingRecommend.skills' },
         { $group: { _id: '$settingRecommend.skills' } },
         { $project: { _id: 0, value: '$_id', label: '$_id' } },
@@ -338,6 +346,16 @@ export class ProjectController {
       await existingUser.save();
       await existingHackathon.save();
 
+      if (existingHackathon.hackathonIntegrateId && userId) {
+        await this.interactionModel.create({
+          user_id: new Types.ObjectId(userId),
+          hackathon: existingHackathon._id,
+          hackathon_id: existingHackathon.hackathonIntegrateId,
+          status: TEAM_STATUS.HAD_TEAM,
+          interaction_type: 'join',
+        });
+      }
+
       return {
         projectId,
         teamStatus: TEAM_STATUS.HAD_TEAM,
@@ -365,6 +383,21 @@ export class ProjectController {
         { $set: { 'registerUsers.$.status': TEAM_STATUS.HAD_TEAM } },
       );
       existingUser.projects.push(project._id);
+
+      if (existingHackathon.hackathonIntegrateId && userId) {
+        await this.interactionModel.findOneAndUpdate(
+          {
+            user_id: userId,
+            hackathon_id: hackathonId,
+            interaction_type: 'join',
+          },
+          {
+            $set: {
+              status: TEAM_STATUS.HAD_TEAM, // Trạng thái mới
+            },
+          },
+        );
+      }
       await existingUser.save();
       await existingHackathon.save();
 
@@ -374,6 +407,134 @@ export class ProjectController {
         hackathonId,
       };
     }
+  }
+  @Post(':projectId/toggle-like')
+  async toggleLike(
+    @Param('projectId') projectId: string,
+    @Body('userId') userId: string,
+  ) {
+    const project = await this.projectModel.findById(projectId).populate([
+      {
+        path: 'registeredToHackathon',
+        model: 'HackathonDocument',
+        select: 'hackathonIntegrateId _id',
+      },
+    ]);
+
+    if (!project) {
+      throw new Error('Project not found');
+    }
+
+    // Kiểm tra user đã like chưa
+    const hasLiked = project.likedBy.includes(userId);
+
+    if (hasLiked) {
+      // Nếu đã like, thì unlike
+      project.likedBy = project.likedBy.filter((id) => id !== userId);
+    } else {
+      // Nếu chưa like, thì thêm vào likedBy
+      project.likedBy.push(userId);
+      if (project.registeredToHackathon && userId) {
+        if (
+          (project.registeredToHackathon as any).hackathonIntegrateId &&
+          userId
+        ) {
+          await this.interactionModel.create({
+            user_id: new Types.ObjectId(userId),
+            hackathon: new Types.ObjectId(
+              (project.registeredToHackathon as any)._id,
+            ),
+            hackathon_id: (project.registeredToHackathon as any)
+              .hackathonIntegrateId,
+            interaction_type: 'like',
+          });
+        }
+      }
+    }
+    await project.save();
+    return project;
+  }
+
+  @Post(':projectId/add-comment')
+  async addComment(
+    @Param('projectId') projectId: string,
+    @Body()
+    body: {
+      user?: string;
+      updateStr?: string;
+      updateId?: string;
+      comment?: { user: string; comment: string };
+    },
+  ) {
+    const { updateId, comment, user, updateStr } = body;
+    const project = await this.projectModel.findById(projectId).populate([
+      {
+        path: 'registeredToHackathon',
+        model: 'HackathonDocument',
+        select: 'hackathonIntegrateId _id',
+      },
+    ]);
+
+    if (!project) {
+      throw new Error('Project not found');
+    }
+
+    // Tìm bản cập nhật tương ứng
+
+    if (!project.updates) {
+      project.updates = [
+        {
+          id: uuidv4(),
+          update: updateStr,
+          user,
+          createdAt: new Date().toISOString(),
+          comments: comment
+            ? [
+                {
+                  user: comment.user,
+                  comment: comment.comment,
+                  createdAt: new Date().toISOString(),
+                },
+              ]
+            : [],
+        },
+      ];
+    } else {
+      // Thêm comment vào update
+      if (project.updates[0].comments.length === 0) {
+        project.updates[0].comments = [
+          {
+            user: comment.user,
+            comment: comment.comment,
+            createdAt: new Date().toISOString(),
+          },
+        ];
+      } else {
+        project.updates[0].comments.push({
+          user: comment.user,
+          comment: comment.comment,
+          createdAt: new Date().toISOString(),
+        });
+      }
+    }
+    if (project.registeredToHackathon && user) {
+      if ((project.registeredToHackathon as any).hackathonIntegrateId && user) {
+        await this.interactionModel.create({
+          user_id: new Types.ObjectId(user),
+          hackathon: new Types.ObjectId(
+            (project.registeredToHackathon as any)._id,
+          ),
+          hackathon_id: (project.registeredToHackathon as any)
+            .hackathonIntegrateId,
+          interaction_type: 'like',
+        });
+      }
+    }
+
+    await this.projectModel.findByIdAndUpdate(projectId, {
+      updates: project.updates,
+    });
+    return project;
   }
 
   @Post(':projectId/remove-member')
@@ -417,6 +578,18 @@ export class ProjectController {
       { $set: { 'registerUsers.$.status': TEAM_STATUS.FINDING_TEAMATE } },
     );
 
+    await this.interactionModel.findOneAndUpdate(
+      {
+        user_id: memberId,
+        hackathon_id: hackathonId,
+        interaction_type: 'join',
+      },
+      {
+        $set: {
+          status: TEAM_STATUS.FINDING_TEAMATE, // Trạng thái mới
+        },
+      },
+    );
     return memberId;
   }
 }

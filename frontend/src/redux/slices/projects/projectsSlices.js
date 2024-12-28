@@ -20,6 +20,8 @@ export const getAllProjects = createAsyncThunk(
       if (payload.withDemoVideos)
         params.withDemoVideos = payload.withDemoVideos;
       if (payload.withGallery) params.withGallery = payload.withGallery;
+      if (payload.winnersOnly) params.winnersOnly = payload.winnersOnly;
+      if (payload.joinHackathon) params.joinHackathon = payload.joinHackathon;
       if (payload.sortOption) params.sortOption = payload.sortOption;
       if (payload.selectedTags) {
         if (payload.selectedTags[0] === "All") {
@@ -57,7 +59,8 @@ export const getAllTags = createAsyncThunk(
   async (payload, { rejectWithValue, getState, dispatch }) => {
     try {
       const { data } = await axios.post(`${baseUrl}/${apiPrefix}/search-tags`, {
-        type: "project",
+        type: payload.type,
+        ...(payload.id ? { hackathonId: payload.id } : {}),
       });
       return data;
     } catch (error) {
@@ -252,6 +255,53 @@ export const getProjectSingle = createAsyncThunk(
       // };
 
       const { data } = await axios.get(`${baseUrl}/${apiPrefix}/${productId}`);
+      return data;
+    } catch (error) {
+      if (!error?.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
+export const toggleLikeProject = createAsyncThunk(
+  "projects/toggleLikeProject",
+  async (productId, { rejectWithValue, getState, dispatch }) => {
+    try {
+      const user = getState()?.users;
+      const { userAuth } = user;
+      console.log("🚀 ~ userAuth:", userAuth);
+      const { data } = await axios.post(
+        `${baseUrl}/${apiPrefix}/${productId}/toggle-like`,
+        { userId: userAuth.user.id }
+      );
+      return data;
+    } catch (error) {
+      if (!error?.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+export const addCommentProject = createAsyncThunk(
+  "projects/addCommentProject",
+  async (payload, { rejectWithValue, getState, dispatch }) => {
+    try {
+      const user = getState()?.users;
+      const { userAuth } = user;
+      console.log("🚀 ~ userAuth:", userAuth);
+      const { data } = await axios.post(
+        `${baseUrl}/${apiPrefix}/${payload.productId}/add-comment`,
+        {
+          user: userAuth.user.id,
+          updateStr:
+            "This is some update for the project. Retinopathy is a leading cause of preventable blindness, especially in underserved regions with limited access",
+          comment: { user: userAuth.user.fullname, comment: payload.comment },
+        }
+      );
+      console.log("🚀 ~ data:", data);
       return data;
     } catch (error) {
       if (!error?.response) {
@@ -589,6 +639,32 @@ const projectsSlices = createSlice({
         state.loading = false;
         state.loadingPr = false;
         state.isSuccess = false;
+        state.appErr = action?.payload?.message;
+      }),
+      builder.addCase(toggleLikeProject.pending, (state, action) => {
+        state.loading = true;
+        state.isSuccessUD = false;
+      }),
+      builder.addCase(toggleLikeProject.fulfilled, (state, action) => {
+        state.loading = false;
+        state.isSuccessUD = true;
+      }),
+      builder.addCase(toggleLikeProject.rejected, (state, action) => {
+        state.loading = false;
+        state.isSuccessUD = false;
+        state.appErr = action?.payload?.message;
+      }),
+      builder.addCase(addCommentProject.pending, (state, action) => {
+        state.loading = true;
+        state.isSuccessUD = false;
+      }),
+      builder.addCase(addCommentProject.fulfilled, (state, action) => {
+        state.loading = false;
+        state.isSuccessUD = true;
+      }),
+      builder.addCase(addCommentProject.rejected, (state, action) => {
+        state.loading = false;
+        state.isSuccessUD = false;
         state.appErr = action?.payload?.message;
       }),
       //get project single

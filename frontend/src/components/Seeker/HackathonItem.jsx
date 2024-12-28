@@ -110,7 +110,11 @@ const HackathonItem = ({
                   </div>
                   <div className="flex items-center mt-3">
                     <BsCalendar2Fill className="text-gray-700 mr-3" />
-                    <div className=" text-gray-700 text-sm">{`${startDate} - ${endDate}`}</div>
+                    <div className=" text-gray-700 text-sm">{`${new Date(
+                      startDate
+                    ).toLocaleDateString()} - ${new Date(
+                      endDate
+                    ).toLocaleDateString()}`}</div>
                   </div>
                   <div className="flex items-start mt-3 ">
                     <BsTagsFill className="text-gray-700 mr-2 mt-2 w-8" />

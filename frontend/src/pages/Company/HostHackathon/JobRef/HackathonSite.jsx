@@ -15,7 +15,6 @@ import "froala-editor/js/plugins/font_size.min.js";
 
 import FroalaEditor from "react-froala-wysiwyg";
 import TextInput from "../InputField/TextInput";
-import { IconLlama } from "../../../../assets/icons";
 import OptimizeContentPopup from "../../../../components/Organizer/OptimizeContentPopup";
 
 function JobDes({ formId, formSubmit, flag, config, content, onDoneSubmit }) {
@@ -24,7 +23,16 @@ function JobDes({ formId, formSubmit, flag, config, content, onDoneSubmit }) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    formSubmit(inputValues);
+    // formSubmit(inputValues);
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(
+      inputValues.mainDescription,
+      "text/html"
+    );
+
+    // Lấy tất cả text content
+    const textContent = doc.body.textContent.trim();
+    console.log(textContent);
   }
 
   const [inputValues, setInputValues] = useState({
@@ -124,11 +132,7 @@ function JobDes({ formId, formSubmit, flag, config, content, onDoneSubmit }) {
                 />
               </div>
               <div className="absolute top-0 right-0 translate-x-1/2 translate-y-2 z-10">
-                <OptimizeContentPopup
-                  message={
-                    "Welcome to the Canva AI & Integrations Hackathon! Unleash your creativity and technical prowess in this exciting competition designed to push the boundaries of innovation within the Canva Developers Community. Whether you're an experienced developer or just starting out, this hackathon is your chance to shine. Join us in building apps or integrations for the Canva Apps Marketplace using our powerful Apps SDK and the brand new Connect APIs or solutions for Canva users building with our Apps SDK. After the hackathon, you may even be able to monetize your apps to Canva’s {185 million} monthly active users! This is more than just a competition—it's an opportunity to grow, learn, and make a significant impact. By participating, you'll not only gain invaluable experience but also contribute to generating high-quality use cases for the Connect APIs. Don't miss this chance to be a part of the vibrant Canva Developers Community, showcase your innovative solutions, and potentially see your project featured in the Canva Apps Marketplace. Register now and start creating something amazing! "
-                  }
-                />
+                <OptimizeContentPopup message={inputValues.mainDescription} />
               </div>
             </div>
           </div>

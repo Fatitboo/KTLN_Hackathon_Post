@@ -3,7 +3,7 @@ import { Inject, NotFoundException } from '@nestjs/common';
 import {
   PROJECT_REPOSITORY,
   ProjectRepository,
-} from 'src/Project/domain/repositories/Project.repository';
+} from 'src/project/domain/repositories/project.repository';
 import { UpdateProjectCommand } from './update-project.command';
 import { Project } from 'src/project/domain/entities/project.entity';
 import { Types } from 'mongoose';

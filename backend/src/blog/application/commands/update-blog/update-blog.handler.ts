@@ -3,7 +3,7 @@ import { Inject, NotFoundException } from '@nestjs/common';
 import {
   BLOG_REPOSITORY,
   BlogRepository,
-} from 'src/Blog/domain/repositories/blog.repository';
+} from 'src/blog/domain/repositories/blog.repository';
 import { UpdateBlogCommand } from './update-blog.command';
 import { Blog } from 'src/blog/domain/entities/blog.entity';
 

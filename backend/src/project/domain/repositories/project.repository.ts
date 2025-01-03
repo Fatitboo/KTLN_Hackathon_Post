@@ -1,4 +1,4 @@
-import { ProjectDocument } from 'src/Project/infrastructure/database/schemas';
+import { ProjectDocument } from 'src/project/infrastructure/database/schemas';
 import { Project } from '../entities/project.entity';
 export const PROJECT_REPOSITORY = 'ProjectRepository';
 export interface ProjectRepository {

@@ -1,4 +1,4 @@
-import { BlogDocument } from 'src/Blog/infrastructure/database/schemas';
+import { BlogDocument } from 'src/blog/infrastructure/database/schemas';
 import { Blog } from '../entities/blog.entity';
 export const BLOG_REPOSITORY = 'BlogRepository';
 export interface BlogRepository {

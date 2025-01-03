@@ -52,6 +52,7 @@ export class UserController {
 
   @Get()
   async getAllUsers(@Query('page') page: number) {
+    console.log('dppppppppppppppppppppppp');
     return await this.queryBus.execute(new GetUsersQuery(page));
   }
 

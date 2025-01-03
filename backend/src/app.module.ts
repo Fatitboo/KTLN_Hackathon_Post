@@ -31,6 +31,7 @@ import { InvoiceModule } from './invoice/invoice.module';
     ]),
     UserModule,
     HackathonModule,
+    BlogModule,
     ProjectModule,
     InvoiceModule,
   ],

@@ -3,7 +3,7 @@ import { Inject, NotFoundException } from '@nestjs/common';
 import {
   PROJECT_REPOSITORY,
   ProjectRepository,
-} from 'src/Project/domain/repositories/Project.repository';
+} from 'src/project/domain/repositories/project.repository';
 import { DeleteProjectCommand } from './delete-project.command';
 
 @CommandHandler(DeleteProjectCommand)

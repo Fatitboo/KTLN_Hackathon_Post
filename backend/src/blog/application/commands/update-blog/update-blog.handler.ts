@@ -3,9 +3,9 @@ import { Inject, NotFoundException } from '@nestjs/common';
 import {
   BLOG_REPOSITORY,
   BlogRepository,
-} from 'src/Blog/domain/repositories/Blog.repository';
+} from 'src/Blog/domain/repositories/blog.repository';
 import { UpdateBlogCommand } from './update-blog.command';
-import { Blog } from 'src/Blog/domain/entities/Blog.entity';
+import { Blog } from 'src/blog/domain/entities/blog.entity';
 
 @CommandHandler(UpdateBlogCommand)
 export class UpdateBlogHandler implements ICommandHandler<UpdateBlogCommand> {

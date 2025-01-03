@@ -3,7 +3,7 @@ import { BlogDocument } from '../schemas';
 import { Model } from 'mongoose';
 import { NotFoundException } from '@nestjs/common';
 import { UserDocument } from 'src/user/infrastructure/database/schemas';
-import { Blog } from 'src/Blog/domain/entities/Blog.entity';
+import { Blog } from 'src/blog/domain/entities/blog.entity';
 import { BlogRepository } from 'src/blog/domain/repositories/blog.repository';
 
 export class MongooseBlogRepository implements BlogRepository {

@@ -3,7 +3,7 @@ import { Inject, NotFoundException } from '@nestjs/common';
 import {
   BLOG_REPOSITORY,
   BlogRepository,
-} from 'src/Blog/domain/repositories/Blog.repository';
+} from 'src/Blog/domain/repositories/blog.repository';
 import { DeleteBlogCommand } from './delete-blog.command';
 
 @CommandHandler(DeleteBlogCommand)

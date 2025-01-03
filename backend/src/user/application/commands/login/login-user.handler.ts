@@ -1,5 +1,5 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { LoginUserCommand } from './Login-user.command';
+import { LoginUserCommand } from './login-user.command';
 import {
   USER_REPOSITORY,
   UserRepository,

@@ -1,14 +1,14 @@
 import { LayoutNoSidebar, LayoutHasSidebar } from "../components/index";
 import {
-  AddOccupation,
+  // AddOccupation,
   Approval,
   CompanyProfileAdmin,
   Dashboard,
-  EditOccupation,
+  // EditOccupation,
   HistoryTransaction,
   ManageReport,
   ManageVacancyAdmin,
-  OccupationMng,
+  // OccupationMng,
   ProjectDetailAdmin,
   Skills,
   UserMng,
@@ -57,6 +57,10 @@ import SubmitProject from "../pages/Seeker/ManageProject/SubmitProject";
 import BrowserProducts from "../pages/Seeker/BrowserProducts";
 import AutoRegisterToHackathon from "../pages/Seeker/Hackathon/AutoRegister";
 import ManageHackathonsAdmin from "../pages/Admin/Approval";
+import BrowerBlogs from "../pages/Seeker/BrowerBlogs";
+import ManageReportUser from "../pages/Seeker/Setting/Reports";
+import BlogManagement from "../pages/Admin/BlogMng";
+import AddBlog from "../pages/Admin/BlogMng/AddBlog";
 
 const publicRoutes = [
   // User Layout
@@ -106,6 +110,11 @@ const publicRoutes = [
   {
     path: "/Seeker/brower-projects",
     component: BrowerProjects,
+    layout: LayoutNoSidebar,
+  },
+  {
+    path: "/Seeker/brower-blogs",
+    component: BrowerBlogs,
     layout: LayoutNoSidebar,
   },
   {
@@ -172,6 +181,11 @@ const seekerRoutes = [
   {
     path: "/Seeker/my-profile",
     component: MyProfile,
+    layout: LayoutHasSidebar,
+  },
+  {
+    path: "/Seeker/manage-reports",
+    component: ManageReportUser,
     layout: LayoutHasSidebar,
   },
   {
@@ -275,20 +289,20 @@ const AdminRoutes = [
     layout: LayoutHasSidebar,
   },
   {
-    path: "/Admin/occupation-management",
-    component: OccupationMng,
+    path: "/Admin/blog-management",
+    component: BlogManagement,
     layout: LayoutHasSidebar,
   },
   {
-    path: "/Admin/occupation-management/add-occupation",
-    component: AddOccupation,
+    path: "/Admin/blog-management/add-blog",
+    component: AddBlog,
     layout: LayoutHasSidebar,
   },
-  {
-    path: "/Admin/occupation-management/edit-occupation/:id",
-    component: EditOccupation,
-    layout: LayoutHasSidebar,
-  },
+  // {
+  //   path: "/Admin/blog-management/edit-blog/:id",
+  //   component: EditBlog,
+  //   layout: LayoutHasSidebar,
+  // },
   {
     path: "/Admin/manage-report",
     component: ManageReport,

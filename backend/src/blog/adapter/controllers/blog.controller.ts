@@ -3,67 +3,102 @@ import {
   Controller,
   Delete,
   Get,
+  NotFoundException,
   Param,
   Post,
   Put,
   Query,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { Blog } from 'src/blog/domain/entities/blog.entity';
-import { CreateBlogCommand } from 'src/blog/application/commands/create-blog/create-blog.command';
-import { GetBlogQuery } from 'src/blog/application/queries/get-blog/get-blog.query';
-import { UpdateBlogCommand } from 'src/blog/application/commands/update-blog/update-blog.command';
-import { DeleteBlogCommand } from 'src/blog/application/commands/delete-blog/delete-blog.command';
-import { GetBlogsQuery } from 'src/blog/application/queries/get-blogs/get-blogs.query';
 import { UpdateBlogDTO } from '../dto/update-blog.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { BlogDocument } from 'src/blog/infrastructure/database/schemas';
+import { Model } from 'mongoose';
+import { UserDocument } from 'src/user/infrastructure/database/schemas';
 
 @Controller('blogs')
 export class BlogController {
   constructor(
     private readonly commandBus: CommandBus,
     private readonly queryBus: QueryBus,
+    @InjectModel(BlogDocument.name)
+    private readonly blogModel: Model<BlogDocument>,
+
+    @InjectModel(UserDocument.name)
+    private readonly userModel: Model<UserDocument>,
   ) {}
 
   @Get()
   async getAllBlogs(@Query('page') page: number) {
-    return await this.queryBus.execute(new GetBlogsQuery(page));
+    const blogs = await this.blogModel.find().lean().exec();
+    if (!blogs) return [];
+    return blogs;
   }
 
   @Get(':id')
   async getBlog(@Param('id') id: string) {
-    return await this.queryBus.execute(new GetBlogQuery(id));
+    const blog = await this.blogModel.findById(id).lean().exec();
+    if (!blog) return null;
+    return blog;
   }
 
   @Post(':userId')
   async createBlog(
     @Param('userId') userId: string,
     @Body() blog: UpdateBlogDTO,
-  ): Promise<string> {
-    const result = this.commandBus.execute(
-      new CreateBlogCommand({ userId: userId, blog }),
-    );
+  ) {
+    const existingUser = await this.userModel.findById(userId);
 
-    return result;
+    if (!existingUser) {
+      throw new NotFoundException(`User with ID ${userId} not found.`);
+    }
+
+    const createBlog = new this.blogModel({
+      blogTitle: blog.blogTitle,
+      tagline: blog.tagline,
+      content: blog.content,
+      thumnailImage: blog.thumnailImage,
+      autho: blog.autho,
+      isApproval: blog.isApproval,
+      blogType: blog.blogType,
+      owner: existingUser._id,
+    });
+
+    const blogObj = await createBlog.save();
+
+    existingUser.blogs.push(blogObj._id);
+    await existingUser.save();
+
+    return blogObj;
   }
 
   @Put(':id')
-  async updateBlog(
-    @Param('id') id: string,
-    @Body() blog: UpdateBlogDTO,
-  ): Promise<Blog> {
-    if (id == null) throw new Error('Id is empty');
-    const result = this.commandBus.execute(
-      new UpdateBlogCommand({ id: id, blog }),
-    );
+  async updateBlog(@Param('id') id: string, @Body() blog: UpdateBlogDTO) {
+    const updatedBlog = await this.blogModel
+      .findByIdAndUpdate(
+        id,
+        { $set: blog },
+        { new: true, useFindAndModify: false },
+      )
+      .exec();
 
-    return result;
+    if (!updatedBlog) {
+      throw new NotFoundException(`Blog with ID ${id} not found.`);
+    }
+
+    return updatedBlog;
   }
 
   @Delete(':id')
   async deleteBlog(@Param('id') id: string): Promise<string> {
-    if (id == null) throw new Error('Id is empty');
-    const result = this.commandBus.execute(new DeleteBlogCommand({ id: id }));
+    const existingBlog = await this.blogModel.findById(id);
 
-    return result;
+    if (!existingBlog) {
+      throw new NotFoundException(`Blog with ID ${id} not found.`);
+    }
+
+    await this.blogModel.findByIdAndDelete(id);
+
+    return 'Delete successfully';
   }
 }

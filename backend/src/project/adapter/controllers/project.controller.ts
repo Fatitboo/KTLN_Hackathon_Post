@@ -12,6 +12,7 @@ import {
   Query,
   UseGuards,
   ConflictException,
+  NotFoundException,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Project } from 'src/project/domain/entities/project.entity';
@@ -197,6 +198,27 @@ export class ProjectController {
     );
 
     return true;
+  }
+
+  @Post(':projectId/submit-hackathon')
+  async submitHackathon(
+    @Param('projectId') projectId: string,
+    @Body()
+    body: {
+      hackathonId: string;
+      linkSubmitVideo: string;
+      linkSubmitFile: string;
+    },
+  ) {
+    const project = await this.projectModel.findById(projectId);
+    if (!project) throw new NotFoundException();
+    const hackathon = await this.hackathonModel.findById(body.hackathonId);
+    if (!hackathon) throw new NotFoundException();
+    project.isSubmmited = true;
+    project.linkSubmitFile = body.linkSubmitFile;
+    project.linkSubmitVideo = body.linkSubmitVideo;
+    project.registeredToHackathon = hackathon._id;
+    await project.save();
   }
 
   @Post(':projectId/send-mail-invite')
@@ -388,7 +410,7 @@ export class ProjectController {
         await this.interactionModel.findOneAndUpdate(
           {
             user_id: userId,
-            hackathon_id: hackathonId,
+            hackathon: hackathonId,
             interaction_type: 'join',
           },
           {
@@ -581,7 +603,7 @@ export class ProjectController {
     await this.interactionModel.findOneAndUpdate(
       {
         user_id: memberId,
-        hackathon_id: hackathonId,
+        hackathon: hackathonId,
         interaction_type: 'join',
       },
       {

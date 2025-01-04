@@ -167,6 +167,7 @@ function UserPorfolio() {
                           <CardProject
                             key={index}
                             id={card._id}
+                            member={card.createdBy}
                             title={card?.projectTitle}
                             description={card?.tagline}
                             image={card?.thumnailImage ?? imgDefaultProject}
@@ -176,7 +177,7 @@ function UserPorfolio() {
                             comments={card.comments}
                           />
                           <button
-                            className="absolute top-3 right-3 hidden group-hover:flex items-center bg-blue-600 text-white px-2 py-1 rounded shadow-md text-sm"
+                            className="absolute top-3 right-5 hidden group-hover:flex items-center bg-blue-600 text-white px-2 py-1 rounded shadow-md text-sm"
                             onClick={() =>
                               handleEditProject(
                                 card?.registeredToHackathon

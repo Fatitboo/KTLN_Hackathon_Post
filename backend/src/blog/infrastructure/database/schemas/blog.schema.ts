@@ -35,7 +35,10 @@ export class BlogDocument {
   content: string;
 
   @Prop()
-  thumnailImage: string;
+  thumnailImage?: string;
+
+  @Prop()
+  videoLink?: string;
 
   @Prop({ default: false })
   isApproval: boolean;

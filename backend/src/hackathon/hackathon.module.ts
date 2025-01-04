@@ -30,6 +30,10 @@ import {
   InterationSchema,
 } from './infrastructure/database/schemas/interaction.schema';
 import { AwardHackathonHandler } from './application/commands/awarding-hackathon/awarding-hackathon.handler';
+import {
+  ReportDocument,
+  ReportSchema,
+} from './infrastructure/database/schemas/report.schema';
 
 @Module({
   imports: [
@@ -39,6 +43,7 @@ import { AwardHackathonHandler } from './application/commands/awarding-hackathon
       { name: UserDocument.name, schema: UserSchema },
       { name: ProjectDocument.name, schema: ProjectSchema },
       { name: InteractionDocument.name, schema: InterationSchema },
+      { name: ReportDocument.name, schema: ReportSchema },
     ]),
   ],
   controllers: [HackathonController],

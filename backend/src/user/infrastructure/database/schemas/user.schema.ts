@@ -100,6 +100,9 @@ export class UserDocument {
 
   @Prop()
   expiredDateTokenResetPassword: Date;
+
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'InvoiceDocument' }] })
+  invoices: Types.ObjectId[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(UserDocument).index(

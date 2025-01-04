@@ -58,14 +58,14 @@ export const Payment = () => {
     setMode(selectedMode);
   };
   const handlePayment = (id, price) => {
-    fetch("http://localhost:3000/api/v1/invoices/payment", {
+    fetch("http://localhost:4000/api/v1/invoices/payment", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        userId: "userId",
-        subscriptionId: "subscriptionId",
+        userId: "671a5d4ce7e9496444c1697a",
+        subscriptionId: "6779065634bd989a5b22046c",
         price: String(price * 1000),
         payType: "pay with momo",
       }),

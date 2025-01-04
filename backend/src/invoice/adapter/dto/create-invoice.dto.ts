@@ -2,7 +2,14 @@ import { IsString } from 'class-validator';
 
 export class CreateInvoiceDTO {
   @IsString()
-  id: string;
+  userId: string;
 
-  createInvoice: CreateInvoiceDTO;
+  @IsString()
+  subscriptionId: string;
+
+  @IsString()
+  price: string;
+
+  @IsString()
+  payType: string;
 }

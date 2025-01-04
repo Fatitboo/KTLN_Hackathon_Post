@@ -10,15 +10,24 @@ import { Types } from 'mongoose';
 })
 export class InvoiceDocument {
   @Prop({ type: Types.ObjectId, ref: 'UserDocument' })
-  userId: string;
+  userId: Types.ObjectId;
 
-  @Prop()
+  @Prop({ type: Types.ObjectId, ref: 'SubscriptionDocument' })
   subscriptionId: string;
 
   @Prop()
-  price?: string;
+  price: string;
 
   @Prop()
-  payType?: string;
+  payType: string;
+
+  @Prop()
+  createDate: Date;
+
+  @Prop()
+  startDate: Date;
+
+  @Prop()
+  endDate: Date;
 }
 export const InvoiceSchema = SchemaFactory.createForClass(InvoiceDocument);

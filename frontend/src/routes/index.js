@@ -58,6 +58,7 @@ import BrowserProducts from "../pages/Seeker/BrowserProducts";
 import AutoRegisterToHackathon from "../pages/Seeker/Hackathon/AutoRegister";
 import ManageHackathonsAdmin from "../pages/Admin/Approval";
 import { Payment } from "../pages/Seeker/Payment/Payment";
+import SuccessPaymentPage from "../pages/Seeker/Payment/Sucess";
 
 const publicRoutes = [
   // User Layout
@@ -112,6 +113,11 @@ const publicRoutes = [
   {
     path: "/Seeker/payment",
     component: Payment,
+    layout: LayoutNoSidebar,
+  },
+  {
+    path: "/Seeker/payment/success",
+    component: SuccessPaymentPage,
     layout: LayoutNoSidebar,
   },
   {

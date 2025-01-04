@@ -10,6 +10,8 @@ import { HackathonModule } from './hackathon/hackathon.module';
 import { BlogModule } from './blog/blog.module';
 import { ProjectModule } from './project/project.module';
 import { InvoiceModule } from './invoice/invoice.module';
+import { SubscriptionModule } from './subscription/subscription.module';
+import { SubscriptionTypeModule } from './subscription_type/subscription-type.module';
 
 @Module({
   imports: [
@@ -34,6 +36,8 @@ import { InvoiceModule } from './invoice/invoice.module';
     BlogModule,
     ProjectModule,
     InvoiceModule,
+    SubscriptionModule,
+    SubscriptionTypeModule,
   ],
   controllers: [],
   providers: [

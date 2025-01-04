@@ -91,6 +91,7 @@ export class MongooseUserRepository implements UserRepository {
     hackathonId: string,
     additionalInfo: any,
   ): Promise<any> {
+    console.log(hackathonId);
     const existingUser = await this.userModel.findById(userId);
 
     if (!existingUser) {
@@ -102,9 +103,12 @@ export class MongooseUserRepository implements UserRepository {
     if (!existingHackathon) {
       throw new NotFoundException(`Hackathon with ID ${userId} not found.`);
     }
-    const userExists = existingHackathon.registerUsers.some(
-      (user) => user.userId.toString() === userId,
-    );
+    console.log(existingHackathon._id);
+    console.log(existingHackathon.registerUsers.map((item) => item.userId));
+    const userExists = existingHackathon.registerUsers.find((user) => {
+      console.log(user.userId.toString(), userId);
+      return user.userId.toString() === userId;
+    });
 
     if (userExists) {
       throw new Error('User already registered');

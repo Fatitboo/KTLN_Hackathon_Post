@@ -9,6 +9,7 @@ import { UserModule } from './user/user.module';
 import { HackathonModule } from './hackathon/hackathon.module';
 import { BlogModule } from './blog/blog.module';
 import { ProjectModule } from './project/project.module';
+import { InvoiceModule } from './invoice/invoice.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { ProjectModule } from './project/project.module';
     HackathonModule,
     BlogModule,
     ProjectModule,
+    InvoiceModule,
   ],
   controllers: [],
   providers: [

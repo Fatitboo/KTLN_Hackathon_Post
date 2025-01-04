@@ -20,9 +20,10 @@ class EnvironmentVariables {
   JWT_REFRESH_TOKEN_SECRET: string;
   @IsString()
   JWT_REFRESH_TOKEN_EXPIRATION_TIME: string;
-
   @IsString()
   MONGO_URL: string;
+  @IsString()
+  PORT: string;
 }
 
 export function validate(config: Record<string, unknown>) {
@@ -30,7 +31,7 @@ export function validate(config: Record<string, unknown>) {
     enableImplicitConversion: true,
   });
   const errors = validateSync(validatedConfig, {
-    skipMissingProperties: false,
+    skipMissingProperties: true,
   });
 
   if (errors.length > 0) {

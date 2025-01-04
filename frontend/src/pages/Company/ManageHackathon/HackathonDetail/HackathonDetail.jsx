@@ -328,6 +328,10 @@ function HackathonCorDetail() {
           confirmButtonColor: "#3085d6",
         }).then((result) => {
           if (result.isConfirmed) {
+            setCurrentHackathon({
+              ...currentHackathon,
+              prizes: updateHackathon,
+            });
             setModal(false);
           }
         });
@@ -610,13 +614,13 @@ function HackathonCorDetail() {
                       image={card.thumnailImage}
                       imgUser={defaultAvt}
                       member={card.createdBy}
-                      isWinner={currentHackathon.prizes
-                        .reduce(
+                      isWinner={currentHackathon?.prizes
+                        ?.reduce(
                           (acc, cur) =>
                             cur.winnerList ? acc.concat(cur.winnerList) : acc,
                           []
                         )
-                        .includes(card.id)}
+                        ?.includes(card.id)}
                       votes={Math.floor(Math.random() * 21)}
                       comments={Math.floor(Math.random() * 11)}
                     />
@@ -749,7 +753,7 @@ function HackathonCorDetail() {
                           <div className="relative group ">
                             <TeamProjectSmall
                               props={projectGallery.find(
-                                (proj) => proj.id == i
+                                (proj) => proj.id == i || proj.id == i?.id
                               )}
                             />
                             <div
@@ -868,38 +872,34 @@ function HackathonCorDetail() {
                 );
               })}
             </div>
-            <div className="flex flex-row items-center gap-2 float-right mt-2">
-              <div
-                className="flex items-center justify-center box-border bg-[white] border px-[18px] py-[14px] rounded-[8px] text-[#1967d3] hover:bg-[#eef1fe] hover:border-[#1967d3] cursor-pointer"
-                onClick={() => {
-                  setSelectTeam([]);
-                  setModal2(false);
-                }}
-              >
-                <span className="text-[15px] leading-none font-bold">
-                  Close
-                </span>
-              </div>
-              <button
-                onClick={() => {
-                  setCurrentHackathon({
-                    ...currentHackathon,
-                    prizes: currentHackathon.prizes.map((item) =>
-                      item.id === selectPrize.id
-                        ? { ...item, winnerList: selectTeam }
-                        : { ...item }
-                    ),
-                  });
-                  setSelectTeam([]);
-                  setModal2(false);
-                }}
-                className="w-[90px] flex items-center justify-center box-border bg-[#1967d3] px-[18px] py-[14px] rounded-[8px] text-[#fff] hover:bg-[#0146a6] cursor-pointer"
-              >
-                <span className="text-[15px] leading-none font-bold">
-                  Select
-                </span>
-              </button>
+          </div>
+          <div className="flex flex-row items-center gap-2 float-right mt-2">
+            <div
+              className="flex items-center justify-center box-border bg-[white] border px-[18px] py-[14px] rounded-[8px] text-[#1967d3] hover:bg-[#eef1fe] hover:border-[#1967d3] cursor-pointer"
+              onClick={() => {
+                setSelectTeam([]);
+                setModal2(false);
+              }}
+            >
+              <span className="text-[15px] leading-none font-bold">Close</span>
             </div>
+            <button
+              onClick={() => {
+                setCurrentHackathon({
+                  ...currentHackathon,
+                  prizes: currentHackathon.prizes.map((item) =>
+                    item.id === selectPrize.id
+                      ? { ...item, winnerList: selectTeam }
+                      : { ...item }
+                  ),
+                });
+                setSelectTeam([]);
+                setModal2(false);
+              }}
+              className="w-[90px] flex items-center justify-center box-border bg-[#1967d3] px-[18px] py-[14px] rounded-[8px] text-[#fff] hover:bg-[#0146a6] cursor-pointer"
+            >
+              <span className="text-[15px] leading-none font-bold">Select</span>
+            </button>
           </div>
         </div>
       </Modal>

@@ -26,4 +26,8 @@ export class EnvironmentConfigService implements DatabaseConfig, JWTConfig {
   getMongoUrl(): string {
     return this.configService.get<string>('MONGO_URL');
   }
+
+  getPort(): string {
+    return this.configService.get<string>('PORT');
+  }
 }

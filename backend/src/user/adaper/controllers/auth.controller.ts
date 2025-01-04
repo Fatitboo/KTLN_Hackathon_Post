@@ -24,7 +24,7 @@ import { JwtAuthGuard } from 'src/user/domain/common/guards/jwtAuth.guard';
 import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import JwtRefreshGuard from 'src/user/domain/common/guards/jwtRefresh.guard';
 import { GoogleOAuthGuard } from 'src/user/domain/common/guards/google-oauth.guard';
-import { LoginUserCommand } from 'src/user/application/commands/login/Login-user.command';
+import { LoginUserCommand } from 'src/user/application/commands/login/login-user.command';
 import { LoginUserDto } from '../dto/login-user.dto';
 import { UserType } from 'src/user/domain/entities/user.entity';
 import {

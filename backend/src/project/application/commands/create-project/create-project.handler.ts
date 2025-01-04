@@ -4,7 +4,7 @@ import { Inject } from '@nestjs/common';
 import {
   PROJECT_REPOSITORY,
   ProjectRepository,
-} from 'src/Project/domain/repositories/Project.repository';
+} from 'src/project/domain/repositories/project.repository';
 
 @CommandHandler(CreateProjectCommand)
 export class CreateProjectHandler

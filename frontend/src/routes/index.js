@@ -61,6 +61,7 @@ import BrowerBlogs from "../pages/Seeker/BrowerBlogs";
 import ManageReportUser from "../pages/Seeker/Setting/Reports";
 import BlogManagement from "../pages/Admin/BlogMng";
 import AddBlog from "../pages/Admin/BlogMng/AddBlog";
+import { Payment } from "../pages/Seeker/Payment/Payment";
 
 const publicRoutes = [
   // User Layout
@@ -115,6 +116,11 @@ const publicRoutes = [
   {
     path: "/Seeker/brower-blogs",
     component: BrowerBlogs,
+    layout: LayoutNoSidebar,
+  },
+  {
+    path: "/Seeker/payment",
+    component: Payment,
     layout: LayoutNoSidebar,
   },
   {

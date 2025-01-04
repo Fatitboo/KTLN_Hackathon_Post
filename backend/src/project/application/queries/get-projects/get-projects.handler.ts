@@ -1,7 +1,7 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { GetProjectsQuery } from './get-projects.query';
-import { ProjectRepository } from 'src/Project/domain/repositories/Project.repository';
+import { ProjectRepository } from 'src/project/domain/repositories/project.repository';
 
 @QueryHandler(GetProjectsQuery)
 export class GetProjectsHandler implements IQueryHandler<GetProjectsQuery> {

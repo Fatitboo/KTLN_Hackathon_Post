@@ -114,7 +114,7 @@ function ManageTeam() {
       },
       body: JSON.stringify({
         description: value,
-        threshold: 0.5,
+        threshold: 0.4,
       }),
     })
       .then((response) => response.json())

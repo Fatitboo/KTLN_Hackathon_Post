@@ -344,11 +344,17 @@ function HackathonCorDetail() {
         <div
           className="flex flex-col pt-5 bg-no-repeat bg-cover"
           style={{
-            backgroundImage: `url(${item.img_bg ?? backgroundSearch})`,
+            backgroundImage: `url(${
+              item.headerImgBackground ?? backgroundSearch
+            })`,
           }}
         >
           <div className="px-60 max-lg:px-2">
-            <img src={hackathon?.headerTitleImage} alt={item.name} />
+            <img
+              src={hackathon?.headerTitleImage}
+              alt={item.name}
+              className="max-h-40 min-w-full"
+            />
           </div>
           <div className=" flex bg-gray-400 opacity-70 py-3 mt-3 text-white text-normal">
             <div className="px-60 max-lg:px-2 ">

@@ -34,3 +34,4 @@ export { default as defaultAvt } from "./default-avt.png";
 export { default as tagWinner } from "./tag-winner.png";
 export { default as defaultHackathonBanner } from "./hackathon_banner.png";
 export { default as welcomeToJoin } from "./wctjoin.jpg";
+export { default as adsBlog } from "./ads-blog.png";

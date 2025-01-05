@@ -73,6 +73,7 @@ function ProjectGallery() {
               <CardProject
                 id={card?._id}
                 key={index}
+                member={card.createdBy}
                 title={card?.projectTitle}
                 description={card?.tagline}
                 image={card?.thumnailImage || imgDefaultProject}

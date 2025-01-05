@@ -1,25 +1,26 @@
 import React, { useState } from "react";
-import { BiTimeFive } from "react-icons/bi";
-import { GoHourglass } from "react-icons/go";
+import { BiPencil, BiTimeFive, BiTrash } from "react-icons/bi";
 import { IoChevronDownOutline } from "react-icons/io5";
 import { PiTargetLight } from "react-icons/pi";
-import baseUrl from "../../../utils/baseUrl";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { FiLock } from "react-icons/fi";
 import Swal from "sweetalert2";
-import { updateVacancyStatus } from "../../../redux/slices/vacancies/vacanciesSlices";
 import { Link } from "react-router-dom";
 import { LiaEyeSolid } from "react-icons/lia";
 import { CgLock, CgUnblock } from "react-icons/cg";
-import { updateHackathonComponent } from "../../../redux/slices/hackathons/hackathonsSlices";
+import baseUrl from "../../../../utils/baseUrl";
+import { Modal } from "../../../../components";
+import { UpdateReportHackathon } from "./UpdateReport";
 
-export const VacProj = ({ item }) => {
+export const VacProj = ({ item, handleGetAll }) => {
+  const [openReport, setopenReport] = useState(false);
+
   let [dropDownTags, setDropDownTags] = useState(false);
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [reports, setReports] = useState(null);
-  let [selectId, setSelectedId] = useState();
+  const [selectedReport, setSelectedReport] = useState(null);
+
   const [moreDetail, setMoreDetail] = useState(false);
   const storeData = useSelector((store) => store?.users);
   const { userAuth } = storeData;
@@ -32,7 +33,7 @@ export const VacProj = ({ item }) => {
           if (item?._id) {
             const res = await axios.post(
               `${baseUrl}/${apiPrefix}/get-reports-of-hackathon/${item?._id}`,
-              {}
+              { userId: userAuth.user.id }
             );
 
             if (res.data) {
@@ -53,13 +54,52 @@ export const VacProj = ({ item }) => {
       setLoading(false);
     }
   };
-  const handleDeleteProject = (item) => {
-    dispatch(
-      updateHackathonComponent({
-        id: item._id,
-        hackathon: { block: !item?.block },
-      })
-    );
+  const handleDelete = async (id) => {
+    Swal.fire({
+      title: "Confirm delete!",
+      text: "Are you sure to delete this report.",
+      icon: "warning",
+      confirmButtonText: "OK",
+      cancelButtonText: "Cancel",
+      allowOutsideClick: false,
+      confirmButtonColor: "#3085d6",
+      showCancelButton: true,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        axios
+          .post(`${baseUrl}/api/v1/hackathons/delete-report/${id}`, {})
+          .then(
+            Swal.fire({
+              title: "Delete success!",
+              text: "Delete success.",
+              confirmButtonText: "OK",
+              icon: "success",
+              allowOutsideClick: false,
+              confirmButtonColor: "#3085d6",
+            }).then((result) => {
+              if (result.isConfirmed) {
+                setReports(null);
+                setDropDownTags(false);
+                handleGetAll();
+              }
+            })
+          )
+          .catch((e) => {
+            Swal.fire({
+              title: "Delete failed!",
+              text: "Delete failed, please try again.",
+              confirmButtonText: "OK",
+              icon: "error",
+              allowOutsideClick: false,
+              confirmButtonColor: "#3085d6",
+            }).then((result) => {
+              if (result.isConfirmed) {
+                /* empty */
+              }
+            });
+          });
+      }
+    });
   };
   return (
     <tr>
@@ -75,7 +115,9 @@ export const VacProj = ({ item }) => {
           </div>
           <div className="ml-6 w-full">
             <h4 className="text-[18px] text-[#202124] hover:text-[#1967d2] leading-6 font-medium">
-              <a href="#">{item?.hackathonName}</a>
+              <Link to={"/Hackathon-detail/" + item?._id}>
+                {item?.hackathonName}
+              </Link>
             </h4>
             <div className="flex justify-between w-full">
               <div className="flex flex-row items-center mt-2">
@@ -92,33 +134,6 @@ export const VacProj = ({ item }) => {
                 <div className="flex flex-row items-center text-[14px] text-[dimgray] leading-[22px] font-normal mr-3">
                   <PiTargetLight className="w-[18px] h-[18px] mr-[5px]" />
                   {item?.location}
-                </div>
-              </div>
-              <div className="pr-[9%] flex">
-                <div className="">
-                  <div className="list-none flex relative item-center justify-center">
-                    <Link
-                      to={`/Organizer/manage-hackathons/${item?._id}/overview`}
-                      className="list-none relative mr-2 bg-[#f5f7fc] border rounded-md border-[#e9ecf9] px-1 pt-1 hover:bg-[#5f86e9] hover:text-white"
-                    >
-                      <LiaEyeSolid fontSize={18} />
-                    </Link>
-                    <div
-                      className="list-none relative bg-[#f5f7fc] border rounded-md border-[#e9ecf9] px-1 pt-1 hover:bg-[#ce3e37] hover:text-white"
-                      onClick={() => {
-                        setSelectedId(item?._id);
-                        handleDeleteProject(item);
-                      }}
-                    >
-                      <button>
-                        {item?.block ? (
-                          <CgUnblock fontSize={18} />
-                        ) : (
-                          <CgLock fontSize={18} />
-                        )}
-                      </button>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
@@ -214,7 +229,7 @@ export const VacProj = ({ item }) => {
               className={`overflow-auto no-scrollbar mx-4  bg-transparent border-t-0 gap-y-2 transition-all duration-500 ease-in-out max-h-0 opacity-0 peer-checked:max-h-[500px] peer-checked:opacity-100`}
             >
               <div className="my-1  flex flex-col ">
-                {reports?.map((item, index) => {
+                {reports?.map((i, index) => {
                   return (
                     <div
                       key={index}
@@ -222,29 +237,50 @@ export const VacProj = ({ item }) => {
                     >
                       <div className="col-span-1 ">
                         <img
-                          src={item?.user?.avatar}
+                          src={i?.user?.avatar}
                           alt=""
                           className="rounded-full w-2/3"
                         />
                       </div>
-                      <div className="col-span-11 text-[14px]">
+                      <div className="col-span-10 text-[14px]">
                         <div className="font-medium text-[16px]">
-                          {item?.user?.fullName}
+                          {i?.user?.fullName}
                         </div>
                         <div className="text-xs text-gray-600">{`${new Date(
-                          item?.create_at
+                          i?.create_at
                         ).toDateString()}`}</div>
                         <div className="flex mt-2">
                           <div className="mr-1 font-medium">
                             Report of type:{" "}
                           </div>
-                          <div>{item?.type}</div>
+                          <div>{i?.type}</div>
                         </div>
                         <div className="flex mt-2 ">
                           <div className="mr-1 font-medium">
                             Additional Infor:
                           </div>
-                          <div>{item?.content}</div>
+                          <div>{i?.content}</div>
+                        </div>
+                      </div>
+                      <div className="col-span-1 flex">
+                        <div
+                          onClick={() => {
+                            // setopenReport(true);
+                            setSelectedReport({
+                              type: i?.type,
+                              content: i?.content,
+                              reportId: i?._id,
+                            });
+                          }}
+                          className="list-none relative mr-2 h-fit py-2 cursor-pointer bg-[#f5f7fc] border rounded-md border-[#e9ecf9] px-1 pt-1 hover:bg-[#278646] hover:text-white"
+                        >
+                          <BiPencil fontSize={18} />{" "}
+                        </div>
+                        <div
+                          onClick={() => handleDelete(i?._id)}
+                          className="list-none relative mr-2 h-fit py-2 cursor-pointer bg-[#f5f7fc] border rounded-md border-[#e9ecf9] px-1 pt-1 hover:bg-[red] hover:text-white"
+                        >
+                          <BiTrash fontSize={18} />{" "}
                         </div>
                       </div>
                     </div>
@@ -255,6 +291,26 @@ export const VacProj = ({ item }) => {
           </div>
         </div>
       </td>
+      <Modal
+        open={
+          selectedReport !== null && typeof selectedReport?.type === "string"
+        }
+      >
+        <UpdateReportHackathon
+          setopenReport={setSelectedReport}
+          setReports={setReports}
+          item={{
+            hackathonName: item?.hackathonName,
+            hostName: item?.hostName,
+            hackathonId: item?._id,
+            userId: userAuth?.user?.id,
+            type: selectedReport?.type,
+            content: selectedReport?.content,
+            reportId: selectedReport?.reportId,
+          }}
+          isVacancy={true}
+        />
+      </Modal>
     </tr>
   );
 };

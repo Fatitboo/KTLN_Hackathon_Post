@@ -1,16 +1,13 @@
 import { AiOutlineSearch } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { LoadingComponent } from "../../../components";
 import { useForm } from "react-hook-form";
 import { VacProj } from "./VacProj";
-import {
-  getAllReportsAdminAction,
-  resetSuccessAction,
-} from "../../../redux/slices/vacancies/vacanciesSlices";
 import Swal from "sweetalert2";
+import { getAllReportsAdminAction } from "../../../../redux/slices/vacancies/vacanciesSlices";
+import { LoadingComponent } from "../../../../components";
 
-function ManageReport() {
+function ManageReportUser() {
   const dispatch = useDispatch();
   const {
     register,
@@ -20,13 +17,15 @@ function ManageReport() {
     formState: { errors },
   } = useForm({ mode: "onChange" });
   const [filterKeyWord, setFilterKeyWord] = useState("");
-
+  const storeData = useSelector((store) => store.users);
+  const handleGetAll = () => {
+    dispatch(getAllReportsAdminAction(storeData?.userAuth?.user?.id));
+  };
   useEffect(() => {
-    dispatch(getAllReportsAdminAction("all"));
+    handleGetAll();
   }, []);
   const vacancies = useSelector((store) => store?.vacancies);
   const { loading, vacProList, appErr, isSuccess2, isSuccessUpd } = vacancies;
-  console.log("🚀 ~ ManageReport ~ vacProList:", vacProList);
   useEffect(() => {
     if (isSuccessUpd) {
       dispatch(resetSuccessAction());
@@ -73,7 +72,7 @@ function ManageReport() {
                   </div>
                 </div>
                 <div className="flex ">
-                  <div className="mr-1">Reported vacancies: </div>{" "}
+                  <div className="mr-1">Reported hackathons: </div>{" "}
                   <span> {vacProList?.length}</span>
                 </div>
               </div>
@@ -84,12 +83,10 @@ function ManageReport() {
                     <thead className="bg-[#f5f7fc] color-white border-transparent border-0 w-full">
                       <tr className="w-full">
                         <th className="relative text-[#3a60bf] font-normal py-6 text-base text-left pl-6">
-                          Vacancies has been reported
+                          Hackathon has been reported
                         </th>
 
-                        <th className="relative text-[#3a60bf] font-normal py-6 text-base text-left ">
-                          Block
-                        </th>
+                        <th className="relative text-[#3a60bf] font-normal py-6 text-base text-left "></th>
                       </tr>
                     </thead>
                     <tbody>
@@ -113,7 +110,11 @@ function ManageReport() {
                               )
                         )
                         ?.map((item, index) => (
-                          <VacProj item={item} key={index} />
+                          <VacProj
+                            handleGetAll={handleGetAll}
+                            item={item}
+                            key={index}
+                          />
                         ))}
                     </tbody>
                   </table>
@@ -127,4 +128,4 @@ function ManageReport() {
   );
 }
 
-export default ManageReport;
+export default ManageReportUser;

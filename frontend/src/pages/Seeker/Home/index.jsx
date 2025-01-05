@@ -208,7 +208,9 @@ function Home() {
                             isFeature={index % 2 === 0 ? true : false}
                             location={hackathon.location}
                             prizes={`${hackathon?.prizeCurrency ?? "$"} ${
-                              hackathon?.prizes[0]?.cashValue ?? 1000
+                              hackathon?.prizes?.length > 0
+                                ? hackathon?.prizes[0]?.cashValue
+                                : 1000
                             }`}
                             participants={hackathon?.registerUsers?.length ?? 0}
                             imageHackthon={hackathon?.thumbnail}
@@ -318,7 +320,9 @@ function Home() {
                           isFeature={index % 2 === 0 ? true : false}
                           location={hackathon.location}
                           prizes={`${hackathon?.prizeCurrency ?? "$"} ${
-                            hackathon?.prizes[0]?.cashValue ?? 1000
+                            hackathon?.prizes?.length > 0
+                              ? hackathon?.prizes[0]?.cashValue
+                              : 1000
                           }`}
                           participants={hackathon?.registerUsers?.length ?? 0}
                           imageHackthon={hackathon?.thumbnail}
@@ -360,7 +364,9 @@ function Home() {
                           isFeature={index % 2 === 0 ? true : false}
                           location={hackathon.location}
                           prizes={`${hackathon?.prizeCurrency ?? "$"} ${
-                            hackathon?.prizes[0]?.cashValue ?? 1000
+                            hackathon?.prizes?.length > 0
+                              ? hackathon?.prizes[0]?.cashValue
+                              : 1000
                           }`}
                           participants={hackathon?.registerUsers?.length ?? 0}
                           imageHackthon={hackathon?.thumbnail}

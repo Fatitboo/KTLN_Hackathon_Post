@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -22,8 +23,11 @@ import { SeedDataHackathonCommand } from 'src/hackathon/application/commands/see
 import { SearchFilterHackathonsQuery } from 'src/hackathon/application/queries/search-filter-hackathons/search-filter-hackathons.query';
 import { InjectModel } from '@nestjs/mongoose';
 import { HackathonDocument } from 'src/hackathon/infrastructure/database/schemas';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { AwardHackathonCommand } from 'src/hackathon/application/commands/awarding-hackathon/awarding-hackathon.command';
+import { ReportDocument } from 'src/hackathon/infrastructure/database/schemas/report.schema';
+import { UserDocument } from 'src/user/infrastructure/database/schemas';
+import { v4 as uuidv4 } from 'uuid';
 
 @Controller('hackathons')
 export class HackathonController {
@@ -32,6 +36,10 @@ export class HackathonController {
     private readonly queryBus: QueryBus,
     @InjectModel(HackathonDocument.name)
     private readonly hackathonModel: Model<HackathonDocument>,
+    @InjectModel(ReportDocument.name)
+    private readonly reportModel: Model<ReportDocument>,
+    @InjectModel(UserDocument.name)
+    private readonly userModel: Model<UserDocument>,
   ) {}
 
   @Get()
@@ -105,6 +113,247 @@ export class HackathonController {
     );
 
     return result;
+  }
+
+  @Post('create-updates/:hackathonId')
+  async createUpdates(
+    @Param('hackathonId') hackathonId: string,
+    @Body() body: { title: string; content: string },
+  ) {
+    const hackathon = await this.hackathonModel.findById(hackathonId);
+    if (!hackathon) throw new BadRequestException('Not found hackathon');
+
+    const upt = {
+      createdAt: new Date().toISOString(),
+      title: body.title,
+      content: body.content,
+      updateId: uuidv4(),
+    };
+    hackathon.updateNews.push(upt);
+
+    await hackathon.save();
+  }
+
+  @Post('update-updates/:updateId')
+  async updateUpdates(
+    @Param('updateId') updateId: string,
+    @Body() body: { hackathonId: string; title: string; content: string },
+  ) {
+    const hackathon = await this.hackathonModel.findById(body.hackathonId);
+    if (!hackathon) throw new BadRequestException('Not found hackathon');
+    const upts = hackathon.updateNews.map((u) => {
+      if (u.updateId === updateId) {
+        u.title = body.title;
+        u.content = body.content;
+      }
+      return u;
+    });
+    hackathon.updateNews = upts;
+    await hackathon.save();
+  }
+
+  @Post('create-discussion/:hackathonId')
+  async createDiscussion(
+    @Param('hackathonId') hackathonId: string,
+    @Body() body: { userId: string; title: string; content: string },
+  ) {
+    const user = await this.userModel.findById(body.userId);
+    if (!user) throw new BadRequestException('Not found user');
+    const hackathon = await this.hackathonModel.findById(hackathonId);
+    if (!hackathon) throw new BadRequestException('Not found hackathon');
+    const dcs = {
+      userId: user._id,
+      createdAt: new Date().toISOString(),
+      title: body.title,
+      content: body.content,
+      discussionId: uuidv4(),
+      userName: user.fullname,
+      avatar: user.avatar,
+      comments: [],
+    };
+    if (hackathon.discussions) {
+      hackathon.discussions.push(dcs);
+    } else {
+      hackathon.discussions = [dcs];
+    }
+    await hackathon.save();
+  }
+
+  @Post('update-discussion/:discussionId')
+  async updateDiscussion(
+    @Param('discussionId') discussionId: string,
+    @Body() body: { hackathonId: string; title: string; content: string },
+  ) {
+    const hackathon = await this.hackathonModel.findById(body.hackathonId);
+    if (!hackathon) throw new BadRequestException('Not found hackathon');
+    const dsc = hackathon.discussions.map((d) => {
+      if (d.discussionId === discussionId) {
+        d.title = body.title;
+        d.content = body.content;
+      }
+      return d;
+    });
+    hackathon.discussions = dsc;
+    await hackathon.save();
+  }
+
+  @Post('create-comment-discussion/:discussionId')
+  async createCommentDiscussion(
+    @Param('discussionId') discussionId: string,
+    @Body()
+    body: {
+      userId: string;
+      title: string;
+      content: string;
+      hackathonId: string;
+    },
+  ) {
+    const user = await this.userModel.findById(body.userId);
+    if (!user) throw new BadRequestException('Not found user');
+    const hackathon = await this.hackathonModel.findById(body.hackathonId);
+    if (!hackathon) throw new BadRequestException('Not found hackathon');
+    const cmt = {
+      userId: user._id,
+      createdAt: new Date().toISOString(),
+      title: body.title,
+      content: body.content,
+      commentId: uuidv4(),
+      userName: user.fullname,
+      avatar: user.avatar,
+    };
+    const dsc = hackathon.discussions.map((d) => {
+      if (d.discussionId === discussionId) {
+        if (d.comments.length === 0) d.comments = [cmt];
+        else d.comments.push(cmt);
+      }
+      return d;
+    });
+    hackathon.discussions = dsc;
+
+    await hackathon.save();
+  }
+
+  @Post('update-comment-discussion/:discussionId')
+  async updateCommentDiscussion(
+    @Param('discussionId') discussionId: string,
+    @Body()
+    body: {
+      hackathonId: string;
+      title: string;
+      content: string;
+      commentId: string;
+    },
+  ) {
+    const hackathon = await this.hackathonModel.findById(body.hackathonId);
+    if (!hackathon) throw new BadRequestException('Not found hackathon');
+    const dsc = hackathon.discussions.map((d) => {
+      if (d.discussionId === discussionId) {
+        const cmts = d.comments.map((c) => {
+          if (c.commentId === body.commentId) {
+            c.title = body.title;
+            c.content = body.content;
+          }
+          return c;
+        });
+        d.comments = cmts;
+      }
+      return d;
+    });
+    hackathon.discussions = dsc;
+    await hackathon.save();
+  }
+
+  @Post('create-report/:id')
+  async createReportHackathon(
+    @Param('id') hackathonId: string,
+    @Body() body: { userId: string; content: string; type: string },
+  ) {
+    const user = await this.userModel.findById(body.userId);
+    if (!user) throw new BadRequestException('Not found user');
+    const hackathon = await this.hackathonModel.findById(hackathonId);
+    if (!hackathon) throw new BadRequestException('Not found hackathon');
+    const report = new this.reportModel({
+      user: user._id,
+      hackathon: hackathon._id,
+      content: body.content,
+      type: body.type,
+    });
+    const r = await report.save();
+    if (!hackathon.reports) hackathon.reports = [r._id];
+    else hackathon.reports.push(r._id);
+    await hackathon.save();
+    return r._id;
+  }
+
+  @Post('update-report/:id')
+  async updateReportHackathon(
+    @Param('id') reportId: string,
+    @Body() body: { content: string; type: string },
+  ) {
+    const report = await this.reportModel.findById(reportId);
+    if (!report) throw new BadRequestException('Not found report');
+    report.content = body.content;
+    report.type = body.type;
+    await report.save();
+    return 'ok';
+  }
+
+  @Post('delete-report/:id')
+  async deleteReportHackathon(@Param('id') reportId: string) {
+    const report = await this.reportModel.findById(reportId);
+    if (!report) throw new BadRequestException('Not found report');
+    await this.hackathonModel.findByIdAndUpdate(report.hackathon, {
+      $pull: { reports: report._id },
+    });
+    await this.reportModel.findByIdAndDelete(reportId);
+    return 'ok';
+  }
+
+  @Get('get-reports/:userId')
+  async getReportOfUser(@Param('userId') userId: string) {
+    if (userId === 'all') {
+      const hackathons = await this.hackathonModel
+        .find({ reports: { $exists: true, $ne: [] } })
+        .populate('reports');
+
+      return hackathons;
+    } else {
+      const user = await this.userModel.findById(userId);
+      if (!user) throw new BadRequestException('Not found user');
+      const rpids = (
+        await this.reportModel.find({ user: user._id }).select('_id')
+      ).map((item) => item._id);
+      const hackathons = await this.hackathonModel
+        .find({ reports: { $in: rpids } })
+        .populate('reports');
+
+      return hackathons;
+    }
+  }
+
+  @Post('get-reports-of-hackathon/:hackathonId')
+  async getReportHackathon(
+    @Param('hackathonId') hackathonId: string,
+    @Body() body: { userId?: string },
+  ) {
+    const hackathon = await this.hackathonModel.findById(hackathonId);
+    if (!hackathon) throw new BadRequestException('Not found hackathon');
+    if (body?.userId) {
+      return await this.reportModel
+        .find({
+          hackathon: hackathon._id,
+          user: new Types.ObjectId(body?.userId),
+        })
+        .populate({
+          path: 'user',
+          model: 'UserDocument',
+        });
+    }
+
+    return await this.reportModel.find({ hackathon: hackathon._id }).populate({
+      path: 'user',
+      model: 'UserDocument',
+    });
   }
 
   @Get('register-users/:id')

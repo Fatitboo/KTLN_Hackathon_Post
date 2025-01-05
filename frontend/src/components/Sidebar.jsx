@@ -149,22 +149,22 @@ function Sidebar({ user }) {
                                     Skills
                                 </Link>
                             </div> */}
-            {/* <div
+            <div
               className={classNames(
-                isActive === "Occupations" ? "bg-[#E9EFFB] text-blue-600" : "",
+                isActive === "blog" ? "bg-[#E9EFFB] text-blue-600" : "",
                 itemStyle
               )}
             >
               <Link
-                onClick={() => dispatch(isActiveSidebarAction("Occupations"))}
-                to="/Admin/occupation-management"
+                onClick={() => dispatch(isActiveSidebarAction("blog"))}
+                to="/Admin/blog-management"
                 className="relative text-sm text-center p-3 flex items-center leading-7 font-normal  capitalize rounded-lg "
               >
                 <LuNetwork className="relative mr-4 ml-4 text-2xl text-center " />
-                Occupations
+                Manage Blogs
               </Link>
-            </div> */}
-            {/* <div
+            </div>
+            <div
               className={classNames(
                 isActive === "Reports" ? "bg-[#E9EFFB] text-blue-600" : "",
                 itemStyle
@@ -193,7 +193,7 @@ function Sidebar({ user }) {
                 <BsClockHistory className="relative mr-4 ml-4 text-2xl text-center " />
                 History Transactions
               </Link>
-            </div> */}
+            </div>
             <div
               className={classNames(
                 isActive === "Change password"
@@ -259,14 +259,12 @@ function Sidebar({ user }) {
             </div>
             <div
               className={classNames(
-                isActive === "Manage Vacancy" ? activeStyle : "",
+                isActive === "Manage blog" ? activeStyle : "",
                 itemStyle
               )}
             >
               <Link
-                onClick={() =>
-                  dispatch(isActiveSidebarAction("Manage Vacancy"))
-                }
+                onClick={() => dispatch(isActiveSidebarAction("Manage blog"))}
                 // to="/Organizer/manage-vacancy"
                 className="relative text-sm text-center p-3 flex items-center leading-7 font-normal  capitalize rounded-lg "
               >
@@ -375,6 +373,21 @@ function Sidebar({ user }) {
               >
                 <FiUsers className="relative mr-4 ml-4 text-2xl text-center " />
                 Edit recommend
+              </Link>
+            </div>
+            <div
+              className={classNames(
+                isActive === "reports" ? "bg-[#E9EFFB] text-blue-600" : "",
+                itemStyle
+              )}
+            >
+              <Link
+                onClick={() => dispatch(isActiveSidebarAction("reports"))}
+                to="/Seeker/manage-reports"
+                className="relative text-sm text-center p-3 flex items-center leading-7 font-normal  capitalize rounded-lg "
+              >
+                <FiUsers className="relative mr-4 ml-4 text-2xl text-center " />
+                Reports
               </Link>
             </div>
 

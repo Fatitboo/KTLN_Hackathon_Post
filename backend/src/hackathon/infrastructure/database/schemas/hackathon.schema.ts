@@ -1,4 +1,4 @@
-import { Prop, raw, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
 import {
   Criteria,
@@ -25,6 +25,67 @@ export class RegisterUser {
   status: TEAM_STATUS;
 }
 
+export class Discussion {
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'UserDocument' }] })
+  userId: Types.ObjectId;
+
+  @Prop()
+  discussionId: string;
+
+  @Prop()
+  userName: string;
+
+  @Prop()
+  avatar: string;
+
+  @Prop()
+  title: string;
+
+  @Prop()
+  content: string;
+
+  @Prop()
+  createdAt: string;
+
+  @Prop()
+  comments: Comment[];
+}
+export class Comment {
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'UserDocument' }] })
+  userId: Types.ObjectId;
+
+  @Prop()
+  commentId: string;
+
+  @Prop()
+  userName: string;
+
+  @Prop()
+  avatar: string;
+
+  @Prop()
+  title: string;
+
+  @Prop()
+  content: string;
+
+  @Prop()
+  createdAt: string;
+}
+
+export class UpdateNew {
+  @Prop()
+  updateId: string;
+
+  @Prop()
+  title: string;
+
+  @Prop()
+  content: string;
+
+  @Prop()
+  createdAt: string;
+}
 @Schema({
   timestamps: {
     createdAt: 'create_at',
@@ -59,6 +120,9 @@ export class HackathonDocument {
 
   @Prop({ type: [{ type: Types.ObjectId, ref: 'ProjectDocument' }] })
   registedTeams: Types.ObjectId[];
+
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'ReportDocument' }] })
+  reports: Types.ObjectId[];
 
   @Prop()
   applyFor: string;
@@ -101,6 +165,12 @@ export class HackathonDocument {
 
   @Prop({ type: [Task] })
   tasks: Task[];
+
+  @Prop({ type: [Discussion], default: [] })
+  discussions: Discussion[];
+
+  @Prop({ type: [UpdateNew], default: [] })
+  updateNews: UpdateNew[];
 
   @Prop()
   subjectMailTitle: string;

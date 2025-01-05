@@ -20,6 +20,10 @@ export class UpdateBlogDTO {
 
   @IsOptional()
   @IsString()
+  videoLink?: string;
+
+  @IsOptional()
+  @IsString()
   blogType: string;
 
   @IsOptional()

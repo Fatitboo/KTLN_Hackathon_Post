@@ -163,6 +163,9 @@ function NavbarUser({ user }) {
             <li>
               <Link to="/Seeker/contact">Contract</Link>
             </li>
+            <li>
+              <Link to="/Seeker/brower-blogs">Blogs</Link>
+            </li>
           </ul>
           <div className="hidden lg:block">
             {!user ? (

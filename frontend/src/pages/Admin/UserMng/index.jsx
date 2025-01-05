@@ -102,19 +102,14 @@ function UserMng() {
   return (
     <div className="px-10  pb-0">
       {loading && <LoadingComponent />}
-      {/* Start title of page  */}
-      <div className="mb-8">
-        <h3 className="font-medium text-3xl text-gray-900 mb-2 leading-10">
-          User Mangement!
-        </h3>
-        <div className="text-sm leading-6 font-normal m-0 right-0 flex justify-between items-center ">
-          Ready to jump back in?
-        </div>
-      </div>
+
       {/* Start main content  to display something*/}
       <div className="flex flex-wrap mx-3 mt-3 ">
         <div className="max-w-full px-3 pt-3 shrink-0 w-full">
-          <div className="relative rounded-lg mb-8 bg-white shadow max-w-full px-3 pt-1 shrink-0 w-full">
+          <div className="relative rounded-lg mb-8 bg-white shadow max-w-full px-6 py-6 shrink-0 w-full">
+            <h3 className="font-medium text-3xl text-gray-900 mb-2 leading-10">
+              User Mangement!
+            </h3>
             <div className="relative w-full">
               {/* Start header of content */}
               <div className="relative flex justify-between items-center flex-wrap bg-transparent px-8 py-5">

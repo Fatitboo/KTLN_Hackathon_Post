@@ -15,131 +15,90 @@ import {
 import fetchSkillApikey from "../../../../utils/fetchSkillApiKey";
 import { IoIosClose } from "react-icons/io";
 import extractId from "../../../../utils/extractId";
+import Swal from "sweetalert2";
+import baseUrl from "../../../../utils/baseUrl";
+import axios from "axios";
 
 function SubmitProject() {
   const inputBox = useRef();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { projectId } = useParams();
-  const [spin, setSpin] = useState(false);
   const [skills, setSkills] = useState([]);
   const [isFirstChecked, setIsFirstChecked] = useState(false);
   const [isSecondChecked, setIsSecondChecked] = useState(false);
-  const [value, setValueDes] = useState(
-    `<h4 style='color: rgb(0, 0, 0); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif; font-size: medium; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;' id="isPasted"><strong><span style="font-size: 18px;">Inspiration</span></strong></h4><h4 style='color: rgb(0, 0, 0); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif; font-size: medium; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;'><strong><span style="font-size: 18px;">What it does</span></strong></h4><h4 style='color: rgb(0, 0, 0); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif; font-size: medium; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;'><strong><span style="font-size: 18px;"> How I built it</span></strong></h4><h4 style='color: rgb(0, 0, 0); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif; font-size: medium; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;'><strong><span style="font-size: 18px;">Challenges I ran into</span></strong></h4><h4 style='color: rgb(0, 0, 0); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif; font-size: medium; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;'><strong><span style="font-size: 18px;">Accomplishments that I'm proud of</span></strong></h4><h4 style='color: rgb(0, 0, 0); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif; font-size: medium; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;'><strong><span style="font-size: 18px;">What I learned</span></strong></h4><h4 style='color: rgb(0, 0, 0); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif; font-size: medium; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;'><strong><span style="font-size: 18px;">What's next</span></strong></h4>`
-  );
-  const [loading, setLoading] = useState(false);
   const [titleBinding, setTitleBinding] = useState("");
   const [taglineBinding, setTaglineBinding] = useState("");
   const [galaryList, setGalaryList] = useState([]);
-  const [listSkillApi, setListSkillApi] = useState([]);
   const [fileThumnail, setFileThumnail] = useState(null);
   const { project, isSuccess } = useSelector((store) => store.projects);
   const [tryoutLinks, setTryoutLinks] = useState([{ id: uuidv4(), name: "" }]);
-  var myHeaders = new Headers();
-  myHeaders.append("apikey", fetchSkillApikey);
-  var requestOptions = {
-    method: "GET",
-    redirect: "follow",
-    headers: myHeaders,
-  };
 
-  const decodeHTML = (html) => {
-    const txt = document.createElement("textarea");
-    txt.innerHTML = html;
-    return txt.value;
-  };
   const {
     register,
-    unregister,
     handleSubmit,
-    getValues,
     setValue,
     formState: { errors },
   } = useForm({ mode: "onChange" });
   const onSubmit = (data) => {
-    const pl = {
-      projectTitle: data.projectName,
-      tagline: data.tagLine,
-      content: value.toString(),
-      thumnailImage: fileThumnail,
-      builtWith: skills,
-      tryoutLinks: tryoutLinks.map((item) => data[`field_${item?.id}`]),
-      galary: [{ url: data.videoLink, caption: "" }, ...galaryList],
-    };
-    console.log("🚀 ~ onSubmit ~ pl:", pl);
-
-    dispatch(
-      updateProject({
-        id: extractId({ str: projectId }),
-        data: pl,
-        navigate,
-        path: `/Hackathon-detail/12762/my-project`,
-      })
-    );
-  };
-
-  const fetchDataSkill = (value) => {
-    if (value === "") {
-      setListSkillApi([]);
+    if (isFirstChecked && isSecondChecked) {
+      const pl = {
+        hackathonId: extractId({ type: "hackathonId", str: projectId }),
+        linkSubmitVideo: data.linkSubmitVideo,
+        linkSubmitFile: data.linkSubmitFile,
+      };
+      axios
+        .post(
+          `${baseUrl}/api/v1/projects/${extractId({
+            str: projectId,
+          })}/submit-hackathon`,
+          pl
+        )
+        .then(
+          Swal.fire({
+            title: "Submit success!",
+            text: "Submit success.",
+            confirmButtonText: "OK",
+            icon: "success",
+            allowOutsideClick: false,
+            confirmButtonColor: "#3085d6",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              navigate(
+                `/Hackathon-detail/${extractId({
+                  type: "hackathonId",
+                  str: projectId,
+                })}/my-project`
+              );
+            }
+          })
+        )
+        .catch((e) => {
+          Swal.fire({
+            title: "Submit failed!",
+            text: "Submit failed, please try again.",
+            confirmButtonText: "OK",
+            icon: "error",
+            allowOutsideClick: false,
+            confirmButtonColor: "#3085d6",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              /* empty */
+            }
+          });
+        });
     } else {
-      setSpin(true);
-      fetch("https://api.apilayer.com/skills?q=" + value, requestOptions)
-        .then((response) => response.json())
-        .then((result) => {
-          console.log(result);
-          setListSkillApi([...result]);
-          setSpin(false);
-        })
-        .catch((error) => console.log("error", error));
-    }
-  };
-
-  const handleAddTryoutLinks = () => {
-    setTryoutLinks((prev) => [...prev, { id: uuidv4(), name: "" }]);
-  };
-
-  const handleDeleteLink = (deleteId) => {
-    const newList = tryoutLinks.filter((item) => {
-      return item.id !== deleteId;
-    });
-    setTryoutLinks(newList);
-    unregister("field_" + deleteId);
-  };
-
-  // Hàm xử lý thay đổi caption
-  const handleCaptionChange = (url, newCaption) => {
-    setGalaryList((prevFiles) => {
-      console.log("🚀 ~ handleCaptionChange ~ prevFiles:", prevFiles);
-      return prevFiles.map((file) =>
-        file.url === url ? { ...file, caption: newCaption } : file
-      );
-    });
-  };
-  const handleDeleteGalaryItem = (url) => {
-    setGalaryList((prevFiles) => prevFiles.filter((file) => file.url !== url));
-  };
-
-  const uploadImageFromLocalFiles = async ({ file }) => {
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("upload_preset", "upload_audio"); // Set this in your Cloudinary dashboard
-
-      const response = await fetch(
-        `https://api.cloudinary.com/v1_1/dvnxdtrzn/auto/upload`,
-        {
-          method: "POST",
-          body: formData,
+      Swal.fire({
+        title: "Accept rule!",
+        text: "Please check both checkboxes Eligibility requirements to submmit.",
+        confirmButtonText: "OK",
+        icon: "info",
+        allowOutsideClick: false,
+        confirmButtonColor: "#3085d6",
+      }).then((result) => {
+        if (result.isConfirmed) {
         }
-      );
-
-      const data = await response.json();
-      return data;
-
-      // return uploadUrls;
-    } catch (error) {
-      console.error("Error uploading image::", error);
+      });
     }
   };
 
@@ -152,16 +111,10 @@ function SubmitProject() {
 
   useEffect(() => {
     if (isSuccess) {
-      console.log("🚀 ~ AddProject ~ project:", project);
-
-      setValue("projectName", project?.projectTitle);
+      setValue("linkSubmitVideo", project?.linkSubmitVideo);
       setTitleBinding(project?.projectTitle);
-      setValue("tagLine", project?.tagline);
+      setValue("linkSubmitFile", project?.linkSubmitFile);
       setTaglineBinding(project?.tagline);
-      setSkills([...(project?.builtWith ?? [])]);
-      if (project?.content) {
-        setValueDes(project?.content);
-      }
       setFileThumnail(project?.thumnailImage);
       if (project?.galary) {
         project.galary?.forEach((element, index) => {
@@ -200,15 +153,14 @@ function SubmitProject() {
             <div className="mb-5 w-full">
               <TextInput
                 type={"text"}
-                register={register("projectName", {
-                  required: "Project name is required!",
-                  onChange: (event) => {
-                    setTitleBinding(event.target.value);
-                  },
+                register={register("linkSubmitVideo", {
+                  required: "Link Submit Video is required!",
                 })}
-                error={errors.projectName ? errors.projectName.message : ""}
-                label="What is your project called? *"
-                name="projectName"
+                error={
+                  errors.linkSubmitVideo ? errors.linkSubmitVideo.message : ""
+                }
+                label="Link demo this project *"
+                name="linkSubmitVideo"
                 containerStyles="text-[#05264e] text-base w-full tw-bg-white"
                 labelStyle="text-[#05264e] font-medium"
               />
@@ -217,17 +169,16 @@ function SubmitProject() {
             <div className="mb-5 w-full">
               <TextInput
                 type={"text"}
-                register={register("tagLine", {
-                  required: "Tag line is required!",
-                  onChange: (event) => {
-                    setTaglineBinding(event.target.value);
-                  },
+                register={register("linkSubmitFile", {
+                  required: "Link Submit File is required!",
                 })}
-                error={errors.tagLine ? errors.tagLine.message : ""}
-                label="Here's the elevator pitch? *"
-                description={`What's your idea? This will be a short tagline for the project`}
-                name="tagLine"
-                placeHolder={"A short tag line for project."}
+                error={
+                  errors.linkSubmitFile ? errors.linkSubmitFile.message : ""
+                }
+                label="Upload link source document of this project? *"
+                description={`This will be a short link Submit File for the project`}
+                name="linkSubmitFile"
+                placeHolder={"A link Submit File for project."}
                 containerStyles="text-[#05264e] text-base w-full tw-bg-white"
                 labelStyle="text-[#05264e] font-medium"
               />
@@ -292,7 +243,12 @@ function SubmitProject() {
             </div>
           </div>
           <div className="mt-5 w-full col-span-1">
-            <div className="font-medium text-base">Thumnail Image</div>
+            <Link
+              to={`/Seeker/project/${extractId({ str: projectId })}`}
+              className="font-medium text-base mb-5 text-blue-700 cursor-pointer"
+            >
+              Preview
+            </Link>
             <div className="mb-5 cursor-pointer max-w-xs bg-white border border-gray-300 rounded-sm hover:shadow-md">
               <div className="">
                 <img

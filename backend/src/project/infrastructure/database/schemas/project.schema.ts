@@ -50,6 +50,12 @@ export class ProjectDocument {
   isSubmmited: boolean;
 
   @Prop({ type: String })
+  linkSubmitVideo: string;
+
+  @Prop({ type: String })
+  linkSubmitFile: string;
+
+  @Prop({ type: String })
   teamName: string;
 
   @Prop({ type: String })

@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from "react";
 
 export const Payment = () => {
-  const [subscriptions, setSubscriptions] = useState([
+  const list = [
     {
       _id: "6779057134bd989a5b220467",
       subscriptionTypeId: "6779061b34bd989a5b22046a",
+      name: "Free",
       description: ["Upload 1 public hackathon", "General Support"],
       price: "0",
       periodType: "month",
+      buttonStyle: "bg-gray-700 text-white hover:bg-gray-600",
     },
     {
       _id: "6779065634bd989a5b22046c",
       subscriptionTypeId: "677902a534bd989a5b22045f",
+      name: "Plus",
       description: [
         "Upload 3 public hackathon",
         "Unlock recommend feature",
@@ -24,6 +27,7 @@ export const Payment = () => {
     {
       _id: "6779067634bd989a5b22046e",
       subscriptionTypeId: "677902e234bd989a5b220460",
+      name: "Advanced",
       description: [
         "Upload 3 public hackathon",
         "Unlock recommend feature",
@@ -32,17 +36,21 @@ export const Payment = () => {
       ],
       price: "19",
       periodType: "month",
+      buttonStyle: "bg-gray-700 text-white hover:bg-gray-600",
     },
     {
       _id: "677906bc34bd989a5b220475",
       subscriptionTypeId: "6779061b34bd989a5b22046a",
+      name: "Free",
       description: ["Upload 1 public hackathon", "General Support"],
       price: "0",
       periodType: "year",
+      buttonStyle: "bg-gray-700 text-white hover:bg-gray-600",
     },
     {
       _id: "677906c634bd989a5b220476",
       subscriptionTypeId: "677902a534bd989a5b22045f",
+      name: "Plus",
       description: [
         "Upload 3 public hackathon",
         "Unlock recommend feature",
@@ -50,10 +58,12 @@ export const Payment = () => {
       ],
       price: "75.6",
       periodType: "year",
+      buttonStyle: "bg-yellow-400 text-black hover:bg-yellow-300",
     },
     {
       _id: "677906ce34bd989a5b220477",
       subscriptionTypeId: "677902e234bd989a5b220460",
+      name: "Advanced",
       description: [
         "Upload 3 public hackathon",
         "Unlock recommend feature",
@@ -64,7 +74,8 @@ export const Payment = () => {
       periodType: "year",
       buttonStyle: "bg-gray-700 text-white hover:bg-gray-600",
     },
-  ]);
+  ];
+  const [subscriptions, setSubscriptions] = useState(list);
 
   const subscriptionList = [
     { id: "month", name: "Month" },
@@ -73,21 +84,7 @@ export const Payment = () => {
   const [mode, setMode] = useState(subscriptionList[0].id); // State to track the selected mode
 
   const handleModeChange = (selectedMode) => {
-    if (selectedMode === subscriptionList[1].id) {
-      setSubscriptions((sub) =>
-        sub.map((item) => ({
-          ...item,
-          price: Math.round(item.price * 12 * 0.6), // Reset price for monthly mode
-        }))
-      );
-    } else {
-      setSubscriptions((sub) =>
-        sub.map((item) => ({
-          ...item,
-          price: Math.round(item.price / 12 / 0.6), // Reset price for monthly mode
-        }))
-      );
-    }
+    setSubscriptions(list.filter((item) => item.periodType == selectedMode));
     setMode(selectedMode);
   };
   const handlePayment = (id, price) => {

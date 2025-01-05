@@ -39,7 +39,7 @@ export class MongooseInvoiceRepository implements InvoiceRepository {
     const orderInfo = 'pay with MoMo';
     const redirectUrl = 'http://localhost:5173/Seeker/payment/success';
     const ipnUrl =
-      'https://ktln-hackathon-post.onrender.com/api/v1/invoices/create-invoice' +
+      'https://ktln-hackathon-post.onrender.com/api/v1/invoices/create-invoice?' +
       this.convertJsonToParams(createInvoiceDTO);
     console.log(ipnUrl);
     // const ipnUrl = redirectUrl = "https://webhook.site/454e7b77-f177-4ece-8236-ddf1c26ba7f8";
@@ -181,5 +181,26 @@ export class MongooseInvoiceRepository implements InvoiceRepository {
 
     await exitUser.save();
     return await createdInvoice.save();
+  }
+
+  async findAll(page: number, userId: string) {
+    if (userId) {
+      const exitUser = await this.userModel.findById(userId).populate({
+        path: 'invoices',
+        model: 'InvoiceDocument',
+      });
+      if (!exitUser) return [];
+
+      return exitUser.invoices;
+    }
+    return await this.invoiceModel
+      .find()
+      .populate({
+        path: 'userId',
+        model: 'UserDocument',
+        select: 'fullname',
+      })
+      .lean()
+      .exec();
   }
 }

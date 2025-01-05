@@ -1,41 +1,74 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export const Payment = () => {
   const [subscriptions, setSubscriptions] = useState([
     {
-      id: "basic",
-      name: "Free",
-      features: ["Upload 1 public hackathon", "General Support"],
-      price: 0,
-      buttonStyle: "bg-black text-white hover:bg-gray-800",
+      _id: "6779057134bd989a5b220467",
+      subscriptionTypeId: "6779061b34bd989a5b22046a",
+      description: ["Upload 1 public hackathon", "General Support"],
+      price: "0",
+      periodType: "month",
     },
     {
-      id: "professional",
-      name: "Plus",
-      features: [
+      _id: "6779065634bd989a5b22046c",
+      subscriptionTypeId: "677902a534bd989a5b22045f",
+      description: [
         "Upload 3 public hackathon",
         "Unlock recommend feature",
         "Premium Support",
       ],
-      price: 9,
+      price: "9",
+      periodType: "month",
       buttonStyle: "bg-yellow-400 text-black hover:bg-yellow-300",
     },
     {
-      id: "enterprise",
-      name: "Advanced",
-      features: [
+      _id: "6779067634bd989a5b22046e",
+      subscriptionTypeId: "677902e234bd989a5b220460",
+      description: [
         "Upload 3 public hackathon",
         "Unlock recommend feature",
         "Unlock AI optimize",
         "Premium Support",
       ],
-      price: 29,
+      price: "19",
+      periodType: "month",
+    },
+    {
+      _id: "677906bc34bd989a5b220475",
+      subscriptionTypeId: "6779061b34bd989a5b22046a",
+      description: ["Upload 1 public hackathon", "General Support"],
+      price: "0",
+      periodType: "year",
+    },
+    {
+      _id: "677906c634bd989a5b220476",
+      subscriptionTypeId: "677902a534bd989a5b22045f",
+      description: [
+        "Upload 3 public hackathon",
+        "Unlock recommend feature",
+        "Premium Support",
+      ],
+      price: "75.6",
+      periodType: "year",
+    },
+    {
+      _id: "677906ce34bd989a5b220477",
+      subscriptionTypeId: "677902e234bd989a5b220460",
+      description: [
+        "Upload 3 public hackathon",
+        "Unlock recommend feature",
+        "Unlock AI optimize",
+        "Premium Support",
+      ],
+      price: "159.6",
+      periodType: "year",
       buttonStyle: "bg-gray-700 text-white hover:bg-gray-600",
     },
   ]);
+
   const subscriptionList = [
-    { id: 1, name: "Month" },
-    { id: 2, name: "Year" },
+    { id: "month", name: "Month" },
+    { id: "year", name: "Year" },
   ];
   const [mode, setMode] = useState(subscriptionList[0].id); // State to track the selected mode
 
@@ -58,7 +91,7 @@ export const Payment = () => {
     setMode(selectedMode);
   };
   const handlePayment = (id, price) => {
-    fetch("http://localhost:4000/api/v1/invoices/payment", {
+    fetch("http://localhost:3000/api/v1/invoices/payment", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -78,6 +111,8 @@ export const Payment = () => {
       })
       .catch((error) => console.log("error", error));
   };
+
+  useEffect(() => {}, []);
   return (
     <div className="bg-gray-100 text-gray-900 font-sans">
       <div className="text-center py-20 mx-28">
@@ -123,48 +158,52 @@ export const Payment = () => {
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 px-6 md:px-12 lg:px-24">
-          {subscriptions.map((subscription) => (
-            <div
-              key={subscription.id}
-              className={`shadow-md rounded-lg p-6 flex flex-col justify-between gap-6 ${
-                subscription.id === "professional"
-                  ? "bg-black text-white transform scale-105"
-                  : "bg-white"
-              }`}
-            >
-              <div>
-                <h2 className="text-2xl font-bold mb-4">{subscription.name}</h2>
-                <ul className="text-left mb-6 space-y-2">
-                  {subscription.features.map((feature, index) => (
-                    <li className="list-none" key={index}>
-                      ✔ {feature}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div>
-                <div className="text-3xl font-bold mb-4">
-                  ${subscription.price}
-                  <span className="text-base font-normal">
-                    /
-                    {subscriptionList
-                      .find((item) => item.id == mode)
-                      ?.name.toLowerCase()}
-                  </span>
+          {subscriptions
+            .filter((item) => item.periodType == mode)
+            .map((subscription) => (
+              <div
+                key={subscription.id}
+                className={`shadow-md rounded-lg p-6 flex flex-col justify-between gap-6 ${
+                  subscription.id === "professional"
+                    ? "bg-black text-white transform scale-105"
+                    : "bg-white"
+                }`}
+              >
+                <div>
+                  <h2 className="text-2xl font-bold mb-4">
+                    {subscription.name}
+                  </h2>
+                  <ul className="text-left mb-6 space-y-2">
+                    {subscription.description.map((feature, index) => (
+                      <li className="list-none" key={index}>
+                        ✔ {feature}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-                {subscription.id !== "basic" && (
-                  <button
-                    className={`py-2 px-6 rounded ${subscription.buttonStyle}`}
-                    onClick={() =>
-                      handlePayment(subscription.id, subscription.price)
-                    }
-                  >
-                    {subscription.id === "basic" ? "Contact" : "Start now"}
-                  </button>
-                )}
+                <div>
+                  <div className="text-3xl font-bold mb-4">
+                    ${subscription.price}
+                    <span className="text-base font-normal">
+                      /
+                      {subscriptionList
+                        .find((item) => item.id == mode)
+                        ?.name.toLowerCase()}
+                    </span>
+                  </div>
+                  {subscription.id !== "basic" && (
+                    <button
+                      className={`py-2 px-6 rounded ${subscription.buttonStyle}`}
+                      onClick={() =>
+                        handlePayment(subscription.id, subscription.price)
+                      }
+                    >
+                      {subscription.id === "basic" ? "Contact" : "Start now"}
+                    </button>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
         </div>
       </div>
     </div>

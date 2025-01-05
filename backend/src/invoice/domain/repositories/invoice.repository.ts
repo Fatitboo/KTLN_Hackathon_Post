@@ -5,4 +5,5 @@ export const INVOICE_REPOSITORY = 'InvoiceRepository';
 export interface InvoiceRepository {
   create(invoice: Invoice): Promise<InvoiceDocument | null>;
   payment(payment: Invoice): any;
+  findAll(page: number, userId: string): any;
 }

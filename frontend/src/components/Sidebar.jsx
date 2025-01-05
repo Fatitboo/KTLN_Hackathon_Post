@@ -109,6 +109,21 @@ function Sidebar({ user }) {
                 Manage User
               </Link>
             </div>
+            <div
+              className={classNames(
+                isActive === "History" ? "bg-[#E9EFFB] text-blue-600" : "",
+                itemStyle
+              )}
+            >
+              <Link
+                onClick={() => dispatch(isActiveSidebarAction("History"))}
+                to="/Admin/history-transactions"
+                className="relative text-sm text-center p-3 flex items-center leading-7 font-normal  capitalize rounded-lg "
+              >
+                <BsClockHistory className="relative mr-4 ml-4 text-2xl text-center " />
+                History Transactions
+              </Link>
+            </div>
             {/* <div
               className={classNames(
                 isActive === "Manage Vacancy"

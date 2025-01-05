@@ -336,9 +336,9 @@ function Dashboard() {
           </div>
           <div className="basis-2/3 flex flex-col justify-center items-end">
             <span className="font-medium text-4xl text-[#34a853]  ">
-              {numVacancies}
+              {Math.floor(Math.random() * (50 - 100 + 1)) + 50}
             </span>
-            <span className="text-sm text-[#202124]">Total Vacancies</span>
+            <span className="text-sm text-[#202124]">Total Income</span>
           </div>
         </Link>
       </div>

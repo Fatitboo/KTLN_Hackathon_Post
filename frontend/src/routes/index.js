@@ -70,6 +70,8 @@ import AddBlogOr from "../pages/Company/BlogMng/AddBlog";
 import BlogDetailUser from "../pages/Seeker/BrowerBlogs/BlogDetail";
 import Discussion from "../pages/Seeker/Hackathon/Discussion";
 import Updates from "../pages/Seeker/Hackathon/Updates";
+import SuccessPaymentPage from "../pages/Seeker/Payment/Sucess";
+
 const publicRoutes = [
   // User Layout
   { path: "/user-auth/login", component: Login, layout: LayoutNoSidebar },
@@ -133,6 +135,11 @@ const publicRoutes = [
   {
     path: "/Seeker/payment",
     component: Payment,
+    layout: LayoutNoSidebar,
+  },
+  {
+    path: "/Seeker/payment/success",
+    component: SuccessPaymentPage,
     layout: LayoutNoSidebar,
   },
   {

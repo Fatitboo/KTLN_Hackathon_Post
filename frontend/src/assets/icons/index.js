@@ -18,3 +18,4 @@ export { default as IconGithub } from "./github-logo.png";
 export { default as IconLlama } from "./llama.jpg";
 export { default as IconSend } from "./send.png";
 export { default as IconResponse } from "./response.gif";
+export { default as SuccessPaymentIcon } from "./success.jpg";

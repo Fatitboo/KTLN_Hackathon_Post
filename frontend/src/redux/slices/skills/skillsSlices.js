@@ -226,10 +226,7 @@ export const getAllHistoriesAction = createAsyncThunk(
           "Content-Type": "application/json",
         },
       };
-      const { data } = await axios.get(
-        `${baseUrl}/api/v1/users/get-all-histories`,
-        config
-      );
+      const { data } = await axios.get(`${baseUrl}/api/v1/invoices`, config);
       console.log(data);
       return data;
     } catch (error) {
@@ -278,7 +275,7 @@ const skillsSlices = createSlice({
       }),
       builder.addCase(getAllHistoriesAction.fulfilled, (state, action) => {
         state.loading = false;
-        state.histories = action?.payload?.histories;
+        state.histories = action?.payload;
         state.appErr = null;
         state.isSuccess = true;
       }),

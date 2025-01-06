@@ -1,7 +1,7 @@
-import { PaymentDTO } from 'src/invoice/adapter/dto/payment.dto';
+import { CreateInvoiceDTO } from 'src/invoice/adapter/dto/create-invoice.dto';
 
 export class CreatePaymentCommandProps {
-  paymentDTO: PaymentDTO;
+  paymentDTO: CreateInvoiceDTO;
 }
 export class CreatePaymentCommand {
   constructor(public readonly props: CreatePaymentCommandProps) {}

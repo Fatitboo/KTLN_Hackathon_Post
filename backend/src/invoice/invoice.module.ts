@@ -16,6 +16,7 @@ import {
   InvoiceSchema,
 } from './infrastructure/schemas/invoice.schema';
 import { CreatePaymentHandler } from './application/commands/create-payment/create-payment.handler';
+import { GetInvoiceHandler } from './application/queries/get-invoices/get-invoices.handler';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { CreatePaymentHandler } from './application/commands/create-payment/crea
     { provide: INVOICE_REPOSITORY, useClass: MongooseInvoiceRepository },
     CreateInvoiceHandler,
     CreatePaymentHandler,
+    GetInvoiceHandler,
   ],
 })
 export class InvoiceModule {}

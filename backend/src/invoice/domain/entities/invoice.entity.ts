@@ -4,8 +4,8 @@ export class Invoice {
 
     public subscriptionId: string,
 
-    public price?: string,
+    public price: string,
 
-    public payType?: string,
+    public payType: string,
   ) {}
 }

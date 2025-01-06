@@ -18,7 +18,6 @@ export class CreateInvoiceHandler
   async execute(command: CreateInvoiceCommand) {
     return {
       invoiceId: await this.invoiceRepository.create(
-        command.props.id,
         command.props.createInvoiceDTO,
       ),
     };

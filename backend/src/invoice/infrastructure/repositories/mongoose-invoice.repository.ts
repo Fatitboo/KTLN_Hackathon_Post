@@ -4,14 +4,31 @@ import { InvoiceRepository } from 'src/invoice/domain/repositories/invoice.repos
 import { InvoiceDocument } from '../schemas/invoice.schema';
 import * as crypto from 'crypto';
 import * as https from 'https';
+import { Invoice } from 'src/invoice/domain/entities/invoice.entity';
+import { UserDocument } from 'src/user/infrastructure/database/schemas';
 
 export class MongooseInvoiceRepository implements InvoiceRepository {
   constructor(
     @InjectModel(InvoiceDocument.name)
     private readonly invoiceModel: Model<InvoiceDocument>,
+
+    @InjectModel(UserDocument.name)
+    private readonly userModel: Model<UserDocument>,
   ) {}
 
-  async payment(createInvoiceDTO: any) {
+  convertJsonToParams(jsonObject: any): string {
+    const params = new URLSearchParams();
+
+    for (const key in jsonObject) {
+      if (jsonObject.hasOwnProperty(key)) {
+        params.append(key, jsonObject[key]);
+      }
+    }
+
+    return params.toString();
+  }
+
+  async payment(createInvoiceDTO: Invoice) {
     //https://developers.momo.vn/#/docs/en/aiov2/?id=payment-method
     //parameters
     const partnerCode = 'MOMO';
@@ -20,8 +37,11 @@ export class MongooseInvoiceRepository implements InvoiceRepository {
     const requestId = partnerCode + new Date().getTime();
     const orderId = requestId;
     const orderInfo = 'pay with MoMo';
-    const redirectUrl = 'http://localhost:5173/Seeker/brower-hackathons';
-    const ipnUrl = 'http://localhost:3000/api/v1/users';
+    const redirectUrl = 'http://localhost:5173/Seeker/payment/success';
+    const ipnUrl =
+      'https://ktln-hackathon-post.onrender.com/api/v1/invoices/create-invoice?' +
+      this.convertJsonToParams(createInvoiceDTO);
+    console.log(ipnUrl);
     // const ipnUrl = redirectUrl = "https://webhook.site/454e7b77-f177-4ece-8236-ddf1c26ba7f8";
     const amount = createInvoiceDTO?.price ?? '1000';
     const requestType = 'captureWallet';
@@ -138,7 +158,49 @@ export class MongooseInvoiceRepository implements InvoiceRepository {
       req.end();
     });
   }
-  create(id: string, invoice: any): Promise<InvoiceDocument | null> {
-    throw new Error('Method not implemented.');
+
+  async create(invoice: Invoice): Promise<InvoiceDocument | null> {
+    const exitUser = await this.userModel.findById(invoice.userId);
+
+    if (!exitUser) throw new Error('User is not exist');
+
+    const createdInvoice = new this.invoiceModel({
+      subscriptionId: invoice.subscriptionId,
+      userId: invoice.userId,
+      price: invoice.price,
+      payType: invoice.payType,
+      createDate: Date.now(),
+      startDate: Date.now(),
+      endDate: Date.now(),
+    });
+
+    let userInvoices = exitUser.invoices;
+    if (!exitUser.invoices) userInvoices = [];
+    userInvoices.push(createdInvoice._id);
+    exitUser.invoices = userInvoices;
+
+    await exitUser.save();
+    return await createdInvoice.save();
+  }
+
+  async findAll(page: number, userId: string) {
+    if (userId) {
+      const exitUser = await this.userModel.findById(userId).populate({
+        path: 'invoices',
+        model: 'InvoiceDocument',
+      });
+      if (!exitUser) return [];
+
+      return exitUser.invoices;
+    }
+    return await this.invoiceModel
+      .find()
+      .populate({
+        path: 'userId',
+        model: 'UserDocument',
+        select: 'fullname',
+      })
+      .lean()
+      .exec();
   }
 }

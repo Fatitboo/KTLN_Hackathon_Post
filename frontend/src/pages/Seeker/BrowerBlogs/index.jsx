@@ -8,31 +8,32 @@ import { useEffect, useMemo, useState } from "react";
 import { LoadingComponent, PaginationButtons } from "../../../components";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  getAllProjects,
-  getAllTags,
-  resetValue,
-} from "../../../redux/slices/projects/projectsSlices";
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
 import CardBlog from "../../../components/Seeker/CardBlog";
-
+import {
+  resetValue,
+  searchBlogs,
+} from "../../../redux/slices/occupations/occupationsSlices";
+const blogTypes = [
+  { id: 7, value: "All", label: "All" },
+  { id: 0, value: "Hackathon planning", label: "Hackathon planning" },
+  { id: 1, value: "Participant resources", label: "Participant resources" },
+  { id: 2, value: "Business impact", label: "Business impact" },
+  { id: 3, value: "Customer stories", label: "Customer stories" },
+  { id: 4, value: "Guides", label: "Guides" },
+  { id: 5, value: "In-person events", label: "In-person events" },
+  { id: 6, value: "Webinars", label: "Webinars" },
+];
 function BrowerBlogs() {
   const [searchTerm, setSearchTerm] = useState("");
   const dispatch = useDispatch();
-  const limit = 10;
+  const limit = 12;
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(10);
   const [totalPages, setTotalPage] = useState(1);
-  let [currentProjects, setCurrentProjects] = useState([]);
+  let [currentBlogs, setCurrentBlogs] = useState([]);
   const [selectedTags, setSelectedTags] = useState(["All"]);
-  const [withDemoVideos, setWithDemoVideos] = useState(false);
-  const [withGallery, setWithGallery] = useState(false);
-  const [winnersOnly, setWinnersOnly] = useState(false);
-  const [joinHackathon, setJoinHackathon] = useState(false);
-  const [sortOption, setSortOption] = useState("Newest");
-  let { loading, projects, isSuccess, tags } = useSelector(
-    (state) => state.projects
-  );
+  let { loading, blogs, isSuccess } = useSelector((state) => state.occupations);
   const handlePageChange = (newPage) => {
     if (newPage > 0 && newPage <= totalPages) {
       setPage(newPage);
@@ -41,54 +42,28 @@ function BrowerBlogs() {
 
   const handleSearch = () => {
     dispatch(
-      getAllProjects({
+      searchBlogs({
         page,
         limit: 12,
         searchKeyword: searchTerm,
-        withDemoVideos,
-        withGallery,
         selectedTags,
-        sortOption,
-        winnersOnly,
-        joinHackathon,
       })
     );
   };
 
   useEffect(() => {
     handleSearch();
-  }, [
-    page,
-    withDemoVideos,
-    withGallery,
-    selectedTags,
-    sortOption,
-    winnersOnly,
-    joinHackathon,
-  ]);
-
-  useEffect(() => {
-    dispatch(getAllTags({ type: "project" }));
-  }, []);
+  }, [page, selectedTags]);
 
   useEffect(() => {
     if (isSuccess) {
-      setCurrentProjects(projects.data);
-      setTotal(projects?.total);
-      setTotalPage(Math.ceil(projects?.total / limit));
+      setCurrentBlogs(blogs.data);
+      setTotal(blogs?.total);
+      setTotalPage(Math.ceil(blogs?.total / limit));
       dispatch(resetValue({ key: "isSuccess", value: false }));
     }
-    console.log("🚀 ~ useEffect ~ projects:", projects);
+    console.log("🚀 ~ useEffect ~ blogs:", blogs);
   }, [isSuccess]);
-
-  const clearFilters = () => {
-    setSearchTerm("");
-    setSelectedTags([]);
-    setWithDemoVideos(false);
-    setWithGallery(false);
-    setSortOption("Newest");
-    setPage(1); // Reset về trang đầu tiên
-  };
 
   return (
     <>
@@ -125,7 +100,7 @@ function BrowerBlogs() {
                     <div className="mb-4 flex items-center ">
                       <div className=" font-semibold mr-3 ">Tags</div>
                       <MultiSelectDropdown
-                        options={tags}
+                        options={blogTypes}
                         setSelectedOptions={setSelectedTags}
                         selectedOptions={selectedTags}
                       />
@@ -157,22 +132,18 @@ function BrowerBlogs() {
               {/* Title */}
               <div className="flex justify-between items-center text-sm mt-2">
                 <dic className="text-gray-600">
-                  Showing {currentProjects.length ?? 0} in {total} blogs
+                  Showing {currentBlogs.length ?? 0} in {total} blogs
                 </dic>
               </div>
               <div className="my-5 grid grid-cols-3 max-md:grid-cols-1 gap-10">
-                {(currentProjects || []).map((card, index) => (
+                {(currentBlogs || []).map((card, index) => (
                   <CardBlog
                     id={card?._id}
                     key={index}
-                    member={card.createdBy}
-                    title={card?.projectTitle}
+                    blogType={card?.blogType}
+                    title={card?.blogTitle}
                     description={card?.tagline}
                     image={card?.thumnailImage || imgDefaultProject}
-                    imgUser={defaultAvt}
-                    isWinner={card.isWinner}
-                    votes={card.votes}
-                    comments={card.comments}
                   />
                 ))}
               </div>

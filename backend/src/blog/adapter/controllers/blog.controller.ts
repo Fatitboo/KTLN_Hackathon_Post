@@ -13,7 +13,7 @@ import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { UpdateBlogDTO } from '../dto/update-blog.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { BlogDocument } from 'src/blog/infrastructure/database/schemas';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { UserDocument } from 'src/user/infrastructure/database/schemas';
 
 @Controller('blogs')
@@ -29,10 +29,50 @@ export class BlogController {
   ) {}
 
   @Get()
-  async getAllBlogs(@Query('page') page: number) {
-    const blogs = await this.blogModel.find().lean().exec();
-    if (!blogs) return [];
-    return blogs;
+  async searchBlogs(
+    @Query('searchKeyword') searchKeyword: string,
+    @Query('tags') tags: string[],
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 12,
+  ) {
+    console.log('🚀 ~ BlogController ~ tags:', tags);
+    const filter: any = {};
+
+    if (searchKeyword) {
+      filter.$or = [
+        { blogTitle: { $regex: searchKeyword, $options: 'i' } },
+        { tagline: { $regex: searchKeyword, $options: 'i' } },
+      ];
+    }
+    if (tags && tags.length > 0) {
+      filter.blogType = { $in: tags };
+    }
+
+    const total = await this.blogModel.countDocuments(filter); // Tổng số lượng dự án
+    const skip = (page - 1) * limit;
+
+    const data = await this.blogModel
+      .find(filter)
+      .skip(skip)
+      .limit(limit)
+      .exec();
+
+    return { data, total, page, limit };
+  }
+  @Get('search/:key')
+  async getAllBlogs(@Query('page') page: number, @Param('key') key: string) {
+    if (key === 'all') {
+      const blogs = await this.blogModel.find().lean().exec();
+      if (!blogs) return [];
+      return blogs;
+    } else {
+      const blogs = await this.blogModel
+        .find({ owner: new Types.ObjectId(key) })
+        .lean()
+        .exec();
+      if (!blogs) return [];
+      return blogs;
+    }
   }
 
   @Get(':id')
@@ -59,14 +99,18 @@ export class BlogController {
       content: blog.content,
       thumnailImage: blog.thumnailImage,
       autho: blog.autho,
+      videoLink: blog?.videoLink,
       isApproval: blog.isApproval,
       blogType: blog.blogType,
       owner: existingUser._id,
     });
 
     const blogObj = await createBlog.save();
-
-    existingUser.blogs.push(blogObj._id);
+    if (existingUser.blogs) {
+      existingUser.blogs.push(blogObj._id);
+    } else {
+      existingUser.blogs = [blogObj._id];
+    }
     await existingUser.save();
 
     return blogObj;

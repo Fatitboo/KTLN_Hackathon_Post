@@ -46,7 +46,7 @@ export class BlogDocument {
   @Prop({ type: AuthoBlog })
   autho: AuthoBlog;
 
-  @Prop({ type: Types.ObjectId, ref: 'User', required: true })
+  @Prop({ type: Types.ObjectId, ref: 'UserDocument', required: true })
   owner: Types.ObjectId;
 }
 export const BlogSchema = SchemaFactory.createForClass(BlogDocument);

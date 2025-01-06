@@ -22,7 +22,7 @@ export const blogTypes = [
   "In-person events",
   "Webinars",
 ];
-function AddBlog() {
+function AddBlogOr() {
   const dispatch = useDispatch();
   const nav = useNavigate();
   const [value, setValueDes] = useState("");
@@ -55,11 +55,11 @@ function AddBlog() {
           videoLink: data?.videoLink,
           thumnailImage: fileThumnail,
           autho: {
-            name: "Admin",
-            title: "Administartor of Devpost",
+            name: user?.fullname,
+            title: "Special in " + user?.settingRecommend?.specialty,
             createdAt: new Date().toISOString(),
           },
-          isApproval: true,
+          isApproval: false,
           blogType: blogType,
         };
         try {
@@ -77,7 +77,7 @@ function AddBlog() {
               confirmButtonColor: "#3085d6",
             }).then((result) => {
               if (result.isConfirmed) {
-                window.location.href = "/Admin/blog-management";
+                window.location.href = "/Organizer/blog-management";
               }
             });
           }
@@ -140,7 +140,10 @@ function AddBlog() {
       {loading && <LoadingComponent />}
       {/* Start title of page  */}
       <div className="flex items-center">
-        <Link to="/Admin/blog-management" className="mb-3 flex items-center ">
+        <Link
+          to="/Organizer/blog-management"
+          className="mb-3 flex items-center "
+        >
           <CgArrowLeft fontSize={30} />
           {/* <h3 className="font-normal text-2xl text-gray-900 ml-2 leading-10">Back</h3> */}
         </Link>
@@ -342,4 +345,4 @@ function AddBlog() {
   );
 }
 
-export default AddBlog;
+export default AddBlogOr;

@@ -17,9 +17,12 @@ function HackathonDetail() {
   const [item, setItemHackathon] = useState({});
   const { hackathon } = useSelector((state) => state.hackathons);
   const dispatch = useDispatch();
+  const handleGetSingleHackathon = async (id) => {
+    dispatch(singleHackathon(id));
+  };
   useEffect(() => {
     if (!id) return;
-    dispatch(singleHackathon(id));
+    handleGetSingleHackathon(id);
   }, [id]);
   useEffect(() => {
     if (hackathon) {
@@ -69,7 +72,16 @@ function HackathonDetail() {
           <SubNavbarHackathon id={id} type={type} />
         </div>
         <div className=" max-lg:px-2 py-5 min-h-60 ">
-          <Outlet context={{ item, myProject, id, isRegistered, user }} />
+          <Outlet
+            context={{
+              item,
+              myProject,
+              id,
+              isRegistered,
+              user,
+              handleGetSingleHackathon,
+            }}
+          />
         </div>
         {/* //recommend team hackathons */}
         <div className="fixed bottom-12 right-12 z-10">

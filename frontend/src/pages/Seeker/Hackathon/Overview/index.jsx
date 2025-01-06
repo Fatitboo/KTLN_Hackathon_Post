@@ -36,7 +36,12 @@ function Overview() {
       navigate(`/Hackathon-detail/${id}/${to}`);
     }
   };
-
+  function isDeadlinePassed(deadline) {
+    if (!deadline) return false; // Không có deadline => chưa hết hạn
+    const currentDate = new Date();
+    const deadlineDate = new Date(deadline);
+    return currentDate > deadlineDate; // true nếu đã hết hạn
+  }
   return (
     <div className="">
       <div className="px-60 max-lg:px-2 py-5  bg-gray-100">
@@ -46,20 +51,32 @@ function Overview() {
             <p className="text-xl mt-5 h-16">{item?.tagline}</p>
             <div className="grid grid-cols-5">
               <div className="col-span-2">
-                {isRegistered === true ? (
+                {isDeadlinePassed(item?.submissions?.deadline) ? (
                   <>
                     <CustomButton
-                      onClick={() => handleNavigatePage(`my-project`)}
-                      title="Edit your project"
+                      onClick={() => handleNavigatePage(`project-gallery`)}
+                      title="View project gallery"
                       containerStyles="bg-blue-600 w-fit font-medium text-white py-2 px-5 focus:outline-none hover:bg-blue-500 rounded-sm text-base border border-blue-600"
                     />
                   </>
                 ) : (
-                  <CustomButton
-                    onClick={() => handleNavigatePage(`register`)}
-                    title="Join hackathon"
-                    containerStyles="bg-blue-600 w-fit font-medium text-white py-2 px-5 focus:outline-none hover:bg-blue-500 rounded-sm text-base border border-blue-600"
-                  />
+                  <div>
+                    {isRegistered === true ? (
+                      <>
+                        <CustomButton
+                          onClick={() => handleNavigatePage(`my-project`)}
+                          title="Edit your project"
+                          containerStyles="bg-blue-600 w-fit font-medium text-white py-2 px-5 focus:outline-none hover:bg-blue-500 rounded-sm text-base border border-blue-600"
+                        />
+                      </>
+                    ) : (
+                      <CustomButton
+                        onClick={() => handleNavigatePage(`register`)}
+                        title="Join hackathon"
+                        containerStyles="bg-blue-600 w-fit font-medium text-white py-2 px-5 focus:outline-none hover:bg-blue-500 rounded-sm text-base border border-blue-600"
+                      />
+                    )}
+                  </div>
                 )}
                 <div className="flex mr-2 mt-6 mb-4">
                   <div

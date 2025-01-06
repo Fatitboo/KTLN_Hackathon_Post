@@ -130,8 +130,10 @@ export class HackathonController {
       updateId: uuidv4(),
     };
     hackathon.updateNews.push(upt);
+    hackathon.markModified('updateNews');
 
     await hackathon.save();
+    return 'ok';
   }
 
   @Post('update-updates/:updateId')
@@ -148,8 +150,29 @@ export class HackathonController {
       }
       return u;
     });
+
     hackathon.updateNews = upts;
+    hackathon.markModified('updateNews');
     await hackathon.save();
+    return 'ok';
+  }
+
+  @Post('delete-updates/:updateId')
+  async deleteUpdates(
+    @Param('updateId') updateId: string,
+    @Body() body: { hackathonId: string; title: string; content: string },
+  ) {
+    const hackathon = await this.hackathonModel.findById(body.hackathonId);
+    if (!hackathon) throw new BadRequestException('Not found hackathon');
+
+    const upts = hackathon.updateNews.filter((d) => {
+      if (d.updateId !== updateId) return true;
+    });
+
+    hackathon.updateNews = upts;
+    hackathon.markModified('updateNews');
+    await hackathon.save();
+    return 'ok';
   }
 
   @Post('create-discussion/:hackathonId')
@@ -167,7 +190,10 @@ export class HackathonController {
       title: body.title,
       content: body.content,
       discussionId: uuidv4(),
-      userName: user.fullname,
+      userName:
+        user._id === hackathon.user
+          ? `[Manage hackathon: ${user.fullname}]`
+          : user.fullname,
       avatar: user.avatar,
       comments: [],
     };
@@ -177,6 +203,7 @@ export class HackathonController {
       hackathon.discussions = [dcs];
     }
     await hackathon.save();
+    return hackathon._id;
   }
 
   @Post('update-discussion/:discussionId')
@@ -192,6 +219,22 @@ export class HackathonController {
         d.content = body.content;
       }
       return d;
+    });
+    hackathon.discussions = [...dsc];
+    hackathon.markModified('discussions');
+    await hackathon.save();
+    return hackathon._id;
+  }
+
+  @Post('delete-discussion/:discussionId')
+  async deleteDiscussion(
+    @Param('discussionId') discussionId: string,
+    @Body() body: { hackathonId: string },
+  ) {
+    const hackathon = await this.hackathonModel.findById(body.hackathonId);
+    if (!hackathon) throw new BadRequestException('Not found hackathon');
+    const dsc = hackathon.discussions.filter((d) => {
+      if (d.discussionId !== discussionId) return true;
     });
     hackathon.discussions = dsc;
     await hackathon.save();
@@ -218,7 +261,10 @@ export class HackathonController {
       title: body.title,
       content: body.content,
       commentId: uuidv4(),
-      userName: user.fullname,
+      userName:
+        user._id === hackathon.user
+          ? `[Manage hackathon: ${user.fullname}]`
+          : user.fullname,
       avatar: user.avatar,
     };
     const dsc = hackathon.discussions.map((d) => {
@@ -229,7 +275,7 @@ export class HackathonController {
       return d;
     });
     hackathon.discussions = dsc;
-
+    hackathon.markModified('discussions');
     await hackathon.save();
   }
 
@@ -260,6 +306,7 @@ export class HackathonController {
       return d;
     });
     hackathon.discussions = dsc;
+    hackathon.markModified('discussions');
     await hackathon.save();
   }
 

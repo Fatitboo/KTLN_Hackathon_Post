@@ -49,6 +49,14 @@ body {
   position: absolute;
 }
 
+.limitline5 {
+  display: -webkit-box;
+  -webkit-line-clamp: 5; /* Hiển thị 5 dòng */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .slider__track {
   background-color: #ced4da;
   width: 100%;

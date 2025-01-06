@@ -16,12 +16,13 @@ import baseUrl from "../../../utils/baseUrl";
 import { BsTrash } from "react-icons/bs";
 import { CgLock } from "react-icons/cg";
 
-function BlogManagement() {
+function BlogManagementOr() {
   const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(getAllOccupationsAction("all"));
-  }, []);
   const users = useSelector((store) => store?.users);
+
+  useEffect(() => {
+    dispatch(getAllOccupationsAction(users?.userAuth?.user?.id));
+  }, []);
   const [filterKeyWord, setFilterKeyWord] = useState("");
   let [currentPage, setCurrentPage] = useState([]);
 
@@ -54,7 +55,7 @@ function BlogManagement() {
               confirmButtonColor: "#3085d6",
             }).then((result) => {
               if (result.isConfirmed) {
-                window.location.href = "/Admin/blog-management";
+                window.location.href = "/Organizer/blog-management";
               }
             });
           }
@@ -112,7 +113,7 @@ function BlogManagement() {
                     </form>
                   </div>
                   <div className="mt-[10px]">
-                    <Link to={"/Admin/blog-management/add-blog"}>
+                    <Link to={"/Organizer/blog-management/add-blog"}>
                       <CustomButton
                         title="Add"
                         iconRight={<BiPlus fontSize={24} />}
@@ -321,36 +322,24 @@ function BlogManagement() {
                                     <div className="flex">
                                       <div className="list-none flex relative item-center justify-center">
                                         <Link
-                                          to={`/Admin/blog-management/detail-blog/${item?._id}`}
+                                          to={`/Organizer/blog-management/detail-blog/${item?._id}`}
                                           className="list-none relative mr-2 bg-[#f5f7fc] border rounded-md border-[#e9ecf9] px-1 pt-1 hover:bg-[#5f86e9] hover:text-white"
                                         >
                                           <LiaEyeSolid fontSize={18} />
                                         </Link>
                                       </div>
-                                      {item?.autho?.name === "Admin" && (
+                                      {
                                         <div className="list-none flex relative item-center justify-center">
                                           <Link
-                                            to={`/Admin/blog-management/edit-blog/${item?._id}`}
+                                            to={`/Organizer/blog-management/edit-blog/${item?._id}`}
                                             className="list-none relative mr-2 bg-[#f5f7fc] border rounded-md border-[#e9ecf9] px-1 pt-1 hover:bg-[#5f86e9] hover:text-white"
                                           >
                                             <BiPencil fontSize={18} />
                                           </Link>
                                         </div>
-                                      )}
-                                      <div className="list-none flex relative item-center justify-center">
-                                        <div
-                                          onClick={() =>
-                                            handleDeleteOrBlockOccupation(
-                                              item?._id,
-                                              !item?.isApproval
-                                            )
-                                          }
-                                          className="list-none relative mr-2 bg-[#f5f7fc] border rounded-md border-[#e9ecf9] px-1 pt-1 hover:bg-[#5f86e9] hover:text-white"
-                                        >
-                                          <CgLock fontSize={18} />
-                                        </div>
-                                      </div>
-                                      {item?.autho?.name === "Admin" && (
+                                      }
+
+                                      {
                                         <div className="list-none flex relative item-center justify-center">
                                           <div
                                             onClick={() =>
@@ -363,7 +352,7 @@ function BlogManagement() {
                                             <BsTrash fontSize={18} />
                                           </div>
                                         </div>
-                                      )}
+                                      }
                                     </div>
                                   </td>
                                 </tr>
@@ -388,4 +377,4 @@ function BlogManagement() {
   );
 }
 
-export default BlogManagement;
+export default BlogManagementOr;

@@ -16,6 +16,8 @@ import Swal from "sweetalert2";
 import { IoClose } from "react-icons/io5";
 import { StarIcon } from "@heroicons/react/20/solid";
 import TeamProjectSmall from "./TeamProjectSmall/TeamProjectSmall";
+import Discussion from "../Discussion";
+import Updates from "../Updates";
 
 function HackathonCorDetail() {
   const { id, type } = useParams();
@@ -186,6 +188,8 @@ function HackathonCorDetail() {
     txt.innerHTML = html;
     return txt.value;
   };
+  const storeData = useSelector((store) => store.users);
+  const user = storeData?.userAuth?.user;
   const [projectGallery, setProjectGallery] = useState([]);
   const [currentHackathon, setCurrentHackathon] = useState([]);
   const { hackathon } = useSelector((state) => state.hackathons);
@@ -475,6 +479,8 @@ function HackathonCorDetail() {
             </div>
           </div>
         )}
+        {type === "discussions" && <Discussion item={hackathon} user={user} />}
+        {type === "updates" && <Updates item={hackathon} user={user} />}
         {type === "teams" && (
           <>
             <div className="px-60 max-lg:px-2 py-5 ">

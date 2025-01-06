@@ -62,7 +62,14 @@ import ManageReportUser from "../pages/Seeker/Setting/Reports";
 import BlogManagement from "../pages/Admin/BlogMng";
 import AddBlog from "../pages/Admin/BlogMng/AddBlog";
 import { Payment } from "../pages/Seeker/Payment/Payment";
-
+import UpdateBlog from "../pages/Admin/BlogMng/UpdateBlog";
+import BlogDetail from "../pages/Admin/BlogMng/BlogDetail";
+import UpdateBlogOr from "../pages/Company/BlogMng/UpdateBlog";
+import BlogManagementOr from "../pages/Company/BlogMng";
+import AddBlogOr from "../pages/Company/BlogMng/AddBlog";
+import BlogDetailUser from "../pages/Seeker/BrowerBlogs/BlogDetail";
+import Discussion from "../pages/Seeker/Hackathon/Discussion";
+import Updates from "../pages/Seeker/Hackathon/Updates";
 const publicRoutes = [
   // User Layout
   { path: "/user-auth/login", component: Login, layout: LayoutNoSidebar },
@@ -119,6 +126,11 @@ const publicRoutes = [
     layout: LayoutNoSidebar,
   },
   {
+    path: "/Seeker/blog-detail/:id",
+    component: BlogDetailUser,
+    layout: LayoutNoSidebar,
+  },
+  {
     path: "/Seeker/payment",
     component: Payment,
     layout: LayoutNoSidebar,
@@ -154,11 +166,11 @@ const publicRoutes = [
       },
       {
         path: "updates",
-        element: Rule,
+        element: Updates,
       },
       {
         path: "discussions",
-        element: Resourses,
+        element: Discussion,
       },
       {
         path: "register",
@@ -255,6 +267,26 @@ const corRoutes = [
     component: HackathonCorDetail,
     layout: LayoutNoSidebar,
   },
+  {
+    path: "/Organizer/blog-management",
+    component: BlogManagementOr,
+    layout: LayoutHasSidebar,
+  },
+  {
+    path: "/Organizer/blog-management/add-blog",
+    component: AddBlogOr,
+    layout: LayoutHasSidebar,
+  },
+  {
+    path: "/Organizer/blog-management/edit-blog/:id",
+    component: UpdateBlogOr,
+    layout: LayoutHasSidebar,
+  },
+  {
+    path: "/Organizer/blog-management/detail-blog/:id",
+    component: BlogDetail,
+    layout: LayoutHasSidebar,
+  },
 ];
 const AdminRoutes = [
   //Admin Layout
@@ -304,11 +336,16 @@ const AdminRoutes = [
     component: AddBlog,
     layout: LayoutHasSidebar,
   },
-  // {
-  //   path: "/Admin/blog-management/edit-blog/:id",
-  //   component: EditBlog,
-  //   layout: LayoutHasSidebar,
-  // },
+  {
+    path: "/Admin/blog-management/edit-blog/:id",
+    component: UpdateBlog,
+    layout: LayoutHasSidebar,
+  },
+  {
+    path: "/Admin/blog-management/detail-blog/:id",
+    component: BlogDetail,
+    layout: LayoutHasSidebar,
+  },
   {
     path: "/Admin/manage-report",
     component: ManageReport,

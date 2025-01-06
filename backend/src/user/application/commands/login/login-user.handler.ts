@@ -47,6 +47,7 @@ export class LoginUserHandler implements ICommandHandler<LoginUserCommand> {
           userType: user._props.userType,
           isVerify: user._props.isVerify,
           isActive: user._props.isActive,
+          specialty: user?._props?.settingRecommend?.specialty,
           isSetPersionalSetting: user._props.isSetPersionalSetting,
         },
       };
@@ -73,6 +74,7 @@ export class LoginUserHandler implements ICommandHandler<LoginUserCommand> {
           userType: user._props.userType,
           isVerify: user._props.isVerify,
           isActive: user._props.isActive,
+          specialty: user?._props?.settingRecommend?.specialty,
           isSetPersionalSetting: user._props.isSetPersionalSetting,
           githubAccountId: user._props.githubAccountId,
         },
@@ -107,6 +109,7 @@ export class LoginUserHandler implements ICommandHandler<LoginUserCommand> {
         userType: user._props.userType,
         isVerify: user._props.isVerify,
         isActive: user._props.isActive,
+        specialty: user?._props?.settingRecommend?.specialty,
         isSetPersionalSetting: user._props.isSetPersionalSetting,
       },
     };

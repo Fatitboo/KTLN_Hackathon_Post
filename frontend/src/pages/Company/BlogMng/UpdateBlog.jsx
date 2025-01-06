@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
 import { CustomButton, TextInput, LoadingComponent } from "../../../components";
 import { CgArrowLeft } from "react-icons/cg";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { AiFillExclamationCircle } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
-import { createNewOccupationAction } from "../../../redux/slices/occupations/occupationsSlices";
 import { v4 as uuidv4 } from "uuid";
 import Swal from "sweetalert2";
 import FroalaEditor from "react-froala-wysiwyg";
@@ -13,19 +11,14 @@ import { imgDefaultProject } from "../../../assets/images";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import baseUrl from "../../../utils/baseUrl";
 import axios from "axios";
-export const blogTypes = [
-  "Hackathon planning",
-  "Participant resources",
-  "Business impact",
-  "Customer stories",
-  "Guides",
-  "In-person events",
-  "Webinars",
-];
-function AddBlog() {
+import { blogTypes } from "./AddBlog";
+
+function UpdateBlogOr() {
+  const { id } = useParams();
   const dispatch = useDispatch();
   const nav = useNavigate();
   const [value, setValueDes] = useState("");
+  const [blog, setBlog] = useState(null);
   const [loading2, setLoading] = useState(false);
   const storeData = useSelector((store) => store.users);
   const user = storeData?.userAuth?.user;
@@ -35,12 +28,13 @@ function AddBlog() {
     handleSubmit,
     unregister,
     reset,
+    setValue,
     formState: { errors },
   } = useForm({ mode: "onChange" });
   const onSubmit = (data) => {
     Swal.fire({
-      title: "Confirm Add",
-      text: "Do you want to add this item?",
+      title: "Confirm update",
+      text: "Do you want to update this item?",
       icon: "info",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -55,36 +49,33 @@ function AddBlog() {
           videoLink: data?.videoLink,
           thumnailImage: fileThumnail,
           autho: {
-            name: "Admin",
-            title: "Administartor of Devpost",
+            name: user?.fullname,
+            title: "Special in " + user?.settingRecommend?.specialty,
             createdAt: new Date().toISOString(),
           },
           isApproval: true,
           blogType: blogType,
         };
         try {
-          const { data } = await axios.post(
-            `${baseUrl}/api/v1/blogs/${user.id}`,
-            pl
-          );
+          const { data } = await axios.put(`${baseUrl}/api/v1/blogs/${id}`, pl);
           if (data) {
             Swal.fire({
-              title: "Added!",
-              text: "This blog has been added.",
+              title: "Updated!",
+              text: "This report has been updated.",
               icon: "success",
               confirmButtonText: "OK",
               allowOutsideClick: false,
               confirmButtonColor: "#3085d6",
             }).then((result) => {
               if (result.isConfirmed) {
-                window.location.href = "/Admin/blog-management";
+                window.location.href = "/Organizer/blog-management";
               }
             });
           }
         } catch (error) {
           Swal.fire({
-            title: "Add failed!",
-            text: "Add failed, please try again.",
+            title: "Update failed!",
+            text: "Update failed, please try again.",
             confirmButtonText: "OK",
             icon: "error",
             allowOutsideClick: false,
@@ -134,18 +125,35 @@ function AddBlog() {
   };
   const occupations = useSelector((store) => store?.occupations);
   const { loading, appErr, isSuccess = false } = occupations;
-
+  const handleGetBlog = async (id) => {
+    const { data } = await axios.get(`${baseUrl}/api/v1/blogs/${id}`);
+    if (data) {
+      setValue("blogTitle", data?.blogTitle);
+      setValue("tagline", data?.tagline);
+      setValue("videoLink", data?.videoLink);
+      setBlogType(data?.blogType);
+      setValueDes(data?.content);
+      setFileThumnail(data?.thumnailImage);
+      setBlog(data);
+    }
+  };
+  useEffect(() => {
+    handleGetBlog(id);
+  }, [id]);
   return (
     <div className="px-10 py-10 pb-0">
       {loading && <LoadingComponent />}
       {/* Start title of page  */}
       <div className="flex items-center">
-        <Link to="/Admin/blog-management" className="mb-3 flex items-center ">
+        <Link
+          to="/Organizer/blog-management"
+          className="mb-3 flex items-center "
+        >
           <CgArrowLeft fontSize={30} />
           {/* <h3 className="font-normal text-2xl text-gray-900 ml-2 leading-10">Back</h3> */}
         </Link>
         <div className="ml-10 font-medium mb-3 text-3xl text-gray-700">
-          Add Blog
+          Update Blog
         </div>
       </div>
 
@@ -342,4 +350,4 @@ function AddBlog() {
   );
 }
 
-export default AddBlog;
+export default UpdateBlogOr;

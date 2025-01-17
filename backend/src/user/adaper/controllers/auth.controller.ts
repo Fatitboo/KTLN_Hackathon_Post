@@ -179,6 +179,7 @@ export class AuthController {
     const result = await this.commandBus.execute(
       new LoginUserCommand({ ...body }),
     );
+    console.log('🚀 ~ AuthController ~ result:', result);
     const { accessTokenCookie, refreshTokenCookie } = await this.getTokenUser(
       result.user,
     );
@@ -198,10 +199,13 @@ export class AuthController {
   async logout(@Request() request: any, @Param('id') id: string) {
     const { user } = request;
     console.log('🚀 ~ AuthController ~ logout ~ user:', user);
-
-    const cookie = this.authenticationService.getCookieForLogOut(id);
-    request.res.setHeader('Set-Cookie', cookie);
-    return null;
+    try {
+      const cookie = this.authenticationService.getCookieForLogOut(id);
+      request.res.setHeader('Set-Cookie', cookie);
+      return null;
+    } catch (error) {
+      return null;
+    }
   }
 
   @Get('refresh')

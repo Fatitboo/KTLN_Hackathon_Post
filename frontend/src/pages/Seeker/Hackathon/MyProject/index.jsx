@@ -66,7 +66,7 @@ function MyProject() {
           )}
           <div>
             <div className="my-5 grid grid-cols-2 max-md:grid-cols-1 gap-6">
-              {[...(itemProject ?? [])]?.map((card, index) => (
+              {itemProject?.map((card, index) => (
                 <CardProject
                   key={index}
                   id={card._id}
@@ -78,7 +78,7 @@ function MyProject() {
                   isWinner={false}
                   votes={card?.votes ?? 0}
                   comments={card?.comments ?? 0}
-                  link={`/Seeker/project/manage-project/!imptHktid_12762_${card._id}`}
+                  link={`/Seeker/project/manage-project/!imptHktid_${id}_${card._id}`}
                 />
               ))}
             </div>

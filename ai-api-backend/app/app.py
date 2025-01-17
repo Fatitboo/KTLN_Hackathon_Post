@@ -7,6 +7,7 @@ import random
 from datetime import datetime, timedelta
 import sklearn
 from nltk.corpus import stopwords
+from bs4 import BeautifulSoup
 from scipy.sparse import csr_matrix
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -18,23 +19,29 @@ from crawl_data import get_data
 import uuid
 from bson import ObjectId
 import json
-
+import schedule
+import time
+import requests
 from pymongo import MongoClient
 client = MongoClient("mongodb+srv://21522448:fuqeCwJnBb4GLDCb@cluster0.x24ts.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 db = client['test']
 app = Flask(__name__)
 users_collection = db['Users']
+hackathons_collection = db['Hackathons']
+interactions_collection = db['Interactions']
 event_type_strength = {
    'view': 1.0,
    'like': 2.5,
    'join': 5.0
 }
 df_hackathon = pd.read_csv('/app/app/data/main/hk_train_with_date.csv')
-df_user = pd.DataFrame()
-final_hk_ful=pd.read_csv('/app/app/data/final_data_hackathon_full.csv')
+# df_hackathon=pd.DataFrame()
+# final_hk_ful=pd.read_csv('/app/app/data/final_data_hackathon_full.csv')
 df_interactions = pd.read_csv('/app/app/data/main/combined_interactions.csv')
+# user_df = pd.read_csv('/app/app/data/main/usr.csv')
 interactions_full_df = pd.DataFrame()
 item_ids = pd.DataFrame()
+user_df = pd.DataFrame()
 tfidf_matrix_with_id = None
 id_to_index = None
 user_profiles = None
@@ -43,11 +50,125 @@ tfidf_matrix=None
 cf_preds_df= None
 cf_recommender_model=None
 hybrid_recommender_model=None
+vectorizer=None
+
 def build_init_data():
-  global df_user, df_hackathon, df_interactions, interactions_full_df, item_ids, tfidf_matrix_with_id, user_profiles, content_based_recommender_model,tfidf_matrix,users_items_pivot_matrix_df, cf_preds_df, cf_recommender_model,hybrid_recommender_model
-  seeker_users = users_collection.find({'userType': {'$in': ['seeker']}})
+  global user_df, df_hackathon, df_interactions, interactions_full_df, item_ids, tfidf_matrix_with_id, user_profiles, content_based_recommender_model,tfidf_matrix,users_items_pivot_matrix_df, cf_preds_df, cf_recommender_model,hybrid_recommender_model
+  seeker_users = users_collection.find({'isUserSystem': True})
+  users_data = []
   for user in seeker_users:
-    print('user: ======> ',user)  
+    settings = user.get("settingRecommend", {})
+    skills = settings.get("skills", [])
+    if not skills:  # If skills is an empty list or contains empty values
+        skills = ["DevOps", "Education", "Gaming"]
+
+    interests = settings.get("interestedIn", [])
+    if not interests:  # If interests is an empty list or contains empty values
+        interests = ["DevOps", "Education", "Gaming"]
+    user_data = {
+        "image": 'https://avatars3.githubusercontent.com/u/16629943?height=180&v=4&width=180',
+        "location": 'None',
+        "skills": f"['{', '.join(skills)}']",
+        "interests": f"['{', '.join(interests)}']",
+        "bio": 'None',
+        "header": 'None',
+        "name": 'None',
+        "user_id":str(user.get("_id")),
+        "links": None,
+        "achievements": None,
+        "followers": None,
+        "following": None,
+        "projects": None,
+        "likes": None
+    }
+    users_data.append(user_data)
+
+# Tạo DataFrame
+  user_df = pd.DataFrame(users_data)
+  user_df.to_csv("updated_interactions.csv", index=False)
+ 
+  mongo_hackathons = list(
+    hackathons_collection.find(
+        {"hackathonIntegrateId": {"$gte": 30000}},
+        {
+            "_id": 1,
+            "hackathonIntegrateId": 1,
+            "mainDescription": 1,
+            "submissionDescription": 1,
+            "tagline": 1,
+            "hackathonName": 1,
+            "location": 1,
+            "hostName": 1,
+            "hackathonTypes": 1,
+            "thumbnail": 1,
+            "headerTitleImage": 1,
+            "submissions": 1,
+        },
+    )
+  )
+  mongo_data = []
+  for hackathon in mongo_hackathons:
+      description = f"{hackathon.get('mainDescription', '')} {hackathon.get('submissionDescription', '')} {hackathon.get('tagline', '')}"
+      description = BeautifulSoup(description, "html.parser").get_text(strip=True)
+      submissions = hackathon.get("submissions", {})
+      
+      try:
+          start_datetime = datetime.strptime(submissions.get("start"), "%Y-%m-%d %H:%M:%S")
+          start_date = start_datetime.strftime("%d-%m-%Y")
+      except Exception:
+          start_date = "02-02-2025"
+
+      try:
+          end_datetime = datetime.strptime(submissions.get("deadline"), "%Y-%m-%d %H:%M:%S")
+          end_date = end_datetime.strftime("%d-%m-%Y")
+      except Exception:
+          end_date = "03-03-2025"
+      themes = ", ".join(hackathon.get("hackathonTypes", []))
+      mongo_data.append(
+          {
+              "hackathon_id": hackathon.get("hackathonIntegrateId"),
+              "title": hackathon.get("hackathonName"),
+              "displayed_location": hackathon.get("location") or hackathon.get("hostName"),
+              "url": None,  # Cần bổ sung logic để lấy URL nếu có
+              "themes": themes,  # Không có thông tin themes trong MongoDB
+              "prize_amount": 0,
+              "featured": False,  # Giá trị mặc định
+              "organization_name": hackathon.get("hostName"),
+              "img_avt": hackathon.get("thumbnail"),
+              "image": hackathon.get("headerTitleImage"),
+              "challenge_description": description,
+              "start_date": start_date,
+              "end_date": end_date,
+          }
+      )
+
+  mongo_df = pd.DataFrame(mongo_data)
+  df_hackathon = pd.concat([df_hackathon, mongo_df]).drop_duplicates(subset=["hackathon_id"], keep="last")
+
+  mongo_interactions = list(
+    interactions_collection.find(
+        {},  # Không có bộ lọc => Lấy tất cả
+        {
+            "_id": 1,  # MongoDB ID
+            "user_id": 1,
+            "hackathon_id": 1,
+            "interaction_type": 1,
+            "status": 1,
+        },
+    )
+  )
+
+  # 3. Chuyển MongoDB data thành DataFrame
+  interaction_data = [
+      {
+          "user_id": str(interaction.get("user_id")),  # Chuyển user_id thành string
+          "hackathon_id": interaction.get("hackathon_id"),
+          "interaction_type": interaction.get("interaction_type"),
+      }
+      for interaction in mongo_interactions
+  ]
+  df_mongo_inte = pd.DataFrame(interaction_data)
+  df_interactions = pd.concat([df_interactions, df_mongo_inte], ignore_index=True)
 
   df_interactions['interaction_strength'] = df_interactions['interaction_type'].apply(lambda x: event_type_strength[x])
   users_interactions_count_df = df_interactions.groupby(['user_id', 'hackathon_id']).size().groupby('user_id').size()
@@ -87,15 +208,15 @@ def build_init_data():
                                              cb_ensemble_weight=1.0, cf_ensemble_weight=100.0)
 
 def build_tfidf_matrix(df_hk):
-    global id_to_index,tfidf_matrix
+    global id_to_index,tfidf_matrix, vectorizer
     df_hk['challenge_description'] = df_hk['challenge_description'].fillna('')
-
-    #Trains a model whose vectors size is 5000, composed by the main unigrams and bigrams found in the corpus, ignoring stopwords
+    df_hackathon['themes'] = df_hackathon['themes'].fillna('')
+    df_hackathon['organization_name'] = df_hackathon['organization_name'].fillna('')
+    df_hackathon['title'] = df_hackathon['title'].fillna('')
     vectorizer = TfidfVectorizer(analyzer='word',stop_words='english',
-                        ngram_range=(1, 2),
-                        min_df=0.003,
-                        max_df=0.5,
-                        max_features=5000)
+                     ngram_range=(1, 2),
+                     min_df=0.003,
+                     max_df=0.5)
 
     words_to_replace = ["devpost", "30","00pm", "00",
                         "event", "build", "create",
@@ -129,34 +250,82 @@ def get_item_profile(item_id):
   if item_id not in id_to_index:
     raise ValueError(f"Hackathon ID {item_id} not found!")
   idx = id_to_index[item_id]
-  
+
   # Truy xuất vector tương ứng từ matrix gốc
   item_profile = tfidf_matrix_with_id[idx:idx+1]
+  # idx = item_ids.index(item_id)
+  # item_profile = tfidf_matrix[idx:idx+1]
   return item_profile
 
 def get_item_profiles(ids):
   if isinstance(ids, (float, int)):
     ids = [ids]
+
   item_profiles_list = [get_item_profile(x) for x in ids]
   item_profiles = scipy.sparse.vstack(item_profiles_list)
   return item_profiles
 
-def build_users_profile(person_id, interactions_indexed_df):
-  interactions_person_df = interactions_indexed_df.loc[person_id]
-  user_item_profiles = get_item_profiles(interactions_person_df['hackathon_id'])
+def build_users_profile(person_id, interactions_indexed_df, user_df):
+  weighted_avg = None
 
-  user_item_strengths = np.array(interactions_person_df['interaction_strength']).reshape(-1,1)
+  # Xử lý thông tin tương tác của người dùng (nếu có)
+  if person_id in interactions_indexed_df.index:
+    interactions_person_df = interactions_indexed_df.loc[person_id]
+    user_item_profiles = get_item_profiles(interactions_person_df['hackathon_id'])
+
+    # Trọng số tương tác
+    user_item_strengths = np.array(interactions_person_df['interaction_strength']).reshape(-1, 1)
+
+    # Trung bình trọng số của các vector hackathon
+    weighted_avg = np.sum(user_item_profiles.multiply(user_item_strengths), axis=0) / np.sum(user_item_strengths)
   #Weighted average of item profiles by the interactions strength
-  user_item_strengths_weighted_avg = np.sum(user_item_profiles.multiply(user_item_strengths), axis=0) / np.sum(user_item_strengths)
-  user_profile_norm = sklearn.preprocessing.normalize(np.asarray(user_item_strengths_weighted_avg).reshape(1, -1))
+  user_data = user_df.loc[user_df['user_id'] == person_id, ['interests', 'skills']]
+
+  # Ghép các thông tin thành một chuỗi duy nhất
+  combined_info = ''
+  if not user_data.empty:
+    combined_info = ' '.join(user_data.fillna('').iloc[0].values)  # Điền null bằng rỗng và ghép lại
+
+    # Vector hóa chuỗi kết hợp các thông tin cá nhân
+    interests_vector = vectorizer.transform([combined_info])
+
+    if weighted_avg is not None:
+      # Kết hợp với vector tương tác nếu tồn tại
+      if scipy.sparse.issparse(interests_vector):
+        interests_vector = interests_vector.todense()
+
+      weighted_avg += np.array(interests_vector)
+    else:
+      # Nếu không có vector tương tác, dùng thông tin cá nhân làm hồ sơ chính
+      weighted_avg = interests_vector
+
+  if weighted_avg is None:
+    # Xử lý trường hợp không có tương tác hoặc thông tin người dùng
+    return None
+  
+  weighted_avg = np.array(weighted_avg).flatten()
+
+  if weighted_avg.ndim == 1:
+      # Đảm bảo chiều của mảng là (1, -1) cho normalize
+      weighted_avg = weighted_avg.reshape(1, -1)
+    
+    # Chuẩn hóa hồ sơ người dùng
+  user_profile_norm = sklearn.preprocessing.normalize(weighted_avg)
   return user_profile_norm
 
 def build_users_profiles():
   interactions_indexed_df = interactions_full_df[interactions_full_df['hackathon_id'].isin(df_hackathon['hackathon_id'])].set_index('user_id')
+  # print(interactions_indexed_df)
   user_profiles = {}
-  for person_id in interactions_indexed_df.index.unique():
-      user_profiles[person_id] = build_users_profile(person_id, interactions_indexed_df)
+  for person_id in user_df['user_id']:
+      # Xây dựng profile từng người dùng
+      print(person_id)
+      user_profiles[person_id] = build_users_profile(person_id, interactions_indexed_df, user_df)
+      if user_profiles[person_id] is None:
+        del user_profiles[person_id]
+
   return user_profiles
+
 
 def json_converter(obj):
   if isinstance(obj, ObjectId):
@@ -330,15 +499,6 @@ class HybridRecommender:
 
 
 build_init_data()
-# Update the user profiles after each data update
-# def update_user_profiles():
-#     global user_profiles, df_hackathon, df_interactions
-#     interactions_indexed_df = df_interactions[df_interactions['hackathon_id'].isin(df_hackathon['hackathon_id'])].set_index('user_id')
-#     user_profiles = {}
-#     for person_id in interactions_indexed_df.index.unique():
-#         user_profiles[person_id] = build_users_profile(person_id, interactions_indexed_df)
-
-# Endpoint to update data
 
 @app.route("/test", methods=['GET'])
 def test():
@@ -350,18 +510,13 @@ def test():
 
 @app.route('/update_data', methods=['POST'])
 def update_data():
-    global df_hackathon, df_user, df_interactions, content_based_recommender_model
+    global df_hackathon, user_df, df_interactions, content_based_recommender_model
 
-    # Receive data as JSON and update dataframes
-    data = request.json
-    df_hackathon = pd.DataFrame(data.get('df_hackathon', []))
-    df_user = pd.DataFrame(data.get('df_user', []))
-    df_interactions = pd.DataFrame(data.get('df_interactions', []))
+    build_init_data()
+    response = make_response(jsonify({"message": "Data updated successfully!"}))
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
 
-    # Update the recommendation model with new data
-    # content_based_recommender_model = ContentBasedRecommender(df_hackathon)
-    # update_user_profiles()
-    return jsonify({"message": "Data updated successfully!"})
 
 # Endpoint to get recommendations
 @app.route('/recommend-cb', methods=['GET'])
@@ -379,18 +534,6 @@ def recommend():
           print("🚀 ~ skills:", skills+interested_in)
         # seeker_users_list = list(seeker_users)
     
-        # # Xóa '_id' nếu không muốn gửi về cho client
-        # for user in seeker_users_list:
-        #     user['_id'] = str(user['_id'])  # Chuyển đổi ObjectId thành chuỗi string để gửi qua JSON
-        
-        # # Trả về dữ liệu dưới dạng JSON
-        # return jsonify(seeker_users_list)
-
-        # Convert items_to_ignore to integers if necessary 
-        # items_to_ignore = list(map(int, items_to_ignore))
-
-        # if user_id not in helper.user_profiles:
-        #     return jsonify({"error": "User profile not found"}), 404
         if byModel == 'cb':
           recommendations = content_based_recommender_model.recommend_items(
               user_id=user_id,
@@ -416,10 +559,7 @@ def recommend():
               verbose=True,
               recent_days=recent_days
           )
-        # recommendation_ids = recommendations['url']
-
-        # matching_hackathons = final_hk_ful[final_hk_ful['url'].isin(recommendation_ids)]
-
+ 
     # logic xử lý
         response = make_response(recommendations.to_json(orient='records'))
         response.headers.add("Access-Control-Allow-Origin", "*")
@@ -429,22 +569,6 @@ def recommend():
     except Exception as e:
         app.logger.error(f"Error: {e}")
         return jsonify({"error": "Internal Server Error"}), 500
-
-@app.route('/get-hackathon-detail/<int:hk_id>', methods=['GET'])
-def get_hackathon_detail(hk_id):
-    try:
-        result = final_hk_ful.loc[final_hk_ful['id'] == hk_id]
-
-    # logic xử lý
-        response = make_response(result.to_json(orient='records'))
-        response.headers.add("Access-Control-Allow-Origin", "*")
-        response.headers.add("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-        response.headers.add("Access-Control-Allow-Headers", "Content-Type, Authorization")
-        return response
-    except Exception as e:
-        app.logger.error(f"Error: {e}")
-        return jsonify({"error": "Internal Server Error"}), 500
-
 
 @app.route('/crawl', methods=['POST'])
 def crawl():
@@ -475,6 +599,20 @@ def crawl():
     subset_df.to_csv(f'/app/app/data_crawl/file_part_{myuuid}.csv', index=False)
     return jsonify('ok')
 
+def run_scheduler():
+    # Lên lịch cho việc chạy build_init_data mỗi 24 giờ
+    schedule.every(24).hours.do(build_init_data)
+
+    while True:
+        schedule.run_pending()  # Chạy các tác vụ đã lên lịch
+        time.sleep(1)
+
 if __name__ == '__main__':
-    app.debug = True
-    app.run(host='0.0.0.0', port=5000)
+    import threading
+    scheduler_thread = threading.Thread(target=run_scheduler)
+    scheduler_thread.daemon = True  # Đảm bảo thread này chạy ở chế độ daemon và thoát khi chương trình chính thoát
+    scheduler_thread.start()
+
+    app.run(debug=True, host="0.0.0.0", port=5000)
+
+

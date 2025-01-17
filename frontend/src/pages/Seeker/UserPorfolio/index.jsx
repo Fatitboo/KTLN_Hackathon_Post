@@ -1,5 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { defaultAvt, imgDefaultProject } from "../../../assets/images";
+import {
+  a1,
+  a2,
+  a3,
+  a4,
+  a5,
+  a6,
+  a7,
+  a8,
+  defaultAvt,
+  imgDefaultProject,
+} from "../../../assets/images";
 import { CustomButton, Modal } from "../../../components";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import HackathonInfo from "../../../components/Seeker/HackathonInfo";
@@ -8,14 +19,30 @@ import { useDispatch, useSelector } from "react-redux";
 import { getUserProfileAction } from "../../../redux/slices/users/usersSlices";
 import HackathonItem from "../../../components/Seeker/HackathonItem";
 import { AskToAddProject } from "../../../components/Modal/AskToAddProject";
-
+const achievements = [a1, a2, a3, a4, a5, a6, a7, a8];
 function UserPorfolio() {
   const { id, type } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [uProfile, setUProfile] = useState({});
   const [openAskToAddProject, setOpenAskToAddProject] = useState(false);
+  function getRandomElements(array) {
+    // Chọn số lượng phần tử ngẫu nhiên từ 1 đến độ dài của mảng
+    const randomCount = Math.floor(Math.random() * array.length) + 1;
 
+    // Tạo mảng trộn để đảm bảo không bị trùng lặp
+    const shuffled = array.slice(); // Tạo bản sao của mảng
+    for (let i = array.length - 1; i > 0; i--) {
+      const randomIndex = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[randomIndex]] = [
+        shuffled[randomIndex],
+        shuffled[i],
+      ]; // Hoán đổi vị trí
+    }
+
+    // Lấy `randomCount` phần tử đầu tiên
+    return shuffled.slice(0, randomCount);
+  }
   const storeData = useSelector((store) => store?.users);
   const { userProfile, loading, appErr, isSuccess, isSuccessUpd } = storeData;
   useEffect(() => {
@@ -129,9 +156,9 @@ function UserPorfolio() {
         <div className="px-60 py-10 ">
           <div className="flex space-x-10">
             {[
-              `${uProfile?.projects?.length} Projects`,
-              `${uProfile?.registerHackathons?.length} Hackathons`,
-              "5 Achievements",
+              `${uProfile?.projects?.length ?? 0} Projects`,
+              `${uProfile?.registerHackathons?.length ?? 0} Hackathons`,
+              "_ Achievements",
               "6 Followers",
               "6 Following",
               "4 Likes",
@@ -237,6 +264,29 @@ function UserPorfolio() {
                                   imageHackthon={hackathon?.thumbnail}
                                 />
                               </Link>
+                            </div>
+                          </>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+          <div className="mt-10 ">
+            {type === "Achievements" && (
+              <>
+                <div className=" max-lg:grid-cols-2 gap-10">
+                  <div>
+                    <div
+                      className={`my-5 grid grid-cols-2 mr-20 max-w-60:grid-cols-2 max-md:grid-cols-2 gap-2`}
+                    >
+                      {getRandomElements(achievements).map((item, index) => {
+                        return (
+                          <>
+                            <div className="m-2" key={index}>
+                              <img src={item} />
                             </div>
                           </>
                         );

@@ -77,7 +77,7 @@ function RegisterToHackathon() {
         if (result.isConfirmed) {
           if (registerRs.teamStatus === TEAM_STATUS.HAD_TEAM) {
             navigate(
-              `/Seeker/project/manage-project/!imptHktid_12762_${registerRs.projectId}`
+              `/Seeker/project/manage-project/!imptHktid_${id}_${registerRs.projectId}`
             );
           } else {
             window.location.href = `/Hackathon-detail/${id}`;

@@ -70,7 +70,7 @@ const HackathonItem = ({
                 {title}
               </h3>
               <div className="flex font-light mt-4 text-xs items-center ">
-                <div className="text-white bg-[#21a196] rounded-full py-1.5 px-2 mr-2 flex items-center">
+                <div className="text-white bg-[#21a196] rounded-full py-1.5 px-1 mr-1 flex items-center">
                   <div className="font-medium text-sm ">
                     {calculateTimeLeft(endDate)}
                   </div>

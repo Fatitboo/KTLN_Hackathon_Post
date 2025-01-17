@@ -28,7 +28,7 @@ function Home() {
   const user = storeData?.userAuth?.user;
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
-
+  console.log("🚀 ~ getRecommend ~ user?.id:", user?.id);
   const getRecommend = async () => {
     axios
       .get(

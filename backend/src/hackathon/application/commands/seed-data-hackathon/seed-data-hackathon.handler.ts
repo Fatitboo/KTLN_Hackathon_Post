@@ -22,7 +22,6 @@ import {
   getRandomEducationLevel,
   getRandomObjectList,
   getRandomPrizeList,
-  HackathonMigrateDTO,
   transformDate,
 } from './dto/hackathon-migrate.dto';
 import { UserDocument } from 'src/user/infrastructure/database/schemas';
@@ -169,8 +168,111 @@ export class SeedDataHackathonHandler
         await this.userModel.updateOne({ _id: user._id }, user);
       }
     }
+
+    if (command.props.type === 'updateHackathon') {
+      const hackathonsWithoutId = await this.hackathonModel
+        .find({ hackathonIntegrateId: { $exists: false } })
+        .exec();
+      const maxHackathonRecord = await this.hackathonModel
+        .findOne({ hackathonIntegrateId: { $exists: true } })
+        .sort('-hackathonIntegrateId')
+        .exec();
+      const maxHackathonId = maxHackathonRecord?.hackathonIntegrateId || 30001;
+      let nextId = maxHackathonId + 1;
+      for (const hackathon of hackathonsWithoutId) {
+        await this.hackathonModel.updateOne(
+          { _id: hackathon._id },
+          { $set: { hackathonIntegrateId: nextId } },
+        );
+        nextId++;
+      }
+    }
+
+    if (command.props.type === 'updateInterate') {
+      const interactionsWithoutHackathonId = await this.interactionModel
+        .find({ hackathon_id: { $exists: false } })
+        .exec();
+
+      if (interactionsWithoutHackathonId.length === 0) {
+        console.log('Không có interaction nào cần cập nhật.');
+        return 'ok';
+      }
+
+      // 2. Gán hackathon_id ngẫu nhiên từ 30000-30010
+      for (const interaction of interactionsWithoutHackathonId) {
+        const randomHackathonId = Math.floor(Math.random() * 11) + 30000; // 30000-30010
+        await this.interactionModel.updateOne(
+          { _id: interaction._id },
+          { $set: { hackathon_id: randomHackathonId } },
+        );
+      }
+    }
+
+    if (command.props.type === 'increateDate') {
+      // Lấy 15 hackathons đầu tiên từ cơ sở dữ liệu
+      const hackathons = await this.hackathonModel.find().limit(55);
+
+      // Ngày hiện tại
+      const today = new Date();
+
+      // Hàm tạo ngày ngẫu nhiên để đảm bảo trạng thái "Open"
+      const getRandomDateRange = () => {
+        // Ngày bắt đầu từ ngày 1/1/2025 đến ngày hôm nay
+        const start = new Date(
+          today.getFullYear(),
+          Math.floor(Math.random() * today.getMonth()), // Từ tháng 0 đến tháng hiện tại
+          Math.floor(Math.random() * today.getDate()) + 1, // Từ ngày 1 đến ngày hiện tại
+        );
+
+        // Ngày kết thúc phải >= ngày hôm nay, random thêm 7-30 ngày
+        const end = new Date(today);
+        const extraDays = [7, 14, 21, 30][Math.floor(Math.random() * 4)];
+        end.setDate(today.getDate() + extraDays);
+
+        return { start, end };
+      };
+
+      // Cập nhật 15 hackathons đầu tiên
+      for (const hackathon of hackathons) {
+        const { start, end } = getRandomDateRange();
+        await this.hackathonModel.updateOne(
+          { _id: hackathon._id },
+          {
+            $set: {
+              'submissions.start': start,
+              'submissions.deadline': end,
+            },
+          },
+        );
+      }
+    }
     return 'ok';
   }
+
+  getRandomDateRange() {
+    // Tăng tỉ lệ xuất hiện cho năm 2024 và 2025
+    const randomYear = (() => {
+      const random = Math.random();
+      if (random < 0.1) return 2021; // 10% cơ hội
+      if (random < 0.2) return 2022; // 10% cơ hội
+      if (random < 0.35) return 2023; // 15% cơ hội
+      if (random < 0.65) return 2024; // 30% cơ hội
+      return 2025; // 35% cơ hội
+    })();
+
+    const randomMonth = Math.floor(Math.random() * 12);
+    const randomDay = Math.floor(Math.random() * 28) + 1; // Đảm bảo mọi tháng hợp lệ
+
+    const start = new Date(randomYear, randomMonth, randomDay);
+
+    // Random thời gian kéo dài từ 1-4 tuần (7, 14, 21, hoặc 30 ngày)
+    const durationDays = [7, 14, 21, 30][Math.floor(Math.random() * 4)];
+    const end = new Date(start);
+    end.setDate(start.getDate() + durationDays);
+
+    return { start, end };
+  }
+
   getRandomFromListIds(ids: any[], ignoreId?: any, count?: number): any[] {
     // Bỏ qua ownerId trong danh sách userIds
     const filteredUsers = ignoreId ? ids.filter((id) => id !== ignoreId) : ids;

@@ -38,6 +38,9 @@ export class UserDocument {
   @Prop({ required: true })
   fullname: string;
 
+  @Prop({ default: true })
+  isUserSystem: boolean;
+
   @Prop({ required: false })
   avatar: string;
 

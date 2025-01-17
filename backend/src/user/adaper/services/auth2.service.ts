@@ -15,12 +15,12 @@ export class Auth2Service {
   ) {}
 
   // Generate a random token
-  private generateRandomToken(): string {
+  public generateRandomToken(): string {
     return crypto.randomBytes(32).toString('hex');
   }
 
   // Hash a token
-  private hashToken(token: string): string {
+  public hashToken(token: string): string {
     return crypto.createHash('sha256').update(token).digest('hex');
   }
 

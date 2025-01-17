@@ -3,6 +3,8 @@ import {
   MdAccessibility,
   MdOutlineFactCheck,
   MdOutlinePassword,
+  MdSubscriptions,
+  MdTypeSpecimen,
 } from "react-icons/md";
 import { FiUsers } from "react-icons/fi";
 import { GrWorkshop } from "react-icons/gr";
@@ -111,17 +113,36 @@ function Sidebar({ user }) {
             </div>
             <div
               className={classNames(
-                isActive === "History" ? "bg-[#E9EFFB] text-blue-600" : "",
+                isActive === "SubscriptionType"
+                  ? "bg-[#E9EFFB] text-blue-600"
+                  : "",
                 itemStyle
               )}
             >
               <Link
-                onClick={() => dispatch(isActiveSidebarAction("History"))}
-                to="/Admin/history-transactions"
+                onClick={() =>
+                  dispatch(isActiveSidebarAction("SubscriptionType"))
+                }
+                to="/Admin/manage-subscriptions-type"
                 className="relative text-sm text-center p-3 flex items-center leading-7 font-normal  capitalize rounded-lg "
               >
-                <BsClockHistory className="relative mr-4 ml-4 text-2xl text-center " />
-                History Transactions
+                <MdTypeSpecimen className="relative mr-4 ml-4 text-2xl text-center " />
+                Subscription type
+              </Link>
+            </div>
+            <div
+              className={classNames(
+                isActive === "Subscription" ? "bg-[#E9EFFB] text-blue-600" : "",
+                itemStyle
+              )}
+            >
+              <Link
+                onClick={() => dispatch(isActiveSidebarAction("Subscription"))}
+                to="/Admin/manage-subscription"
+                className="relative text-sm text-center p-3 flex items-center leading-7 font-normal  capitalize rounded-lg "
+              >
+                <MdSubscriptions className="relative mr-4 ml-4 text-2xl text-center " />
+                Manage subscription
               </Link>
             </div>
             {/* <div

@@ -113,24 +113,28 @@ function HackathonToDos({ formId, formSubmit, config }) {
                       placeHolder={"Select an options."}
                     />
                   </div>
-                  <TextInput
-                    type="text"
-                    rules="requiredText"
-                    vl={item.label}
-                    onChange={(e) =>
-                      onChangeValueTask("label", e.target.value, index)
-                    }
-                    placeHolder="Label"
-                  />
-                  <TextInput
-                    type="text"
-                    vl={item.url}
-                    onChange={(e) =>
-                      onChangeValueTask("url", e.target.value, index)
-                    }
-                    rules="requiredText"
-                    placeHolder="URL"
-                  />
+                  <div className="mt-9">
+                    <TextInput
+                      type="text"
+                      rules="requiredText"
+                      vl={item.label}
+                      onChange={(e) =>
+                        onChangeValueTask("label", e.target.value, index)
+                      }
+                      placeHolder="Label"
+                    />
+                  </div>
+                  <div className="mt-9">
+                    <TextInput
+                      type="text"
+                      vl={item.url}
+                      onChange={(e) =>
+                        onChangeValueTask("url", e.target.value, index)
+                      }
+                      rules="requiredText"
+                      placeHolder="URL"
+                    />
+                  </div>
                   <IoMdClose
                     color="red"
                     width={"20px"}

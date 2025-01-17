@@ -35,7 +35,7 @@ function ManageHackathon() {
     loading,
     hackathons,
     hackathonId,
-    isSuccess,
+    isSuccessHost,
     loadingDelete,
     isSuccessDelete,
   } = useSelector((state) => state.hackathons);
@@ -50,11 +50,11 @@ function ManageHackathon() {
   }, [hackathons]);
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccessHost) {
       navigate(`/Organizer/host-hackathon/${hackathonId}`);
-      dispatch(resetValue({ key: "isSuccess", value: false }));
+      dispatch(resetValue({ key: "isSuccessHost", value: false }));
     }
-  }, [isSuccess]);
+  }, [isSuccessHost]);
 
   useEffect(() => {
     if (isSuccessDelete) {
@@ -276,7 +276,8 @@ function ManageHackathon() {
                               </tr>
                             );
                           })
-                        : currentHackathons
+                        : [...currentHackathons]
+                            ?.reverse()
                             ?.slice(currentPage * 10, (currentPage + 1) * 10)
                             .map((item, index) => {
                               return (

@@ -35,25 +35,21 @@ const TeamProjectItem = ({ props }) => {
             <div className="flex flex-wrap">
               {props?.settingRecommend?.skills?.map((item) => {
                 return (
-                  <>
-                    <div className="text-xs mr-2 mt-1 bg-gray-100 text-gray-500 rounded-full px-2 py-1">
-                      {item}
-                    </div>
-                  </>
+                  <div className="text-xs mr-2 mt-1 bg-gray-100 text-gray-500 rounded-full px-2 py-1">
+                    {item}
+                  </div>
                 );
               })}
             </div>
           </div>
           <div>
             <div className=" uppercase ml-1 my-2">Interest</div>
-            <div className="flex flex-wrap h-14 overflow-hidden">
+            <div className="flex flex-wrap">
               {props?.settingRecommend?.interestedIn?.map((item) => {
                 return (
-                  <>
-                    <div className="text-xs mr-2 mt-1 bg-gray-100 text-gray-500 rounded-full px-2 py-1">
-                      {item}
-                    </div>
-                  </>
+                  <div className="text-xs mr-2 mt-1 bg-gray-100 text-gray-500 rounded-full px-2 py-1">
+                    {item}
+                  </div>
                 );
               })}
             </div>

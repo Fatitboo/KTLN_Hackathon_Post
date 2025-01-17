@@ -71,6 +71,8 @@ import BlogDetailUser from "../pages/Seeker/BrowerBlogs/BlogDetail";
 import Discussion from "../pages/Seeker/Hackathon/Discussion";
 import Updates from "../pages/Seeker/Hackathon/Updates";
 import SuccessPaymentPage from "../pages/Seeker/Payment/Sucess";
+import ManageSubscription from "../pages/Admin/Subscription/ManageSubscription";
+import ManageSubscriptionType from "../pages/Admin/SubscriptionType/ManageSubscriptionType";
 
 const publicRoutes = [
   // User Layout
@@ -361,6 +363,16 @@ const AdminRoutes = [
   {
     path: "/Admin/history-transactions",
     component: HistoryTransaction,
+    layout: LayoutHasSidebar,
+  },
+  {
+    path: "/Admin/manage-subscription",
+    component: ManageSubscription,
+    layout: LayoutHasSidebar,
+  },
+  {
+    path: "/Admin/manage-subscriptions-type",
+    component: ManageSubscriptionType,
     layout: LayoutHasSidebar,
   },
 ];

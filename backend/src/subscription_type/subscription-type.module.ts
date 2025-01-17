@@ -5,6 +5,7 @@ import {
   SubscriptionTypeDocument,
   SubscriptionTypeSchema,
 } from './infrastructure/schemas/subscription-type.schema';
+import { SubscriptionTypeController } from './adapter/controller/subscription-type.controller';
 
 @Module({
   imports: [
@@ -13,6 +14,6 @@ import {
       { name: SubscriptionTypeDocument.name, schema: SubscriptionTypeSchema },
     ]),
   ],
-  providers: [],
+  controllers: [SubscriptionTypeController],
 })
 export class SubscriptionTypeModule {}

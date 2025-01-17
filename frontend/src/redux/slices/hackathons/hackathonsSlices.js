@@ -319,17 +319,17 @@ const hackathonsSlices = createSlice({
       //create vacancies id
       builder.addCase(creatHackathonId.pending, (state, action) => {
         state.loadingCreate = true;
-        state.isSuccess = false;
+        state.isSuccessHost = false;
       }),
       builder.addCase(creatHackathonId.fulfilled, (state, action) => {
         console.log(action.payload);
         state.loadingCreate = false;
         state.hackathonId = action?.payload?.hackathonId;
-        state.isSuccess = true;
+        state.isSuccessHost = true;
       }),
       builder.addCase(creatHackathonId.rejected, (state, action) => {
         state.loadingCreate = false;
-        state.isSuccess = false;
+        state.isSuccessHost = false;
       });
 
     builder.addCase(updateHackathonComponent.pending, (state, action) => {

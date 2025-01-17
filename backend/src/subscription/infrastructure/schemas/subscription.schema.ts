@@ -10,7 +10,7 @@ import { Types } from 'mongoose';
 })
 export class SubscriptionDocument {
   @Prop({ type: Types.ObjectId, ref: 'SubscriptionTypeDocument' })
-  subscriptionTypeId: string;
+  subscriptionTypeId: Types.ObjectId;
 
   @Prop()
   description: string[];

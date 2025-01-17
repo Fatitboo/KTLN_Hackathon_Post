@@ -23,16 +23,7 @@ function JobDes({ formId, formSubmit, flag, config, content, onDoneSubmit }) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    // formSubmit(inputValues);
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(
-      inputValues.mainDescription,
-      "text/html"
-    );
-
-    // Lấy tất cả text content
-    const textContent = doc.body.textContent.trim();
-    console.log(textContent);
+    formSubmit(inputValues);
   }
 
   const [inputValues, setInputValues] = useState({

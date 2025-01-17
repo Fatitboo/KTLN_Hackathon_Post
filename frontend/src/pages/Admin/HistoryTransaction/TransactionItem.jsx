@@ -56,209 +56,45 @@ export const TransactionItem = ({ item }) => {
                   Transactions Information:{" "}
                 </div>
                 <div className="text-red-800 font-bold">
-                  #{item?.id?.slice(0, 20)}
+                  #{item?._id?.slice(0, 20)}
                 </div>
               </div>
               <div className="grid grid-cols-3 gap-5 px-5 mt-5 ">
                 <div className="flex ">
                   <div className="mr-2">Organizer Name: </div>
                   <div className="text-blue-800 font-medium">
-                    {item?.userInfo?.fullName}
+                    {item?.userId?.fullname?.toUpperCase()}
                   </div>
                 </div>
                 <div className="flex ">
                   <div className="mr-2">Payment amount: </div>
-                  <div className="text-blue-800">
-                    {item?.transactions?.amount?.total} $
-                  </div>
+                  <div className="text-blue-800">{item?.price / 1000} $</div>
                 </div>
                 <div className="flex ">
                   <div className="mr-7">Payment fee: </div>
-                  <div className="text-blue-800">
-                    {
-                      item?.transactions?.related_resources?.sale
-                        ?.transaction_fee?.value
-                    }{" "}
-                    $
-                  </div>
+                  <div className="text-blue-800">1.3 $</div>
                 </div>
                 <div className="flex ">
                   <div className="mr-10 ">Create time: </div>
                   <div className="text-blue-800">
-                    {convertDateFormat(item?.create_time)}
+                    {convertDateFormat(item?.create_at)}
                   </div>
                 </div>
                 <div className="flex ">
                   <div className="mr-2">Payment method: </div>
-                  <div className="text-blue-800">
-                    {item?.transactions?.description}{" "}
-                  </div>
+                  <div className="text-blue-800">MOMO</div>
                 </div>
                 <div className="flex ">
                   <div className="mr-2">Payment status: </div>
-                  <div className="text-blue-800">
-                    {item?.transactions?.related_resources?.sale?.state}{" "}
-                  </div>
+                  <div className="text-blue-800">SUCCESS</div>
                 </div>
                 <div className="flex col-span-3">
                   <div className="mr-1">Payment content: </div>
                   <div className="text-blue-800 font-medium">
-                    Pay the posting fee for{" "}
-                    {item?.vacancy
-                      ? " vacancy " + item?.vacancy?.vacancyName
-                      : " project " + item?.project?.projectName}{" "}
+                    Pay for basic account
                   </div>
                 </div>
               </div>
-
-              {item?.vacancy ? (
-                <>
-                  <div className="border border-gray-400 pb-2 mt-5 bg-gray-50">
-                    <div className="flex mt-2 px-5">
-                      <div className="text-blue-800 font-bold">
-                        {item?.vacancy?.vacancyName}
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-3 gap-3 px-10 mt-3 ">
-                      <div className="flex ">
-                        <div className="mr-2">Duration: </div>
-                        <div className="text-blue-800 ml-5">
-                          {item?.vacancy?.hiringTimeline}
-                        </div>
-                      </div>
-                      <div className="flex ">
-                        <div className="mr-2">Location: </div>
-                        <div className="text-blue-800">
-                          {item?.vacancy?.location === ""
-                            ? "At home"
-                            : item?.vacancy?.location}{" "}
-                        </div>
-                      </div>
-                      <div className="flex ">
-                        <div className="mr-2">Max required: </div>
-                        <div className="text-blue-800">
-                          {item?.vacancy?.maxRequired} candidate(s)
-                        </div>
-                      </div>
-                      <div className="flex ">
-                        <div className="mr-2">Create time: </div>
-                        <div className="text-blue-800">{`${item?.vacancy?.createdAt[3]}:${item?.vacancy?.createdAt[4]} ${item?.vacancy?.createdAt[2]}-${item?.vacancy?.createdAt[1]}-${item?.vacancy?.createdAt[0]}`}</div>
-                      </div>
-                      <div className="flex ">
-                        <div className="mr-2">Segment: </div>
-                        <div className="text-blue-800">
-                          {item?.vacancy?.locationType}{" "}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div className="border border-gray-400 pb-2 mt-5 bg-gray-50">
-                    <div className="flex mt-2 px-5">
-                      <div className="text-blue-800 font-bold">
-                        {" "}
-                        {item?.project?.projectName}
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-3 gap-3 px-10 mt-3 ">
-                      <div className="flex ">
-                        <div className="mr-5">Start time: </div>
-                        <div className="text-blue-800 ">
-                          {convertDateFormat(item?.project?.startDate)}{" "}
-                        </div>
-                      </div>
-                      <div className="flex ">
-                        <div className="mr-2">Duration: </div>
-                        <div className="text-blue-800 ">
-                          {item?.project?.duration} {item?.project?.period}
-                        </div>
-                      </div>
-                      <div className="flex ">
-                        <div className="mr-10">Max participants: </div>
-                        <div className="text-blue-800">
-                          {item?.project?.maxParticipants} participant(s)
-                        </div>
-                      </div>
-                      <div className="flex ">
-                        <div className="mr-2">Create time: </div>
-                        <div className="text-blue-800">{`${item?.project?.createdAt[3]}:${item?.project?.createdAt[4]} ${item?.project?.createdAt[2]}-${item?.project?.createdAt[1]}-${item?.project?.createdAt[0]}`}</div>
-                      </div>
-                      <div className="flex ">
-                        <div className="mr-4">Budget: </div>
-                        <div className="text-blue-800">
-                          {item?.project?.budget} ${" "}
-                        </div>
-                      </div>
-                      <div className="flex ">
-                        <div className="mr-2">Number of vacancies: </div>
-                        <div className="text-blue-800">
-                          {item?.project?.vacancies?.length} vacancies
-                        </div>
-                      </div>
-                    </div>
-                    <div className="px-10">
-                      <div className="text-blue-800 font-bold mt-3 ">
-                        Vacancies List:{" "}
-                      </div>
-                      <div>
-                        {item?.project?.vacancies?.map((i, index) => {
-                          return (
-                            <>
-                              <div key={index}>
-                                <div className="flex px-5 mt-3">
-                                  <div className="text-green-800 font-bold">
-                                    - {i?.vacancyName}
-                                  </div>
-                                </div>
-                                <div className="grid grid-cols-3 gap-2 px-10 mt-2 ">
-                                  <div className="flex ">
-                                    <div className="mr-2">Duration: </div>
-                                    <div className="text-green-800 ml-5">
-                                      {i?.hiringTimeline}
-                                    </div>
-                                  </div>
-                                  <div className="flex ">
-                                    <div className="mr-2">Location: </div>
-                                    <div className="text-green-800">
-                                      {i?.location === ""
-                                        ? "At home"
-                                        : i?.location}{" "}
-                                    </div>
-                                  </div>
-                                  <div className="flex ">
-                                    <div className="mr-2">Max required: </div>
-                                    <div className="text-green-800">
-                                      {i?.maxRequired} candidate(s)
-                                    </div>
-                                  </div>
-                                  <div className="flex ">
-                                    <div className="mr-2">Create time: </div>
-                                    <div className="text-green-800">{`${i?.createdAt[3]}:${i?.createdAt[4]} ${i?.createdAt[2]}-${i?.createdAt[1]}-${i?.createdAt[0]}`}</div>
-                                  </div>
-                                  <div className="flex ">
-                                    <div className="mr-2">Segment: </div>
-                                    <div className="text-green-800">
-                                      {i?.locationType}{" "}
-                                    </div>
-                                  </div>
-                                  <div className="flex ">
-                                    <div className="mr-2">Item payment: </div>
-                                    <div className="text-green-800">
-                                      {i?.paymentAmount} $
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  </div>
-                </>
-              )}
             </div>
           </td>
         </tr>

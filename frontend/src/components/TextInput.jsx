@@ -31,13 +31,17 @@ const TextInput = React.forwardRef(
     }
     return (
       <div className="flex flex-col ">
-        <p className={styleLabel}>
-          <label className="align-middle mr-1 text-[#FF4949] font-bold">
-            {required ? "*" : ""}
-          </label>
-          {label}
-        </p>
-        <p className="text-xs text-[#6F6F6F] italic">{description}</p>
+        {label && (
+          <p className={styleLabel}>
+            <label className="align-middle mr-1 text-[#FF4949] font-bold">
+              {required ? "*" : ""}
+            </label>
+            {label}
+          </p>
+        )}
+        {description && (
+          <p className="text-xs text-[#6F6F6F] italic">{description}</p>
+        )}
         <div className="relative mt-[2px] rounded-sm">
           <input
             type={type}

@@ -18,7 +18,9 @@ export const getAllHackathons = createAsyncThunk(
       //     },
       // };
 
-      const { data } = await axios.get(`${baseUrl}/${apiPrefix}`);
+      const { data } = await axios.get(
+        `${baseUrl}/${apiPrefix}?userId=${payload.userId}`
+      );
       return data;
     } catch (error) {
       if (!error?.response) {

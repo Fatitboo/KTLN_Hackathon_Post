@@ -1,15 +1,18 @@
-import { useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { JobBasicImage } from "../../../../assets/images";
-import CheckBox from "../InputField/CheckBox";
-import RadioButton from "../InputField/RadioButton";
 import TextInput from "../InputField/TextInput";
-import { IoIosClose } from "react-icons/io";
-import { CustomButton } from "../../../../components";
-// import ReactImagePickerEditor from "react-image-picker-editor";
 import { BsCheck } from "react-icons/bs";
 import axios from "axios";
+import { useParams } from "react-router-dom";
+import { BiMailSend } from "react-icons/bi";
+import { IoClose } from "react-icons/io5";
+import Swal from "sweetalert2";
+import FroalaEditor from "react-froala-wysiwyg";
+import { Modal } from "../../../../components";
 
-function HackathonJudging({ formSubmit, formId, config }) {
+function HackathonJudging({ formSubmit, formId }) {
+  const param = useParams();
+  const [modal, setModal] = useState(false);
   const [inputValues, setInputValues] = useState({
     judgingType: "",
     judgingPeriod: {
@@ -18,6 +21,10 @@ function HackathonJudging({ formSubmit, formId, config }) {
     },
     judges: [],
     criteria: [],
+  });
+  const [inviteMail, setInviteMail] = useState({
+    title: "",
+    content: "",
   });
 
   const onSubmitForm = async (e) => {
@@ -116,6 +123,39 @@ function HackathonJudging({ formSubmit, formId, config }) {
     }));
   };
 
+  function convertToDateTimeFormat(isoDateString) {
+    try {
+      // Create a new Date object from the ISO 8601 string
+      const date = new Date(isoDateString);
+
+      if (isNaN(date.getTime())) {
+        throw new Error("Invalid date string");
+      }
+
+      // Extract the required components
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+      const day = String(date.getDate()).padStart(2, "0");
+      const hours = String(date.getHours()).padStart(2, "0");
+      const minutes = String(date.getMinutes()).padStart(2, "0");
+
+      // Return the formatted string
+      return `${year}-${month}-${day}T${hours}:${minutes}`;
+    } catch (error) {
+      console.error("Error converting date:", error.message);
+      return null;
+    }
+  }
+
+  useEffect(() => {
+    fetch(`http://localhost:3000/api/v1/hackathons/${param.id}/${formId}`)
+      .then((response) => response.json())
+      .then((result) => {
+        const { _id, ...rest } = result;
+        setInputValues({ ...inputValues, ...rest });
+      });
+  }, []);
+
   return (
     <>
       <div>
@@ -195,7 +235,7 @@ function HackathonJudging({ formSubmit, formId, config }) {
             <TextInput
               label="Start"
               required
-              vl={inputValues.judgingPeriod.start}
+              value={convertToDateTimeFormat(inputValues.judgingPeriod.start)}
               onChange={(value) => onChangeValueTextInput("start", value)}
               type="datetime-local"
             />
@@ -203,7 +243,7 @@ function HackathonJudging({ formSubmit, formId, config }) {
             <TextInput
               label="Ends"
               required
-              vl={inputValues.judgingPeriod.end}
+              value={convertToDateTimeFormat(inputValues.judgingPeriod.end)}
               onChange={(value) => onChangeValueTextInput("end", value)}
               type="datetime-local"
             />
@@ -217,50 +257,78 @@ function HackathonJudging({ formSubmit, formId, config }) {
               return (
                 <div
                   key={item.id}
-                  className="bg-[#f7f7f7] p-5 rounded-lg flex flex-col gap-2"
+                  className="bg-[#f7f7f7] p-5 rounded-lg grid grid-cols-2 gap-4"
                 >
-                  <div className="w-2/5">
-                    <TextInput
-                      label="Full name"
-                      required
-                      vl={item.fullName}
-                      onChange={(e) =>
-                        onChangeText(
-                          "judges",
-                          "fullName",
-                          item.id,
-                          e.target.value
-                        )
-                      }
-                    />
+                  <div className="flex flex-col gap-2">
+                    <div>
+                      <TextInput
+                        label="Full name"
+                        required
+                        value={item.fullName}
+                        onChange={(e) =>
+                          onChangeText(
+                            "judges",
+                            "fullName",
+                            item.id,
+                            e.target.value
+                          )
+                        }
+                      />
+                    </div>
+                    <div>
+                      <TextInput
+                        label="Email or Hackadev username"
+                        required
+                        value={item.email}
+                        onChange={(e) =>
+                          onChangeText(
+                            "judges",
+                            "email",
+                            item.id,
+                            e.target.value
+                          )
+                        }
+                      />
+                    </div>
+                    <div>
+                      <TextInput
+                        label="Title / Company"
+                        required
+                        value={item.title}
+                        onChange={(e) =>
+                          onChangeText(
+                            "judges",
+                            "title",
+                            item.id,
+                            e.target.value
+                          )
+                        }
+                      />
+                    </div>
+                    <button
+                      onClick={() => {
+                        setModal(true);
+                      }}
+                      type="button"
+                      className="flex items-center justify-center h-[53px] box-border bg-[#1967d3] px-[18px] py-[8px] rounded-[8px] text-[#fff] hover:bg-[#0146a6] cursor-pointer"
+                    >
+                      <BiMailSend className="w-6 h-6" />
+                      <span className="text-[15px] leading-none font-semibold ml-1">
+                        Invite Mail
+                      </span>
+                    </button>
                   </div>
-                  <div className="w-2/5">
-                    <TextInput
-                      label="Email or Hackadev username"
-                      required
-                      vl={item.email}
-                      onChange={(e) =>
-                        onChangeText("judges", "email", item.id, e.target.value)
-                      }
-                    />
-                  </div>
-                  <div className="w-2/5">
-                    <TextInput
-                      label="Title / Company"
-                      required
-                      vl={item.title}
-                      onChange={(e) =>
-                        onChangeText("judges", "title", item.id, e.target.value)
-                      }
-                    />
-                  </div>
-                  <div className="text-gray-900 font-medium">Photo</div>
-                  <div>
-                    <div className="mt-8 w-56 h-56 bg-[#f2f2f2] flex flex-col items-center justify-center border text-sm text-[#6F6F6F] italic mb-1">
+                  <div className="ml-4">
+                    <div className="text-gray-900 font-medium mb-1">Photo</div>
+                    <div className="w-56 h-56 bg-[#f2f2f2] flex flex-col items-center justify-center border text-sm text-[#6F6F6F] italic mb-1">
                       <div className="w-full h-full">
                         {item.photo && (
                           <img
-                            src={URL.createObjectURL(item.photo)}
+                            src={
+                              typeof item.photo == "string"
+                                ? item.photo
+                                : URL.createObjectURL(item.photo)
+                            }
                             alt="Uploaded"
                             className="w-full h-full"
                           />
@@ -272,20 +340,19 @@ function HackathonJudging({ formSubmit, formId, config }) {
                       name="photo"
                       onChange={(e) => handleImageChange("photo", item.id, e)}
                     />
-                  </div>
-
-                  <div
-                    className="text-[#1D4ED8] cursor-pointer mt-1 font-semibold w-14"
-                    onClick={() => {
-                      setInputValues({
-                        ...inputValues,
-                        judges: inputValues.judges.filter(
-                          (i) => i.id !== item.id
-                        ),
-                      });
-                    }}
-                  >
-                    Cancel
+                    <div
+                      className="text-[#1D4ED8] cursor-pointer mt-1 font-semibold w-14"
+                      onClick={() => {
+                        setInputValues({
+                          ...inputValues,
+                          judges: inputValues.judges.filter(
+                            (i) => i.id !== item.id
+                          ),
+                        });
+                      }}
+                    >
+                      Cancel
+                    </div>
                   </div>
                 </div>
               );
@@ -327,7 +394,7 @@ function HackathonJudging({ formSubmit, formId, config }) {
                     <TextInput
                       label="Title"
                       required
-                      vl={item.title}
+                      value={item.title}
                       onChange={(e) =>
                         onChangeText(
                           "criteria",
@@ -391,6 +458,133 @@ function HackathonJudging({ formSubmit, formId, config }) {
           </form>
         </div>
       </div>
+      <Modal open={modal} setModal={setModal}>
+        <div>
+          <div className="flex flex-row items-center justify-between mx-2">
+            <p className="block leading-8 text-gray-900 text-xl font-bold">
+              Invitation Mail
+            </p>
+            <div
+              className="hover:bg-slate-100 rounded-sm p-2 cursor-pointer opacity-90"
+              onClick={() => {
+                setModal(false);
+              }}
+            >
+              <IoClose size={20} />
+            </div>
+          </div>
+          <hr className="block h-1 w-full bg-[rgb(212, 210, 208)] my-3" />
+          <div className="flex flex-col w-[600px] mx-9 overflow-x-hidden mb-4 gap-6">
+            <TextInput
+              label="Subject"
+              required
+              name="jobTitle"
+              value={inviteMail.title}
+              onChange={(e) => {
+                setInviteMail({
+                  ...inviteMail,
+                  title: e.target.value,
+                });
+              }}
+              type="text"
+              rules="requiredText"
+            />
+
+            <div>
+              {TitleDescription(
+                "Main Description",
+                "Describe your hackathon and what makes it special. Many in-person hackathons include their event schedules here too."
+              )}
+              <div
+                name="jobDes"
+                className="border border-[black] rounded-md overflow-hidden h-96"
+              >
+                <FroalaEditor
+                  model={inviteMail.content}
+                  onModelChange={(event, editor) => {
+                    console.log(event);
+                    setInviteMail({
+                      ...inviteMail,
+                      content: event,
+                    });
+                  }}
+                  config={{
+                    placeholderText:
+                      "Provide a comprehensive vacancy description, outlining the roles, responsibilities, qualifications, and any additional information relevant to the job.",
+                    charCounterCount: true,
+                    toolbarButtons: {
+                      moreParagraph: {
+                        buttons: ["formatUL", "outdent", "indent"],
+                      },
+                      moreText: {
+                        buttons: ["bold", "italic", "underline", "fontSize"],
+                      },
+                      moreRich: {
+                        buttons: ["insertImage", "insertVideo", "insertTable"],
+                      },
+                      moreMisc: {
+                        buttons: ["undo", "redo"],
+                      },
+                    },
+                    height: 325,
+                    heightMin: 325,
+                    resizable: true,
+                    wordCounter: true,
+                    wordCounterLabel: "words",
+                    wordCounterBbCode: false,
+                    wordCounterTimeout: 0,
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-row items-center gap-2 float-right">
+            <div
+              className="flex items-center justify-center box-border bg-[white] border px-[18px] py-[14px] rounded-[8px] text-[#1967d3] hover:bg-[#eef1fe] hover:border-[#1967d3] cursor-pointer"
+              onClick={() => {
+                setModal(false);
+              }}
+            >
+              <span className="text-[15px] leading-none font-bold">Close</span>
+            </div>
+            <button
+              type="submit"
+              onClick={() => {
+                console.log(inviteMail);
+                fetch(
+                  `http://localhost:3000/api/v1/hackathons/invite-judge/${param.id}`,
+                  {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(inviteMail),
+                  }
+                )
+                  .then((response) => response.json())
+                  .then((aydy) => {
+                    Swal.fire({
+                      title: "Updated!",
+                      text: "Subscription type has been updated.",
+                      icon: "success",
+                      confirmButtonText: "OK",
+                      allowOutsideClick: false,
+                      confirmButtonColor: "#3085d6",
+                    }).then((result) => {
+                      if (result.isConfirmed) {
+                        setModal(false);
+                      }
+                    });
+                  })
+                  .catch((error) => console.log("error", error));
+              }}
+              className="w-[90px] flex items-center justify-center box-border bg-[#1967d3] px-[18px] py-[14px] rounded-[8px] text-[#fff] hover:bg-[#0146a6] cursor-pointer"
+            >
+              <span className="text-[15px] leading-none font-bold">Send</span>
+            </button>
+          </div>
+        </div>
+      </Modal>
     </>
   );
 }

@@ -16,12 +16,11 @@ export default function RadioButton({
   require,
   description,
 }) {
-  const [selected, setSelected] = useState(
-    selectedItem ? selectedItem : { id: -1, name: "", value: false }
-  );
+  const [selected, setSelected] = useState(selectedItem);
+
   useEffect(() => {
-    filterValueChecked(selected);
-  }, [selected]);
+    if (selectedItem) setSelected(selectedItem);
+  }, [selectedItem]);
 
   return (
     <div>
@@ -39,7 +38,6 @@ export default function RadioButton({
         name={name}
         type={type}
         rules={rules}
-        value={selected?.value}
         className="relative cursor-default"
       >
         <ul
@@ -54,6 +52,7 @@ export default function RadioButton({
                 value={index}
                 onClick={() => {
                   setSelected(item);
+                  filterValueChecked(item);
                 }}
                 className="flex items-center justify-between py-0 px-5 focus:outline-none text-base text-gray-900 hover:font-normal hover:opacity-90"
               >

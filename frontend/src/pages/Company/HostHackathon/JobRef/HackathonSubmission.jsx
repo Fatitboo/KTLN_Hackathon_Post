@@ -2,9 +2,13 @@ import { JobPreScreenImage } from "../../../../assets/images";
 import { useDispatch, useSelector } from "react-redux";
 import TextInput from "../InputField/TextInput";
 import FroalaEditor from "react-froala-wysiwyg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ComboBox from "../InputField/ComboBox";
+import { useParams } from "react-router-dom";
+import { CustomComboBox } from "../../../../components";
 function HackathonSubmissions({ formId, formSubmit }) {
+  const param = useParams();
+
   const [inputValues, setInputValues] = useState({
     start: "",
     deadline: "",
@@ -50,6 +54,42 @@ function HackathonSubmissions({ formId, formSubmit }) {
     );
   };
 
+  function convertToDateOnly(isoDateString) {
+    try {
+      const date = new Date(isoDateString);
+
+      if (isNaN(date.getTime())) {
+        throw new Error("Invalid date string");
+      }
+
+      // Extract the year, month, and day parts
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+      const day = String(date.getDate()).padStart(2, "0");
+
+      // Return the formatted string
+      return `${year}-${month}-${day}`;
+    } catch (error) {
+      console.error("Error converting date:", error.message);
+      return null;
+    }
+  }
+
+  useEffect(() => {
+    fetch(`http://localhost:3000/api/v1/hackathons/${param.id}/${formId}`)
+      .then((response) => response.json())
+      .then((result) => {
+        const { start, deadline, ...rest } = result.submissions;
+
+        setInputValues({
+          ...inputValues,
+          ...rest,
+          start: convertToDateOnly(start),
+          deadline: convertToDateOnly(deadline),
+        });
+      });
+  }, []);
+
   return (
     <>
       <div>
@@ -76,7 +116,7 @@ function HackathonSubmissions({ formId, formSubmit }) {
             <TextInput
               type="date"
               label="Start of hacking period"
-              vl={inputValues.start}
+              value={inputValues.start}
               onChange={(e) => onChange("start", e.target.value)}
               required
               description="Event kickoff for in-person events."
@@ -85,7 +125,7 @@ function HackathonSubmissions({ formId, formSubmit }) {
             <TextInput
               type="date"
               label="Deadline"
-              vl={inputValues.deadline}
+              value={inputValues.deadline}
               onChange={(e) => onChange("deadline", e.target.value)}
               required
               description="Hackers must submit their projects before this time."
@@ -135,23 +175,32 @@ function HackathonSubmissions({ formId, formSubmit }) {
               />
             </div>
 
-            <ComboBox
+            <CustomComboBox
               listItem={[
                 { id: 1, name: "On" },
                 { id: 2, name: "Off" },
               ]}
-              name="participantAge"
+              selectItem={
+                inputValues.isUploadFile
+                  ? { id: 1, name: "On" }
+                  : { id: 2, name: "Off" }
+              }
               filterValueSelected={(e) => filterCombobox("isUploadFile", e)}
               label="File Upload (PDF, ZIP, Word doc)"
               description="Some types of submissions (for example, YouTube videos and apps in the iPhone App Store) will exist outside of the hackathon site. For other types, you can add a file upload button so a file can be attached right on the hackathon site. Uploaded files will only be visible to hackathon managers and judges."
               placeHolder={"Select an options."}
             />
-            <ComboBox
+            <CustomComboBox
               listItem={[
                 { id: 1, name: "On" },
                 { id: 2, name: "Off" },
               ]}
               name="participantAge"
+              selectItem={
+                inputValues.isUploadVideo
+                  ? { id: 1, name: "On" }
+                  : { id: 2, name: "Off" }
+              }
               filterValueSelected={(e) => filterCombobox("isUploadVideo", e)}
               label="Require videos"
               description="Turning this on will require submitters to add a video link to their submission."

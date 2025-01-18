@@ -1,12 +1,14 @@
 import { JobRefImage } from "../../../../assets/images";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { TextInput } from "../../../../components";
 
 import FroalaEditor from "react-froala-wysiwyg";
+import { useParams } from "react-router-dom";
 
 function HackathonStarterKit({ formId, formSubmit, config }) {
-  const [value, setValue] = useState("");
   const editor = useRef();
+  const param = useParams();
+
   let [errors, setErrors] = useState({});
 
   const [inputValues, setInputValues] = useState({
@@ -39,6 +41,15 @@ function HackathonStarterKit({ formId, formSubmit, config }) {
       </div>
     );
   };
+
+  useEffect(() => {
+    fetch(`http://localhost:3000/api/v1/hackathons/${param.id}/${formId}`)
+      .then((response) => response.json())
+      .then((result) => {
+        const { _id, ...rest } = result;
+        setInputValues({ ...inputValues, ...rest });
+      });
+  }, []);
 
   return (
     <>

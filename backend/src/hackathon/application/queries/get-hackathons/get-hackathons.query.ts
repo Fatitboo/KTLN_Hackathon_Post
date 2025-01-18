@@ -1,3 +1,6 @@
 export class GetHackathonsQuery {
-  constructor(public readonly page: number | undefined) {}
+  constructor(
+    public readonly userId: string,
+    public readonly page: number | undefined,
+  ) {}
 }

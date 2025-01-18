@@ -1,10 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { JobRefImage } from "../../../../assets/images";
 import { TextInput } from "../../../../components";
 import ComboBox from "../InputField/ComboBox";
 import { IoMdClose } from "react-icons/io";
+import { useParams } from "react-router-dom";
 
-function HackathonToDos({ formId, formSubmit, config }) {
+function HackathonToDos({ formId, formSubmit }) {
+  const param = useParams();
+
   function handleSubmit(e) {
     e.preventDefault();
     formSubmit(inputValues);
@@ -49,6 +52,15 @@ function HackathonToDos({ formId, formSubmit, config }) {
     });
   };
 
+  useEffect(() => {
+    fetch(`http://localhost:3000/api/v1/hackathons/${param.id}/${formId}`)
+      .then((response) => response.json())
+      .then((result) => {
+        const { _id, ...rest } = result;
+        setInputValues({ ...inputValues, ...rest });
+      });
+  }, []);
+
   return (
     <>
       <div className="flex flex-row justify-between bg-[#faf9f8] rounded-xl -mx-8">
@@ -70,6 +82,7 @@ function HackathonToDos({ formId, formSubmit, config }) {
             description="If the hackathon has a Slack, Discord chat or Facebook group add the the join link, this will be made available to registered participants."
             required
             type="text"
+            vl={inputValues.communityChatLink}
             onChange={(e) => {
               setInputValues({
                 ...inputValues,

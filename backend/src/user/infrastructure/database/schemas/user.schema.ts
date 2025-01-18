@@ -103,6 +103,9 @@ export class UserDocument {
 
   @Prop({ type: [{ type: Types.ObjectId, ref: 'InvoiceDocument' }] })
   invoices: Types.ObjectId[];
+
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'HackathonDocument' }] })
+  judgesHackathons: Types.ObjectId[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(UserDocument).index(

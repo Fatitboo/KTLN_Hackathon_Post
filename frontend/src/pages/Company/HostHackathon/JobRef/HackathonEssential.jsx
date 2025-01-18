@@ -1,11 +1,14 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { JobBasicImage } from "../../../../assets/images";
 import CheckBox from "../InputField/CheckBox";
 import RadioButton from "../InputField/RadioButton";
 import TextInput from "../InputField/TextInput";
 import { IoIosClose } from "react-icons/io";
+import { useParams } from "react-router-dom";
 
-function HackathonEssential({ formSubmit, formId, config }) {
+function HackathonEssential({ formSubmit, formId }) {
+  const param = useParams();
+
   const [listSkillApi, setListSkillApi] = useState([]);
   const [spin, setSpin] = useState(false);
   const [skills, setSkills] = useState([]);
@@ -57,7 +60,6 @@ function HackathonEssential({ formSubmit, formId, config }) {
 
   const onSubmitForm = (e) => {
     e.preventDefault();
-    console.log(inputValues);
     formSubmit(inputValues);
   };
 
@@ -68,6 +70,7 @@ function HackathonEssential({ formSubmit, formId, config }) {
     redirect: "follow",
     headers: new Headers(),
   };
+
   const fetchDataSkill = (value) => {
     if (value === "") {
       setListSkillApi([]);
@@ -100,6 +103,17 @@ function HackathonEssential({ formSubmit, formId, config }) {
     });
   };
 
+  useEffect(() => {
+    fetch(`http://localhost:3000/api/v1/hackathons/${param.id}/${formId}`)
+      .then((response) => response.json())
+      .then((result) => {
+        const { _id, ...rest } = result;
+        setInputValues({ ...inputValues, ...rest });
+        const { hackathonTypes } = result;
+        setSkills([...hackathonTypes]);
+      });
+  }, []);
+
   return (
     <>
       <div>
@@ -123,7 +137,7 @@ function HackathonEssential({ formSubmit, formId, config }) {
               label="Name"
               description="Enter the name of your hackathon. Make it distinctive and memorable! Less is more."
               required
-              vl={inputValues.hackathonName}
+              value={inputValues?.hackathonName}
               onChange={(value) =>
                 onChangeValueTextInput("hackathonName", value)
               }
@@ -137,7 +151,7 @@ function HackathonEssential({ formSubmit, formId, config }) {
               type="text"
               description="Create a short tagline to describe your hackathon."
               required
-              vl={inputValues.tagline}
+              value={inputValues?.tagline}
               onChange={(value) => onChangeValueTextInput("tagline", value)}
               placeHolder="e.g. Create apps and games that enhance math teaching and learning for our middle schools."
               name="numberParticipants"
@@ -148,7 +162,7 @@ function HackathonEssential({ formSubmit, formId, config }) {
               type="text"
               description="Who can participants contact if they have a question about your hackathon? This email address will be public and displayed on site like this."
               required
-              vl={inputValues.managerMail}
+              value={inputValues.managerMail}
               onChange={(value) => onChangeValueTextInput("managerMail", value)}
               rules="requiredText|number|positiveNumber|intergerNumber"
               placeHolder="manager@hackathon.com"
@@ -255,6 +269,11 @@ function HackathonEssential({ formSubmit, formId, config }) {
               require
               column={3}
               description="What's your hackathon about? Select up to 3."
+              selectedItem={
+                themeTags.filter((item) =>
+                  inputValues.hackathonTypes.includes(item.name)
+                ) ?? []
+              }
               filterValueChecked={(e) => {
                 setInputValues({
                   ...inputValues,
@@ -269,6 +288,11 @@ function HackathonEssential({ formSubmit, formId, config }) {
               listItem={hackathonTypes}
               name="isRequire"
               column={3}
+              selectedItem={
+                hackathonTypes.find(
+                  (item) => inputValues.applyFor === item.name
+                ) ?? []
+              }
               filterValueChecked={(e) => {
                 setInputValues({
                   ...inputValues,

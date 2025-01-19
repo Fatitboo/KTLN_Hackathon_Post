@@ -71,6 +71,11 @@ import BlogDetailUser from "../pages/Seeker/BrowerBlogs/BlogDetail";
 import Discussion from "../pages/Seeker/Hackathon/Discussion";
 import Updates from "../pages/Seeker/Hackathon/Updates";
 import SuccessPaymentPage from "../pages/Seeker/Payment/Sucess";
+import ManageSubscription from "../pages/Admin/Subscription/ManageSubscription";
+import ManageSubscriptionType from "../pages/Admin/SubscriptionType/ManageSubscriptionType";
+import AutoRegisterJudge from "../pages/Auth/AutoRegisJudge";
+import HackathonJudgeDetail from "../pages/Judge/HackathonJudgeDetail/HackathonDetail";
+import ManageJudgeHackathon from "../pages/Judge/ManageHackathon";
 
 const publicRoutes = [
   // User Layout
@@ -187,6 +192,10 @@ const publicRoutes = [
         path: "auto-register",
         element: AutoRegisterToHackathon,
       },
+      {
+        path: "auto-register-judge",
+        element: AutoRegisterJudge,
+      },
     ],
   },
   { path: "/Seeker/about-us", component: AboutUs, layout: LayoutNoSidebar },
@@ -202,6 +211,7 @@ const publicRoutes = [
   },
   { path: "/Seeker/contact", component: Contact, layout: LayoutNoSidebar },
 ];
+
 const seekerRoutes = [
   {
     path: "/Seeker/my-profile",
@@ -253,6 +263,7 @@ const seekerRoutes = [
     layout: LayoutNoSidebar,
   },
 ];
+
 const corRoutes = [
   {
     path: "/Organizer/dashboard",
@@ -265,7 +276,7 @@ const corRoutes = [
     layout: LayoutHasSidebar,
   },
   {
-    path: "/Organizer/host-hackathon/:id",
+    path: "/Organizer/:type/:id",
     component: HostHackathon,
     layout: LayoutNoSidebar,
   },
@@ -295,6 +306,7 @@ const corRoutes = [
     layout: LayoutHasSidebar,
   },
 ];
+
 const AdminRoutes = [
   //Admin Layout
   {
@@ -363,6 +375,29 @@ const AdminRoutes = [
     component: HistoryTransaction,
     layout: LayoutHasSidebar,
   },
+  {
+    path: "/Admin/manage-subscription",
+    component: ManageSubscription,
+    layout: LayoutHasSidebar,
+  },
+  {
+    path: "/Admin/manage-subscriptions-type",
+    component: ManageSubscriptionType,
+    layout: LayoutHasSidebar,
+  },
 ];
 
-export { publicRoutes, seekerRoutes, AdminRoutes, corRoutes };
+const judgeRoutes = [
+  {
+    path: "/Judge/manage-hackathons",
+    component: ManageJudgeHackathon,
+    layout: LayoutHasSidebar,
+  },
+  {
+    path: "/Judge/judge-hackathons/:id/:type",
+    component: HackathonJudgeDetail,
+    layout: LayoutNoSidebar,
+  },
+];
+
+export { publicRoutes, seekerRoutes, AdminRoutes, corRoutes, judgeRoutes };

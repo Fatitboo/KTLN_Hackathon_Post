@@ -35,13 +35,15 @@ function ManageHackathon() {
     loading,
     hackathons,
     hackathonId,
-    isSuccess,
+    isSuccessHost,
     loadingDelete,
     isSuccessDelete,
   } = useSelector((state) => state.hackathons);
 
+  let { userAuth } = useSelector((state) => state.users);
+
   useEffect(() => {
-    dispatch(getAllHackathons());
+    dispatch(getAllHackathons({ userId: userAuth.user.id }));
   }, []);
   useEffect(() => {
     if (hackathons) {
@@ -50,11 +52,11 @@ function ManageHackathon() {
   }, [hackathons]);
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccessHost) {
       navigate(`/Organizer/host-hackathon/${hackathonId}`);
-      dispatch(resetValue({ key: "isSuccess", value: false }));
+      dispatch(resetValue({ key: "isSuccessHost", value: false }));
     }
-  }, [isSuccess]);
+  }, [isSuccessHost]);
 
   useEffect(() => {
     if (isSuccessDelete) {
@@ -276,7 +278,8 @@ function ManageHackathon() {
                               </tr>
                             );
                           })
-                        : currentHackathons
+                        : [...currentHackathons]
+                            ?.reverse()
                             ?.slice(currentPage * 10, (currentPage + 1) * 10)
                             .map((item, index) => {
                               return (
@@ -347,7 +350,7 @@ function ManageHackathon() {
                                           <LiaEyeSolid fontSize={18} />
                                         </Link>
                                         <Link
-                                          to={`/Organizer/update-project/${item?.projectId}`}
+                                          to={`/Organizer/update-hackathons/${item?._id}`}
                                           className="list-none relative mr-2 bg-[#f5f7fc] border rounded-md border-[#e9ecf9] px-1 pt-1 hover:bg-[#278646] hover:text-white"
                                         >
                                           <button>

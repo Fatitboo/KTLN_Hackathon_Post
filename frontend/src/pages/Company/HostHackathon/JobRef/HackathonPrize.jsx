@@ -1,9 +1,13 @@
 import { JobBasicImage } from "../../../../assets/images";
 import TextInput from "../InputField/TextInput";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ComboBox from "../InputField/ComboBox";
+import { useParams } from "react-router-dom";
+import { CustomComboBox } from "../../../../components";
 
 function HackathonPrize({ formSubmit, formId, config }) {
+  const param = useParams();
+
   const [inputValues, setInputValues] = useState({
     winnersAnnounced: "",
     prizeCurrency: "",
@@ -47,6 +51,40 @@ function HackathonPrize({ formSubmit, formId, config }) {
     );
   };
 
+  function convertToDateTimeFormat(isoDateString) {
+    try {
+      // Create a new Date object from the ISO 8601 string
+      const date = new Date(isoDateString);
+
+      if (isNaN(date.getTime())) {
+        throw new Error("Invalid date string");
+      }
+
+      // Extract the required components
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+      const day = String(date.getDate()).padStart(2, "0");
+      const hours = String(date.getHours()).padStart(2, "0");
+      const minutes = String(date.getMinutes()).padStart(2, "0");
+
+      // Return the formatted string
+      return `${year}-${month}-${day}T${hours}:${minutes}`;
+    } catch (error) {
+      console.error("Error converting date:", error.message);
+      return null;
+    }
+  }
+
+  useEffect(() => {
+    fetch(`http://localhost:3000/api/v1/hackathons/${param.id}/${formId}`)
+      .then((response) => response.json())
+      .then((result) => {
+        const { _id, ...rest } = result;
+        console.log(rest);
+        setInputValues({ ...inputValues, ...rest });
+      });
+  }, []);
+
   return (
     <>
       <div>
@@ -69,7 +107,7 @@ function HackathonPrize({ formSubmit, formId, config }) {
               require
               description="MM/DD/YYYY format. All times are in Eastern Time (US & Canada) (EDT)"
               type="datetime-local"
-              vl={inputValues.winnersAnnounced}
+              value={convertToDateTimeFormat(inputValues.winnersAnnounced)}
               onChange={(e) => {
                 setInputValues({
                   ...inputValues,
@@ -78,10 +116,15 @@ function HackathonPrize({ formSubmit, formId, config }) {
               }}
             />
 
-            <ComboBox
+            <CustomComboBox
               label={"Prize currency"}
               require
               placeHolder={"Select an options"}
+              selectItem={
+                currencyList.find(
+                  (item) => item.name == inputValues.prizeCurrency
+                ) ?? currencyList[0]
+              }
               listItem={currencyList}
               filterValueSelected={(e) => {
                 setInputValues({
@@ -106,7 +149,7 @@ function HackathonPrize({ formSubmit, formId, config }) {
                     <TextInput
                       label="Prize name"
                       required
-                      vl={item.prizeName}
+                      value={item.prizeName}
                       onChange={(e) =>
                         onChangeText(
                           "prizes",
@@ -122,7 +165,7 @@ function HackathonPrize({ formSubmit, formId, config }) {
                       label="Cash value"
                       description={`The total value of the prize (in $). We'll add up the cash value of all your prizes to calculate the "XX in prizes" total prize value listed for your hackathon. The cash value entered will not be displayed next to each prize in your list of prizes.`}
                       required
-                      vl={item.cashValue}
+                      value={item.cashValue}
                       onChange={(e) =>
                         onChangeText(
                           "prizes",
@@ -138,7 +181,7 @@ function HackathonPrize({ formSubmit, formId, config }) {
                       label="Number of winning projects"
                       type="number"
                       required
-                      vl={item.numberWinningProject}
+                      value={item.numberWinningProject}
                       onChange={(e) =>
                         onChangeText(
                           "prizes",

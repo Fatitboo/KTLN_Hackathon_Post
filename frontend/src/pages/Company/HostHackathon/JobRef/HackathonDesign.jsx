@@ -1,10 +1,10 @@
 import { JobBenefitImage } from "../../../../assets/images";
-import { useState } from "react";
-// import ReactImagePickerEditor from "react-image-picker-editor";
-// import "react-image-picker-editor/dist/index.css";
+import { useEffect, useState } from "react";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 
 function HackathonDesign({ formId, formSubmit }) {
+  const param = useParams();
   const [inputsValues, setInputValues] = useState({
     thumbnail: null,
     headerTitleImage: null,
@@ -14,8 +14,10 @@ function HackathonDesign({ formId, formSubmit }) {
     e.preventDefault();
 
     const data = await handleUpload();
+    console.log(data);
     formSubmit(data);
   };
+
   const TitleDescription = (title, description) => {
     return (
       <div>
@@ -43,7 +45,7 @@ function HackathonDesign({ formId, formSubmit }) {
     const updatedInputsValues = { ...inputsValues }; // Giữ lại giá trị cũ
 
     for (const [key, file] of Object.entries(updatedInputsValues)) {
-      if (!file) continue;
+      if (!file || typeof file == "string") continue;
 
       const formData = new FormData();
       formData.append("file", file);
@@ -63,6 +65,15 @@ function HackathonDesign({ formId, formSubmit }) {
 
     return updatedInputsValues; // Cập nhật state với URL đã upload
   };
+
+  useEffect(() => {
+    fetch(`http://localhost:3000/api/v1/hackathons/${param.id}/${formId}`)
+      .then((response) => response.json())
+      .then((result) => {
+        const { _id, ...rest } = result;
+        setInputValues({ ...inputsValues, ...rest });
+      });
+  }, []);
 
   return (
     <>
@@ -97,7 +108,11 @@ function HackathonDesign({ formId, formSubmit }) {
                     {inputsValues.thumbnail && (
                       <img
                         className="w-full h-full"
-                        src={URL.createObjectURL(inputsValues.thumbnail)}
+                        src={
+                          typeof inputsValues.thumbnail == "string"
+                            ? inputsValues.thumbnail
+                            : URL.createObjectURL(inputsValues.thumbnail)
+                        }
                         alt="Uploaded"
                       />
                     )}
@@ -120,7 +135,11 @@ function HackathonDesign({ formId, formSubmit }) {
                   <div>
                     {inputsValues.headerTitleImage && (
                       <img
-                        src={URL.createObjectURL(inputsValues.headerTitleImage)}
+                        src={
+                          typeof inputsValues.headerTitleImage == "string"
+                            ? inputsValues.headerTitleImage
+                            : URL.createObjectURL(inputsValues.headerTitleImage)
+                        }
                         alt="Uploaded"
                         className="w-full h-full"
                       />

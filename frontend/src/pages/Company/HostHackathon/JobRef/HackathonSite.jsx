@@ -16,23 +16,17 @@ import "froala-editor/js/plugins/font_size.min.js";
 import FroalaEditor from "react-froala-wysiwyg";
 import TextInput from "../InputField/TextInput";
 import OptimizeContentPopup from "../../../../components/Organizer/OptimizeContentPopup";
+import { useParams } from "react-router-dom";
 
-function JobDes({ formId, formSubmit, flag, config, content, onDoneSubmit }) {
+function JobDes({ formId, formSubmit, config }) {
   const editor = useRef();
+  const param = useParams();
+
   let [errors] = useState({});
 
   function handleSubmit(e) {
     e.preventDefault();
-    // formSubmit(inputValues);
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(
-      inputValues.mainDescription,
-      "text/html"
-    );
-
-    // Lấy tất cả text content
-    const textContent = doc.body.textContent.trim();
-    console.log(textContent);
+    formSubmit(inputValues);
   }
 
   const [inputValues, setInputValues] = useState({
@@ -61,6 +55,16 @@ function JobDes({ formId, formSubmit, flag, config, content, onDoneSubmit }) {
   function handleChange(e, model) {
     setInputValues({ ...inputValues, [model]: e });
   }
+
+  useEffect(() => {
+    console.log(param);
+    fetch(`http://localhost:3000/api/v1/hackathons/${param.id}/${formId}`)
+      .then((response) => response.json())
+      .then((result) => {
+        const { _id, ...rest } = result;
+        setInputValues({ ...inputValues, ...rest });
+      });
+  }, []);
 
   return (
     <>
@@ -191,7 +195,7 @@ function JobDes({ formId, formSubmit, flag, config, content, onDoneSubmit }) {
             description="Do you have a promotional or explainer video for your hackathon? If so, include a YouTube or Vimeo link here. Make sure embedding is enabled."
             required
             type="text"
-            vl={inputValues.videoDescription}
+            value={inputValues.videoDescription}
             onChange={(e) => {
               handleChange(e.target.value, "videoDescription");
             }}

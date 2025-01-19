@@ -66,6 +66,13 @@ export class DateRange {
 export class Judges {
   @Prop()
   @IsString()
+  id: string;
+
+  @Prop({ type: Types.ObjectId, ref: 'UserDocument' })
+  userId: Types.ObjectId;
+
+  @Prop()
+  @IsString()
   fullName: string;
 
   @Prop()

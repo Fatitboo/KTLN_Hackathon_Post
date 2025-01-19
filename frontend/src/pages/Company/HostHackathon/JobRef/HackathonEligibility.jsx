@@ -5,8 +5,11 @@ import { useEffect, useState } from "react";
 import RadioButton from "../InputField/RadioButton";
 import CheckBox from "../InputField/CheckBox";
 import CustomeCbbAddress from "../../../../components/Organizer/CustomeCbbAddress";
+import { useParams } from "react-router-dom";
 
 function HackathonEligibility({ formId, formSubmit, config }) {
+  const param = useParams();
+
   const listRangeTypes = [
     { id: 1, name: "Range" },
     { id: 2, name: "Starting amount" },
@@ -17,13 +20,13 @@ function HackathonEligibility({ formId, formSubmit, config }) {
   let [inputsValues, setInputValues] = useState({
     isPublished: true,
     participantAge: {
-      type: "",
+      type: "Range",
       min: "",
       max: "",
     },
     teamRequirement: {
       isRequire: false,
-      type: "",
+      type: "Range",
       min: "",
       max: "",
     },
@@ -40,14 +43,14 @@ function HackathonEligibility({ formId, formSubmit, config }) {
     data.participantAge.max =
       data.participantAge.max != "" ? Number(data.participantAge.max) : null;
 
-    if (data.location === "Offline")
+    if (data.location !== "Online")
       data.location = `${detail}, ${adrSelected.ward}, ${adrSelected.district}, ${adrSelected.province}`;
     formSubmit(data);
   }
 
   const communityTypes = [
-    { id: 1, name: "Public" },
-    { id: 2, name: "Invite only" },
+    { id: 1, name: "Public", value: true },
+    { id: 2, name: "Invite only", value: false },
   ];
 
   const locationTypes = [
@@ -119,38 +122,8 @@ function HackathonEligibility({ formId, formSubmit, config }) {
   const [detail, setDetail] = useState("");
   const [adrSelected, setAdrSelected] = useState({});
 
-  useEffect(() => {
-    fetch(provinceApi)
-      .then((res) => res.json())
-      .then((json) => {
-        setProvince(json);
-        // if (userProfile?.address) {
-        //   const code = Array.from(json).find(
-        //     (item) => item.name === userProfile?.address?.province
-        //   )?.code;
-        //   code &&
-        //     fetch(districtApi(code))
-        //       .then((res) => res.json())
-        //       .then((json) => {
-        //         const code = Array.from(json.districts).find(
-        //           (item) => item.name === userProfile?.address?.district
-        //         )?.code;
-        //         setDistrict(json.districts);
-        //         code &&
-        //           fetch(wardApi(code))
-        //             .then((res) => res.json())
-        //             .then((json) => {
-        //               setWard(json.wards);
-        //             });
-        //       });
-        // } else {
-        //   setDistrict([]);
-        //   setWard([]);
-        // }
-      });
-  }, []);
-
   const filterProvince = (e) => {
+    if (e.code === -1) return;
     fetch(districtApi(e.code))
       .then((res) => res.json())
       .then((json) => {
@@ -158,22 +131,70 @@ function HackathonEligibility({ formId, formSubmit, config }) {
         if (adrSelected.district) adrSelected.district = "";
         if (adrSelected.ward) adrSelected.ward = "";
         adrSelected.province = e.name;
-
         setAdrSelected({ ...adrSelected });
       });
   };
 
   const filterDistrict = (e) => {
+    if (e.code === -1) return;
     fetch(wardApi(e.code))
       .then((res) => res.json())
       .then((json) => {
         setWard(json.wards);
         if (adrSelected.ward) adrSelected.ward = "";
         adrSelected.district = e.name;
-
         setAdrSelected({ ...adrSelected });
       });
   };
+
+  useEffect(() => {
+    fetch(`http://localhost:3000/api/v1/hackathons/${param.id}/${formId}`)
+      .then((response) => response.json())
+      .then((result) => {
+        const { _id, ...rest } = result;
+        setInputValues({ ...inputsValues, ...rest });
+        if (rest.location !== "" && rest.location !== "Online") {
+          const [detail, ward, district, province] = rest.location.split(",");
+          setAdrSelected({
+            district: district.trim(),
+            province: province.trim(),
+            ward: ward.trim(),
+          });
+          setDetail(detail);
+
+          fetch(provinceApi)
+            .then((res) => res.json())
+            .then((json) => {
+              setProvince(json);
+              const selectedProvince = json.find(
+                (item) => item.name == province.trim()
+              );
+              fetch(districtApi(selectedProvince.code))
+                .then((res) => res.json())
+                .then((json2) => {
+                  setDistrict(json2.districts);
+                  const selectedDistrict = json2.districts.find(
+                    (item) => item.name == district.trim()
+                  );
+                  fetch(wardApi(selectedDistrict.code))
+                    .then((res) => res.json())
+                    .then((json3) => {
+                      setWard(json3.wards);
+                    });
+                });
+            });
+        }
+      });
+  }, []);
+
+  useEffect(() => {
+    fetch(provinceApi)
+      .then((res) => res.json())
+      .then((json) => {
+        setProvince(json);
+      });
+  }, []);
+
   return (
     <>
       <div>
@@ -203,6 +224,11 @@ function HackathonEligibility({ formId, formSubmit, config }) {
               listItem={communityTypes}
               name="isRequire"
               column={1}
+              selectedItem={
+                communityTypes.find(
+                  (item) => inputsValues.isPublished === item.value
+                ) ?? []
+              }
               filterValueChecked={(e) => {
                 setInputValues({
                   ...inputsValues,
@@ -218,6 +244,13 @@ function HackathonEligibility({ formId, formSubmit, config }) {
                 listItem={locationTypes}
                 name="isRequire"
                 column={1}
+                selectedItem={
+                  inputsValues.location === "Online"
+                    ? locationTypes[0]
+                    : inputsValues.location !== ""
+                    ? locationTypes[1]
+                    : { id: -1, name: "" }
+                }
                 filterValueChecked={(e) => {
                   setInputValues({ ...inputsValues, location: e.name });
                 }}
@@ -229,52 +262,54 @@ function HackathonEligibility({ formId, formSubmit, config }) {
               />
             </div>
 
-            {inputsValues.location === "Offline" && (
-              <div>
-                <div className="grid grid-cols-2 gap-5">
-                  <div className="">
-                    <CustomeCbbAddress
-                      listItem={provinces}
-                      labelItemSelected={adrSelected.province}
-                      placeHolder={"Select province"}
-                      label={"Province"}
-                      filterValueSelected={filterProvince}
-                    />
-                  </div>
-                  <div className="">
-                    <CustomeCbbAddress
-                      listItem={districts}
-                      labelItemSelected={adrSelected.district}
-                      placeHolder={"Select district"}
-                      label={"District"}
-                      filterValueSelected={filterDistrict}
-                    />
-                  </div>
-                  <div className="">
-                    <CustomeCbbAddress
-                      listItem={wards}
-                      labelItemSelected={adrSelected.ward}
-                      placeHolder={"Select ward"}
-                      label={"Ward"}
-                      filterValueSelected={(e) => {
-                        setAdrSelected((prev) => ({ ...prev, ward: e.name }));
-                      }}
-                    />
-                  </div>
-                  <div className=" ">
-                    <TextInput
-                      name="addressDetail"
-                      value={detail}
-                      onChange={(e) => setDetail(e.target.value)}
-                      type="text"
-                      label="Address Detail"
-                      placeholder="..."
-                      styles="bg-[#f0f5f7]"
-                    />
+            {inputsValues.location !== "Online" &&
+              inputsValues.location !== "" && (
+                <div>
+                  <div className="grid grid-cols-2 gap-5">
+                    <div className="">
+                      <CustomeCbbAddress
+                        listItem={provinces}
+                        labelItemSelected={adrSelected.province}
+                        placeHolder={"Select province"}
+                        label={"Province"}
+                        filterValueSelected={filterProvince}
+                      />
+                    </div>
+                    <div className="">
+                      <CustomeCbbAddress
+                        listItem={districts}
+                        labelItemSelected={adrSelected.district}
+                        placeHolder={"Select district"}
+                        label={"District"}
+                        filterValueSelected={filterDistrict}
+                      />
+                    </div>
+                    <div className="">
+                      <CustomeCbbAddress
+                        listItem={wards}
+                        labelItemSelected={adrSelected.ward}
+                        placeHolder={"Select ward"}
+                        label={"Ward"}
+                        filterValueSelected={(e) => {
+                          if (e.code == -1) return;
+                          setAdrSelected((prev) => ({ ...prev, ward: e.name }));
+                        }}
+                      />
+                    </div>
+                    <div className=" ">
+                      <TextInput
+                        name="addressDetail"
+                        value={detail}
+                        onChange={(e) => setDetail(e.target.value)}
+                        type="text"
+                        label="Address Detail"
+                        placeholder="..."
+                        styles="bg-[#f0f5f7]"
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
 
             <div>
               {TitleDescription(
@@ -287,6 +322,9 @@ function HackathonEligibility({ formId, formSubmit, config }) {
                     <CustomComboBox
                       listItem={listRangeTypes}
                       name="participantAge"
+                      selectItem={listRangeTypes.find(
+                        (item) => item.name === inputsValues.participantAge.type
+                      )}
                       filterValueSelected={(e) =>
                         filterValueCombobox("participantAge", e)
                       }
@@ -341,6 +379,11 @@ function HackathonEligibility({ formId, formSubmit, config }) {
               <CheckBox
                 label="Team requirements"
                 require
+                selectedItem={
+                  inputsValues.teamRequirement.isRequire
+                    ? [{ id: 1, name: "Team required" }]
+                    : []
+                }
                 filterValueChecked={canTeamRequired}
                 listItem={[{ id: 1, name: "Team required" }]}
               />
@@ -351,6 +394,10 @@ function HackathonEligibility({ formId, formSubmit, config }) {
                       <CustomComboBox
                         listItem={listRangeTypes}
                         name="teamRequirement"
+                        selectItem={listRangeTypes.find(
+                          (item) =>
+                            item.name === inputsValues.teamRequirement.type
+                        )}
                         filterValueSelected={(e) => {
                           filterValueCombobox("teamRequirement", e);
                         }}

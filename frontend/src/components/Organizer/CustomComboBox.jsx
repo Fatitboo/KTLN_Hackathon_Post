@@ -20,9 +20,7 @@ export default function CustomComboBox({
   placeHolder,
   selectItem,
 }) {
-  const [selected, setSelected] = useState(
-    selectItem ? selectItem : { id: -1, name: "" }
-  );
+  const [selected, setSelected] = useState(selectItem);
   const [visible, setVisible] = useState("none");
   const [outline, setOutline] = useState(false);
 
@@ -30,14 +28,9 @@ export default function CustomComboBox({
     visible === "none" ? setVisible("block") : setVisible("none");
     setOutline(!outline);
   }
-  useEffect(() => {
-    filterValueSelected(selected);
-    console.log(["Selected"], selected);
-  }, [selected]);
 
   useEffect(() => {
     if (selectItem) setSelected(selectItem);
-    console.log(["SelectedItem"], selectItem);
   }, [selectItem]);
 
   const dropDownTag = useRef();
@@ -98,6 +91,7 @@ export default function CustomComboBox({
                   value={index}
                   onClick={() => {
                     setSelected(item);
+                    filterValueSelected(item);
                   }}
                   className="flex flex-row items-center justify-between bg-white py-3 px-5 shadow-lg focus:outline-none text-base hover:bg-[#f3f9ff] text-[#636363]"
                 >

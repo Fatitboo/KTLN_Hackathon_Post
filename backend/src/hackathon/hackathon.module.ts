@@ -34,6 +34,7 @@ import {
   ReportDocument,
   ReportSchema,
 } from './infrastructure/database/schemas/report.schema';
+import { GetHackathonComponentHandler } from './application/queries/get-hackathon-component/get-hackathon-component.handler';
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import {
     { provide: HACKATHON_REPOSITORY, useClass: MongooseHackathonRepository },
     GetHackathonHandler,
     GetHackathonsHandler,
+    GetHackathonComponentHandler,
     GetProjectsHandler,
     GetAllRegisterUsersHandler,
     AwardHackathonHandler,

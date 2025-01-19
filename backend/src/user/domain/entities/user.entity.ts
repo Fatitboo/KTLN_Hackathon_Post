@@ -4,6 +4,7 @@ export enum UserType {
   SEEKER = 'seeker',
   ORGANIZER = 'organizer',
   ADMIN = 'admin',
+  JUDGE = 'judge',
 }
 
 export enum SocialType {

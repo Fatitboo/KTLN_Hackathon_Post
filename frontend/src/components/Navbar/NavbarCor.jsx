@@ -108,11 +108,11 @@ function NavbarCor({ user }) {
   const hackathons = useSelector((store) => store?.hackathons);
 
   useEffect(() => {
-    if (hackathons.isSuccess) {
+    if (hackathons.isSuccessHost) {
       navigate(`/Organizer/host-hackathon/${hackathons.hackathonId}`);
       dispatch(resetValue({ key: "isSuccess", value: false }));
     }
-  }, [hackathons?.isSuccess]);
+  }, [hackathons?.isSuccessHost]);
   return (
     <>
       {(loading || hackathons?.loadingCreate) && <LoadingComponent />}

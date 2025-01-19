@@ -4,6 +4,7 @@ import {
   Controller,
   Delete,
   Get,
+  Inject,
   Param,
   Post,
   Put,
@@ -28,6 +29,12 @@ import { AwardHackathonCommand } from 'src/hackathon/application/commands/awardi
 import { ReportDocument } from 'src/hackathon/infrastructure/database/schemas/report.schema';
 import { UserDocument } from 'src/user/infrastructure/database/schemas';
 import { v4 as uuidv4 } from 'uuid';
+import { GetHackathonComponentQuery } from 'src/hackathon/application/queries/get-hackathon-component/get-hackathon-component.query';
+import { sendEmail } from 'src/user/domain/services/email.service';
+import { templateInviteJudgeHTML } from 'src/hackathon/infrastructure/constants/template-email-invite-judge';
+import { UserType } from 'src/user/domain/entities/user.entity';
+import * as bcrypt from 'bcrypt';
+import { templateInviteConfirmHTML } from 'src/hackathon/infrastructure/constants/template-email-confirm';
 
 @Controller('hackathons')
 export class HackathonController {
@@ -43,8 +50,24 @@ export class HackathonController {
   ) {}
 
   @Get()
-  async getAllHackathons(@Query('page') page: number) {
-    return await this.queryBus.execute(new GetHackathonsQuery(page));
+  async getAllHackathons(
+    @Query('userId') userId: string,
+    @Query('page') page: number,
+    @Query('isJudge') isJudge: boolean,
+  ) {
+    if (isJudge) {
+      const user = await this.userModel
+        .findById(userId)
+        .populate({
+          path: 'judgesHackathons',
+          model: 'HackathonDocument',
+        })
+        .exec();
+
+      if (!user) return [];
+      return user.judgesHackathons;
+    }
+    return await this.queryBus.execute(new GetHackathonsQuery(userId, page));
   }
 
   @Get('/search')
@@ -79,6 +102,16 @@ export class HackathonController {
     return await this.queryBus.execute(new GetHackathonQuery(id, userId));
   }
 
+  @Get(':id/:type')
+  async getHackathonComponent(
+    @Param('id') id: string,
+    @Param('type') type: string,
+  ) {
+    return await this.queryBus.execute(
+      new GetHackathonComponentQuery(id, type),
+    );
+  }
+
   @Post(':userId')
   async createHackathon(@Param('userId') userId: string): Promise<string> {
     const result = this.commandBus.execute(
@@ -86,6 +119,15 @@ export class HackathonController {
     );
 
     return result;
+  }
+
+  @Post('invitations/accept-invite-judge/:id')
+  async acceptInviteJudge(
+    @Param('id') hackathonId: string,
+    @Query('name') name: string,
+    @Query('email') email: string,
+  ) {
+    return { hackathonId, name, email };
   }
 
   @Put(':id')
@@ -113,6 +155,119 @@ export class HackathonController {
     );
 
     return result;
+  }
+
+  @Post('invite-judge/:id')
+  async inviteJudge(
+    @Param('id') id: string,
+    @Query('judgeId') judgeId: string,
+    @Query('emails') emails: string,
+    @Query('receiver') receiverName: string,
+  ) {
+    const emailArray = JSON.parse(emails);
+    const hackathon = await this.hackathonModel
+      .findById(id)
+      .populate('user')
+      .select('user user hackathonName location judgingPeriod');
+    await Promise.all(
+      emailArray.map((email) => {
+        const link = `http://localhost:5173/Hackathon-detail/${id}/auto-register-judge?id=${id}&name=${encodeURIComponent(receiverName)}&email=${email}&judgeId=${judgeId}`;
+
+        sendMailInviteJudge(
+          id,
+          hackathon.user['fullname'],
+          hackathon.user['email'],
+          receiverName,
+          email,
+          link,
+          {
+            name: hackathon.hackathonName,
+            location: hackathon.location,
+            time: hackathon.judgingPeriod.start,
+          },
+        );
+      }),
+    );
+    return 'haha';
+    // return result;
+  }
+
+  @Post('accept-invite-judge/:id')
+  async acceptInvitation(
+    @Param('id') hackathonId: string,
+    @Body() body: { name: string; email: string; judge: string },
+  ) {
+    const exitUser = await this.userModel.findOne({ email: body.email }).exec();
+    const exitHackathon = await this.hackathonModel
+      .findById(hackathonId)
+      .exec();
+    if (!exitHackathon) throw new Error('Hackathon is not exit');
+    if (exitUser) {
+      if (!exitUser.userType.find((item) => item === UserType.JUDGE)) {
+        exitUser.userType.push(UserType.JUDGE);
+      }
+      let list = exitUser.judgesHackathons;
+      if (!list) list = [];
+      const hackathonObjId = new Types.ObjectId(hackathonId);
+      if (!exitUser.judgesHackathons.includes(hackathonObjId)) {
+        list.push(hackathonObjId);
+      }
+      exitUser.judgesHackathons = list;
+      await exitUser.save();
+      await this.hackathonModel.findOneAndUpdate(
+        { _id: hackathonId, 'judges.id': Number(body.judge) },
+        { $set: { 'judges.$.userId': exitUser._id } },
+        { new: true },
+      );
+
+      await sendEmail(
+        body.email,
+        templateInviteConfirmHTML(
+          'old',
+          `http://localhost:5173/user-auth/login`,
+          body.name,
+        ),
+        'Confirmation email',
+        'Confirmation email',
+      );
+    } else {
+      const salt = await bcrypt.genSalt(10);
+      const password = await bcrypt.hash(generatePassword(), salt);
+      const createdUser = new this.userModel({
+        password: password,
+        email: body.email,
+        fullname: body.name,
+        isSetPersionalSetting: false,
+        isVerify: true,
+        avatar:
+          'https://firebasestorage.googleapis.com/v0/b/englishvoc-43d5a.appspot.com/o/images%2FavatarDefault.png?alt=media&token=59aae8c1-2129-46ca-ad75-5dad1b119188',
+        userType: [UserType.JUDGE],
+        judgesHackathons: [new Types.ObjectId(hackathonId)],
+      });
+      const user = await createdUser.save();
+      await this.hackathonModel.findOneAndUpdate(
+        { _id: hackathonId, 'judges.id': Number(body.judge) },
+        { $set: { 'judges.$.userId': user._id } },
+        { new: true },
+      );
+      await sendEmail(
+        body.email,
+        templateInviteConfirmHTML(
+          'old',
+          `http://localhost:5173/user-auth/login`,
+          body.name,
+        ),
+        'Confirmation email',
+        'Confirmation email',
+      );
+    }
+
+    return {
+      message: `Invitation accepted!`,
+      hackathonId,
+      email: body.email,
+      name: body.name,
+    };
   }
 
   @Post('create-updates/:hackathonId')
@@ -515,4 +670,41 @@ export class HackathonController {
     );
     return result;
   }
+}
+
+async function sendMailInviteJudge(
+  hackathonId: string,
+  senderName: string,
+  senderEmail: string,
+  receiverName: string,
+  receiverEmail: string,
+  linkInvite: string,
+  objHackathon: any,
+) {
+  await sendEmail(
+    receiverEmail,
+    templateInviteJudgeHTML(
+      linkInvite,
+      `http://localhost:5173/Hackathon-detail/${hackathonId}/overview`,
+      senderName,
+      receiverName,
+      senderEmail,
+      objHackathon.name,
+      objHackathon.time,
+      objHackathon.location,
+    ),
+    'Join our Team Hackathon',
+    'Send mail successfull',
+  );
+}
+
+function generatePassword(length = 8) {
+  const characters =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+[]{}|;:,.<>?';
+  let password = '';
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    password += characters[randomIndex];
+  }
+  return password;
 }

@@ -23,6 +23,55 @@ export class MongooseHackathonRepository implements HackathonRepository {
     @InjectModel(InteractionDocument.name)
     private readonly interactionModel: Model<InteractionDocument>,
   ) {}
+  async getHackathonComponent(
+    id: string,
+    type: string,
+  ): Promise<HackathonDocument | null> {
+    let getter = '';
+    switch (type) {
+      case 'form-hackathon-essential':
+        getter =
+          'hackathonName tagline managerMail hostName hackathonTypes applyFor';
+        break;
+      case 'form-hackathon-eligibility':
+        getter = 'isPublished participantAge teamRequirement location';
+        break;
+      case 'form-hackathon-design':
+        getter = 'thumbnail headerTitleImage';
+        break;
+      case 'form-hackathon-site':
+        getter =
+          'mainDescription videoDescription submissionDescription ruleDescription resourceDescription';
+        break;
+      case 'form-hackathon-todos':
+        getter = 'communityChatLink tasks';
+        break;
+      case 'form-hackathon-starter-kit':
+        getter = 'subjectMailTitle contentMailRegister';
+        break;
+      case 'form-hackathon-submission':
+        getter = 'submissions';
+        break;
+      case 'form-hackathon-judging':
+        getter = 'judgingType judgingPeriod judges criteria';
+        break;
+      case 'form-hackathon-prize':
+        getter = 'winnersAnnounced prizeCurrency prizes';
+        break;
+      default:
+        getter = '';
+        break;
+    }
+    const hackathon = await this.hackathonModel
+      .findById(id)
+      .select(getter)
+      .lean()
+      .exec();
+    if (!hackathon) return null;
+
+    return hackathon;
+  }
+
   async award(hackathonId: string, hackathon: any) {
     await this.hackathonModel
       .findByIdAndUpdate(
@@ -172,10 +221,20 @@ export class MongooseHackathonRepository implements HackathonRepository {
     };
   }
 
-  async findAll(page: number): Promise<any[]> {
-    const hackathons = await this.hackathonModel.find().lean().exec();
-    if (!hackathons) return [];
-    return hackathons;
+  async findAll(userId: string, page: number): Promise<any[]> {
+    if (userId) {
+      console.log(userId);
+      const hackathons = await this.hackathonModel
+        .find({ user: userId })
+        .lean()
+        .exec();
+      if (!hackathons) return [];
+      return hackathons;
+    } else {
+      const hackathons = await this.hackathonModel.find().lean().exec();
+      if (!hackathons) return [];
+      return hackathons;
+    }
   }
 
   async findById(id: string, userId?: string | undefined): Promise<any> {

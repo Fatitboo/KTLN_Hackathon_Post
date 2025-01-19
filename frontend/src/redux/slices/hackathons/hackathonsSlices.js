@@ -8,17 +8,9 @@ export const getAllHackathons = createAsyncThunk(
   "hackathons/getAllHackathons",
   async (payload, { rejectWithValue, getState, dispatch }) => {
     try {
-      // const user = getState()?.users;
-      // const { userAuth } = user;
-      // // http call
-      // const config = {
-      //     headers: {
-      //         Authorization: `Bearer ${userAuth?.user?.token}`,
-      //         'Content-Type': 'application/json',
-      //     },
-      // };
-
-      const { data } = await axios.get(`${baseUrl}/${apiPrefix}`);
+      const { data } = await axios.get(`${baseUrl}/${apiPrefix}`, {
+        params: payload, // Query parameters added here
+      });
       return data;
     } catch (error) {
       if (!error?.response) {
@@ -319,17 +311,17 @@ const hackathonsSlices = createSlice({
       //create vacancies id
       builder.addCase(creatHackathonId.pending, (state, action) => {
         state.loadingCreate = true;
-        state.isSuccess = false;
+        state.isSuccessHost = false;
       }),
       builder.addCase(creatHackathonId.fulfilled, (state, action) => {
         console.log(action.payload);
         state.loadingCreate = false;
         state.hackathonId = action?.payload?.hackathonId;
-        state.isSuccess = true;
+        state.isSuccessHost = true;
       }),
       builder.addCase(creatHackathonId.rejected, (state, action) => {
         state.loadingCreate = false;
-        state.isSuccess = false;
+        state.isSuccessHost = false;
       });
 
     builder.addCase(updateHackathonComponent.pending, (state, action) => {

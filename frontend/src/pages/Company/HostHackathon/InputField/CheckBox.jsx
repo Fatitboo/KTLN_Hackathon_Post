@@ -15,12 +15,10 @@ export default function CheckBox({
   require,
   description,
 }) {
-  const [selected, setSelected] = useState(selectedItem ? selectedItem : []);
-  useEffect(() => {
-    filterValueChecked(selected);
-  }, [selected]);
+  const [selected, setSelected] = useState(selectedItem);
 
   useEffect(() => {
+    console.log(selectedItem);
     if (selectedItem) setSelected(selectedItem);
   }, [selectedItem]);
 
@@ -29,6 +27,7 @@ export default function CheckBox({
     if (selected.length === list.length)
       list.push(listItem.find((i) => i.id === item.id));
     setSelected(list);
+    filterValueChecked(list);
   };
 
   return (
@@ -47,7 +46,7 @@ export default function CheckBox({
         name={name}
         type={type}
         rules={rules}
-        value={selected.map((item) => item.id)}
+        // value={selected.map((item) => item.id)}
         onBlur={onBlur}
         tabIndex={0}
         className="relative cursor-default"
@@ -74,7 +73,7 @@ export default function CheckBox({
                       <div
                         style={{
                           visibility: `${
-                            selected.find((i) => i.id === item.id)
+                            selected?.find((i) => i.id === item.id)
                               ? "visible"
                               : "hidden"
                           }`,

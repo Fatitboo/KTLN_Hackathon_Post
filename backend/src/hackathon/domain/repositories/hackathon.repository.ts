@@ -3,7 +3,7 @@ import { GetAllRegisterUsersQueryProps } from 'src/hackathon/application/queries
 export const HACKATHON_REPOSITORY = 'HackathonRepository';
 
 export interface HackathonRepository {
-  findAll(page: number): Promise<any[]>;
+  findAll(userId: string | undefined, page: number): Promise<any[]>;
   findAllRegisterUser(props: GetAllRegisterUsersQueryProps): Promise<any>;
   findAllProject(id: string, type: string, page: number): Promise<any[]>;
   findById(id: string, userId?: string | undefined): Promise<any>;

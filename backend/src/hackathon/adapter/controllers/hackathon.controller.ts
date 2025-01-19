@@ -103,6 +103,18 @@ export class HackathonController {
   }
 
   @Get(':id/:type')
+  async getAllProjectHackathon(
+    @Param('id') id: string,
+    @Param('type') type: string,
+    @Query('page') page: number,
+  ): Promise<any[]> {
+    if (id == null) throw new Error('Id is empty');
+    const result = this.queryBus.execute(new GetProjectsQuery(id, type, page));
+
+    return result;
+  }
+
+  @Get('component/:id/:type')
   async getHackathonComponent(
     @Param('id') id: string,
     @Param('type') type: string,
@@ -636,18 +648,6 @@ export class HackathonController {
       onlines,
       inPerson,
     };
-  }
-
-  @Get('/:id/:type')
-  async getAllProjectHackathon(
-    @Param('id') id: string,
-    @Param('type') type: string,
-    @Query('page') page: number,
-  ): Promise<any[]> {
-    if (id == null) throw new Error('Id is empty');
-    const result = this.queryBus.execute(new GetProjectsQuery(id, type, page));
-
-    return result;
   }
 
   @Delete(':userId/delete/:id')

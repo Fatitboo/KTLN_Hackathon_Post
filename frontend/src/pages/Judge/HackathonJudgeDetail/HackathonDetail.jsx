@@ -14,7 +14,8 @@ import TeamProjectItem from "../../Company/ManageHackathon/HackathonDetail/TeamP
 import SearchInput from "../../../components/Seeker/SearchInput";
 import { CustomButton, Modal } from "../../../components";
 import CardProject from "../../../components/Seeker/CardProject";
-import { defaultAvt } from "../../../assets/images";
+import { backgroundSearch, defaultAvt } from "../../../assets/images";
+import { singleHackathon } from "../../../redux/slices/hackathons/hackathonsSlices";
 
 function HackathonJudgeDetail() {
   const { id, type } = useParams();
@@ -360,7 +361,7 @@ function HackathonJudgeDetail() {
           <div className=" flex bg-gray-400 opacity-70 py-3 mt-3 text-white text-normal">
             <div className="px-60 max-lg:px-2 ">
               <Link
-                to={`/Organizer/manage-hackathons/${id}/overview`}
+                to={`/Judge/judge-hackathons/${id}/overview`}
                 className={`py-4 px-4 hover:underline ${
                   type === "overview" ? "text-black opacity-100 bg-white" : ""
                 }`}
@@ -368,7 +369,7 @@ function HackathonJudgeDetail() {
                 Overview
               </Link>
               <Link
-                to={`/Organizer/manage-hackathons/${id}/teams`}
+                to={`/Judge/judge-hackathons/${id}/teams`}
                 className={`py-4 px-4 hover:underline ${
                   type === "teams" ? "text-black opacity-100 bg-white" : ""
                 }`}
@@ -376,7 +377,7 @@ function HackathonJudgeDetail() {
                 Teams
               </Link>
               <Link
-                to={`/Organizer/manage-hackathons/${id}/participants`}
+                to={`/Judge/judge-hackathons/${id}/participants`}
                 className={`py-4 px-4 hover:underline ${
                   type === "participants"
                     ? "text-black opacity-100 bg-white"
@@ -386,7 +387,7 @@ function HackathonJudgeDetail() {
                 Participants
               </Link>
               <Link
-                to={`/Organizer/manage-hackathons/${id}/resourses`}
+                to={`/Judge/judge-hackathons/${id}/resourses`}
                 className={`py-4 px-4 hover:underline ${
                   type === "resourses" ? "text-black opacity-100 bg-white" : ""
                 }`}
@@ -394,7 +395,7 @@ function HackathonJudgeDetail() {
                 Resourses
               </Link>
               <Link
-                to={`/Organizer/manage-hackathons/${id}/rules`}
+                to={`/Judge/judge-hackathons/${id}/rules`}
                 className={`py-4 px-4 hover:underline ${
                   type === "rules" ? "text-black opacity-100 bg-white" : ""
                 }`}
@@ -402,7 +403,7 @@ function HackathonJudgeDetail() {
                 Rules
               </Link>
               <Link
-                to={`/Organizer/manage-hackathons/${id}/project-gallery`}
+                to={`/Judge/judge-hackathons/${id}/project-gallery`}
                 className={`py-4 px-4 hover:underline ${
                   type === "project-gallery"
                     ? "text-black opacity-100 bg-white"
@@ -412,7 +413,7 @@ function HackathonJudgeDetail() {
                 Project gallery
               </Link>
               <Link
-                to={`/Organizer/manage-hackathons/${id}/updates`}
+                to={`/Judge/judge-hackathons/${id}/updates`}
                 className={`py-4 px-4 hover:underline ${
                   type === "updates" ? "text-black opacity-100 bg-white" : ""
                 }`}
@@ -420,7 +421,7 @@ function HackathonJudgeDetail() {
                 Updates
               </Link>
               <Link
-                to={`/Organizer/manage-hackathons/${id}/discussions`}
+                to={`/Judge/judge-hackathons/${id}/discussions`}
                 className={`py-4 px-4 hover:underline ${
                   type === "discussions"
                     ? "text-black opacity-100 bg-white"
@@ -428,6 +429,14 @@ function HackathonJudgeDetail() {
                 }`}
               >
                 Discussions
+              </Link>
+              <Link
+                to={`/Judge/judge-hackathons/${id}/judge`}
+                className={`py-4 px-4 hover:underline ${
+                  type === "judge" ? "text-black opacity-100 bg-white" : ""
+                }`}
+              >
+                Judge
               </Link>
             </div>
           </div>
@@ -462,7 +471,7 @@ function HackathonJudgeDetail() {
                       </ul>
                     </div>
                     <Link
-                      to={`/Organizer/manage-hackathons/${id}/rules`}
+                      to={`/Judge/judge-hackathons/${id}/rules`}
                       className="font-normal mt-5 text-blue-600"
                     >
                       View all rules
@@ -478,7 +487,7 @@ function HackathonJudgeDetail() {
         )}
         {type === "discussions" && <Discussion item={hackathon} user={user} />}
         {type === "updates" && <Updates item={hackathon} user={user} />}
-        {type === "teams" && (
+        {/* {type === "teams" && (
           <>
             <div className="px-60 max-lg:px-2 py-5 ">
               <div className="col-span-2">
@@ -591,8 +600,49 @@ function HackathonJudgeDetail() {
               </div>
             </div>
           </>
-        )}
+        )} */}
         {type === "project-gallery" && (
+          <>
+            <div className="px-60 max-lg:px-2 py-5 ">
+              <div>
+                <div className="mb-10 w-[90%] flex items-end">
+                  <SearchInput
+                    textPlaceholder={"Search project"}
+                    btnText={"Search project"}
+                  />
+                  <CustomButton
+                    onClick={handleAward}
+                    title={"Awarding"}
+                    containerStyles="h-[42px] bg-blue-600 w-fit font-medium text-white py-2 px-5 focus:outline-none hover:bg-blue-500 rounded-sm text-base border border-blue-600"
+                  />
+                </div>
+                <div className="my-5 grid grid-cols-4 max-md:grid-cols-1 gap-6">
+                  {[...projectGallery].map((card, index) => (
+                    <CardProject
+                      key={index}
+                      id={card.id}
+                      title={card.projectTitle}
+                      description={card.tagLine}
+                      image={card.thumnailImage}
+                      imgUser={defaultAvt}
+                      member={card.createdBy}
+                      isWinner={currentHackathon?.prizes
+                        ?.reduce(
+                          (acc, cur) =>
+                            cur.winnerList ? acc.concat(cur.winnerList) : acc,
+                          []
+                        )
+                        ?.includes(card.id)}
+                      votes={Math.floor(Math.random() * 21)}
+                      comments={Math.floor(Math.random() * 11)}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+        {type === "judge" && (
           <>
             <div className="px-60 max-lg:px-2 py-5 ">
               <div>

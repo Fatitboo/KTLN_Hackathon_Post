@@ -76,7 +76,9 @@ function HackathonSubmissions({ formId, formSubmit }) {
   }
 
   useEffect(() => {
-    fetch(`http://localhost:3000/api/v1/hackathons/${param.id}/${formId}`)
+    fetch(
+      `http://localhost:3000/api/v1/hackathons/component/${param.id}/${formId}`
+    )
       .then((response) => response.json())
       .then((result) => {
         const { start, deadline, ...rest } = result.submissions;

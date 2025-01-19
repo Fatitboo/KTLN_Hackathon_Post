@@ -34,6 +34,7 @@ import { sendEmail } from 'src/user/domain/services/email.service';
 import { templateInviteJudgeHTML } from 'src/hackathon/infrastructure/constants/template-email-invite-judge';
 import { UserType } from 'src/user/domain/entities/user.entity';
 import * as bcrypt from 'bcrypt';
+import { templateInviteConfirmHTML } from 'src/hackathon/infrastructure/constants/template-email-confirm';
 
 @Controller('hackathons')
 export class HackathonController {
@@ -52,7 +53,20 @@ export class HackathonController {
   async getAllHackathons(
     @Query('userId') userId: string,
     @Query('page') page: number,
+    @Query('isJudge') isJudge: boolean,
   ) {
+    if (isJudge) {
+      const user = await this.userModel
+        .findById(userId)
+        .populate({
+          path: 'judgesHackathons',
+          model: 'HackathonDocument',
+        })
+        .exec();
+
+      if (!user) return [];
+      return user.judgesHackathons;
+    }
     return await this.queryBus.execute(new GetHackathonsQuery(userId, page));
   }
 
@@ -146,6 +160,7 @@ export class HackathonController {
   @Post('invite-judge/:id')
   async inviteJudge(
     @Param('id') id: string,
+    @Query('judgeId') judgeId: string,
     @Query('emails') emails: string,
     @Query('receiver') receiverName: string,
   ) {
@@ -156,7 +171,7 @@ export class HackathonController {
       .select('user user hackathonName location judgingPeriod');
     await Promise.all(
       emailArray.map((email) => {
-        const link = `http://localhost:5173/Hackathon-detail/${id}/auto-register-judge?id=${id}&name=${encodeURIComponent(receiverName)}&email=${email}`;
+        const link = `http://localhost:5173/Hackathon-detail/${id}/auto-register-judge?id=${id}&name=${encodeURIComponent(receiverName)}&email=${email}&judgeId=${judgeId}`;
 
         sendMailInviteJudge(
           id,
@@ -180,19 +195,41 @@ export class HackathonController {
   @Post('accept-invite-judge/:id')
   async acceptInvitation(
     @Param('id') hackathonId: string,
-    @Body() body: { name: string; email: string },
+    @Body() body: { name: string; email: string; judge: string },
   ) {
-    console.log('dô');
     const exitUser = await this.userModel.findOne({ email: body.email }).exec();
+    const exitHackathon = await this.hackathonModel
+      .findById(hackathonId)
+      .exec();
+    if (!exitHackathon) throw new Error('Hackathon is not exit');
     if (exitUser) {
       if (!exitUser.userType.find((item) => item === UserType.JUDGE)) {
         exitUser.userType.push(UserType.JUDGE);
       }
       let list = exitUser.judgesHackathons;
       if (!list) list = [];
-      list.push(new Types.ObjectId(hackathonId));
+      const hackathonObjId = new Types.ObjectId(hackathonId);
+      if (!exitUser.judgesHackathons.includes(hackathonObjId)) {
+        list.push(hackathonObjId);
+      }
       exitUser.judgesHackathons = list;
       await exitUser.save();
+      await this.hackathonModel.findOneAndUpdate(
+        { _id: hackathonId, 'judges.id': Number(body.judge) },
+        { $set: { 'judges.$.userId': exitUser._id } },
+        { new: true },
+      );
+
+      await sendEmail(
+        body.email,
+        templateInviteConfirmHTML(
+          'old',
+          `http://localhost:5173/user-auth/login`,
+          body.name,
+        ),
+        'Confirmation email',
+        'Confirmation email',
+      );
     } else {
       const salt = await bcrypt.genSalt(10);
       const password = await bcrypt.hash(generatePassword(), salt);
@@ -205,8 +242,24 @@ export class HackathonController {
         avatar:
           'https://firebasestorage.googleapis.com/v0/b/englishvoc-43d5a.appspot.com/o/images%2FavatarDefault.png?alt=media&token=59aae8c1-2129-46ca-ad75-5dad1b119188',
         userType: [UserType.JUDGE],
+        judgesHackathons: [new Types.ObjectId(hackathonId)],
       });
       const user = await createdUser.save();
+      await this.hackathonModel.findOneAndUpdate(
+        { _id: hackathonId, 'judges.id': Number(body.judge) },
+        { $set: { 'judges.$.userId': user._id } },
+        { new: true },
+      );
+      await sendEmail(
+        body.email,
+        templateInviteConfirmHTML(
+          'old',
+          `http://localhost:5173/user-auth/login`,
+          body.name,
+        ),
+        'Confirmation email',
+        'Confirmation email',
+      );
     }
 
     return {

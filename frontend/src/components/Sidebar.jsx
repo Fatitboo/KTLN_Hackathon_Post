@@ -47,7 +47,10 @@ function Sidebar({ user }) {
   };
   const handleSwitchToSeeker = () => {
     var getUserAuth = JSON.parse(localStorage.getItem("userInfo"));
-    getUserAuth.user.userType = ["seeker"];
+    if (getUserAuth.user.userType.includes("judge")) {
+      getUserAuth.user.userType = ["judge"];
+    }
+    getUserAuth.user.userType.push("seeker");
     localStorage.setItem("userInfo", JSON.stringify(getUserAuth));
     window.location.href = "/Seeker-detail/my-porfolio/Projects";
   };
@@ -349,7 +352,7 @@ function Sidebar({ user }) {
               </div>
             </div>
           </div>
-        ) : (
+        ) : user?.userType?.includes("seeker") ? (
           <div className="relative w-full l-0 m-0 p-0">
             <div
               className={classNames(
@@ -430,6 +433,49 @@ function Sidebar({ user }) {
                 <MdReportGmailerrorred className="relative mr-4 ml-4 text-2xl text-center " />
                 Change password
               </Link>
+            </div>
+            <div className={itemStyle}>
+              <div
+                onClick={handleLogout}
+                className="cursor-pointer relative text-sm text-center p-3 flex items-center leading-7 font-normal  capitalize rounded-lg "
+              >
+                <AiOutlineLogout className="relative mr-4 ml-4 text-2xl text-center " />
+                Logout
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="relative w-full l-0 m-0 p-0">
+            <div
+              className={classNames(
+                isActive === "JudgeHackathon" ? activeStyle : "",
+                itemStyle
+              )}
+            >
+              <Link
+                onClick={() =>
+                  dispatch(isActiveSidebarAction("JudgeHackathon"))
+                }
+                to="/Judge/manage-hackathons"
+                className="relative text-sm text-center p-3 flex items-center leading-7 font-normal  capitalize rounded-lg "
+              >
+                <LuNetwork className="relative mr-4 ml-4 text-2xl text-center " />
+                Judge Hackathons
+              </Link>
+            </div>
+            <div
+              className={classNames(
+                isActive === "Find Seeker" ? activeStyle : "",
+                itemStyle
+              )}
+            >
+              <div
+                onClick={handleSwitchToSeeker}
+                className="relative text-sm text-center p-3 flex items-center leading-7 font-normal  capitalize rounded-lg "
+              >
+                <MdAccessibility className="relative mr-4 ml-4 text-2xl text-center " />
+                Switch to Seeker
+              </div>
             </div>
             <div className={itemStyle}>
               <div

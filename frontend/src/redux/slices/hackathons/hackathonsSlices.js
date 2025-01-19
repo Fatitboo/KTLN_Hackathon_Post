@@ -8,19 +8,9 @@ export const getAllHackathons = createAsyncThunk(
   "hackathons/getAllHackathons",
   async (payload, { rejectWithValue, getState, dispatch }) => {
     try {
-      // const user = getState()?.users;
-      // const { userAuth } = user;
-      // // http call
-      // const config = {
-      //     headers: {
-      //         Authorization: `Bearer ${userAuth?.user?.token}`,
-      //         'Content-Type': 'application/json',
-      //     },
-      // };
-
-      const { data } = await axios.get(
-        `${baseUrl}/${apiPrefix}?userId=${payload.userId}`
-      );
+      const { data } = await axios.get(`${baseUrl}/${apiPrefix}`, {
+        params: payload, // Query parameters added here
+      });
       return data;
     } catch (error) {
       if (!error?.response) {

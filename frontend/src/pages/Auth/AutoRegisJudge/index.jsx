@@ -11,6 +11,7 @@ function AutoRegisterJudge() {
   const params = new URLSearchParams(queryString);
   const name = params.get("name");
   const email = params.get("email");
+  const judgeId = params.get("judgeId");
   const id = params.get("id");
   const storeData = useSelector((store) => store.users);
   const user = storeData?.userAuth?.user;
@@ -23,6 +24,7 @@ function AutoRegisterJudge() {
         {
           name: name,
           email: email,
+          judge: judgeId,
         },
         {
           withCredentials: true,

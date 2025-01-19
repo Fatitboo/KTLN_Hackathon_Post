@@ -4,6 +4,7 @@ import {
   AdminRoutes,
   seekerRoutes,
   corRoutes,
+  judgeRoutes,
 } from "./routes/index.js";
 import { useSelector } from "react-redux";
 
@@ -80,6 +81,23 @@ function App() {
         </Route>
         <Route element={<Layout user={user} role={"organizer"} />}>
           {corRoutes.map((route, index) => {
+            const Layout = route.layout;
+            const Page = route.component;
+            return (
+              <Route
+                key={index}
+                path={route.path}
+                element={
+                  <Layout user={user}>
+                    <Page />
+                  </Layout>
+                }
+              />
+            );
+          })}
+        </Route>
+        <Route element={<Layout user={user} role={"judge"} />}>
+          {judgeRoutes.map((route, index) => {
             const Layout = route.layout;
             const Page = route.component;
             return (

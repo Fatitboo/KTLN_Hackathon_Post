@@ -25,10 +25,21 @@ function MenuList({ user, onClick }) {
   };
   const handleSwitchRole = () => {
     var getUserAuth = JSON.parse(localStorage.getItem("userInfo"));
+    if (getUserAuth.user.userType.includes("judge")) {
+      getUserAuth.user.userType = ["judge"];
+    }
     getUserAuth.user.userType.push("organizer");
     localStorage.setItem("userInfo", JSON.stringify(getUserAuth));
     window.location.href = "/Organizer/dashboard";
   };
+
+  const handleSwitchJudgeRole = () => {
+    var getUserAuth = JSON.parse(localStorage.getItem("userInfo"));
+    getUserAuth.user.userType = ["judge"];
+    localStorage.setItem("userInfo", JSON.stringify(getUserAuth));
+    window.location.href = "/Judge/manage-hackathons";
+  };
+
   return (
     <div>
       <Menu as="div" className="inline-block text-left text-blue-600">
@@ -89,18 +100,23 @@ function MenuList({ user, onClick }) {
                   </div>
                 )}
               </Menu.Item>
-              {/* <Menu.Item>
-                {({ active }) => (
-                  <Link
-                    to={"/Seeker/dashboard"}
-                    className={`${
-                      active ? "bg-blue-500 text-white" : "text-gray-900"
-                    } group flex w-full items-center rounded-sm p-2 text-sm `}
-                  >
-                    {"Help"}
-                  </Link>
-                )}
-              </Menu.Item> */}
+
+              {JSON.parse(
+                localStorage.getItem("userInfo")
+              )?.user?.userType?.includes("judge") && (
+                <Menu.Item>
+                  {({ active }) => (
+                    <div
+                      onClick={handleSwitchJudgeRole}
+                      className={`${
+                        active ? "bg-blue-500 text-white" : "text-gray-900"
+                      } group flex w-full items-center rounded-sm p-2 text-sm`}
+                    >
+                      {"Judge Hackathon"}
+                    </div>
+                  )}
+                </Menu.Item>
+              )}
               <Menu.Item>
                 {({ active }) => (
                   <div

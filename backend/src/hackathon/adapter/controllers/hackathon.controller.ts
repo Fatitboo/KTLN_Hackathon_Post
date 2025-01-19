@@ -439,13 +439,14 @@ export class HackathonController {
 
     if (body.hackathonLeans.length === 0) {
       recommendHackathons = await this.hackathonModel
-        .find()
+        .find({ block: false })
         .sort({ registerUsers: -1 })
         .limit(10)
         .exec();
     } else {
       recommendHackathons = await this.hackathonModel
         .find({
+          block: false,
           hackathonIntegrateId: {
             $in: body.hackathonLeans.map((item) => item.hackathon_id),
           },
@@ -456,6 +457,7 @@ export class HackathonController {
     }
     const onlines = await this.hackathonModel
       .find({
+        block: false,
         location: {
           $in: ['Online'],
         },
@@ -465,6 +467,7 @@ export class HackathonController {
       .exec();
     const inPerson = await this.hackathonModel
       .find({
+        block: false,
         location: {
           $nin: ['Online'],
         },

@@ -182,12 +182,12 @@ function UserPorfolio() {
           <div className="mt-10">
             {type === "Projects" && (
               <>
-                <div className=" max-lg:grid-cols-1 gap-10">
+                <div className=" max-lg:grid-cols-2 max-sm:grid-cols-1 gap-10">
                   <div>
                     <div
                       className={`my-5 grid ${
                         id !== undefined ? "grid-cols-4" : "grid-cols-3"
-                      }  max-w-60:grid-cols-3 max-md:grid-cols-1 gap-6`}
+                      }  max-w-60:grid-cols-3 max-xl:grid-cols-1 gap-6`}
                     >
                       {(uProfile?.projects || []).map((card, index) => (
                         <div className="relative group">
@@ -229,7 +229,7 @@ function UserPorfolio() {
                 <div className=" max-lg:grid-cols-1 gap-10">
                   <div>
                     <div
-                      className={`my-5 grid mr-20 max-w-60:grid-cols-3 max-md:grid-cols-1 gap-6`}
+                      className={`my-5 grid mr-20 max-w-60:grid-cols-3 max-xl:grid-cols-1 gap-6`}
                     >
                       {(
                         (uProfile?.registerHackathons || []).filter(
@@ -280,7 +280,7 @@ function UserPorfolio() {
                 <div className=" max-lg:grid-cols-2 gap-10">
                   <div>
                     <div
-                      className={`my-5 grid grid-cols-2 mr-20 max-w-60:grid-cols-2 max-md:grid-cols-2 gap-2`}
+                      className={`my-5 grid grid-cols-2 mr-20 max-w-60:grid-cols-2 max-xl:grid-cols-2 gap-2`}
                     >
                       {getRandomElements(achievements).map((item, index) => {
                         return (

@@ -105,8 +105,8 @@ function BrowerHackathons() {
       {/* Popular hackthon */}
       <></>
       <div>
-        <div className="grid grid-cols-12 max-md:grid-cols-1 max-md:mt-1 gap-4 w-full h-full max-md:px-4 px-60">
-          <div className="col-span-3 max-md:col-span-1 max-md:mt-1 mt-36">
+        <div className="grid grid-cols-12 max-xl:grid-cols-1 max-xl:mt-1 gap-4 w-full h-full max-xl:px-4 px-60">
+          <div className="col-span-3 max-xl:col-span-1 max-xl:mt-1 mt-36">
             <div className="flex items-center">
               <div
                 className="text-blue-600 cursor-pointer"
@@ -277,7 +277,7 @@ function BrowerHackathons() {
               </div>
             </div>
           </div>
-          <div className="col-span-9 max-md:col-span-1 pl-5 pb-5">
+          <div className="col-span-9 max-xl:col-span-1 pl-5 pb-5">
             <div className="">
               <SearchInput
                 searchTerm={searchTerm}

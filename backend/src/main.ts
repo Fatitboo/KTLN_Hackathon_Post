@@ -6,7 +6,6 @@ import { LoggerService } from './shared/infrastructure/logger/logger.service';
 import { AllExceptionFilter } from './shared/infrastructure/common/filter/exception.filter';
 import { LoggingInterceptor } from './shared/infrastructure/common/interceptors/logging.interceptor';
 import { ResponseFormat } from './shared/infrastructure/common/interceptors/response.interceptor';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -37,21 +36,6 @@ async function bootstrap() {
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
-  // swagger config
-  if (env !== 'production') {
-    const config = new DocumentBuilder()
-      .addBearerAuth()
-      .setTitle('HackaDev')
-      .setDescription('Website support organize Hackathons')
-      .setVersion('1.0')
-      .build();
-    const document = SwaggerModule.createDocument(app, config, {
-      extraModels: [ResponseFormat],
-      deepScanRoutes: true,
-    });
-    SwaggerModule.setup('api', app, document);
-  }
-  console.log(process.env.PORT);
   await app.listen(process.env.PORT);
 }
 bootstrap();

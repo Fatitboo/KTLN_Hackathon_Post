@@ -6,6 +6,7 @@ import accountVericationSlices from "../slices/accountVerication/accountVericati
 import vacanciesSlices from "../slices/vacancies/vacanciesSlices";
 import projectsSlices from "../slices/projects/projectsSlices";
 import hackathonsSlices from "../slices/hackathons/hackathonsSlices";
+import chatSlices from "../slices/chat/chatSlices";
 const store = configureStore({
   reducer: {
     users: usersSlices.reducer,
@@ -15,6 +16,7 @@ const store = configureStore({
     vacancies: vacanciesSlices.reducer,
     projects: projectsSlices.reducer,
     hackathons: hackathonsSlices.reducer,
+    chats: chatSlices.reducer,
   },
 });
 export default store;

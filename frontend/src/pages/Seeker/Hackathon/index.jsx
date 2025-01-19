@@ -84,9 +84,6 @@ function HackathonDetail() {
           />
         </div>
         {/* //recommend team hackathons */}
-        <div className="fixed bottom-12 right-12 z-10">
-          <RecommendTeamChat />
-        </div>
       </div>
     </>
   );

@@ -113,7 +113,7 @@ export class MongooseHackathonRepository implements HackathonRepository {
       }
 
       // Kiểm tra specialty, skills và interestedIn
-      const setting = user.settingRecommend || {};
+      const setting = user?.settingRecommend || {};
       if (specialty && !specialty.includes(setting.specialty)) {
         return false;
       }
@@ -172,16 +172,13 @@ export class MongooseHackathonRepository implements HackathonRepository {
     };
   }
 
-  async findAll(page: number): Promise<HackathonDocument[]> {
+  async findAll(page: number): Promise<any[]> {
     const hackathons = await this.hackathonModel.find().lean().exec();
     if (!hackathons) return [];
     return hackathons;
   }
 
-  async findById(
-    id: string,
-    userId?: string | undefined,
-  ): Promise<HackathonDocument | null> {
+  async findById(id: string, userId?: string | undefined): Promise<any> {
     const hackathon = await this.hackathonModel.findById(id).lean().exec();
     if (!hackathon) return null;
     if (hackathon.hackathonIntegrateId && userId) {

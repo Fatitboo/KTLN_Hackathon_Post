@@ -65,7 +65,7 @@ function MyProject() {
             <div>Nothing to show. You have to register hackathon</div>
           )}
           <div>
-            <div className="my-5 grid grid-cols-2 max-md:grid-cols-1 gap-6">
+            <div className="my-5 grid grid-cols-2 max-xl:grid-cols-1 gap-6">
               {itemProject?.map((card, index) => (
                 <CardProject
                   key={index}

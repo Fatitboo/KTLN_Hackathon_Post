@@ -68,7 +68,7 @@ function ProjectGallery() {
           <dic className="text-gray-600">
             Showing {currentProjects.length ?? 0} in {total} projects
           </dic>
-          <div className="my-5 grid grid-cols-4 max-md:grid-cols-1 gap-6">
+          <div className="my-5 grid grid-cols-4 max-xl:grid-cols-1 gap-6">
             {(currentProjects || []).map((card, index) => (
               <CardProject
                 id={card?._id}

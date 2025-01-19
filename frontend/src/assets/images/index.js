@@ -43,3 +43,5 @@ export { default as a5 } from "./a5.png";
 export { default as a6 } from "./a6.png";
 export { default as a7 } from "./a7.png";
 export { default as a8 } from "./a8.png";
+export { default as chatIcon } from "./chat-icon.png";
+export { default as groupChat } from "./group-chat.jpg";

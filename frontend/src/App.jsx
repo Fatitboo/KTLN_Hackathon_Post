@@ -6,6 +6,7 @@ import {
   corRoutes,
 } from "./routes/index.js";
 import { useSelector } from "react-redux";
+import ChatManageScreen from "./components/Chat/ChatManageScreen.jsx";
 
 function Layout({ user, role }) {
   const location = useLocation();
@@ -148,6 +149,11 @@ function App() {
           );
         })}
       </Routes>
+      {user && (
+        <div className="fixed bottom-12 right-12 z-10">
+          <ChatManageScreen user={user} />
+        </div>
+      )}
     </main>
   );
 }

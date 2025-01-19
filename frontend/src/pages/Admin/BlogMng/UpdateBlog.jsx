@@ -61,7 +61,7 @@ function UpdateBlog() {
           if (data) {
             Swal.fire({
               title: "Updated!",
-              text: "This report has been updated.",
+              text: "This blog has been updated.",
               icon: "success",
               confirmButtonText: "OK",
               allowOutsideClick: false,

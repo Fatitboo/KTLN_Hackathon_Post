@@ -78,11 +78,11 @@ function BrowerBlogs() {
         </p>
         <img src={adsBlog} />
       </div>
-      <div className="max-md:px-4 px-60">
+      <div className="max-xl:px-4 px-60">
         {/* Popular hackthon */}
         <></>
         <div>
-          <div className="max-md:mt-1 gap-4 w-full h-full ">
+          <div className="max-xl:mt-1 gap-4 w-full h-full ">
             <div>
               <div className="">
                 <SearchInput
@@ -93,7 +93,7 @@ function BrowerBlogs() {
                   handleSearch={handleSearch}
                 />
               </div>
-              <div className=" max-md:mt-1 mt-5">
+              <div className=" max-xl:mt-1 mt-5">
                 <div className="flex items-center text-sm text-gray-600 font-normal">
                   {/* Interest Tags Section */}
                   <div className="mt-3 mr-10">
@@ -135,7 +135,7 @@ function BrowerBlogs() {
                   Showing {currentBlogs.length ?? 0} in {total} blogs
                 </dic>
               </div>
-              <div className="my-5 grid grid-cols-3 max-md:grid-cols-1 gap-10">
+              <div className="my-5 grid grid-cols-3 max-md:grid-cols-1 max-xl:grid-cols-2 gap-10">
                 {(currentBlogs || []).map((card, index) => (
                   <CardBlog
                     id={card?._id}

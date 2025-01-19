@@ -137,7 +137,7 @@ const HackathonItem = ({
         </div>
         {/* The right tag  when hover*/}
         <div
-          className={`max-md:opacity-0 absolute z-0 inset-y-0 ${
+          className={`max-xl:opacity-0 absolute z-0 inset-y-0 ${
             isExtended ? "right-3" : "right-0"
           } flex items-center opacity-0 group-hover:opacity-100 transition-opacity duration-0 transform group-hover:translate-x-full`}
         >
@@ -150,7 +150,7 @@ const HackathonItem = ({
           </div>
         </div>
         {/* The left tag when hover */}
-        <div className="max-md:opacity-0 absolute z-0 inset-y-0 left-0 flex items-center opacity-0 group-hover:opacity-100 transition-opacity duration-0 transform group-hover:-translate-x-full">
+        <div className="max-xl:opacity-0 absolute z-0 inset-y-0 left-0 flex items-center opacity-0 group-hover:opacity-100 transition-opacity duration-0 transform group-hover:-translate-x-full">
           <div
             className={`${
               isFeature ? "" : "bg-[#21a196] w-[2px]"

@@ -30,15 +30,15 @@ function BrowserProducts() {
       {
         <>
           <div className="min-h-[800px]">
-            <div className=" max-md:block flex justify-between items-center py-5 px-60 max-md:px-4 bg-[#F1F8FA]">
+            <div className=" max-xl:block flex justify-between items-center py-5 px-60 max-xl:px-4 bg-[#F1F8FA]">
               <div className="flex items-center">
                 <h4 className="font-semibold mr-4">YOUR HACKATHON</h4>
                 {userProfile?.registerHackathons?.length ?? 0} opens
               </div>
             </div>
-            <div className="px-60 max-md:px-4">
+            <div className="px-60 max-xl:px-4">
               <h4 className="font-semibold mr-4 my-5">Submissions opens</h4>
-              <div className="grid grid-cols-2 max-md:grid-cols-1 max-md:gap-0 gap-5">
+              <div className="grid grid-cols-2 max-xl:grid-cols-1 max-xl:gap-0 gap-5">
                 {(userProfile?.registerHackathons || []).map(
                   (hackathon, index) => {
                     return (

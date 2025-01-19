@@ -610,7 +610,7 @@ function HackathonCorDetail() {
                     containerStyles="h-[42px] bg-blue-600 w-fit font-medium text-white py-2 px-5 focus:outline-none hover:bg-blue-500 rounded-sm text-base border border-blue-600"
                   />
                 </div>
-                <div className="my-5 grid grid-cols-4 max-md:grid-cols-1 gap-6">
+                <div className="my-5 grid grid-cols-4 max-xl:grid-cols-1 gap-6">
                   {[...projectGallery].map((card, index) => (
                     <CardProject
                       key={index}

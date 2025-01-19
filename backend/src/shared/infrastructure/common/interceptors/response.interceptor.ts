@@ -4,18 +4,13 @@ import {
   ExecutionContext,
   CallHandler,
 } from '@nestjs/common';
-import { ApiProperty } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 export class ResponseFormat<T> {
-  @ApiProperty()
   isArray: boolean;
-  @ApiProperty()
   path: string;
-  @ApiProperty()
   duration: string;
-  @ApiProperty()
   method: string;
 
   data: T;

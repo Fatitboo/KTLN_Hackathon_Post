@@ -17,7 +17,9 @@ export class SearchFilterHackathonsHandler
   async execute(qr: SearchFilterHackathonsQuery): Promise<any> {
     const { search, location, status, length, tags, hosts, sort, page, limit } =
       qr.props;
-    const query: any = {};
+    const query: any = {
+      block: false,
+    };
     const orQuery: any = [];
     // Search
     if (search && search !== '') {

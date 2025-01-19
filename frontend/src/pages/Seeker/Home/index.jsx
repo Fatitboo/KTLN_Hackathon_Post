@@ -85,7 +85,7 @@ function Home() {
             className=" grid grid-cols-12 gap-3 w-full h-full bg-no-repeat bg-cover pt-5 pb-20"
             style={{ backgroundImage: `url(${backgroundSearch})` }}
           >
-            <div className="col-span-7 pt-12 pl-60 max-md:pl-4 pr-20 pb-20 relative">
+            <div className="col-span-7 pt-12 pl-60 max-xl:pl-4 pr-20 pb-20 relative">
               {/* Introduce */}
               <h1 className="text-5xl font-bold leading-[60px]">
                 The home for
@@ -164,7 +164,7 @@ function Home() {
       {/* Popular hackthon */}
 
       {user && (
-        <div className="px-96 max-md:px-4">
+        <div className="px-96 max-xl:px-4">
           <div className="">
             <SearchInput
               searchTerm={searchTerm}
@@ -176,8 +176,8 @@ function Home() {
       )}
       <></>
       <div>
-        <div className="grid grid-cols-12 max-md:grid-cols-1 gap-4 mt-12 w-full h-full">
-          <div className="col-span-6 max-md:col-span-1 max-md:pl-4 pl-60 pr-5 pb-5">
+        <div className="grid grid-cols-12 max-xl:grid-cols-1 gap-4 mt-12 w-full h-full">
+          <div className="col-span-6 max-xl:col-span-1 max-xl:pl-4 pl-60 pr-5 pb-5">
             {/* Title */}
             <div className="flex justify-between items-end">
               <h3 className="font-semibold">Hackathons for you</h3>
@@ -224,7 +224,7 @@ function Home() {
             </div>
           </div>
 
-          <div className="col-span-6 max-md:col-span-1 pr-60 max-md:pr-4 pl-16">
+          <div className="col-span-6 max-xl:col-span-1 pr-60 max-xl:pr-4 pl-16">
             <div className="flex justify-between items-end">
               <h3 className="font-semibold">Top Hackathons themes</h3>
             </div>
@@ -292,7 +292,7 @@ function Home() {
 
       <div className="pb-10 bg-gradient-to-tl from-[#6373E0] via-[#1F78D1] to-[#23A197] mt-10 ">
         <div>
-          <div className="flex justify-between items-end px-60 max-md:px-4 py-8">
+          <div className="flex justify-between items-end px-60 max-xl:px-4 py-8">
             <h2 className="font-semibold text-white">
               Featured online hackathons
             </h2>
@@ -301,7 +301,7 @@ function Home() {
               containerStyles="text-blue-800 font-medium py-2 px-5 bg-white focus:outline-none hover:bg-gray-50 rounded-sm text-base  border border-blue-800"
             />
           </div>
-          <div className="grid grid-cols-2 max-md:grid-cols-1 gap-5 max-md:gap-1 max-md:px-4 px-60">
+          <div className="grid grid-cols-2 max-xl:grid-cols-1 gap-5 max-xl:gap-1 max-xl:px-4 px-60">
             {(onlines.filter((i) => i.id !== null) || []).map(
               (hackathon, index) => {
                 return (
@@ -336,7 +336,7 @@ function Home() {
           </div>
         </div>
         <div className="mt-6">
-          <div className="flex justify-between items-end px-60 max-md:px-4 py-8">
+          <div className="flex justify-between items-end px-60 max-xl:px-4 py-8">
             <h2 className="font-semibold text-white">
               Featured in-person hackathons
             </h2>
@@ -345,7 +345,7 @@ function Home() {
               containerStyles="text-blue-800 font-medium py-2 px-5 bg-white focus:outline-none hover:bg-gray-50 rounded-sm text-base  border border-blue-800"
             />
           </div>
-          <div className="grid grid-cols-2 max-md:grid-cols-1 gap-5 max-md:gap-1 max-md:px-4 px-60">
+          <div className="grid grid-cols-2 max-xl:grid-cols-1 gap-5 max-xl:gap-1 max-xl:px-4 px-60">
             {(inPersons.filter((i) => i.id !== null) || []).map(
               (hackathon, index) => {
                 return (

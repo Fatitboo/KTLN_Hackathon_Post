@@ -12,6 +12,9 @@ import { ProjectModule } from './project/project.module';
 import { InvoiceModule } from './invoice/invoice.module';
 import { SubscriptionModule } from './subscription/subscription.module';
 import { SubscriptionTypeModule } from './subscription_type/subscription-type.module';
+import { SocketModule } from './socket/socket.module';
+import { MessageModule } from './message/message.module';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
@@ -33,11 +36,14 @@ import { SubscriptionTypeModule } from './subscription_type/subscription-type.mo
     ]),
     UserModule,
     HackathonModule,
+    SocketModule,
     BlogModule,
     ProjectModule,
     InvoiceModule,
     SubscriptionModule,
     SubscriptionTypeModule,
+    MessageModule,
+    ChatModule,
   ],
   controllers: [],
   providers: [

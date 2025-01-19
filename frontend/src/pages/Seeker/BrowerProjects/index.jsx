@@ -102,11 +102,11 @@ function BrowerProjects() {
           containerStyles="bg-[#21a196] w-fit font-medium text-white py-2 px-5 focus:outline-none hover:bg-blue-500 rounded-sm text-base"
         />
       </div>
-      <div className="max-md:px-4 px-60">
+      <div className="max-xl:px-4 px-60">
         {/* Popular hackthon */}
         <></>
         <div>
-          <div className="max-md:mt-1 gap-4 w-full h-full ">
+          <div className="max-xl:mt-1 gap-4 w-full h-full ">
             <div>
               <div className="">
                 <SearchInput
@@ -117,7 +117,7 @@ function BrowerProjects() {
                   handleSearch={handleSearch}
                 />
               </div>
-              <div className=" max-md:mt-1 mt-5">
+              <div className=" max-xl:mt-1 mt-5">
                 <div className="flex items-center">
                   <div
                     className="text-blue-600 cursor-pointer"
@@ -127,7 +127,7 @@ function BrowerProjects() {
                   </div>
                   <div className="ml-6 rounded-[3px] bg-blue-50 px-3 py-1 text-blue-700 text-sm my-1 mr-2"></div>
                 </div>
-                <div className="grid grid-cols-4 max-md:grid-cols-1 text-sm text-gray-600 font-normal">
+                <div className="grid grid-cols-4 max-xl:grid-cols-2 text-sm text-gray-600 font-normal">
                   <div className="mb-4 ">
                     <div className=" font-semibold mb-2 mt-5">
                       Projects include
@@ -233,7 +233,7 @@ function BrowerProjects() {
                   </div>
                 </div>
               </div>
-              <div className="my-5 grid grid-cols-4 max-md:grid-cols-1 gap-6">
+              <div className="my-5 grid grid-cols-4 max-xl:grid-cols-2 gap-6">
                 {(currentProjects || []).map((card, index) => (
                   <CardProject
                     id={card?._id}

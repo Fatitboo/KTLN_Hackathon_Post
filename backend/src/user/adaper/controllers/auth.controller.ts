@@ -21,7 +21,6 @@ import { RegisterUserCommand } from 'src/user/application/commands/register-user
 import { CreateUserDto } from '../dto/create-user.dto';
 import { AuthenticationService } from 'src/user/domain/services/auth.service';
 import { JwtAuthGuard } from 'src/user/domain/common/guards/jwtAuth.guard';
-import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import JwtRefreshGuard from 'src/user/domain/common/guards/jwtRefresh.guard';
 import { GoogleOAuthGuard } from 'src/user/domain/common/guards/google-oauth.guard';
 import { LoginUserCommand } from 'src/user/application/commands/login/login-user.command';
@@ -34,7 +33,6 @@ import {
 import { Auth2Service } from '../services/auth2.service';
 import axios from 'axios';
 import { AuthGuard } from '@nestjs/passport';
-import { Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -170,8 +168,6 @@ export class AuthController {
 
   @HttpCode(200)
   @Post('log-in')
-  @ApiBearerAuth()
-  @ApiOperation({ description: 'login' })
   async logIn(
     @Request() request: any,
     @Body() body: LoginUserDto,
@@ -195,7 +191,6 @@ export class AuthController {
   @HttpCode(200)
   @Get('logout/:id')
   @UseGuards(JwtAuthGuard)
-  @ApiOperation({ description: 'logout' })
   async logout(@Request() request: any, @Param('id') id: string) {
     const { user } = request;
     console.log('🚀 ~ AuthController ~ logout ~ user:', user);
@@ -210,7 +205,6 @@ export class AuthController {
 
   @Get('refresh')
   @UseGuards(JwtRefreshGuard)
-  @ApiBearerAuth()
   async refresh(@Req() request: any) {
     const { user } = request;
 

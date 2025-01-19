@@ -23,10 +23,7 @@ export class MongooseHackathonRepository implements HackathonRepository {
     @InjectModel(InteractionDocument.name)
     private readonly interactionModel: Model<InteractionDocument>,
   ) {}
-  async getHackathonComponent(
-    id: string,
-    type: string,
-  ): Promise<HackathonDocument | null> {
+  async getHackathonComponent(id: string, type: string): Promise<any> {
     let getter = '';
     switch (type) {
       case 'form-hackathon-essential':

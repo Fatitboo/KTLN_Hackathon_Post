@@ -31,6 +31,7 @@ export class Hackathon {
     public prizes: Prize[],
     public block: boolean,
     public location: string,
+    public criteriaScore: Range,
   ) {}
   setId(id: string) {
     this.id = id;

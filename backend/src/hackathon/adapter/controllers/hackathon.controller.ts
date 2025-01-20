@@ -35,6 +35,8 @@ import { templateInviteJudgeHTML } from 'src/hackathon/infrastructure/constants/
 import { UserType } from 'src/user/domain/entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { templateInviteConfirmHTML } from 'src/hackathon/infrastructure/constants/template-email-confirm';
+import { ProjectDocument } from 'src/project/infrastructure/database/schemas';
+import { Project } from 'src/project/domain/entities/project.entity';
 
 @Controller('hackathons')
 export class HackathonController {
@@ -100,6 +102,32 @@ export class HackathonController {
   @Get(':id')
   async getHackathon(@Param('id') id: string, @Query('userId') userId: string) {
     return await this.queryBus.execute(new GetHackathonQuery(id, userId));
+  }
+
+  @Get('judges-project/:id')
+  async getJudgeProject(
+    @Param('id') id: string,
+    @Query('judgeId') judgeId: string,
+  ) {
+    const judgeProject = await this.hackathonModel.aggregate([
+      { $match: { _id: new Types.ObjectId(id) } },
+      {
+        $project: {
+          judges: {
+            $filter: {
+              input: '$judges',
+              as: 'item', // Alias for each element in the array
+              cond: {
+                $eq: ['$$item.userId', new Types.ObjectId(judgeId)], // Condition: matching judge's `id`
+              },
+            },
+          },
+        },
+      },
+    ]);
+
+    if (!judgeProject) throw new Error('Cannot find hackathon');
+    return judgeProject;
   }
 
   @Get(':id/:type')
@@ -173,34 +201,36 @@ export class HackathonController {
   async inviteJudge(
     @Param('id') id: string,
     @Query('judgeId') judgeId: string,
-    @Query('emails') emails: string,
+    @Query('email') email: string,
     @Query('receiver') receiverName: string,
   ) {
-    const emailArray = JSON.parse(emails);
     const hackathon = await this.hackathonModel
       .findById(id)
       .populate('user')
       .select('user user hackathonName location judgingPeriod');
-    await Promise.all(
-      emailArray.map((email) => {
-        const link = `http://localhost:5173/Hackathon-detail/${id}/auto-register-judge?id=${id}&name=${encodeURIComponent(receiverName)}&email=${email}&judgeId=${judgeId}`;
+    const link = `http://localhost:5173/Hackathon-detail/${id}/auto-register-judge?id=${id}&name=${encodeURIComponent(receiverName)}&email=${email}&judgeId=${judgeId}`;
 
-        sendMailInviteJudge(
-          id,
-          hackathon.user['fullname'],
-          hackathon.user['email'],
-          receiverName,
-          email,
-          link,
-          {
-            name: hackathon.hackathonName,
-            location: hackathon.location,
-            time: hackathon.judgingPeriod.start,
-          },
-        );
-      }),
+    await sendMailInviteJudge(
+      id,
+      hackathon.user['fullname'],
+      hackathon.user['email'],
+      receiverName,
+      email,
+      link,
+      {
+        name: hackathon.hackathonName,
+        location: hackathon.location,
+        time: hackathon.judgingPeriod.start,
+      },
     );
-    return 'haha';
+
+    console.log(judgeId);
+    await this.hackathonModel.findOneAndUpdate(
+      { _id: id, 'judges.id': judgeId },
+      { $set: { 'judges.$.invited': true, 'judges.$.email': email } },
+      { new: true },
+    );
+    return 'ok';
     // return result;
   }
 
@@ -227,7 +257,7 @@ export class HackathonController {
       exitUser.judgesHackathons = list;
       await exitUser.save();
       await this.hackathonModel.findOneAndUpdate(
-        { _id: hackathonId, 'judges.id': Number(body.judge) },
+        { _id: hackathonId, 'judges.id': body.judge },
         { $set: { 'judges.$.userId': exitUser._id } },
         { new: true },
       );
@@ -258,7 +288,7 @@ export class HackathonController {
       });
       const user = await createdUser.save();
       await this.hackathonModel.findOneAndUpdate(
-        { _id: hackathonId, 'judges.id': Number(body.judge) },
+        { _id: hackathonId, 'judges.id': body.judge },
         { $set: { 'judges.$.userId': user._id } },
         { new: true },
       );
@@ -667,6 +697,20 @@ export class HackathonController {
   async seedDataHackathon(@Param('type') type: string): Promise<string> {
     const result = this.commandBus.execute(
       new SeedDataHackathonCommand({ type }),
+    );
+    return result;
+  }
+
+  @Post('assign-project-judges/:id')
+  async assignProjectForJudge(
+    @Param('id') id: string,
+    @Body('judgeId') judgeId: string,
+    @Body('projects') projects: string[],
+  ) {
+    const result = await this.hackathonModel.findOneAndUpdate(
+      { _id: id, 'judges.userId': new Types.ObjectId(judgeId) },
+      { $set: { 'judges.$.projectRates': projects } },
+      { new: true },
     );
     return result;
   }

@@ -49,6 +49,16 @@ body {
   position: absolute;
 }
 
+.scrollbar-hidden,
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+.scrollbar-hidden::-webkit-scrollbar,
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
 .limitline5 {
   display: -webkit-box;
   -webkit-line-clamp: 5; /* Hiển thị 5 dòng */

@@ -49,6 +49,8 @@ function Sidebar({ user }) {
     var getUserAuth = JSON.parse(localStorage.getItem("userInfo"));
     if (getUserAuth.user.userType.includes("judge")) {
       getUserAuth.user.userType = ["judge"];
+    } else {
+      getUserAuth.user.userType = [];
     }
     getUserAuth.user.userType.push("seeker");
     localStorage.setItem("userInfo", JSON.stringify(getUserAuth));

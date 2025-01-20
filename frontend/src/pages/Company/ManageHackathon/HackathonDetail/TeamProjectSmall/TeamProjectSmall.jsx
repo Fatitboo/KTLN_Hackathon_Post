@@ -1,5 +1,5 @@
 import { BsFillHeartFill } from "react-icons/bs";
-import { defaultAvt } from "../../../../../assets/images";
+import { defaultAvt, imgDefaultProject } from "../../../../../assets/images";
 import { FaTags } from "react-icons/fa6";
 import { CustomCheckBox } from "../../../../../components";
 
@@ -31,7 +31,7 @@ const TeamProjectSmall = ({ props, select }) => {
                 {props?.projectTitle}
               </h3>
               <p className="text-gray-600 line-clamp-2 italic text-sm">
-                {props?.tagLine}
+                {props?.tagline}
               </p>
             </div>
           </div>
@@ -44,7 +44,7 @@ const TeamProjectSmall = ({ props, select }) => {
                 <img
                   key={item._id}
                   className="w-6 h-6 rounded-full border-2 border-white"
-                  src={item.avatar ?? imgUser}
+                  src={item.avatar ?? imgDefaultProject}
                   alt="User 1"
                 />
               );

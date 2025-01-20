@@ -65,7 +65,7 @@ function AddProject() {
   const onSubmit = (data) => {
     const pl = {
       projectTitle: data.projectName,
-      tagline: data.tagLine,
+      tagline: data.tagline,
       content: value.toString(),
       thumnailImage: fileThumnail,
       builtWith: skills,
@@ -175,7 +175,7 @@ function AddProject() {
 
       setValue("projectName", project?.projectTitle);
       setTitleBinding(project?.projectTitle);
-      setValue("tagLine", project?.tagline);
+      setValue("tagline", project?.tagline);
       setTaglineBinding(project?.tagline);
       setSkills([...(project?.builtWith ?? [])]);
       if (project?.content) {
@@ -241,16 +241,16 @@ function AddProject() {
             <div className="mb-5 w-full">
               <TextInput
                 type={"text"}
-                register={register("tagLine", {
+                register={register("tagline", {
                   required: "Tag line is required!",
                   onChange: (event) => {
                     setTaglineBinding(event.target.value);
                   },
                 })}
-                error={errors.tagLine ? errors.tagLine.message : ""}
+                error={errors.tagline ? errors.tagline.message : ""}
                 label="Here's the elevator pitch? *"
                 description={`What's your idea? This will be a short tagline for the project`}
-                name="tagLine"
+                name="tagline"
                 placeHolder={"A short tag line for project."}
                 containerStyles="text-[#05264e] text-base w-full tw-bg-white"
                 labelStyle="text-[#05264e] font-medium"

@@ -35,15 +35,13 @@ function AutoRegisterJudge() {
         console.log("🚀 ~ handleAddRegisterHackathon ~ data:", data);
         Swal.fire({
           title: "You had added to team!",
-          text: "You had added to team and registered to this Hackathon. Please check the project of your team.",
+          text: "You had added to team as a judge. Please check your email.",
           confirmButtonText: "OK",
           icon: "info",
           allowOutsideClick: false,
           confirmButtonColor: "#3085d6",
         }).then((result) => {
           if (result.isConfirmed) {
-            localStorage.removeItem("registerInfo");
-
             navigate(`/Hackathon-detail/${data.hackathonId}`);
           }
         });
@@ -73,7 +71,7 @@ function AutoRegisterJudge() {
         ) {
           Swal.fire({
             title: data.message,
-            text: "You had registered to this Hackathon.",
+            text: "You had registered to this Hackathon. Please check your email!",
             confirmButtonText: "OK",
             icon: "info",
             allowOutsideClick: false,
@@ -109,12 +107,18 @@ function AutoRegisterJudge() {
     }
   }, [email, name]);
   return (
-    <div className="px-96 max-lg:px-2 py-5 ">
-      <div className="text-3xl font-medium uppercase">Register</div>
-      <div className="py-5">Please respect our community guidelines.</div>
-
-      <div>
-        <img src={welcomeToJoin}></img>
+    <div className="max-lg:px-2 py-5 align-middle">
+      <div className="text-3xl font-medium uppercase self-center text-center">
+        Register
+      </div>
+      <div className="py-5 text-center">
+        Please respect our community guidelines.
+      </div>
+      <div className="flex justify-center align-middle self-center">
+        <img
+          src={welcomeToJoin}
+          className="text-center self-center items-center align-middle"
+        ></img>
       </div>
     </div>
   );

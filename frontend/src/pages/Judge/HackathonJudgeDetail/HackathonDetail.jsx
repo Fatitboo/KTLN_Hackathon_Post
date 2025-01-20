@@ -16,6 +16,9 @@ import { CustomButton, Modal } from "../../../components";
 import CardProject from "../../../components/Seeker/CardProject";
 import { backgroundSearch, defaultAvt } from "../../../assets/images";
 import { singleHackathon } from "../../../redux/slices/hackathons/hackathonsSlices";
+import BrowerParticipants from "@/pages/Seeker/BrowerParticipants";
+import JudgeProjects from "./JudgeProject";
+import TeamProjectSmall from "./TeamProjectSmall/TeamProjectSmall";
 
 function HackathonJudgeDetail() {
   const { id, type } = useParams();
@@ -207,7 +210,7 @@ function HackathonJudgeDetail() {
   }, [hackathon]);
 
   useEffect(() => {
-    if (type == "project-gallery" || type == "teams") {
+    if (type == "project-gallery" || type == "judge") {
       fetch(`http://localhost:3000/api/v1/hackathons/${id}/${type}`)
         .then((response) => response.json())
         .then((result) => {
@@ -217,83 +220,6 @@ function HackathonJudgeDetail() {
         .catch((error) => console.log("error", error));
     }
   }, [type]);
-
-  const handleGetMembers = (project) => {
-    if (project?.createdByObj) {
-      setProjectGallery(
-        projectGallery.map((item) =>
-          item.id === project.id ? { ...item, createdByObj: null } : { ...item }
-        )
-      );
-    } else {
-      fetch(
-        `http://localhost:3000/api/v1/projects/get-members/${project.id}/members`
-      )
-        .then((response) => response.json())
-        .then((result) => {
-          setProjectGallery(
-            projectGallery.map((item) =>
-              item.id === project.id
-                ? { ...item, createdByObj: result }
-                : { ...item }
-            )
-          );
-        })
-        .catch((error) => console.log("error", error));
-    }
-  };
-
-  const handleBlockTeam = (project) => {
-    Swal.fire({
-      title: "Warning",
-      text: "Do you want to confirm?",
-      confirmButtonText: "OK",
-      cancelButtonText: "Cancel",
-      showCancelButton: true,
-      cancelButtonColor: "#d33",
-      icon: "warning",
-      allowOutsideClick: false,
-      confirmButtonColor: "#3085d6",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        fetch(
-          `http://localhost:3000/api/v1/projects/block-project/${project?.id}/block`,
-          {
-            method: "POST", // Chỉ định phương thức là POST
-            headers: {
-              "Content-Type": "application/json", // Đặt header để báo server biết dữ liệu là JSON
-            },
-            body: JSON.stringify({
-              block: !project?.block, // Thay thế bằng dữ liệu bạn muốn gửi
-            }),
-          }
-        )
-          .then((response) => response.json())
-          .then(() => {
-            setProjectGallery(
-              projectGallery.map((item) =>
-                item.id === project.id
-                  ? { ...item, block: !item.block }
-                  : { ...item }
-              )
-            );
-            Swal.fire({
-              title: "Success",
-              text: `${project?.block ? "Unblock" : "Block"} project success`,
-              confirmButtonText: "OK",
-              icon: "success",
-              allowOutsideClick: false,
-              confirmButtonColor: "#3085d6",
-            }).then((result) => {
-              if (result.isConfirmed) {
-                /* empty */
-              }
-            });
-          })
-          .catch((error) => console.log("error", error));
-      }
-    });
-  };
 
   const handleAward = () => {
     setModal(!modal);
@@ -367,14 +293,6 @@ function HackathonJudgeDetail() {
                 }`}
               >
                 Overview
-              </Link>
-              <Link
-                to={`/Judge/judge-hackathons/${id}/teams`}
-                className={`py-4 px-4 hover:underline ${
-                  type === "teams" ? "text-black opacity-100 bg-white" : ""
-                }`}
-              >
-                Teams
               </Link>
               <Link
                 to={`/Judge/judge-hackathons/${id}/participants`}
@@ -487,120 +405,6 @@ function HackathonJudgeDetail() {
         )}
         {type === "discussions" && <Discussion item={hackathon} user={user} />}
         {type === "updates" && <Updates item={hackathon} user={user} />}
-        {/* {type === "teams" && (
-          <>
-            <div className="px-60 max-lg:px-2 py-5 ">
-              <div className="col-span-2">
-                <h2 className="font-semibold mt-5 mb-5">Manage teams</h2>
-                <div>
-                  <div className="gap-2">
-                    <table className="relative w-full overflow-y-hidden overflow-x-hidden rounded-md mb-1 bg-white border-0">
-                      <thead className="bg-[#f5f7fc] color-white border-transparent border-0 w-full">
-                        <tr className="w-full">
-                          <th className="relative text-[#3a60bf] font-medium py-6 text-base text-left w-4/12 pl-5 ">
-                            Team name
-                          </th>
-                          <th className="relative text-[#3a60bf] font-medium py-6 text-base text-left w-2/12">
-                            Project
-                          </th>
-                          <th className="relative text-[#3a60bf] font-medium py-6 text-base text-left w-2/12">
-                            Member
-                          </th>
-                          <th className="relative text-[#3a60bf] font-medium py-6 text-base text-left w-2/12">
-                            Owner
-                          </th>
-                          <th className="relative text-[#3a60bf] font-medium py-6 text-base text-left w-2/12">
-                            Actions
-                          </th>
-                        </tr>
-                      </thead>
-                    </table>
-                    <div className="w-full flex flex-col gap-5">
-                      {[...projectGallery]?.map((item, index) => {
-                        return (
-                          <div
-                            key={index}
-                            className="border-b border-l border-r border-solid border-[#ecedf2] px-2 pb-1"
-                          >
-                            <div className="flex items-center w-full hover:bg-[#f4f2f2] cursor-pointer">
-                              <div className="relative pl-5 py-5 font-normal text-base w-4/12">
-                                <div className="mb-0 relative h-16 gap-2 flex flex-row items-center">
-                                  <div>
-                                    <div className="font-medium text-md text-ellipsis mb-1 line-clamp-2 ">
-                                      {item?.teamName}
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="font-light w-2/12">
-                                <div className="font-medium text-md text-ellipsis mb-1 line-clamp-2 ">
-                                  {item?.projectTitle}
-                                </div>
-                              </div>
-                              <div className="font-semibold text-blue-700 w-[12%]">
-                                <div className="flex h-full items-center">
-                                  <div className="mr-1">
-                                    {item?.createdBy?.length ?? 0}
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="text-center w-2/12 font-semibold text-gray-700 text-base">
-                                <div className="line-clamp-3 w-full flex items-center gap-1">
-                                  <img
-                                    src={item?.owner?.avatar}
-                                    className="w-5 h-5 rounded-full"
-                                  />
-                                  {item?.owner?.name}
-                                </div>
-                              </div>
-                              <div className="text-center w-2/12 font-semibold text-gray-700 text-base">
-                                <div className="line-clamp-3 w-full flex relative item-center justify-center">
-                                  <button
-                                    onClick={() => handleGetMembers(item)}
-                                    className="list-none relative mr-2 bg-[#f5f7fc] border rounded-md border-[#e9ecf9] px-1 pt-1 hover:bg-[#5f86e9] hover:text-white"
-                                  >
-                                    {item?.createdByObj ? (
-                                      <LiaEyeSlash fontSize={18} />
-                                    ) : (
-                                      <LiaEyeSolid fontSize={18} />
-                                    )}
-                                  </button>
-
-                                  <li
-                                    className="list-none relative bg-[#f5f7fc] border rounded-md border-[#e9ecf9] px-1 pt-1 hover:bg-[#ce3e37] hover:text-white"
-                                    onClick={() => {
-                                      handleBlockTeam(item);
-                                    }}
-                                  >
-                                    {item?.block ? (
-                                      <CgUnblock fontSize={18} />
-                                    ) : (
-                                      <CgLock fontSize={18} />
-                                    )}
-                                  </li>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="grid grid-cols-2 gap-2 transition-all duration-300">
-                              {item?.createdByObj &&
-                                item?.createdByObj.map((i) => {
-                                  return (
-                                    <div className="my-1" key={item?._id}>
-                                      <TeamProjectItem props={i} />
-                                    </div>
-                                  );
-                                })}
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </>
-        )} */}
         {type === "project-gallery" && (
           <>
             <div className="px-60 max-lg:px-2 py-5 ">
@@ -610,11 +414,6 @@ function HackathonJudgeDetail() {
                     textPlaceholder={"Search project"}
                     btnText={"Search project"}
                   />
-                  <CustomButton
-                    onClick={handleAward}
-                    title={"Awarding"}
-                    containerStyles="h-[42px] bg-blue-600 w-fit font-medium text-white py-2 px-5 focus:outline-none hover:bg-blue-500 rounded-sm text-base border border-blue-600"
-                  />
                 </div>
                 <div className="my-5 grid grid-cols-4 max-md:grid-cols-1 gap-6">
                   {[...projectGallery].map((card, index) => (
@@ -622,7 +421,7 @@ function HackathonJudgeDetail() {
                       key={index}
                       id={card.id}
                       title={card.projectTitle}
-                      description={card.tagLine}
+                      description={card.tagline}
                       image={card.thumnailImage}
                       imgUser={defaultAvt}
                       member={card.createdBy}
@@ -643,47 +442,12 @@ function HackathonJudgeDetail() {
           </>
         )}
         {type === "judge" && (
-          <>
-            <div className="px-60 max-lg:px-2 py-5 ">
-              <div>
-                <div className="mb-10 w-[90%] flex items-end">
-                  <SearchInput
-                    textPlaceholder={"Search project"}
-                    btnText={"Search project"}
-                  />
-                  <CustomButton
-                    onClick={handleAward}
-                    title={"Awarding"}
-                    containerStyles="h-[42px] bg-blue-600 w-fit font-medium text-white py-2 px-5 focus:outline-none hover:bg-blue-500 rounded-sm text-base border border-blue-600"
-                  />
-                </div>
-                <div className="my-5 grid grid-cols-4 max-md:grid-cols-1 gap-6">
-                  {[...projectGallery].map((card, index) => (
-                    <CardProject
-                      key={index}
-                      id={card.id}
-                      title={card.projectTitle}
-                      description={card.tagLine}
-                      image={card.thumnailImage}
-                      imgUser={defaultAvt}
-                      member={card.createdBy}
-                      isWinner={currentHackathon?.prizes
-                        ?.reduce(
-                          (acc, cur) =>
-                            cur.winnerList ? acc.concat(cur.winnerList) : acc,
-                          []
-                        )
-                        ?.includes(card.id)}
-                      votes={Math.floor(Math.random() * 21)}
-                      comments={Math.floor(Math.random() * 11)}
-                    />
-                  ))}
-                </div>
-              </div>
-            </div>
-          </>
+          <JudgeProjects
+            projectGallery={projectGallery}
+            hackathon={hackathon}
+          />
         )}
-        {/* {type === "participants" && <BrowerParticipants hackathonId={id} />} */}
+        {type === "participants" && <BrowerParticipants hackathonId={id} />}
         <div className="px-60 max-lg:px-2 py-5 ">
           <div className="grid grid-cols-3 max-lg:grid-cols-1 gap-10">
             <div className="col-span-2 text-gray-600 " id="generated-script">

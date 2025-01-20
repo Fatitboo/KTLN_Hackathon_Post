@@ -15,6 +15,7 @@ const TextInput = React.forwardRef(
       onChange,
       value,
       onBlur,
+      min,
     },
     rest
   ) => {
@@ -31,6 +32,7 @@ const TextInput = React.forwardRef(
           <input
             type={type}
             name={name}
+            min={min}
             placeholder={placeHolder}
             onChange={onChange}
             onBlur={onBlur}

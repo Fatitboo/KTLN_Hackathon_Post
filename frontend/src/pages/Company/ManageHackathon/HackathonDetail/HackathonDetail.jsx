@@ -18,6 +18,7 @@ import { StarIcon } from "@heroicons/react/20/solid";
 import TeamProjectSmall from "./TeamProjectSmall/TeamProjectSmall";
 import Discussion from "../Discussion";
 import Updates from "../Updates";
+import ManageJudges from "./ManageJudges";
 
 function HackathonCorDetail() {
   const { id, type } = useParams();
@@ -209,7 +210,7 @@ function HackathonCorDetail() {
   }, [hackathon]);
 
   useEffect(() => {
-    if (type == "project-gallery" || type == "teams") {
+    if (type == "project-gallery" || type == "teams" || type == "judges") {
       fetch(`http://localhost:3000/api/v1/hackathons/${id}/${type}`)
         .then((response) => response.json())
         .then((result) => {
@@ -432,6 +433,14 @@ function HackathonCorDetail() {
               >
                 Discussions
               </Link>
+              <Link
+                to={`/Organizer/manage-hackathons/${id}/judges`}
+                className={`py-4 px-4 hover:underline ${
+                  type === "judges" ? "text-black opacity-100 bg-white" : ""
+                }`}
+              >
+                Judges
+              </Link>
             </div>
           </div>
         </div>
@@ -616,7 +625,7 @@ function HackathonCorDetail() {
                       key={index}
                       id={card.id}
                       title={card.projectTitle}
-                      description={card.tagLine}
+                      description={card.tagline}
                       image={card.thumnailImage}
                       imgUser={defaultAvt}
                       member={card.createdBy}
@@ -637,6 +646,9 @@ function HackathonCorDetail() {
           </>
         )}
         {type === "participants" && <BrowerParticipants hackathonId={id} />}
+        {type === "judges" && (
+          <ManageJudges judges={hackathon?.judges} projects={projectGallery} />
+        )}
         <div className="px-60 max-lg:px-2 py-5 ">
           <div className="grid grid-cols-3 max-lg:grid-cols-1 gap-10">
             <div className="col-span-2 text-gray-600 " id="generated-script">

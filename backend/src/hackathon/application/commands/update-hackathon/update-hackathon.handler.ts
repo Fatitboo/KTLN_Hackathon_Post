@@ -5,7 +5,6 @@ import {
   HackathonRepository,
 } from 'src/hackathon/domain/repositories/hackathon.repository';
 import { UpdateHackathonCommand } from './update-hackathon.command';
-import { Hackathon } from 'src/hackathon/domain/entities/hackathon.entity';
 
 @CommandHandler(UpdateHackathonCommand)
 export class UpdateHackathonHandler
@@ -79,6 +78,7 @@ export class UpdateHackathonHandler
         : existingHackathon.judgingPeriod,
       judges: hackathon.judges ?? existingHackathon.judges,
       criteria: hackathon.criteria ?? existingHackathon.criteria,
+      criteriaScore: hackathon.criteriaScore ?? existingHackathon.criteriaScore,
       winnersAnnounced: hackathon.winnersAnnounced
         ? new Date(hackathon.winnersAnnounced)
         : existingHackathon.winnersAnnounced,

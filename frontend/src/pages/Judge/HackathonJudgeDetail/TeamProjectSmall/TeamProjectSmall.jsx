@@ -26,7 +26,7 @@ const TeamProjectSmall = ({ props, select }) => {
                 {props?.projectTitle}
               </h3>
               <p className="text-gray-600 line-clamp-2 italic text-sm">
-                {props?.tagLine}
+                {props?.tagline}
               </p>
             </div>
           </div>

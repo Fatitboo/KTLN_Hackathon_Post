@@ -616,7 +616,7 @@ function HackathonCorDetail() {
                       key={index}
                       id={card.id}
                       title={card.projectTitle}
-                      description={card.tagLine}
+                      description={card.tagline}
                       image={card.thumnailImage}
                       imgUser={defaultAvt}
                       member={card.createdBy}

@@ -125,4 +125,7 @@ export class UpdateHackathonDTO {
 
   @IsOptional()
   location?: string;
+
+  @IsOptional()
+  criteriaScore: Range;
 }

@@ -210,5 +210,8 @@ export class HackathonDocument {
 
   @Prop()
   location: string;
+
+  @Prop()
+  criteriaScore: Range;
 }
 export const HackathonSchema = SchemaFactory.createForClass(HackathonDocument);

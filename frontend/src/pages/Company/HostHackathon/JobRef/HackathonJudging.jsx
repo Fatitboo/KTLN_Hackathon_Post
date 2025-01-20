@@ -21,6 +21,10 @@ function HackathonJudging({ formSubmit, formId }) {
     },
     judges: [],
     criteria: [],
+    criteriaScore: {
+      min: 0,
+      max: 0,
+    },
   });
   const [inviteMail, setInviteMail] = useState({
     title: "",
@@ -37,7 +41,12 @@ function HackathonJudging({ formSubmit, formId }) {
         start: new Date(inputValues.judgingPeriod.start),
         end: new Date(inputValues.judgingPeriod.end),
       },
+      criteriaScore: {
+        min: Number(inputValues.criteriaScore.min),
+        max: Number(inputValues.criteriaScore.max),
+      },
     };
+    console.log(data);
     formSubmit(data);
   };
 
@@ -76,7 +85,10 @@ function HackathonJudging({ formSubmit, formId }) {
     for (const judge of judgePhotos) {
       const { photo, id } = judge;
       if (!photo) continue;
-
+      if (typeof photo === "string") {
+        updatedJudges.push(judge);
+        continue;
+      }
       const formData = new FormData();
       formData.append("file", photo);
       formData.append("upload_preset", "nhanle");
@@ -157,6 +169,52 @@ function HackathonJudging({ formSubmit, formId }) {
         setInputValues({ ...inputValues, ...rest });
       });
   }, []);
+
+  const sendInvitation = (judgeId, email, name) => {
+    const queryParams = {
+      judgeId: judgeId,
+      email: email,
+      receiver: name,
+    };
+
+    // Manually construct the query string
+    const queryString = Object.keys(queryParams)
+      .map(
+        (key) =>
+          `${encodeURIComponent(key)}=${encodeURIComponent(queryParams[key])}`
+      )
+      .join("&");
+
+    fetch(
+      `http://localhost:3000/api/v1/hackathons/invite-judge/${param.id}?${queryString}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
+      .then((aydy) => {
+        Swal.fire({
+          title: "Success!",
+          text: "Invitation mail has been send.",
+          icon: "success",
+          confirmButtonText: "OK",
+          allowOutsideClick: false,
+          confirmButtonColor: "#3085d6",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            setInputValues({
+              ...inputValues,
+              judges: inputValues.judges.map((item) =>
+                item.id === judgeId ? { ...item, invited: true } : { ...item }
+              ),
+            });
+          }
+        });
+      })
+      .catch((error) => console.log("error", error));
+  };
 
   return (
     <>
@@ -307,18 +365,30 @@ function HackathonJudging({ formSubmit, formId }) {
                         }
                       />
                     </div>
-                    <button
-                      onClick={() => {
-                        setModal(true);
-                      }}
-                      type="button"
-                      className="flex items-center justify-center h-[53px] box-border bg-[#1967d3] px-[18px] py-[8px] rounded-[8px] text-[#fff] hover:bg-[#0146a6] cursor-pointer"
-                    >
-                      <BiMailSend className="w-6 h-6" />
-                      <span className="text-[15px] leading-none font-semibold ml-1">
-                        Invite Mail
-                      </span>
-                    </button>
+                    {item.invited ? (
+                      <button
+                        type="button"
+                        className="flex items-center justify-center h-[53px] box-border bg-gray-400 px-[18px] py-[8px] rounded-[8px] text-[#fff] cursor-default"
+                      >
+                        <BiMailSend className="w-6 h-6" />
+                        <span className="text-[15px] leading-none font-semibold ml-1">
+                          Mail Send
+                        </span>
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => {
+                          sendInvitation(item.id, item.email, item.fullName);
+                        }}
+                        type="button"
+                        className="flex items-center justify-center h-[53px] box-border bg-[#1967d3] px-[18px] py-[8px] rounded-[8px] text-[#fff] hover:bg-[#0146a6] cursor-pointer"
+                      >
+                        <BiMailSend className="w-6 h-6" />
+                        <span className="text-[15px] leading-none font-semibold ml-1">
+                          Invite Mail
+                        </span>
+                      </button>
+                    )}
                   </div>
                   <div className="ml-4">
                     <div className="text-gray-900 font-medium mb-1">Photo</div>
@@ -366,11 +436,12 @@ function HackathonJudging({ formSubmit, formId }) {
                 e.preventDefault();
                 const newArr = [...inputValues.judges];
                 newArr.push({
-                  id: Date.now(),
+                  id: Date.now().toString(),
                   fullName: "",
                   email: "",
                   title: "",
                   photo: "",
+                  invited: false,
                 });
                 setInputValues({
                   ...inputValues,
@@ -457,6 +528,51 @@ function HackathonJudging({ formSubmit, formId }) {
             >
               Add criteria
             </button>
+
+            {TitleDescription(
+              "Criteria Score",
+              "Add criteria score to set the range of to mark"
+            )}
+            <div className="flex flex-row items-center gap-4 bg-[#f7f7f7] p-5 rounded-lg">
+              <TextInput
+                label="Min score"
+                type="number"
+                min={0}
+                required
+                value={inputValues.criteriaScore.min}
+                onChange={(e) => {
+                  setInputValues({
+                    ...inputValues,
+                    criteriaScore: {
+                      min: e.target.value,
+                      max: Math.max(
+                        e.target.value,
+                        inputValues.criteriaScore.max
+                      ),
+                    },
+                  });
+                }}
+              />
+              <TextInput
+                label="Max score"
+                type="number"
+                min={0}
+                required
+                value={inputValues.criteriaScore.max}
+                onChange={(e) =>
+                  setInputValues({
+                    ...inputValues,
+                    criteriaScore: {
+                      min: Math.min(
+                        e.target.value,
+                        inputValues.criteriaScore.min
+                      ),
+                      max: e.target.value,
+                    },
+                  })
+                }
+              />
+            </div>
           </form>
         </div>
       </div>

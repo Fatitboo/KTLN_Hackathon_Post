@@ -1,3 +1,4 @@
+import { Optional } from '@nestjs/common';
 import { Prop } from '@nestjs/mongoose';
 import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
 import { Date, Types } from 'mongoose';
@@ -86,6 +87,36 @@ export class Judges {
   @Prop()
   @IsString()
   photo: string;
+
+  @Prop({ default: false })
+  @Optional()
+  invited: boolean;
+
+  @Prop()
+  @Optional()
+  projectRates: ProjectRate[];
+}
+
+class ProjectRate {
+  @Prop({ type: Types.ObjectId, ref: 'ProjectDocument' })
+  projectId: Types.ObjectId;
+
+  @Prop()
+  @Optional()
+  judge: JudgeType[];
+}
+
+class JudgeType {
+  @Prop()
+  criteriaId: string;
+
+  @Prop({ default: 0 })
+  @Optional()
+  score: number;
+
+  @Prop({ default: '' })
+  @Optional()
+  comment: string;
 }
 
 export class Criteria {

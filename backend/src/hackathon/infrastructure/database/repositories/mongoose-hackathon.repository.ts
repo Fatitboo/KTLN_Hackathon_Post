@@ -50,7 +50,7 @@ export class MongooseHackathonRepository implements HackathonRepository {
         getter = 'submissions';
         break;
       case 'form-hackathon-judging':
-        getter = 'judgingType judgingPeriod judges criteria';
+        getter = 'judgingType judgingPeriod judges criteria criteriaScore';
         break;
       case 'form-hackathon-prize':
         getter = 'winnersAnnounced prizeCurrency prizes';
@@ -101,7 +101,7 @@ export class MongooseHackathonRepository implements HackathonRepository {
         projectTitle: p.projectTitle,
         thumnailImage: p.thumnailImage,
         teamName: p.teamName ?? `Team ${p.owner.toString().substring(0, 5)}`,
-        tagLine: p.tagline,
+        tagline: p.tagline,
         owner: { uId: owner._id, name: owner.fullname, avatar: owner.avatar },
         createdByUsername: p.createdByUsername,
         createdBy: p.createdBy,

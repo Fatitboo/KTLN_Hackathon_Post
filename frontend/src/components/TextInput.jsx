@@ -22,6 +22,8 @@ const TextInput = React.forwardRef(
       oninput,
       vl,
       readOnly,
+      min,
+      max,
     },
     ref
   ) => {
@@ -52,6 +54,8 @@ const TextInput = React.forwardRef(
             rules={rules}
             onBlur={onblur}
             ref={ref}
+            min={min}
+            max={max}
             value={vl}
             defaultValue={value}
             className={`block bg-white focus:bg-white text-base outline-1 shadow-sm w-full rounded-sm py-1 px-3 text-gray-900 border-[1px] border-gray-300 placeholder:text-gray-400 sm:text-base sm:leading-8 ${styles}`}

@@ -17,7 +17,7 @@ function HistoryTransaction() {
   // get histories
   useEffect(() => {
     setLoading(true);
-    fetch(`http://localhost:3000/api/v1/invoices`)
+    fetch(`${baseUrl}/api/v1/invoices`)
       .then((response) => response.json())
       .then((result) => {
         console.log(result);

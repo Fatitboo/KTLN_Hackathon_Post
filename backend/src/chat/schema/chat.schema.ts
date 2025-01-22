@@ -1,5 +1,14 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
+export class OrgSender {
+  @Prop()
+  id: string;
+  @Prop()
+  avatar: string;
+  @Prop()
+  name: string;
+}
+
 @Schema({
   timestamps: {
     createdAt: 'created_at',
@@ -16,6 +25,15 @@ export class ChatDocument {
 
   @Prop({ type: [{ type: Types.ObjectId, ref: 'UserDocument' }] })
   users: Types.ObjectId[];
+
+  @Prop()
+  avatarGroupChat: string;
+
+  @Prop()
+  orgHackathon: string;
+
+  @Prop({ type: OrgSender })
+  orgSender: OrgSender;
 
   @Prop({ type: Types.ObjectId, ref: 'MessageDocument' })
   latestMessage: Types.ObjectId;

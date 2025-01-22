@@ -5,7 +5,6 @@ import {
   HackathonRepository,
 } from 'src/hackathon/domain/repositories/hackathon.repository';
 import { UpdateHackathonCommand } from './update-hackathon.command';
-import { Hackathon } from 'src/hackathon/domain/entities/hackathon.entity';
 
 @CommandHandler(UpdateHackathonCommand)
 export class UpdateHackathonHandler

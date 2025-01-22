@@ -88,7 +88,7 @@ export const Payment = () => {
     setMode(selectedMode);
   };
   const handlePayment = (id, price) => {
-    fetch("http://localhost:3000/api/v1/invoices/payment", {
+    fetch(`${baseUrl}/api/v1/invoices/payment`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

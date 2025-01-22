@@ -43,7 +43,7 @@ function HackathonStarterKit({ formId, formSubmit, config }) {
   };
 
   useEffect(() => {
-    fetch(`http://localhost:3000/api/v1/hackathons/${param.id}/${formId}`)
+    fetch(`${baseUrl}/api/v1/hackathons/${param.id}/${formId}`)
       .then((response) => response.json())
       .then((result) => {
         const { _id, ...rest } = result;

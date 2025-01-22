@@ -5,12 +5,10 @@ import { ValidationPipe } from '@nestjs/common';
 import { LoggerService } from './shared/infrastructure/logger/logger.service';
 import { AllExceptionFilter } from './shared/infrastructure/common/filter/exception.filter';
 import { LoggingInterceptor } from './shared/infrastructure/common/interceptors/logging.interceptor';
-import { ResponseFormat } from './shared/infrastructure/common/interceptors/response.interceptor';
+export const urlFe = process.env.URL_FE || 'http://localhost:5173';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  const env = process.env.NODE_ENV;
-
   app.use(cookieParser());
 
   // app.enableCors({
@@ -32,7 +30,7 @@ async function bootstrap() {
   app.useGlobalInterceptors(new LoggingInterceptor(new LoggerService()));
   // app.useGlobalInterceptors(new ResponseInterceptor());
   app.enableCors({
-    origin: 'http://localhost:5173', // Frontend origin
+    origin: urlFe, // Frontend origin
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });

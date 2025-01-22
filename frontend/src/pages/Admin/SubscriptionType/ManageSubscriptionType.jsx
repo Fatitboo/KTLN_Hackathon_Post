@@ -31,7 +31,7 @@ function ManageSubscriptionType() {
   // get histories
   useEffect(() => {
     setLoading(true);
-    fetch(`http://localhost:3000/api/v1/subscription-types`)
+    fetch(`${baseUrl}/api/v1/subscription-types`)
       .then((response) => response.json())
       .then((result) => {
         setSubscriptionList([...result]);
@@ -259,7 +259,7 @@ function ManageSubscriptionType() {
                                     }}
                                     handleDelete={() => {
                                       fetch(
-                                        `http://localhost:3000/api/v1/subscription-types/${item._id}`,
+                                        `${baseUrl}/api/v1/subscription-types/${item._id}`,
                                         {
                                           method: "DELETE",
                                           headers: {
@@ -365,7 +365,7 @@ function ManageSubscriptionType() {
               onClick={() => {
                 console.log(inputValues);
                 fetch(
-                  `http://localhost:3000/api/v1/subscription-types${
+                  `${baseUrl}/api/v1/subscription-types${
                     modalType === "Edit" ? `/${selected._id}` : ""
                   }`,
                   {

@@ -15,6 +15,7 @@ import { IconGithub } from "../../../assets/icons";
 import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 import clientId from "../../../utils/clientGoogleId";
 import Swal from "sweetalert2";
+import domainUrl from "@/utils/domainUrl";
 
 function Login() {
   const [accountType, setAccountType] = useState("seeker");
@@ -100,7 +101,7 @@ function Login() {
   };
   const handleLoginGithub = () => {
     const clientID = "Ov23li2OBHnvzstAMXu3";
-    const redirectURI = "http://localhost:5173/user/github-callback";
+    const redirectURI = `${domainUrl}/user/github-callback`;
     window.location.href = `https://github.com/login/oauth/authorize?client_id=${clientID}&redirect_uri=${redirectURI}`;
   };
 

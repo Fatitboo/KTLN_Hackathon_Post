@@ -35,9 +35,16 @@ import {
   ReportSchema,
 } from './infrastructure/database/schemas/report.schema';
 import { GetHackathonComponentHandler } from './application/queries/get-hackathon-component/get-hackathon-component.handler';
+import { ChatDocument, ChatSchema } from 'src/chat/schema/chat.schema';
+import { ChatModule } from 'src/chat/chat.module';
+import {
+  NotificationDocument,
+  NotificationSchema,
+} from './infrastructure/database/schemas/notification.schema';
 
 @Module({
   imports: [
+    ChatModule,
     CqrsModule,
     MongooseModule.forFeature([
       { name: HackathonDocument.name, schema: HackathonSchema },
@@ -45,6 +52,8 @@ import { GetHackathonComponentHandler } from './application/queries/get-hackatho
       { name: ProjectDocument.name, schema: ProjectSchema },
       { name: InteractionDocument.name, schema: InterationSchema },
       { name: ReportDocument.name, schema: ReportSchema },
+      { name: ChatDocument.name, schema: ChatSchema },
+      { name: NotificationDocument.name, schema: NotificationSchema },
     ]),
   ],
   controllers: [HackathonController],

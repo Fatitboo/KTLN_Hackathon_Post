@@ -4,7 +4,6 @@ import {
   Controller,
   Delete,
   Get,
-  Inject,
   Param,
   Post,
   Put,
@@ -35,6 +34,10 @@ import { templateInviteJudgeHTML } from 'src/hackathon/infrastructure/constants/
 import { UserType } from 'src/user/domain/entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { templateInviteConfirmHTML } from 'src/hackathon/infrastructure/constants/template-email-confirm';
+import { urlFe } from 'src/main';
+import { NotificationDocument } from 'src/hackathon/infrastructure/database/schemas/notification.schema';
+import { InteractionDocument } from 'src/hackathon/infrastructure/database/schemas/interaction.schema';
+import { templateHackathonUpdateHTML } from 'src/user/infrastructure/constants/template-email-confirm-register copy';
 
 @Controller('hackathons')
 export class HackathonController {
@@ -47,6 +50,10 @@ export class HackathonController {
     private readonly reportModel: Model<ReportDocument>,
     @InjectModel(UserDocument.name)
     private readonly userModel: Model<UserDocument>,
+    @InjectModel(NotificationDocument.name)
+    private readonly notificationModel: Model<NotificationDocument>,
+    @InjectModel(InteractionDocument.name)
+    private readonly interactionModel: Model<InteractionDocument>,
   ) {}
 
   @Get()
@@ -102,7 +109,7 @@ export class HackathonController {
     return await this.queryBus.execute(new GetHackathonQuery(id, userId));
   }
 
-  @Get(':id/:type')
+  @Get('get-component/:id/:type')
   async getHackathonComponent(
     @Param('id') id: string,
     @Param('type') type: string,
@@ -171,7 +178,7 @@ export class HackathonController {
       .select('user user hackathonName location judgingPeriod');
     await Promise.all(
       emailArray.map((email) => {
-        const link = `http://localhost:5173/Hackathon-detail/${id}/auto-register-judge?id=${id}&name=${encodeURIComponent(receiverName)}&email=${email}&judgeId=${judgeId}`;
+        const link = `${urlFe}/Hackathon-detail/${id}/auto-register-judge?id=${id}&name=${encodeURIComponent(receiverName)}&email=${email}&judgeId=${judgeId}`;
 
         sendMailInviteJudge(
           id,
@@ -222,11 +229,7 @@ export class HackathonController {
 
       await sendEmail(
         body.email,
-        templateInviteConfirmHTML(
-          'old',
-          `http://localhost:5173/user-auth/login`,
-          body.name,
-        ),
+        templateInviteConfirmHTML('old', `${urlFe}/user-auth/login`, body.name),
         'Confirmation email',
         'Confirmation email',
       );
@@ -252,11 +255,7 @@ export class HackathonController {
       );
       await sendEmail(
         body.email,
-        templateInviteConfirmHTML(
-          'old',
-          `http://localhost:5173/user-auth/login`,
-          body.name,
-        ),
+        templateInviteConfirmHTML('old', `${urlFe}/user-auth/login`, body.name),
         'Confirmation email',
         'Confirmation email',
       );
@@ -287,6 +286,65 @@ export class HackathonController {
     hackathon.updateNews.push(upt);
     hackathon.markModified('updateNews');
 
+    const noti = await this.notificationModel.create({
+      type: 'hackathon_update',
+      sender: {
+        id: hackathon._id,
+        avatar: hackathon.thumbnail,
+        type: 'hackathon',
+        name: hackathon.hackathonName,
+      },
+      content: `We have an important update regarding the ${hackathon.hackathonName}. The information have been changed. Please ensure you mark your calendars and plan accordingly. For further updates or queries, visit the link below.!`,
+      title: 'Important Update: Hackathon Details Changed',
+      additionalData: {
+        hackathonName: hackathon.hackathonName,
+        hackathonTime: `${hackathon.submissions.start} - ${hackathon.submissions.deadline}`,
+        hackathonLocation: hackathon.location,
+        linkDetails: `/Hackathon-detail/${hackathon._id.toString()}/overview`,
+      },
+    });
+
+    const registerUsers = await this.interactionModel
+      .find({
+        hackathon: hackathon._id,
+      })
+      .populate({
+        path: 'user_id',
+        model: 'UserDocument',
+        select: '_id email',
+      });
+    await Promise.all(
+      registerUsers.map(async (interaction) => {
+        const user = interaction.user_id as any;
+        if (user?._id) {
+          await this.userModel.findByIdAndUpdate(user?._id, {
+            $push: { notifications: noti._id },
+          });
+        }
+      }),
+    );
+    const emails = registerUsers.map((interaction) => {
+      const user = interaction.user_id as any;
+      if (user?.email) {
+        return sendEmail(
+          user.email,
+          templateHackathonUpdateHTML(
+            `${urlFe}/Hackathon-detail/${hackathon._id.toString()}/overview`,
+            user.fullname || 'Participant',
+            hackathon.hackathonName,
+            `${hackathon.submissions.start} - ${hackathon.submissions.deadline}`,
+            hackathon.location,
+          ),
+          'Hackathon Update',
+          'Update Details Sent',
+        ).catch((err) => {
+          console.error(`Failed to send email to ${user.email}:`, err.message);
+        });
+      }
+    });
+
+    // Không chờ việc gửi email hoàn thành, trả về ngay
+    Promise.allSettled(emails);
     await hackathon.save();
     return 'ok';
   }
@@ -685,7 +743,7 @@ async function sendMailInviteJudge(
     receiverEmail,
     templateInviteJudgeHTML(
       linkInvite,
-      `http://localhost:5173/Hackathon-detail/${hackathonId}/overview`,
+      `${urlFe}/Hackathon-detail/${hackathonId}/overview`,
       senderName,
       receiverName,
       senderEmail,

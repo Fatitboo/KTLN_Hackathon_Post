@@ -3,14 +3,19 @@ import { CustomButton, Modal } from "../../../../components";
 import HackathonInfo from "../../../../components/Seeker/HackathonInfo";
 import Swal from "sweetalert2";
 import { useState } from "react";
-import { BiSolidFlag } from "react-icons/bi";
+import { BiLogoSnapchat, BiSolidFlag } from "react-icons/bi";
 import { ReportHackathon } from "../ReportHackathon";
+import {
+  accessChatHackathon,
+  resetValue,
+} from "@/redux/slices/chat/chatSlices";
+import { useDispatch } from "react-redux";
 
 function Overview() {
   const { item, id, isRegistered, user } = useOutletContext();
   const navigate = useNavigate();
   const [openReport, setopenReport] = useState(false);
-
+  const dispatch = useDispatch();
   const decodeHTML = (html) => {
     const txt = document.createElement("textarea");
     txt.innerHTML = html;
@@ -42,6 +47,17 @@ function Overview() {
     const deadlineDate = new Date(deadline);
     return currentDate > deadlineDate; // true nếu đã hết hạn
   }
+  const handleClose = () => {
+    dispatch(resetValue({ key: "popInner", value: true }));
+  };
+  const handleChatHackathon = () => {
+    dispatch(
+      accessChatHackathon({
+        hackathonId: id,
+        handleClose,
+      })
+    );
+  };
   return (
     <div className="">
       <div className="px-60 max-lg:px-2 py-5  bg-gray-100">
@@ -76,17 +92,26 @@ function Overview() {
                         containerStyles="bg-blue-600 w-fit font-medium text-white py-2 px-5 focus:outline-none hover:bg-blue-500 rounded-sm text-base border border-blue-600"
                       />
                     )}
+                    <div className="flex mr-2 mt-6 mb-4">
+                      <div
+                        onClick={() => setopenReport(true)}
+                        className="bg-white border border-gray-500 p-2 rounded-md flex items-center cursor-pointer hover:bg-gray-200 hover:text-red-800"
+                      >
+                        {" "}
+                        <BiSolidFlag className="mr-1" /> Report this
+                      </div>
+                    </div>
+                    <div className="flex mr-2 mt-6 mb-4">
+                      <div
+                        onClick={() => handleChatHackathon()}
+                        className="bg-white border border-gray-500 p-2 rounded-md flex items-center cursor-pointer hover:bg-gray-200 hover:text-red-800"
+                      >
+                        {" "}
+                        <BiLogoSnapchat className="mr-1" /> Group chat
+                      </div>
+                    </div>
                   </div>
                 )}
-                <div className="flex mr-2 mt-6 mb-4">
-                  <div
-                    onClick={() => setopenReport(true)}
-                    className="bg-white border border-gray-500 p-2 rounded-md flex items-center cursor-pointer hover:bg-gray-200 hover:text-red-800"
-                  >
-                    {" "}
-                    <BiSolidFlag className="mr-1" /> Report this
-                  </div>
-                </div>
               </div>
               <div className="text-sm ml-10 col-span-3 ">
                 <div className="font-bold mb-2">Who can participate</div>

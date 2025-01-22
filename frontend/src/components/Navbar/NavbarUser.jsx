@@ -16,6 +16,7 @@ import LoadingComponent from "../Loading";
 import { LogoImage } from "../../assets/images";
 import { ArrowRightIcon } from "@heroicons/react/20/solid";
 import { isActiveSidebarAction } from "../../redux/slices/skills/skillsSlices";
+import NotificationBell from "./notificationBell";
 function MenuList({ user, onClick }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -201,8 +202,14 @@ function NavbarUser({ user }) {
                 </Link>
               </div>
             ) : (
-              <div>
-                <MenuList user={user} />
+              <div className="flex items-center">
+                <div className="flex items-center mr-4 space-x-4">
+                  {/* Thêm chuông notification ở đây */}
+                  <NotificationBell />
+                </div>
+                <div>
+                  <MenuList user={user} />
+                </div>
               </div>
             )}
           </div>

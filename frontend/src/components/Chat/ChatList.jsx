@@ -202,9 +202,10 @@ const ChatList = ({ setSelectedDiscussion }) => {
                   >
                     <img
                       src={
-                        !chat.isGroupChat
+                        chat.avatarGroupChat ??
+                        (!chat.isGroupChat
                           ? getSenderAvatar(user, chat.users)
-                          : groupChat
+                          : groupChat)
                       }
                       alt="avatar"
                       style={{
@@ -221,15 +222,16 @@ const ChatList = ({ setSelectedDiscussion }) => {
                           : chat.chatName}
                       </p>
                       {chat.latestMessage && (
-                        <p className="max-lg:hidden text-xs text-gray-700">
+                        <p className="max-lg:hidden text-xs text-gray-700 text-ellipsis line-clamp-1">
                           <strong>
                             {getLastestMessageSender(
                               chat.latestMessage.sender,
-                              chat.users
+                              chat.users,
+                              chat.orgSender
                             )}{" "}
                             :
                           </strong>{" "}
-                          {chat.latestMessage.content.length > 50
+                          {chat?.latestMessage?.content?.length > 50
                             ? chat.latestMessage.content.substring(0, 51) +
                               "..."
                             : chat.latestMessage.content}

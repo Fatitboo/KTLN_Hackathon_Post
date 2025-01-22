@@ -1,14 +1,16 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { ChatDocument } from './schema/chat.schema';
 import { UserDocument } from 'src/user/infrastructure/database/schemas';
-
+import { HackathonDocument } from 'src/hackathon/infrastructure/database/schemas';
 @Injectable()
 export class ChatService {
   constructor(
     @InjectModel(ChatDocument.name) private chatModel: Model<ChatDocument>,
     @InjectModel(UserDocument.name) private userModel: Model<UserDocument>,
+    @InjectModel(HackathonDocument.name)
+    private readonly hackathonModel: Model<HackathonDocument>,
   ) {}
 
   // Tạo hoặc lấy phòng chat một-một
@@ -47,6 +49,63 @@ export class ChatService {
       };
 
       const createdChat = await this.chatModel.create(chatData);
+      const fullChat = await this.chatModel
+        .findOne({ _id: createdChat._id })
+        .populate({
+          path: 'users',
+          model: 'UserDocument',
+          select: '_id email fullname avatar userType',
+        });
+
+      return fullChat;
+    }
+  }
+
+  async accessChatHacakthon(hackathonId: string, currentUserId: any) {
+    if (!hackathonId) {
+      throw new NotFoundException('HackathonId param not sent with request');
+    }
+    const hackathon = await this.hackathonModel.findById(hackathonId);
+    if (!hackathon) throw new NotFoundException('Hackathon not found');
+
+    const isChat = await this.chatModel.findOne({
+      isGroupChat: true,
+      orgHackathon: hackathonId,
+    });
+
+    if (isChat) {
+      const updatedChat = await this.chatModel
+        .findByIdAndUpdate(
+          isChat._id,
+          {
+            $addToSet: { users: currentUserId }, // Chỉ thêm nếu userId chưa tồn tại
+          },
+          { new: true }, // Trả về tài liệu đã cập nhật
+        )
+        .populate({
+          path: 'users',
+          model: 'UserDocument',
+          select: '_id email fullname avatar userType',
+        });
+      return updatedChat;
+    } else {
+      const users = hackathon.registerUsers.map((item) =>
+        item.userId.toString(),
+      );
+      const us = [...new Set([...users, hackathon.user, currentUserId])];
+      const createdChat = await this.chatModel.create({
+        chatName: `Group chat ${hackathon.hackathonName}`,
+        users: us,
+        isGroupChat: true,
+        avatarGroupChat: hackathon.thumbnail,
+        orgHackathon: hackathon._id.toString(),
+        orgSender: {
+          id: hackathon.user.toString(),
+          avatar: hackathon.thumbnail,
+          name: `Admin hackathon ${hackathon.hackathonName}`,
+        },
+        groupAdmins: [hackathon.user],
+      });
       const fullChat = await this.chatModel
         .findOne({ _id: createdChat._id })
         .populate({

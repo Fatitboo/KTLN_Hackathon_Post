@@ -40,6 +40,9 @@ import { JwtAuthGuard } from 'src/user/domain/common/guards/jwtAuth.guard';
 import { InteractionDocument } from 'src/hackathon/infrastructure/database/schemas/interaction.schema';
 import { v4 as uuidv4 } from 'uuid';
 import { GetMembersProjectQuery } from 'src/project/application/queries/get-member-project/get-member-project.query';
+import { urlFe } from 'src/main';
+import { NotificationDocument } from 'src/hackathon/infrastructure/database/schemas/notification.schema';
+import { templateConfirmRegisterHTML } from 'src/user/infrastructure/constants/template-email-confirm-register';
 
 @Controller('projects')
 export class ProjectController {
@@ -56,6 +59,8 @@ export class ProjectController {
     private readonly hackathonModel: Model<HackathonDocument>,
     @InjectModel(InteractionDocument.name)
     private readonly interactionModel: Model<InteractionDocument>,
+    @InjectModel(NotificationDocument.name)
+    private readonly notificationModel: Model<NotificationDocument>,
   ) {}
 
   @Get()
@@ -234,12 +239,14 @@ export class ProjectController {
       {
         path: 'owner',
         model: 'UserDocument',
-        select: 'fullname email settingRecommend _id',
+        select: 'fullname email settingRecommend _id avatar',
       },
     ]);
     if (!project) throw new BadRequestException();
     const { emails } = body;
-
+    const users = await this.userModel
+      .find({ email: { $in: emails } })
+      .select('_id email');
     const hackathon = project.registeredToHackathon as any;
     const hackathonId = hackathon._id.toString();
     const objHackathon = {
@@ -250,23 +257,47 @@ export class ProjectController {
     };
     const senderEmail = (project.owner as any)?.email;
     const senderName = (project.owner as any)?.fullname;
+
     await Promise.all(
-      emails.map((email) => {
+      users.map(async (item) => {
+        const user = item as any;
+
         const paramsToken = {
-          email,
+          email: user.email,
           hackathonId,
           projectId,
         };
-        const token = this.auth2Service.generateTokenInvite(paramsToken);
-        const link = `http://localhost:5173/Hackathon-detail/${hackathonId}/auto-register?token=${token}&email=${encodeURIComponent(email)}`;
 
-        sendMailInviteUser(
+        const token = this.auth2Service.generateTokenInvite(paramsToken);
+        const link = `/Hackathon-detail/${hackathonId}/auto-register?token=${token}&email=${encodeURIComponent(user.email)}`;
+        const noti = await this.notificationModel.create({
+          type: 'invitation',
+          sender: {
+            id: (project.owner as any)?._id,
+            avatar: (project.owner as any)?.avatar,
+            type: 'user',
+            name: senderName,
+          },
+          content: `Hi there! ${senderName} has invited you to join their team for the upcoming hackathon ${hackathon.hackathonName}.This is an incredible opportunity to collaborate, learn, and potentially win amazing prizes. Click on the link below to accept the invitation and secure your spot on the team.`,
+          title: 'You ve Been Invited to Join a Team',
+          additionalData: {
+            hackathonName: hackathon.hackathonName,
+            linkInvite: link,
+            linkDetails: `/Hackathon-detail/${hackathon._id.toString()}/overview`,
+          },
+        });
+        if (user?._id) {
+          await this.userModel.findByIdAndUpdate(user?._id, {
+            $push: { notifications: noti._id },
+          });
+        }
+        await sendMailInviteUser(
           hackathonId,
           senderName,
           senderEmail,
           '',
-          email,
-          link,
+          user.email,
+          urlFe + link,
           objHackathon,
         );
       }),
@@ -312,6 +343,7 @@ export class ProjectController {
   async autoRegister(
     @Request() request: any,
     @Query('token') token: string,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/ban-types
     @Body() body: {},
   ) {
     const payload = this.auth2Service.extractPayload(token);
@@ -365,9 +397,42 @@ export class ProjectController {
       );
       existingUser.projects.push(project._id);
 
-      await existingUser.save();
       await existingHackathon.save();
+      const noti = await this.notificationModel.create({
+        type: 'participation_confirmation',
+        sender: {
+          id: existingHackathon._id,
+          avatar: existingHackathon.thumbnail,
+          type: 'hackathon',
+          name: existingHackathon.hackathonName,
+        },
+        content: `Your registration for ${existingHackathon.hackathonName} has been confirmed!`,
+        title: 'Registration Confirmed for Hackathon',
+        additionalData: {
+          hackathonName: existingHackathon.hackathonName,
+          hackathonTime: `${existingHackathon.submissions.start} - ${existingHackathon.submissions.deadline}`,
+          hackathonLocation: existingHackathon.location,
+          linkDetails: `/Hackathon-detail/${hackathonId}/overview`,
+        },
+      });
 
+      if (existingUser.notifications) existingUser.notifications.push(noti._id);
+      else existingUser.notifications = [noti._id];
+      await existingUser.save();
+
+      await sendEmail(
+        existingUser.email,
+        templateConfirmRegisterHTML(
+          `${urlFe}/Hackathon-detail/${hackathonId}/overview`,
+          existingUser.fullname,
+          existingHackathon.hackathonName,
+          `${existingHackathon.submissions.start} - ${existingHackathon.submissions.deadline}`,
+          existingHackathon.location,
+          existingHackathon.hackathonTypes.join(','),
+        ),
+        'Confirmation register Hackathon',
+        'Send mail successfull',
+      );
       if (existingHackathon.hackathonIntegrateId && userId) {
         await this.interactionModel.create({
           user_id: new Types.ObjectId(userId),
@@ -488,7 +553,7 @@ export class ProjectController {
       comment?: { user: string; comment: string };
     },
   ) {
-    const { updateId, comment, user, updateStr } = body;
+    const { comment, user, updateStr } = body;
     const project = await this.projectModel.findById(projectId).populate([
       {
         path: 'registeredToHackathon',
@@ -629,7 +694,7 @@ async function sendMailInviteUser(
     receiverEmail,
     templateInviteHTML(
       linkInvite,
-      `http://localhost:5173/Hackathon-detail/${hackathonId}/overview`,
+      `${urlFe}/Hackathon-detail/${hackathonId}/overview`,
       senderName,
       receiverName,
       senderEmail,

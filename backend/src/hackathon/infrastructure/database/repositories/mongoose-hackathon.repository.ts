@@ -2,12 +2,17 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Hackathon } from 'src/hackathon/domain/entities/hackathon.entity';
 import { HackathonRepository } from 'src/hackathon/domain/repositories/hackathon.repository';
 import { HackathonDocument } from '../schemas';
-import { Model, PipelineStage, Types } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { NotFoundException } from '@nestjs/common';
 import { UserDocument } from 'src/user/infrastructure/database/schemas';
 import { ProjectDocument } from 'src/project/infrastructure/database/schemas';
 import { GetAllRegisterUsersQueryProps } from 'src/hackathon/application/queries/get-all-register-users/get-all-register-users.query';
 import { InteractionDocument } from '../schemas/interaction.schema';
+import { ChatDocument } from 'src/chat/schema/chat.schema';
+import { NotificationDocument } from '../schemas/notification.schema';
+import { urlFe } from 'src/main';
+import { sendEmail } from 'src/user/domain/services/email.service';
+import { templateHackathonUpdateHTML } from 'src/user/infrastructure/constants/template-email-confirm-register copy';
 
 export class MongooseHackathonRepository implements HackathonRepository {
   constructor(
@@ -22,11 +27,14 @@ export class MongooseHackathonRepository implements HackathonRepository {
 
     @InjectModel(InteractionDocument.name)
     private readonly interactionModel: Model<InteractionDocument>,
+
+    @InjectModel(ChatDocument.name)
+    private readonly chatModel: Model<ChatDocument>,
+
+    @InjectModel(NotificationDocument.name)
+    private readonly notificationModel: Model<NotificationDocument>,
   ) {}
-  async getHackathonComponent(
-    id: string,
-    type: string,
-  ): Promise<HackathonDocument | null> {
+  async getHackathonComponent(id: string, type: string): Promise<any> {
     let getter = '';
     switch (type) {
       case 'form-hackathon-essential':
@@ -82,6 +90,7 @@ export class MongooseHackathonRepository implements HackathonRepository {
       .exec();
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async findAllProject(id: string, type: string, page: number): Promise<any[]> {
     const existingHackathon = await this.hackathonModel.findById(id).exec();
     if (!existingHackathon.registedTeams) return null;
@@ -208,10 +217,6 @@ export class MongooseHackathonRepository implements HackathonRepository {
     const endIndex = page * limit;
 
     filteredUsers = filteredUsers.slice(startIndex, endIndex);
-    console.log(
-      '🚀 ~ MongooseHackathonRepository ~ filteredUsers:',
-      filteredUsers,
-    );
 
     return {
       data: filteredUsers,
@@ -221,6 +226,7 @@ export class MongooseHackathonRepository implements HackathonRepository {
     };
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async findAll(userId: string, page: number): Promise<any[]> {
     if (userId) {
       console.log(userId);
@@ -292,7 +298,85 @@ export class MongooseHackathonRepository implements HackathonRepository {
     if (!updatedHackathon) {
       throw new NotFoundException(`Hackathon with ID ${id} not found.`);
     }
+    const isChat = await this.chatModel.findOne({
+      isGroupChat: true,
+      orgHackathon: updatedHackathon._id.toString(),
+    });
 
+    if (!isChat) {
+      await this.chatModel.create({
+        chatName: `Group chat ${updatedHackathon.hackathonName}`,
+        users: [updatedHackathon.user],
+        isGroupChat: true,
+        avatarGroupChat: updatedHackathon.thumbnail,
+        orgHackathon: updatedHackathon._id.toString(),
+        orgSender: {
+          avatar: updatedHackathon.thumbnail,
+          name: `Admin hackathon ${updatedHackathon.hackathonName}`,
+        },
+        groupAdmins: [updatedHackathon.user],
+      });
+    }
+
+    const noti = await this.notificationModel.create({
+      type: 'hackathon_update',
+      sender: {
+        id: updatedHackathon._id,
+        avatar: updatedHackathon.thumbnail,
+        type: 'hackathon',
+        name: updatedHackathon.hackathonName,
+      },
+      content: `We have an important update regarding the ${updatedHackathon.hackathonName}. The information have been changed. Please ensure you mark your calendars and plan accordingly. For further updates or queries, visit the link below.!`,
+      title: 'Important Update: Hackathon Details Changed',
+      additionalData: {
+        hackathonName: updatedHackathon.hackathonName,
+        hackathonTime: `${updatedHackathon.submissions.start} - ${updatedHackathon.submissions.deadline}`,
+        hackathonLocation: updatedHackathon.location,
+        linkDetails: `/Hackathon-detail/${updatedHackathon._id.toString()}/overview`,
+      },
+    });
+
+    const registerUsers = await this.interactionModel
+      .find({
+        hackathon: updatedHackathon._id,
+      })
+      .populate({
+        path: 'user_id',
+        model: 'UserDocument',
+        select: '_id email',
+      });
+    await Promise.all(
+      registerUsers.map(async (interaction) => {
+        const user = interaction.user_id as any;
+        if (user?._id) {
+          await this.userModel.findByIdAndUpdate(user?._id, {
+            $push: { notifications: noti._id },
+          });
+        }
+      }),
+    );
+    const emails = registerUsers.map((interaction) => {
+      const user = interaction.user_id as any;
+      if (user?.email) {
+        return sendEmail(
+          user.email,
+          templateHackathonUpdateHTML(
+            `${urlFe}/Hackathon-detail/${updatedHackathon._id.toString()}/overview`,
+            user.fullname || 'Participant',
+            updatedHackathon.hackathonName,
+            `${updatedHackathon.submissions.start} - ${updatedHackathon.submissions.deadline}`,
+            updatedHackathon.location,
+          ),
+          'Hackathon Update',
+          'Update Details Sent',
+        ).catch((err) => {
+          console.error(`Failed to send email to ${user.email}:`, err.message);
+        });
+      }
+    });
+
+    // Không chờ việc gửi email hoàn thành, trả về ngay
+    Promise.allSettled(emails);
     return updatedHackathon;
   }
 

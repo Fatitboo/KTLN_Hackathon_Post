@@ -76,6 +76,8 @@ import ManageSubscriptionType from "../pages/Admin/SubscriptionType/ManageSubscr
 import AutoRegisterJudge from "../pages/Auth/AutoRegisJudge";
 import HackathonJudgeDetail from "../pages/Judge/HackathonJudgeDetail/HackathonDetail";
 import ManageJudgeHackathon from "../pages/Judge/ManageHackathon";
+import ChatManageScreenOrganizer from "@/components/Chat/ChatManageScreenOrganizer";
+import ManageNotificationUser from "@/pages/Seeker/Setting/Notification";
 
 const publicRoutes = [
   // User Layout
@@ -224,6 +226,11 @@ const seekerRoutes = [
     layout: LayoutHasSidebar,
   },
   {
+    path: "/Seeker/manage-notification",
+    component: ManageNotificationUser,
+    layout: LayoutHasSidebar,
+  },
+  {
     path: "/Seeker/brower-products",
     component: BrowserProducts,
     layout: LayoutNoSidebar,
@@ -298,6 +305,11 @@ const corRoutes = [
   {
     path: "/Organizer/blog-management/edit-blog/:id",
     component: UpdateBlogOr,
+    layout: LayoutHasSidebar,
+  },
+  {
+    path: "/Organizer/chat",
+    component: ChatManageScreenOrganizer,
     layout: LayoutHasSidebar,
   },
   {

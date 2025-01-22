@@ -7,6 +7,7 @@ import { UserDocument } from 'src/user/infrastructure/database/schemas';
 import { sendEmail } from 'src/user/domain/services/email.service';
 import { templateHTML } from 'src/user/infrastructure/constants/template-email';
 import * as jwt from 'jsonwebtoken';
+import { urlFe } from 'src/main';
 
 @Injectable()
 export class Auth2Service {
@@ -38,7 +39,7 @@ export class Auth2Service {
       user.email,
       templateHTML(
         'verify',
-        `http://localhost:5173/user-auth/verify-account/${token}`,
+        `${urlFe}/user-auth/verify-account/${token}`,
         user.fullname,
       ),
       'Verify your email',
@@ -61,7 +62,7 @@ export class Auth2Service {
       user.email,
       templateHTML(
         'reset',
-        `http://localhost:5173/user-auth/reset-password/${token}`,
+        `${urlFe}/user-auth/reset-password/${token}`,
         user.fullname,
       ),
       'Reset your password',

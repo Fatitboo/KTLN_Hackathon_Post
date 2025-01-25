@@ -41,11 +41,18 @@ import {
   NotificationDocument,
   NotificationSchema,
 } from './infrastructure/database/schemas/notification.schema';
+import { TeamController } from './adapter/controllers/team.controller';
+import {
+  TeamDocument,
+  TeamSchema,
+} from './infrastructure/database/schemas/team.schema';
+import { UserModule } from 'src/user/user.module';
 
 @Module({
   imports: [
     ChatModule,
     CqrsModule,
+    UserModule,
     MongooseModule.forFeature([
       { name: HackathonDocument.name, schema: HackathonSchema },
       { name: UserDocument.name, schema: UserSchema },
@@ -54,9 +61,10 @@ import {
       { name: ReportDocument.name, schema: ReportSchema },
       { name: ChatDocument.name, schema: ChatSchema },
       { name: NotificationDocument.name, schema: NotificationSchema },
+      { name: TeamDocument.name, schema: TeamSchema },
     ]),
   ],
-  controllers: [HackathonController],
+  controllers: [HackathonController, TeamController],
   providers: [
     { provide: HACKATHON_REPOSITORY, useClass: MongooseHackathonRepository },
     GetHackathonHandler,

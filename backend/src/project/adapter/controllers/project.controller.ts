@@ -16,7 +16,6 @@ import {
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Project } from 'src/project/domain/entities/project.entity';
-import { CreateProjectCommand } from 'src/project/application/commands/create-project/create-project.command';
 import { GetProjectQuery } from 'src/project/application/queries/get-project/get-project.query';
 import { UpdateProjectCommand } from 'src/project/application/commands/update-project/update-project.command';
 import { DeleteProjectCommand } from 'src/project/application/commands/delete-project/delete-project.command';
@@ -43,6 +42,7 @@ import { GetMembersProjectQuery } from 'src/project/application/queries/get-memb
 import { urlFe } from 'src/main';
 import { NotificationDocument } from 'src/hackathon/infrastructure/database/schemas/notification.schema';
 import { templateConfirmRegisterHTML } from 'src/user/infrastructure/constants/template-email-confirm-register';
+import { TeamDocument } from 'src/hackathon/infrastructure/database/schemas/team.schema';
 
 @Controller('projects')
 export class ProjectController {
@@ -61,6 +61,8 @@ export class ProjectController {
     private readonly interactionModel: Model<InteractionDocument>,
     @InjectModel(NotificationDocument.name)
     private readonly notificationModel: Model<NotificationDocument>,
+    @InjectModel(TeamDocument.name)
+    private readonly teamModel: Model<TeamDocument>,
   ) {}
 
   @Get()
@@ -131,18 +133,93 @@ export class ProjectController {
   @Post(':userId')
   async createProject(
     @Param('userId') userId: string,
-    @Body() body: { title: string; hackathonId?: string; teamType?: string },
-  ): Promise<string> {
-    const result = this.commandBus.execute(
-      new CreateProjectCommand({
-        userId: userId,
-        title: body.title,
-        hackathonId: body.hackathonId,
-        teamType: body.teamType,
-      }),
-    );
+    @Body()
+    body: {
+      title: string;
+      hackathonId?: string;
+      teamType?: string;
+      teamId?: string;
+    },
+  ) {
+    const { title, hackathonId, teamType, teamId } = body;
+    const existingUser = await this.userModel.findById(userId);
 
-    return result;
+    if (!existingUser) {
+      throw new NotFoundException(`User with ID ${userId} not found.`);
+    }
+    let projectNameId = `${title.trim().toLocaleLowerCase().replace(/ /g, '-')}`;
+    const timestamp: number = Date.now();
+
+    const existProject = await this.projectModel.findOne({ projectNameId });
+    if (existProject) {
+      projectNameId =
+        projectNameId +
+        `-${existProject._id.toString().slice(0, 4)}${timestamp.toString().slice(-4)}`;
+    }
+    if (teamId) {
+      const existTeam = await this.teamModel.findById(teamId);
+      if (!existTeam) {
+        throw new NotFoundException(`Team with ID ${teamId} not found.`);
+      }
+      const createProject = new this.projectModel({
+        owner: userId,
+        projectTitle: title,
+        projectNameId,
+        teamName: existTeam.name,
+        createdByUsername: existTeam.members,
+        createdBy: existTeam.members,
+        teamType,
+      });
+
+      const prjObj = await createProject.save();
+      existTeam.projects.push(prjObj._id);
+      await existTeam.save();
+      if (hackathonId) {
+        const existHackathon = await this.hackathonModel.findById(hackathonId);
+        if (!existHackathon) {
+          throw new NotFoundException(
+            `Hackathon with ID ${hackathonId} not found.`,
+          );
+        }
+        existHackathon.registedTeams.push(prjObj._id);
+        await existHackathon.save();
+      }
+      existTeam.members.map(async (mem) => {
+        await this.userModel.findByIdAndUpdate(
+          mem,
+          {
+            $push: { projects: prjObj._id },
+          },
+          { new: true },
+        );
+      });
+      return { projectId: prjObj._id.toString(), type: 'add-to-team' };
+    } else {
+      const createProject = new this.projectModel({
+        owner: userId,
+        projectTitle: title,
+        projectNameId,
+        teamName: 'Untitled',
+        createdByUsername: [userId],
+        createdBy: [userId],
+        teamType,
+      });
+
+      const prjObj = await createProject.save();
+      if (hackathonId) {
+        const existHackathon = await this.hackathonModel.findById(hackathonId);
+        if (!existHackathon) {
+          throw new NotFoundException(
+            `Hackathon with ID ${hackathonId} not found.`,
+          );
+        }
+        existHackathon.registedTeams.push(prjObj._id);
+        await existHackathon.save();
+      }
+      existingUser.projects.push(prjObj._id);
+      await existingUser.save();
+      return { projectId: prjObj._id.toString(), type: 'add-to-personal' };
+    }
   }
 
   @Put(':id')
@@ -205,9 +282,11 @@ export class ProjectController {
     return true;
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post(':projectId/submit-hackathon')
   async submitHackathon(
     @Param('projectId') projectId: string,
+    @Request() request: any,
     @Body()
     body: {
       hackathonId: string;
@@ -215,15 +294,24 @@ export class ProjectController {
       linkSubmitFile: string;
     },
   ) {
+    const userId = request.user._props.id as string;
     const project = await this.projectModel.findById(projectId);
     if (!project) throw new NotFoundException();
     const hackathon = await this.hackathonModel.findById(body.hackathonId);
     if (!hackathon) throw new NotFoundException();
+    const team = await this.teamModel.findOne({
+      hackathonId: body.hackathonId,
+      members: { $in: [new Types.ObjectId(userId)] },
+      status: 'active',
+    });
     project.isSubmmited = true;
     project.linkSubmitFile = body.linkSubmitFile;
     project.linkSubmitVideo = body.linkSubmitVideo;
     project.registeredToHackathon = hackathon._id;
+    team.submittedProjectId = project._id;
+    await team.save();
     await project.save();
+    return 'ok';
   }
 
   @Post(':projectId/send-mail-invite')
@@ -246,7 +334,7 @@ export class ProjectController {
     const { emails } = body;
     const users = await this.userModel
       .find({ email: { $in: emails } })
-      .select('_id email');
+      .select('_id email isUserSystem');
     const hackathon = project.registeredToHackathon as any;
     const hackathonId = hackathon._id.toString();
     const objHackathon = {
@@ -291,15 +379,17 @@ export class ProjectController {
             $push: { notifications: noti._id },
           });
         }
-        await sendMailInviteUser(
-          hackathonId,
-          senderName,
-          senderEmail,
-          '',
-          user.email,
-          urlFe + link,
-          objHackathon,
-        );
+        if (user?.email && user?.isUserSystem) {
+          await sendMailInviteUser(
+            hackathonId,
+            senderName,
+            senderEmail,
+            '',
+            user.email,
+            urlFe + link,
+            objHackathon,
+          );
+        }
       }),
     );
     return 'ok';
@@ -318,18 +408,21 @@ export class ProjectController {
     const existingHackathon = await this.hackathonModel.findById(hackathonId);
     if (!existingHackathon)
       throw new BadRequestException('Not found hackathon');
+
     await Promise.all(
       emails.map(async (email) => {
         const user = await this.userModel.findOne({ email });
         if (!user) dataUser.noAccount.push(email);
         else {
+          const team = await this.teamModel.findOne({
+            hackathonId: hackathonId,
+            members: { $in: [user._id] },
+            status: 'active',
+          });
           const registerToHackathon = existingHackathon.registerUsers.find(
             (u) => u.userId.toString() === user._id.toString(),
           );
-          if (
-            registerToHackathon &&
-            registerToHackathon.status === TEAM_STATUS.HAD_TEAM
-          ) {
+          if (registerToHackathon && team) {
             dataUser.registedAndHasTeam.push(email);
           }
         }
@@ -347,152 +440,328 @@ export class ProjectController {
     @Body() body: {},
   ) {
     const payload = this.auth2Service.extractPayload(token);
-    const { email, hackathonId, projectId } = payload as any;
+    const { email, hackathonId, projectId, teamId } = payload as any;
     const { user } = request;
+    if (teamId) {
+      if (user._props.email !== email)
+        throw new BadRequestException('Not found user');
+      const existingUser = await this.userModel.findOne({ email });
+      if (!existingUser) throw new BadRequestException('Not found user');
 
-    if (user._props.email !== email)
-      throw new BadRequestException('Not found user');
-    const existingUser = await this.userModel.findOne({ email });
-    if (!existingUser) throw new BadRequestException('Not found user');
-    const project = await this.projectModel.findById(projectId);
-    if (!project) throw new BadRequestException('Not found project');
-    const existingHackathon = await this.hackathonModel.findById(hackathonId);
-    if (!existingHackathon)
-      throw new BadRequestException('Not found hackathon');
-    const userId = existingUser._id.toString();
+      const existingHackathon = await this.hackathonModel.findById(hackathonId);
+      if (!existingHackathon)
+        throw new BadRequestException('Not found hackathon');
+      const userId = existingUser._id.toString();
 
-    // check number of team
-    const currentNum = project.createdBy.length;
-    let isOk = true;
-    const teamRequirement = existingHackathon.teamRequirement;
-    if (teamRequirement) {
-      if (currentNum >= teamRequirement.max && teamRequirement.isRequire) {
-        isOk = false;
+      const team = await this.teamModel.findById(teamId);
+      if (!team) throw new BadRequestException('Not found team');
+      const currentNum = team.members?.length ?? 0;
+      let isOk = true;
+      const teamRequirement = existingHackathon.teamRequirement;
+      if (teamRequirement) {
+        if (currentNum >= teamRequirement.max && teamRequirement.isRequire) {
+          isOk = false;
+        }
       }
-    }
-    if (!isOk)
-      throw new ConflictException(
-        'This team is full. Please ask another team to join. ',
+      if (!isOk)
+        throw new ConflictException(
+          'This team is full. Please ask another team to join. ',
+        );
+      const registerToHackathon = existingHackathon.registerUsers.find(
+        (user) => user.userId.toString() === userId,
       );
-    /**
-     * check status
-     * isRegister to this Hackathon
-     * => Yes  => check status
-     *        status = solo | find_teamate => Add to project, hackathon => Delete old project if has
-     * => No => Add to project, hackathon
-     */
-    const registerToHackathon = existingHackathon.registerUsers.find(
-      (user) => user.userId.toString() === userId,
-    );
 
-    if (!registerToHackathon) {
-      existingUser.registerHackathons.push(existingHackathon._id);
-      existingHackathon.registerUsers.push({
-        userId: existingUser._id,
-        status: TEAM_STATUS.HAD_TEAM,
-      });
-      await this.projectModel.updateOne(
-        { _id: projectId },
-        { $addToSet: { createdBy: existingUser._id } },
-      );
-      existingUser.projects.push(project._id);
-
-      await existingHackathon.save();
-      const noti = await this.notificationModel.create({
-        type: 'participation_confirmation',
-        sender: {
-          id: existingHackathon._id,
-          avatar: existingHackathon.thumbnail,
-          type: 'hackathon',
-          name: existingHackathon.hackathonName,
-        },
-        content: `Your registration for ${existingHackathon.hackathonName} has been confirmed!`,
-        title: 'Registration Confirmed for Hackathon',
-        additionalData: {
-          hackathonName: existingHackathon.hackathonName,
-          hackathonTime: `${existingHackathon.submissions.start} - ${existingHackathon.submissions.deadline}`,
-          hackathonLocation: existingHackathon.location,
-          linkDetails: `/Hackathon-detail/${hackathonId}/overview`,
-        },
-      });
-
-      if (existingUser.notifications) existingUser.notifications.push(noti._id);
-      else existingUser.notifications = [noti._id];
-      await existingUser.save();
-
-      await sendEmail(
-        existingUser.email,
-        templateConfirmRegisterHTML(
-          `${urlFe}/Hackathon-detail/${hackathonId}/overview`,
-          existingUser.fullname,
-          existingHackathon.hackathonName,
-          `${existingHackathon.submissions.start} - ${existingHackathon.submissions.deadline}`,
-          existingHackathon.location,
-          existingHackathon.hackathonTypes.join(','),
-        ),
-        'Confirmation register Hackathon',
-        'Send mail successfull',
-      );
-      if (existingHackathon.hackathonIntegrateId && userId) {
-        await this.interactionModel.create({
-          user_id: new Types.ObjectId(userId),
-          hackathon: existingHackathon._id,
-          hackathon_id: existingHackathon.hackathonIntegrateId,
+      if (!registerToHackathon) {
+        existingUser.registerHackathons.push(existingHackathon._id);
+        existingHackathon.registerUsers.push({
+          userId: existingUser._id,
           status: TEAM_STATUS.HAD_TEAM,
-          interaction_type: 'join',
         });
-      }
-
-      return {
-        projectId,
-        teamStatus: TEAM_STATUS.HAD_TEAM,
-        hackathonId,
-      };
-    } else {
-      if (registerToHackathon.status === TEAM_STATUS.HAD_TEAM)
-        throw new BadRequestException(
-          'This user has join a team in this Hackathon',
+        team.members.push(new Types.ObjectId(userId));
+        await team.save();
+        await existingHackathon.save();
+        await this.projectModel.updateMany(
+          { _id: { $in: team.projects } },
+          { $addToSet: { createdBy: existingUser._id } },
         );
+        const noti = await this.notificationModel.create({
+          type: 'participation_confirmation',
+          sender: {
+            id: existingHackathon._id,
+            avatar: existingHackathon.thumbnail,
+            type: 'hackathon',
+            name: existingHackathon.hackathonName,
+          },
+          content: `Your registration for ${existingHackathon.hackathonName} has been confirmed!`,
+          title: 'Registration Confirmed for Hackathon',
+          additionalData: {
+            hackathonName: existingHackathon.hackathonName,
+            hackathonTime: `${existingHackathon.submissions.start} - ${existingHackathon.submissions.deadline}`,
+            hackathonLocation: existingHackathon.location,
+            linkDetails: `/Hackathon-detail/${hackathonId}/overview`,
+          },
+        });
 
-      await this.projectModel
-        .deleteMany({
-          createdBy: new Types.ObjectId(userId),
-          registeredToHackathon: new Types.ObjectId(hackathonId),
-        })
-        .exec();
+        if (existingUser.notifications)
+          existingUser.notifications.push(noti._id);
+        else existingUser.notifications = [noti._id];
+        existingUser.projects.push(...team.projects);
+        await existingUser.save();
+        if (existingUser.isUserSystem) {
+          await sendEmail(
+            existingUser.email,
+            templateConfirmRegisterHTML(
+              `${urlFe}/Hackathon-detail/${hackathonId}/overview`,
+              existingUser.fullname,
+              existingHackathon.hackathonName,
+              `${existingHackathon.submissions.start} - ${existingHackathon.submissions.deadline}`,
+              existingHackathon.location,
+              existingHackathon.hackathonTypes.join(','),
+            ),
+            'Confirmation register Hackathon',
+            'Send mail successfull',
+          );
+        }
 
-      await this.projectModel.updateOne(
-        { _id: projectId },
-        { $addToSet: { createdBy: existingUser._id } },
-      );
-      await this.hackathonModel.updateOne(
-        { _id: hackathonId, 'registerUsers.userId': userId },
-        { $set: { 'registerUsers.$.status': TEAM_STATUS.HAD_TEAM } },
-      );
-      existingUser.projects.push(project._id);
-
-      if (existingHackathon.hackathonIntegrateId && userId) {
-        await this.interactionModel.findOneAndUpdate(
-          {
-            user_id: userId,
-            hackathon: hackathonId,
+        if (existingHackathon.hackathonIntegrateId && userId) {
+          await this.interactionModel.create({
+            user_id: new Types.ObjectId(userId),
+            hackathon: existingHackathon._id,
+            hackathon_id: existingHackathon.hackathonIntegrateId,
+            status: TEAM_STATUS.HAD_TEAM,
             interaction_type: 'join',
-          },
-          {
-            $set: {
-              status: TEAM_STATUS.HAD_TEAM, // Trạng thái mới
-            },
-          },
-        );
-      }
-      await existingUser.save();
-      await existingHackathon.save();
+          });
+        }
 
-      return {
-        projectId,
-        teamStatus: TEAM_STATUS.HAD_TEAM,
-        hackathonId,
-      };
+        return {
+          projectId,
+          teamStatus: TEAM_STATUS.HAD_TEAM,
+          hackathonId,
+        };
+      } else {
+        const texist = await this.teamModel.find({
+          hackathonId: hackathonId,
+          members: { $in: [userId] },
+          status: 'active',
+        });
+        if (texist)
+          throw new BadRequestException(
+            'This user has join a team in this Hackathon',
+          );
+
+        await this.projectModel
+          .deleteMany({
+            createdBy: new Types.ObjectId(userId),
+            registeredToHackathon: new Types.ObjectId(hackathonId),
+          })
+          .exec();
+
+        await this.projectModel.updateMany(
+          { _id: { $in: team.projects } },
+          { $addToSet: { createdBy: existingUser._id } },
+        );
+
+        await this.hackathonModel.updateOne(
+          { _id: hackathonId, 'registerUsers.userId': userId },
+          { $set: { 'registerUsers.$.status': TEAM_STATUS.HAD_TEAM } },
+        );
+        team.members.push(new Types.ObjectId(userId));
+        await team.save();
+        existingUser.projects.push(...team.projects);
+        if (existingHackathon.hackathonIntegrateId && userId) {
+          await this.interactionModel.findOneAndUpdate(
+            {
+              user_id: userId,
+              hackathon: hackathonId,
+              interaction_type: 'join',
+            },
+            {
+              $set: {
+                status: TEAM_STATUS.HAD_TEAM, // Trạng thái mới
+              },
+            },
+          );
+        }
+        const noti = await this.notificationModel.create({
+          type: 'participation_confirmation',
+          sender: {
+            id: existingHackathon._id,
+            avatar: existingHackathon.thumbnail,
+            type: 'hackathon',
+            name: existingHackathon.hackathonName,
+          },
+          content: `Your registration for join a team in ${existingHackathon.hackathonName} has been confirmed!`,
+          title: 'Join a team Hackathon',
+          additionalData: {
+            hackathonName: existingHackathon.hackathonName,
+            hackathonTime: `${existingHackathon.submissions.start} - ${existingHackathon.submissions.deadline}`,
+            hackathonLocation: existingHackathon.location,
+            linkDetails: `/Hackathon-detail/${hackathonId}/overview`,
+          },
+        });
+
+        if (existingUser.notifications)
+          existingUser.notifications.push(noti._id);
+        else existingUser.notifications = [noti._id];
+        await existingUser.save();
+        await existingHackathon.save();
+
+        return {
+          projectId,
+          teamStatus: TEAM_STATUS.HAD_TEAM,
+          hackathonId,
+        };
+      }
+    } else if (projectId) {
+      if (user._props.email !== email)
+        throw new BadRequestException('Not found user');
+      const existingUser = await this.userModel.findOne({ email });
+      if (!existingUser) throw new BadRequestException('Not found user');
+
+      const existingHackathon = await this.hackathonModel.findById(hackathonId);
+      if (!existingHackathon)
+        throw new BadRequestException('Not found hackathon');
+      const userId = existingUser._id.toString();
+
+      const project = await this.projectModel.findById(projectId);
+      if (!project) throw new BadRequestException('Not found project');
+
+      // check number of team
+      const currentNum = project.createdBy.length;
+      let isOk = true;
+      const teamRequirement = existingHackathon.teamRequirement;
+      if (teamRequirement) {
+        if (currentNum >= teamRequirement.max && teamRequirement.isRequire) {
+          isOk = false;
+        }
+      }
+      if (!isOk)
+        throw new ConflictException(
+          'This team is full. Please ask another team to join. ',
+        );
+      /**
+       * check status
+       * isRegister to this Hackathon
+       * => Yes  => check status
+       *        status = solo | find_teamate => Add to project, hackathon => Delete old project if has
+       * => No => Add to project, hackathon
+       */
+      const registerToHackathon = existingHackathon.registerUsers.find(
+        (user) => user.userId.toString() === userId,
+      );
+
+      if (!registerToHackathon) {
+        existingUser.registerHackathons.push(existingHackathon._id);
+        existingHackathon.registerUsers.push({
+          userId: existingUser._id,
+          status: TEAM_STATUS.HAD_TEAM,
+        });
+        await this.projectModel.updateOne(
+          { _id: projectId },
+          { $addToSet: { createdBy: existingUser._id } },
+        );
+        existingUser.projects.push(project._id);
+
+        await existingHackathon.save();
+        const noti = await this.notificationModel.create({
+          type: 'participation_confirmation',
+          sender: {
+            id: existingHackathon._id,
+            avatar: existingHackathon.thumbnail,
+            type: 'hackathon',
+            name: existingHackathon.hackathonName,
+          },
+          content: `Your registration for ${existingHackathon.hackathonName} has been confirmed!`,
+          title: 'Registration Confirmed for Hackathon',
+          additionalData: {
+            hackathonName: existingHackathon.hackathonName,
+            hackathonTime: `${existingHackathon.submissions.start} - ${existingHackathon.submissions.deadline}`,
+            hackathonLocation: existingHackathon.location,
+            linkDetails: `/Hackathon-detail/${hackathonId}/overview`,
+          },
+        });
+
+        if (existingUser.notifications)
+          existingUser.notifications.push(noti._id);
+        else existingUser.notifications = [noti._id];
+        await existingUser.save();
+        if (existingUser.isUserSystem) {
+          await sendEmail(
+            existingUser.email,
+            templateConfirmRegisterHTML(
+              `${urlFe}/Hackathon-detail/${hackathonId}/overview`,
+              existingUser.fullname,
+              existingHackathon.hackathonName,
+              `${existingHackathon.submissions.start} - ${existingHackathon.submissions.deadline}`,
+              existingHackathon.location,
+              existingHackathon.hackathonTypes.join(','),
+            ),
+            'Confirmation register Hackathon',
+            'Send mail successfull',
+          );
+        }
+
+        if (existingHackathon.hackathonIntegrateId && userId) {
+          await this.interactionModel.create({
+            user_id: new Types.ObjectId(userId),
+            hackathon: existingHackathon._id,
+            hackathon_id: existingHackathon.hackathonIntegrateId,
+            status: TEAM_STATUS.HAD_TEAM,
+            interaction_type: 'join',
+          });
+        }
+
+        return {
+          projectId,
+          teamStatus: TEAM_STATUS.HAD_TEAM,
+          hackathonId,
+        };
+      } else {
+        if (registerToHackathon.status === TEAM_STATUS.HAD_TEAM)
+          throw new BadRequestException(
+            'This user has join a team in this Hackathon',
+          );
+
+        await this.projectModel
+          .deleteMany({
+            createdBy: new Types.ObjectId(userId),
+            registeredToHackathon: new Types.ObjectId(hackathonId),
+          })
+          .exec();
+
+        await this.projectModel.updateOne(
+          { _id: projectId },
+          { $addToSet: { createdBy: existingUser._id } },
+        );
+        await this.hackathonModel.updateOne(
+          { _id: hackathonId, 'registerUsers.userId': userId },
+          { $set: { 'registerUsers.$.status': TEAM_STATUS.HAD_TEAM } },
+        );
+        existingUser.projects.push(project._id);
+
+        if (existingHackathon.hackathonIntegrateId && userId) {
+          await this.interactionModel.findOneAndUpdate(
+            {
+              user_id: userId,
+              hackathon: hackathonId,
+              interaction_type: 'join',
+            },
+            {
+              $set: {
+                status: TEAM_STATUS.HAD_TEAM, // Trạng thái mới
+              },
+            },
+          );
+        }
+        await existingUser.save();
+        await existingHackathon.save();
+
+        return {
+          projectId,
+          teamStatus: TEAM_STATUS.HAD_TEAM,
+          hackathonId,
+        };
+      }
     }
   }
   @Post(':projectId/toggle-like')

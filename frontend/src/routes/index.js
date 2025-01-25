@@ -78,6 +78,7 @@ import HackathonJudgeDetail from "../pages/Judge/HackathonJudgeDetail/HackathonD
 import ManageJudgeHackathon from "../pages/Judge/ManageHackathon";
 import ChatManageScreenOrganizer from "@/components/Chat/ChatManageScreenOrganizer";
 import ManageNotificationUser from "@/pages/Seeker/Setting/Notification";
+import HackathonTeams from "@/pages/Seeker/Hackathon/Team/TeamHackathons";
 
 const publicRoutes = [
   // User Layout
@@ -185,6 +186,10 @@ const publicRoutes = [
       {
         path: "discussions",
         element: Discussion,
+      },
+      {
+        path: "teams",
+        element: HackathonTeams,
       },
       {
         path: "register",

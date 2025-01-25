@@ -2,6 +2,7 @@ import { defaultAvt } from "../../assets/images";
 import { FaTags } from "react-icons/fa6";
 
 const ParticipantItem = ({ props }) => {
+  console.log("🚀 ~ ParticipantItem ~ props:", props);
   return (
     <>
       <div className="border border-gray-200 rounded-sm p-5">
@@ -23,10 +24,10 @@ const ParticipantItem = ({ props }) => {
               <div className="flex text-xs text-gray-400 mt-3 space-x-4">
                 <div>{props?.projects?.length ?? 0} PROJECTS</div>
                 <div>{props?.followBy?.length ?? 8} FOLLOWER</div>
-                <div>{props?.achievement?.length ?? 9} ACHIVEMENT</div>
+                <div>{props?.userId?.email}</div>
               </div>
             </div>
-            <div className="rounded-full h-fit px-2 py-1 border text-sm text-gray-500 border-r-gray-100">
+            {/* <div className="rounded-full h-fit px-2 py-1 border text-sm text-gray-500 border-r-gray-100">
               {props?.status === "had_team"
                 ? "Has a team"
                 : props?.status === "working_solo"
@@ -34,7 +35,7 @@ const ParticipantItem = ({ props }) => {
                 : props?.status === "finding_teamate"
                 ? "Finding teamate"
                 : "Unknow"}
-            </div>
+            </div> */}
           </div>
         </div>
 

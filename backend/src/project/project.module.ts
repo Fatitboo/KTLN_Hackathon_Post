@@ -33,6 +33,10 @@ import {
   NotificationDocument,
   NotificationSchema,
 } from 'src/hackathon/infrastructure/database/schemas/notification.schema';
+import {
+  TeamDocument,
+  TeamSchema,
+} from 'src/hackathon/infrastructure/database/schemas/team.schema';
 
 @Module({
   imports: [
@@ -44,6 +48,7 @@ import {
       { name: UserDocument.name, schema: UserSchema },
       { name: InteractionDocument.name, schema: InterationSchema },
       { name: NotificationDocument.name, schema: NotificationSchema },
+      { name: TeamDocument.name, schema: TeamSchema },
     ]),
   ],
   controllers: [ProjectController],

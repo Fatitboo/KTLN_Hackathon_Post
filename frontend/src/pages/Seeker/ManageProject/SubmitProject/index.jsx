@@ -52,7 +52,8 @@ function SubmitProject() {
           `${baseUrl}/api/v1/projects/${extractId({
             str: projectId,
           })}/submit-hackathon`,
-          pl
+          pl,
+          { withCredentials: true }
         )
         .then(
           Swal.fire({

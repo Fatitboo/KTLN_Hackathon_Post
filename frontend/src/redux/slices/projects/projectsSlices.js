@@ -147,7 +147,13 @@ export const createProject = createAsyncThunk(
         config
       );
       if (payload.navigate) {
-        payload.navigate(`/Seeker/project/manage-project/${data?.projectId}`);
+        if (payload?.data?.teamId) {
+          payload.navigate(
+            `/Seeker/project/manage-project/!imptHktid_${payload?.data?.hackathonId}_${data?.projectId}/edit`
+          );
+        } else {
+          payload.navigate(`/Seeker/project/manage-project/${data?.projectId}`);
+        }
       }
       return data;
     } catch (error) {
@@ -483,6 +489,7 @@ const projectsSlices = createSlice({
     projectsAdmin: [],
     projectparticipants: [],
     tags: [],
+    myprojects: [],
   },
   reducers: {
     setValueSuccess: (state, action) => {
@@ -595,7 +602,7 @@ const projectsSlices = createSlice({
         getProjectRegisteredToHackathonAction.fulfilled,
         (state, action) => {
           state.loadingUD = false;
-          state.projects = action.payload;
+          state.myprojects = action.payload;
           state.isSuccessUD = true;
         }
       ),

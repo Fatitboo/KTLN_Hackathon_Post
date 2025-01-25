@@ -307,11 +307,12 @@ export class HackathonController {
     const registerUsers = await this.interactionModel
       .find({
         hackathon: hackathon._id,
+        interaction_type: 'join',
       })
       .populate({
         path: 'user_id',
         model: 'UserDocument',
-        select: '_id email',
+        select: '_id email isUserSystem',
       });
     await Promise.all(
       registerUsers.map(async (interaction) => {
@@ -323,9 +324,11 @@ export class HackathonController {
         }
       }),
     );
+    await hackathon.save();
+
     const emails = registerUsers.map((interaction) => {
       const user = interaction.user_id as any;
-      if (user?.email) {
+      if (user?.email && user?.isUserSystem) {
         return sendEmail(
           user.email,
           templateHackathonUpdateHTML(
@@ -345,7 +348,6 @@ export class HackathonController {
 
     // Không chờ việc gửi email hoàn thành, trả về ngay
     Promise.allSettled(emails);
-    await hackathon.save();
     return 'ok';
   }
 

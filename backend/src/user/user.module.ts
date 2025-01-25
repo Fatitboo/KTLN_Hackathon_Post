@@ -43,6 +43,10 @@ import {
   NotificationSchema,
 } from 'src/hackathon/infrastructure/database/schemas/notification.schema';
 import { NotificationController } from './adaper/controllers/noti.controller';
+import {
+  TeamDocument,
+  TeamSchema,
+} from 'src/hackathon/infrastructure/database/schemas/team.schema';
 @Module({
   imports: [
     CqrsModule,
@@ -56,6 +60,7 @@ import { NotificationController } from './adaper/controllers/noti.controller';
       { name: InteractionDocument.name, schema: InterationSchema },
       { name: ChatDocument.name, schema: ChatSchema },
       { name: NotificationDocument.name, schema: NotificationSchema },
+      { name: TeamDocument.name, schema: TeamSchema },
     ]),
   ],
   controllers: [UserController, AuthController, NotificationController],

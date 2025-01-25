@@ -215,7 +215,7 @@ export class SeedDataHackathonHandler
 
       // Ngày hiện tại
       const today = new Date();
-
+      //$2b$10$EYsbeAwuJQiNhuIpYFdrg.aIKoJfx67m8CknZbC54T3KCgofx0Jy2
       // Hàm tạo ngày ngẫu nhiên để đảm bảo trạng thái "Open"
       const getRandomDateRange = () => {
         // Ngày bắt đầu từ ngày 1/1/2025 đến ngày hôm nay
@@ -246,6 +246,24 @@ export class SeedDataHackathonHandler
           },
         );
       }
+    }
+
+    if (command.props.type === 'updatePassword') {
+      //$2b$10$EYsbeAwuJQiNhuIpYFdrg.aIKoJfx67m8CknZbC54T3KCgofx0Jy2
+      await this.userModel.updateMany(
+        {
+          $or: [
+            { isUserSystem: false }, // isUserSystem = false
+            { isUserSystem: { $exists: false } }, // isUserSystem không tồn tại
+          ],
+        },
+        {
+          $set: {
+            password:
+              '$2b$10$EYsbeAwuJQiNhuIpYFdrg.aIKoJfx67m8CknZbC54T3KCgofx0Jy2',
+          },
+        },
+      );
     }
     return 'ok';
   }

@@ -12,7 +12,7 @@ import TextInput from "../TextInput";
 import { createProject } from "../../redux/slices/projects/projectsSlices";
 import { useNavigate } from "react-router-dom";
 
-export const AskToAddProject = ({ setopenReport, isAddProject }) => {
+export const AskToAddProject = ({ setopenReport, isAddProject, teamId }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { loading } = useSelector((store) => store.projects);
@@ -25,10 +25,9 @@ export const AskToAddProject = ({ setopenReport, isAddProject }) => {
   } = useForm({ mode: "onChange" });
   const onSubmit = (data) => {
     const payload = {
-      data: { title: data.projectName },
+      data: { title: data.projectName, teamId },
       navigate: navigate,
     };
-    console.log("🚀 ~ onSubmit ~ payload:", payload);
     dispatch(createProject(payload));
   };
   return (

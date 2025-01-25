@@ -424,7 +424,7 @@ function ProjectDetail() {
                 </div>
 
                 <div style={{ listStyle: "none", padding: 0 }}>
-                  {teammates.map((teammate, index) => (
+                  {teammates?.map((teammate, index) => (
                     <Link
                       to={`/Seeker-detail/${teammate?._id}/Projects`}
                       key={index}

@@ -7,6 +7,7 @@ import { getAllReportsAdminAction } from "../../../../redux/slices/vacancies/vac
 import { LoadingComponent } from "../../../../components";
 import baseUrl from "@/utils/baseUrl";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 function ManageNotificationUser() {
   const dispatch = useDispatch();
@@ -178,6 +179,21 @@ function ManageNotificationUser() {
                               <p className="text-gray-600 text-sm">
                                 {noti.content}
                               </p>
+                              <div className="flex space-x-4 mt-2">
+                                <Link
+                                  to={noti?.additionalData?.linkDetails}
+                                  className="text-blue-600"
+                                >
+                                  View detail hackathon
+                                </Link>
+                                {noti?.additionalData?.linkInvite && (
+                                  <Link to={noti?.additionalData?.linkInvite}>
+                                    <div className="bg-green-800 text-white px-2">
+                                      Accept invitation
+                                    </div>
+                                  </Link>
+                                )}
+                              </div>
                             </div>
                           ))
                         )}

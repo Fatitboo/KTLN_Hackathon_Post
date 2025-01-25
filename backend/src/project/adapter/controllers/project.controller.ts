@@ -544,7 +544,7 @@ export class ProjectController {
           members: { $in: [userId] },
           status: 'active',
         });
-        if (texist)
+        if (texist?.length !== 0)
           throw new BadRequestException(
             'This user has join a team in this Hackathon',
           );

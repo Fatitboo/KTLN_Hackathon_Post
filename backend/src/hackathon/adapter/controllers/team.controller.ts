@@ -499,7 +499,7 @@ export class TeamController {
       );
     }
     const mergedProjects = [
-      ...new Set([...team.members, ...invitedTeam.members]),
+      ...new Set([...team.projects, ...invitedTeam.projects]),
     ];
     // Create merged team
     const newTeam = await this.teamModel.create({

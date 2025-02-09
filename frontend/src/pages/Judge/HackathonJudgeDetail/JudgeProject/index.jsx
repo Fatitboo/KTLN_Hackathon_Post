@@ -7,12 +7,14 @@ import { useSelector } from "react-redux";
 import { CustomButton, TextInput } from "@/components";
 import { BiInfoCircle } from "react-icons/bi";
 import InfoPopup from "@/components/Judge/InfoPopup";
+import Swal from "sweetalert2";
 
 const JudgeProjects = ({ props, projectGallery, hackathon }) => {
   const params = useParams();
 
   const [projects, setProjects] = useState([]);
   let { userAuth } = useSelector((state) => state.users);
+  const list = [12, 10, 25, 1, 3, 6, 10, 15, 16, 12, 1, 6, 4, 6, 8];
 
   useEffect(() => {
     if (projectGallery) {
@@ -36,12 +38,99 @@ const JudgeProjects = ({ props, projectGallery, hackathon }) => {
         const projectsSelect = projectGallery.filter((i) =>
           projectIdList.includes(i.id)
         );
-        setProjects(projectsSelect);
+        const projectRates = hackathon.judges.find(
+          (i) => i.userId === id
+        )?.projectRates;
+
+        if (!projectRates) return;
+        const mappedProject = projectsSelect.map((i) => {
+          const proj = projectRates.find((p) => p.projectId === i.id);
+          return {
+            ...i,
+            scores: [
+              ...hackathon.criteria.map((c) => ({
+                ...c,
+                score:
+                  proj.scores?.find((p) => p.criteriaId === c.id)?.score ?? 0,
+              })),
+            ],
+            comment: proj.comment,
+          };
+        });
+        setProjects(mappedProject);
       })
       .catch((error) => console.log("error", error));
   };
 
-  const handleSave = () => {};
+  const handleSave = () => {
+    fetch(
+      `http://localhost:3000/api/v1/hackathons/update-view-judge/${params.id}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          judgeId: userAuth.user.id,
+        }),
+      }
+    )
+      .then((result) => {
+        Swal.fire({
+          title: "Success",
+          text: "Your rate send successfully!",
+          confirmButtonText: "OK",
+          icon: "success",
+          allowOutsideClick: false,
+          confirmButtonColor: "#3085d6",
+        }).then((result) => {
+          if (result.isConfirmed) {
+          }
+        });
+      })
+      .catch((error) => console.log("error", error));
+  };
+
+  const handleDraftSave = () => {
+    const saveRating = projects.map((item) => {
+      return {
+        projectId: item.id,
+        scores: item.scores.map((i) => ({
+          criteriaId: i.id,
+          score: Number(i.score),
+        })),
+        comment: item.comment,
+      };
+    });
+    fetch(
+      `http://localhost:3000/api/v1/hackathons/rate-project-judge/${params.id}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          judgeId: userAuth.user.id,
+          ratingObj: saveRating,
+        }),
+      }
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        Swal.fire({
+          title: "Success",
+          text: "Your rate has been saved successfully",
+          confirmButtonText: "OK",
+          icon: "success",
+          allowOutsideClick: false,
+          confirmButtonColor: "#3085d6",
+        }).then((result) => {
+          if (result.isConfirmed) {
+          }
+        });
+      })
+      .catch((error) => console.log("error", error));
+  };
 
   return (
     <>
@@ -106,15 +195,41 @@ const JudgeProjects = ({ props, projectGallery, hackathon }) => {
                           imgUser={defaultAvt}
                           member={card.createdBy}
                           isWinner={false}
-                          votes={Math.floor(Math.random() * 21)}
-                          comments={Math.floor(Math.random() * 11)}
+                          votes={index < list.length ? list[index] : 0}
+                          comments={
+                            index < list.length
+                              ? list[list.length - index - 1]
+                              : 0
+                          }
                         />
                       </td>
-                      {hackathon.criteria.map((item) => {
+                      {card.scores.map((item) => {
                         return (
                           <td className="p-2 border-r-2 border-r-[#a7b1c2]">
                             <TextInput
                               type="number"
+                              value={item.score}
+                              onChange={(e) => {
+                                setProjects([
+                                  ...projects.map((i) => {
+                                    if (i.id === card.id)
+                                      return {
+                                        ...i,
+                                        scores: [
+                                          ...card.scores.map((s) =>
+                                            s.id === item.id
+                                              ? {
+                                                  ...s,
+                                                  score: Number(e.target.value),
+                                                }
+                                              : { ...s }
+                                          ),
+                                        ],
+                                      };
+                                    else return { ...i };
+                                  }),
+                                ]);
+                              }}
                               min={hackathon?.criteriaScore?.min ?? 0}
                               max={hackathon?.criteriaScore?.max ?? 10}
                             />
@@ -126,6 +241,19 @@ const JudgeProjects = ({ props, projectGallery, hackathon }) => {
                           type="text"
                           name="comment"
                           id="comment"
+                          value={card.comment}
+                          onChange={(e) => {
+                            setProjects([
+                              ...projects.map((i) => {
+                                if (i.id === card.id)
+                                  return {
+                                    ...i,
+                                    comment: e.target.value,
+                                  };
+                                else return { ...i };
+                              }),
+                            ]);
+                          }}
                           className="block focus:bg-white text-base w-full rounded-md border-0 py-2.5 pl-5 pr-5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  sm:text-base sm:leading-8"
                         />
                       </td>
@@ -134,10 +262,15 @@ const JudgeProjects = ({ props, projectGallery, hackathon }) => {
                 </tbody>
               </table>
             </div>
-            <div className="flex items-end justify-end">
+            <div className="flex items-end justify-end gap-2">
+              <CustomButton
+                onClick={handleDraftSave}
+                title={"Draft save"}
+                containerStyles="bg-blue-600 w-fit font-medium text-white py-2 px-5 focus:outline-none hover:bg-blue-500 rounded-sm text-base border border-blue-600"
+              />
               <CustomButton
                 onClick={handleSave}
-                title={"Save"}
+                title={"Submit"}
                 containerStyles="bg-blue-600 w-fit font-medium text-white py-2 px-5 focus:outline-none hover:bg-blue-500 rounded-sm text-base border border-blue-600"
               />
             </div>

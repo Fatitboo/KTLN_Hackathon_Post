@@ -5,6 +5,7 @@ import {
   HackathonRepository,
 } from 'src/hackathon/domain/repositories/hackathon.repository';
 import { UpdateHackathonCommand } from './update-hackathon.command';
+import { Types } from 'mongoose';
 
 @CommandHandler(UpdateHackathonCommand)
 export class UpdateHackathonHandler
@@ -76,7 +77,12 @@ export class UpdateHackathonHandler
             end: new Date(hackathon.judgingPeriod.start),
           }
         : existingHackathon.judgingPeriod,
-      judges: hackathon.judges ?? existingHackathon.judges,
+      judges:
+        hackathon.judges.map((item) => {
+          if (item.userId)
+            return { ...item, userId: new Types.ObjectId(item.userId) };
+          else return { ...item };
+        }) ?? existingHackathon.judges,
       criteria: hackathon.criteria ?? existingHackathon.criteria,
       criteriaScore: hackathon.criteriaScore ?? existingHackathon.criteriaScore,
       winnersAnnounced: hackathon.winnersAnnounced

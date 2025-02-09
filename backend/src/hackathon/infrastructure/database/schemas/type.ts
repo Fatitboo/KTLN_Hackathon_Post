@@ -69,7 +69,10 @@ export class Judges {
   @IsString()
   id: string;
 
-  @Prop({ type: Types.ObjectId, ref: 'UserDocument' })
+  @Prop({
+    type: Types.ObjectId,
+    ref: 'UserDocument',
+  })
   userId: Types.ObjectId;
 
   @Prop()
@@ -95,6 +98,19 @@ export class Judges {
   @Prop()
   @Optional()
   projectRates: ProjectRate[];
+
+  @Prop({ default: false })
+  @Optional()
+  view: boolean;
+}
+
+class CriteriaScore {
+  @Prop()
+  criteriaId: string;
+
+  @Prop({ default: 0 })
+  @Optional()
+  score: number;
 }
 
 class ProjectRate {
@@ -102,17 +118,7 @@ class ProjectRate {
   projectId: Types.ObjectId;
 
   @Prop()
-  @Optional()
-  judge: JudgeType[];
-}
-
-class JudgeType {
-  @Prop()
-  criteriaId: string;
-
-  @Prop({ default: 0 })
-  @Optional()
-  score: number;
+  scores: CriteriaScore[];
 
   @Prop({ default: '' })
   @Optional()

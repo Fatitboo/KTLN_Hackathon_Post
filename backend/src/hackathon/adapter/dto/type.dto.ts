@@ -1,3 +1,5 @@
+import { Types } from 'mongoose';
+
 export class Range {
   constructor(
     public min: number,
@@ -40,6 +42,7 @@ export class Judges {
     public email: string,
     public title: string,
     public photo: string,
+    public userId: string,
   ) {}
 }
 

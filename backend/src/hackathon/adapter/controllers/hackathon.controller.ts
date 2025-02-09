@@ -4,7 +4,6 @@ import {
   Controller,
   Delete,
   Get,
-  Inject,
   Param,
   Post,
   Put,
@@ -35,8 +34,7 @@ import { templateInviteJudgeHTML } from 'src/hackathon/infrastructure/constants/
 import { UserType } from 'src/user/domain/entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { templateInviteConfirmHTML } from 'src/hackathon/infrastructure/constants/template-email-confirm';
-import { ProjectDocument } from 'src/project/infrastructure/database/schemas';
-import { Project } from 'src/project/domain/entities/project.entity';
+import { UpdateProjectRateDTO } from '../dto/update-project-rate.dto';
 
 @Controller('hackathons')
 export class HackathonController {
@@ -266,7 +264,7 @@ export class HackathonController {
         body.email,
         templateInviteConfirmHTML(
           'old',
-          `http://localhost:5173/user-auth/login`,
+          `http://localhost:5173/user-auth/login?type=judge`,
           body.name,
         ),
         'Confirmation email',
@@ -274,16 +272,17 @@ export class HackathonController {
       );
     } else {
       const salt = await bcrypt.genSalt(10);
-      const password = await bcrypt.hash(generatePassword(), salt);
+      const prevPass = generatePassword();
+      console.log(prevPass);
+      const password = await bcrypt.hash(prevPass, salt);
       const createdUser = new this.userModel({
         password: password,
         email: body.email,
         fullname: body.name,
-        isSetPersionalSetting: false,
         isVerify: true,
         avatar:
           'https://firebasestorage.googleapis.com/v0/b/englishvoc-43d5a.appspot.com/o/images%2FavatarDefault.png?alt=media&token=59aae8c1-2129-46ca-ad75-5dad1b119188',
-        userType: [UserType.JUDGE],
+        userType: [UserType.JUDGE, UserType.SEEKER],
         judgesHackathons: [new Types.ObjectId(hackathonId)],
       });
       const user = await createdUser.save();
@@ -296,8 +295,9 @@ export class HackathonController {
         body.email,
         templateInviteConfirmHTML(
           'old',
-          `http://localhost:5173/user-auth/login`,
+          `http://localhost:5173/user-auth/login?type=judge`,
           body.name,
+          prevPass,
         ),
         'Confirmation email',
         'Confirmation email',
@@ -714,6 +714,51 @@ export class HackathonController {
     );
     return result;
   }
+
+  @Post('rate-project-judge/:id')
+  async rateProjectByJudge(
+    @Param('id') id: string,
+    @Body('judgeId') judgeId: string,
+    @Body('ratingObj') ratingObj: UpdateProjectRateDTO[],
+  ) {
+    const bulkOperations = ratingObj.map((rate) => ({
+      updateOne: {
+        filter: {
+          _id: id,
+          'judges.userId': new Types.ObjectId(judgeId),
+          'judges.projectRates.projectId': rate.projectId,
+        },
+        update: {
+          $set: {
+            'judges.$[judge].projectRates.$[project].scores': rate.scores,
+            'judges.$[judge].projectRates.$[project].comment': rate.comment,
+          },
+        },
+        arrayFilters: [
+          { 'judge.userId': new Types.ObjectId(judgeId) },
+          { 'project.projectId': rate.projectId },
+        ],
+      },
+    }));
+
+    // Thực hiện cập nhật nhiều projectRates
+    const result = await this.hackathonModel.bulkWrite(bulkOperations);
+    return result;
+  }
+
+  @Post('update-view-judge/:id')
+  async updateViewJudge(
+    @Param('id') id: string,
+    @Body('judgeId') judgeId: string,
+  ) {
+    console.log(judgeId);
+    const result = await this.hackathonModel.findOneAndUpdate(
+      { _id: id, 'judges.userId': new Types.ObjectId(judgeId) },
+      { $set: { 'judges.$.view': true } },
+      { new: true },
+    );
+    return result;
+  }
 }
 
 async function sendMailInviteJudge(
@@ -744,7 +789,7 @@ async function sendMailInviteJudge(
 
 function generatePassword(length = 8) {
   const characters =
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+[]{}|;:,.<>?';
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$&';
   let password = '';
   for (let i = 0; i < length; i++) {
     const randomIndex = Math.floor(Math.random() * characters.length);

@@ -90,18 +90,22 @@ function MenuList({ user, onClick }) {
                   </Link>
                 )}
               </Menu.Item>
-              <Menu.Item>
-                {({ active }) => (
-                  <div
-                    onClick={handleSwitchRole}
-                    className={`${
-                      active ? "bg-blue-500 text-white" : "text-gray-900"
-                    } group flex w-full items-center rounded-sm p-2 text-sm`}
-                  >
-                    {"Host Hackathon"}
-                  </div>
-                )}
-              </Menu.Item>
+              {JSON.parse(
+                localStorage.getItem("userInfo")
+              )?.user?.userType?.includes("seeker") && (
+                <Menu.Item>
+                  {({ active }) => (
+                    <div
+                      onClick={handleSwitchRole}
+                      className={`${
+                        active ? "bg-blue-500 text-white" : "text-gray-900"
+                      } group flex w-full items-center rounded-sm p-2 text-sm`}
+                    >
+                      {"Host Hackathon"}
+                    </div>
+                  )}
+                </Menu.Item>
+              )}
 
               {JSON.parse(
                 localStorage.getItem("userInfo")

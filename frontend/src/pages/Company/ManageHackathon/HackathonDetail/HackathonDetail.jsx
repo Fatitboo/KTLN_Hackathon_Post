@@ -14,11 +14,12 @@ import ParticipantItem from "../../../../components/Seeker/ParticipantItem";
 import TeamProjectItem from "./TeamProject/TeamProject";
 import Swal from "sweetalert2";
 import { IoClose } from "react-icons/io5";
-import { StarIcon } from "@heroicons/react/20/solid";
 import TeamProjectSmall from "./TeamProjectSmall/TeamProjectSmall";
 import Discussion from "../Discussion";
 import Updates from "../Updates";
 import ManageJudges from "./ManageJudges";
+import { CiViewBoard } from "react-icons/ci";
+import ManageProjects from "./ManageProjects";
 
 function HackathonCorDetail() {
   const { id, type } = useParams();
@@ -193,11 +194,8 @@ function HackathonCorDetail() {
   const user = storeData?.userAuth?.user;
   const [projectGallery, setProjectGallery] = useState([]);
   const [currentHackathon, setCurrentHackathon] = useState([]);
+  const [selectTeam, setSelectTeam] = useState([]);
   const { hackathon } = useSelector((state) => state.hackathons);
-  let [modal, setModal] = useState(false);
-  let [modal2, setModal2] = useState(false);
-  let [selectTeam, setSelectTeam] = useState([]);
-  let [selectPrize, setSelectPrize] = useState(null);
   useEffect(() => {
     if (!id) return;
     dispatch(singleHackathon(id));
@@ -214,7 +212,7 @@ function HackathonCorDetail() {
       fetch(`http://localhost:3000/api/v1/hackathons/${id}/${type}`)
         .then((response) => response.json())
         .then((result) => {
-          console.log(result);
+          console.log("haha", result);
           setProjectGallery(result);
         })
         .catch((error) => console.log("error", error));
@@ -298,51 +296,6 @@ function HackathonCorDetail() {
     });
   };
 
-  const handleAward = () => {
-    setModal(!modal);
-  };
-
-  const handleSaveWinner = () => {
-    const updateHackathon = currentHackathon.prizes.map((item) => {
-      if (item.winnerList)
-        return {
-          ...item,
-          winnerList: item.winnerList.map((i) => i.id),
-        };
-      else return { ...item };
-    });
-    fetch(`http://localhost:3000/api/v1/hackathons/awarding/${id}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        hackathon: {
-          prizes: updateHackathon,
-        },
-      }),
-    })
-      .then((response) => response.json())
-      .then((result) => {
-        Swal.fire({
-          title: "Success",
-          text: "Awarding successfully",
-          confirmButtonText: "OK",
-          icon: "success",
-          allowOutsideClick: false,
-          confirmButtonColor: "#3085d6",
-        }).then((result) => {
-          if (result.isConfirmed) {
-            setCurrentHackathon({
-              ...currentHackathon,
-              prizes: updateHackathon,
-            });
-            setModal(false);
-          }
-        });
-      })
-      .catch((error) => console.log("error", error));
-  };
   return (
     <>
       <div>
@@ -605,49 +558,21 @@ function HackathonCorDetail() {
           </>
         )}
         {type === "project-gallery" && (
-          <>
-            <div className="px-60 max-lg:px-2 py-5 ">
-              <div>
-                <div className="mb-10 w-[90%] flex items-end">
-                  <SearchInput
-                    textPlaceholder={"Search project"}
-                    btnText={"Search project"}
-                  />
-                  <CustomButton
-                    onClick={handleAward}
-                    title={"Awarding"}
-                    containerStyles="h-[42px] bg-blue-600 w-fit font-medium text-white py-2 px-5 focus:outline-none hover:bg-blue-500 rounded-sm text-base border border-blue-600"
-                  />
-                </div>
-                <div className="my-5 grid grid-cols-4 max-xl:grid-cols-1 gap-6">
-                  {[...projectGallery].map((card, index) => (
-                    <CardProject
-                      key={index}
-                      id={card.id}
-                      title={card.projectTitle}
-                      description={card.tagline}
-                      image={card.thumnailImage}
-                      imgUser={defaultAvt}
-                      member={card.createdBy}
-                      isWinner={currentHackathon?.prizes
-                        ?.reduce(
-                          (acc, cur) =>
-                            cur.winnerList ? acc.concat(cur.winnerList) : acc,
-                          []
-                        )
-                        ?.includes(card.id)}
-                      votes={Math.floor(Math.random() * 21)}
-                      comments={Math.floor(Math.random() * 11)}
-                    />
-                  ))}
-                </div>
-              </div>
-            </div>
-          </>
+          <ManageProjects
+            projects={projectGallery}
+            hackathon={hackathon}
+            selectTeam={selectTeam}
+            setSelectTeam={setSelectTeam}
+          />
         )}
         {type === "participants" && <BrowerParticipants hackathonId={id} />}
         {type === "judges" && (
-          <ManageJudges judges={hackathon?.judges} projects={projectGallery} />
+          <ManageJudges
+            judges={currentHackathon?.judges}
+            projects={projectGallery}
+            hackathon={currentHackathon}
+            setHackathon={setCurrentHackathon}
+          />
         )}
         <div className="px-60 max-lg:px-2 py-5 ">
           <div className="grid grid-cols-3 max-lg:grid-cols-1 gap-10">
@@ -706,221 +631,6 @@ function HackathonCorDetail() {
           </div>
         </div>
       </div>
-      <Modal open={modal} setModal={setModal}>
-        <div>
-          <div className="flex flex-row items-center justify-between mx-2">
-            <p className="block leading-8 text-gray-900 text-xl font-bold">
-              Present an award
-            </p>
-            <div
-              className="hover:bg-slate-100 rounded-sm p-2 cursor-pointer opacity-90"
-              onClick={() => {
-                setSelectTeam([]);
-                setSelectPrize(null);
-                setCurrentHackathon(hackathon);
-                setModal(false);
-              }}
-            >
-              <IoClose size={20} />
-            </div>
-          </div>
-          <hr className="block h-1 w-full bg-[rgb(212, 210, 208)] my-3" />
-          <div className="max-h-[400px] max-w-[900px] mx-9 overflow-y-scroll no-scrollbar overflow-x-hidden mb-4">
-            <div className="flex gap-3 flex-col col-span-2">
-              {currentHackathon?.prizes?.map((item, index) => {
-                return (
-                  <div
-                    key={item.id}
-                    className=" bg-white border border-gray-300 rounded-sm hover:shadow-md p-2"
-                  >
-                    <div className="flex flex-row gap-1 text-base font-semibold justify-between">
-                      <div className="flex flex-row gap-1 items-center">
-                        <StarIcon color="#FFD333" width={24} />
-                        {item.prizeName}
-                      </div>
-                      <button
-                        onClick={() => {
-                          setSelectPrize(item);
-                          setSelectTeam([...(item.winnerList ?? [])]);
-                          setModal2(true);
-                        }}
-                        className="flex items-center justify-center box-border bg-[#1967d3] px-[10px] py-[8px] rounded-[4px] text-[#fff] hover:bg-[#0146a6] cursor-pointer"
-                      >
-                        <span className="text-[15px] leading-none font-semibold">
-                          Award team
-                        </span>
-                      </button>
-                    </div>
-                    <ul className="list-disc pl-10">
-                      <li>
-                        <span className="font-semibold">Prize: </span>$
-                        {item.cashValue}
-                      </li>
-                      <li>
-                        <span className="font-semibold">Number wining: </span>
-                        {item.numberWinningProject}
-                      </li>
-                      <li>
-                        <span className="font-semibold">Description: </span>
-                        {item.description}
-                      </li>
-                    </ul>
-                    <div className="grid grid-cols-2 gap-2">
-                      {item?.winnerList?.map((i) => {
-                        return (
-                          <div className="relative group ">
-                            <TeamProjectSmall
-                              props={projectGallery.find(
-                                (proj) => proj.id == i || proj.id == i?.id
-                              )}
-                            />
-                            <div
-                              onClick={() => {
-                                let list = [...item.winnerList];
-                                if (list.length === 1) list = null;
-                                else list.splice(list.indexOf(i), 1);
-                                setCurrentHackathon({
-                                  ...currentHackathon,
-                                  prizes: currentHackathon.prizes.map((prize) =>
-                                    prize.id == item.id
-                                      ? { ...prize, winnerList: list }
-                                      : { ...prize }
-                                  ),
-                                });
-                              }}
-                              className="absolute top-2 right-4 cursor-pointer bg-transparent rounded-lg text-black group-hover:text-white group-hover:bg-red-600"
-                            >
-                              <IoClose />
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-          <div className="flex flex-row items-center gap-2 float-right">
-            <div
-              className="flex items-center justify-center box-border bg-[white] border px-[18px] py-[14px] rounded-[8px] text-[#1967d3] hover:bg-[#eef1fe] hover:border-[#1967d3] cursor-pointer"
-              onClick={() => {
-                setSelectTeam([]);
-                setSelectPrize(null);
-                setCurrentHackathon(hackathon);
-                setModal(false);
-              }}
-            >
-              <span className="text-[15px] leading-none font-bold">Close</span>
-            </div>
-            <button
-              type="submit"
-              onClick={handleSaveWinner}
-              className="w-[90px] flex items-center justify-center box-border bg-[#1967d3] px-[18px] py-[14px] rounded-[8px] text-[#fff] hover:bg-[#0146a6] cursor-pointer"
-            >
-              {false ? (
-                <svg
-                  className="right-1 animate-spin h-4 w-4 text-white"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="white"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-0"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="white"
-                    strokeWidth="4"
-                  ></circle>
-                  <path
-                    className="opacity-90"
-                    fill="white"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
-                </svg>
-              ) : (
-                <span className="text-[15px] leading-none font-bold">Done</span>
-              )}
-            </button>
-          </div>
-        </div>
-      </Modal>
-      <Modal open={modal2} setModal={setModal2}>
-        <div>
-          <div className="flex flex-row items-center justify-between mx-2">
-            <p className="block leading-8 text-gray-900 text-xl font-bold">
-              Select team
-            </p>
-            <div
-              className="hover:bg-slate-100 rounded-sm p-2 cursor-pointer opacity-90"
-              onClick={() => {
-                setSelectTeam([]);
-                setModal2(false);
-              }}
-            >
-              <IoClose size={20} />
-            </div>
-          </div>
-          <hr className="block h-1 w-full bg-[rgb(212, 210, 208)] my-3" />
-          <div className="max-h-[400px] max-w-[900px] mx-4 overflow-y-auto overflow-x-hidden mb-4">
-            <div className="flex flex-col gap-2 col-span-1">
-              {projectGallery?.map((item) => {
-                return (
-                  <div
-                    onClick={() => {
-                      if (selectTeam.includes(item)) {
-                        selectTeam.splice(selectTeam.indexOf(item), 1);
-                        setSelectTeam([...selectTeam]);
-                      } else {
-                        if (
-                          selectTeam.length >=
-                          Number(selectPrize.numberWinningProject)
-                        )
-                          return;
-                        setSelectTeam([...selectTeam, item]);
-                      }
-                    }}
-                  >
-                    <TeamProjectSmall
-                      props={item}
-                      select={selectTeam.includes(item)}
-                    />
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-          <div className="flex flex-row items-center gap-2 float-right mt-2">
-            <div
-              className="flex items-center justify-center box-border bg-[white] border px-[18px] py-[14px] rounded-[8px] text-[#1967d3] hover:bg-[#eef1fe] hover:border-[#1967d3] cursor-pointer"
-              onClick={() => {
-                setSelectTeam([]);
-                setModal2(false);
-              }}
-            >
-              <span className="text-[15px] leading-none font-bold">Close</span>
-            </div>
-            <button
-              onClick={() => {
-                setCurrentHackathon({
-                  ...currentHackathon,
-                  prizes: currentHackathon.prizes.map((item) =>
-                    item.id === selectPrize.id
-                      ? { ...item, winnerList: selectTeam }
-                      : { ...item }
-                  ),
-                });
-                setSelectTeam([]);
-                setModal2(false);
-              }}
-              className="w-[90px] flex items-center justify-center box-border bg-[#1967d3] px-[18px] py-[14px] rounded-[8px] text-[#fff] hover:bg-[#0146a6] cursor-pointer"
-            >
-              <span className="text-[15px] leading-none font-bold">Select</span>
-            </button>
-          </div>
-        </div>
-      </Modal>
     </>
   );
 }

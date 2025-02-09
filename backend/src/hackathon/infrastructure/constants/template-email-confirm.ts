@@ -2,6 +2,7 @@ export const templateInviteConfirmHTML = (
   type: string,
   linkOrOtp: string,
   fullname: string,
+  prevPass?: string,
 ) => {
   const title = 'Confirmation email';
   const contentMessage =
@@ -11,7 +12,7 @@ export const templateInviteConfirmHTML = (
   const contentEmail = `<div class="button">
           <a href=${linkOrOtp} target="_blank">${type === 'reset' ? 'Access as Judge' : 'Access as Judge'}</a>
           </div>`;
-
+  const password = prevPass ? `<p>Your password: ${prevPass}</p>` : '';
   const footerMessage =
     type === 'reset'
       ? 'If you did not request a password reset, please ignore this email and contact us immediately.'
@@ -88,9 +89,11 @@ export const templateInviteConfirmHTML = (
               <p>${contentMessage}</p>
   
               ${contentEmail}
+
+              ${password}
   
               <p>${footerMessage}</p>
-  
+
               <div class="footer">
               <p>&copy; 2024 Your Company. All rights reserved.</p>
               </div>

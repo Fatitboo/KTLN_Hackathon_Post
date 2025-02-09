@@ -32,7 +32,7 @@ function HackathonJudging({ formSubmit, formId }) {
   });
 
   const onSubmitForm = async (e) => {
-    e.preventDefault();
+    e?.preventDefault();
     const uploadedJudges = await handleUpload(inputValues.judges);
     const data = {
       ...inputValues,
@@ -170,7 +170,8 @@ function HackathonJudging({ formSubmit, formId }) {
       });
   }, []);
 
-  const sendInvitation = (judgeId, email, name) => {
+  const sendInvitation = async (judgeId, email, name) => {
+    await onSubmitForm();
     const queryParams = {
       judgeId: judgeId,
       email: email,

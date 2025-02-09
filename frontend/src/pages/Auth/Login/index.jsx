@@ -20,6 +20,10 @@ function Login() {
   const [accountType, setAccountType] = useState("seeker");
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const type = searchParams.get("type");
+
   const handleChangeCheckbox = () => {
     setAccountType((prev) => {
       if (prev === "admin") {
@@ -39,7 +43,7 @@ function Login() {
     const dataLogin = {
       email: data.email,
       password: data.password,
-      userType: accountType,
+      userType: type ?? accountType,
     };
     dispatch(loginUserAction(dataLogin));
   };
@@ -49,6 +53,13 @@ function Login() {
 
   useEffect(() => {
     if (userAuth) {
+      if (type === "judge") {
+        var getUserAuth = JSON.parse(localStorage.getItem("userInfo"));
+        getUserAuth.user.userType = ["judge"];
+        localStorage.setItem("userInfo", JSON.stringify(getUserAuth));
+        window.location.href = "/Judge/manage-hackathons";
+        return;
+      }
       if (userAuth?.user?.isActive) {
         if (userAuth?.user?.userType.includes("seeker")) {
           var registerInfo = JSON.parse(localStorage.getItem("registerInfo"));

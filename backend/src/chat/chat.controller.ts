@@ -17,12 +17,19 @@ export class ChatController {
   @Post()
   @UseGuards(JwtAuthGuard)
   async accessChat(@Body() body: { userId: string }, @Request() request: any) {
-    console.log(
-      '🚀 ~ ChatController ~ accessChat ~ userId:',
-      body.userId,
+    return this.chatService.accessChat(body, request.user._props.id);
+  }
+
+  @Post('hackathon')
+  @UseGuards(JwtAuthGuard)
+  async accessChatHackathon(
+    @Body() body: { hackathonId: string },
+    @Request() request: any,
+  ) {
+    return this.chatService.accessChatHacakthon(
+      body.hackathonId,
       request.user._props.id,
     );
-    return this.chatService.accessChat(body, request.user._props.id);
   }
 
   @UseGuards(JwtAuthGuard)

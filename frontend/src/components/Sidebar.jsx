@@ -1,4 +1,4 @@
-import { LiaDocker, LiaHomeSolid } from "react-icons/lia";
+import { LiaHomeSolid } from "react-icons/lia";
 import {
   MdAccessibility,
   MdOutlineFactCheck,
@@ -6,26 +6,19 @@ import {
   MdSubscriptions,
   MdTypeSpecimen,
 } from "react-icons/md";
-import { FiUsers } from "react-icons/fi";
+import { FiBell, FiUsers } from "react-icons/fi";
 import { GrWorkshop } from "react-icons/gr";
 import { AiOutlineLogout } from "react-icons/ai";
 import { LuNetwork } from "react-icons/lu";
 import { MdReportGmailerrorred } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
 import classNames from "classnames";
-import { HiPlus } from "react-icons/hi";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUserAction } from "../redux/slices/users/usersSlices";
-import {
-  createVacancyId,
-  resetComponent,
-  setValueSuccess,
-} from "../redux/slices/vacancies/vacanciesSlices";
-import { BiBookmark } from "react-icons/bi";
-import { PiSuitcaseSimpleDuotone } from "react-icons/pi";
+import { setValueSuccess } from "../redux/slices/vacancies/vacanciesSlices";
 import { isActiveSidebarAction } from "../redux/slices/skills/skillsSlices";
-import { BsClockHistory, BsStar } from "react-icons/bs";
+import { BsClockHistory } from "react-icons/bs";
 
 function Sidebar({ user }) {
   const storeData = useSelector((store) => store.users);
@@ -317,13 +310,13 @@ function Sidebar({ user }) {
             </div>
             <div
               className={classNames(
-                isActive === "Interviews" ? activeStyle : "",
+                isActive === "Message" ? activeStyle : "",
                 itemStyle
               )}
             >
               <Link
-                onClick={() => dispatch(isActiveSidebarAction("Interviews"))}
-                // to="/Organizer/interview"
+                onClick={() => dispatch(isActiveSidebarAction("Message"))}
+                to="/Organizer/chat"
                 className="relative text-sm text-center p-3 flex items-center leading-7 font-normal  capitalize rounded-lg "
               >
                 <LuNetwork className="relative mr-4 ml-4 text-2xl text-center " />
@@ -414,6 +407,21 @@ function Sidebar({ user }) {
               >
                 <FiUsers className="relative mr-4 ml-4 text-2xl text-center " />
                 Reports
+              </Link>
+            </div>
+            <div
+              className={classNames(
+                isActive === "notification" ? "bg-[#E9EFFB] text-blue-600" : "",
+                itemStyle
+              )}
+            >
+              <Link
+                onClick={() => dispatch(isActiveSidebarAction("notification"))}
+                to="/Seeker/manage-notification"
+                className="relative text-sm text-center p-3 flex items-center leading-7 font-normal  capitalize rounded-lg "
+              >
+                <FiBell className="relative mr-4 ml-4 text-2xl text-center " />
+                Notifications
               </Link>
             </div>
 

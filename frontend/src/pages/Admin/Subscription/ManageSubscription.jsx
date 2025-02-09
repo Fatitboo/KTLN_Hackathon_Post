@@ -48,7 +48,7 @@ function ManageSubscription() {
 
   const getHis = () => {
     setLoading(true);
-    fetch(`http://localhost:3000/api/v1/subscriptions`)
+    fetch(`${baseUrl}/api/v1/subscriptions`)
       .then((response) => response.json())
       .then((result) => {
         console.log(result);
@@ -67,7 +67,7 @@ function ManageSubscription() {
 
   useEffect(() => {
     setLoading(true);
-    fetch(`http://localhost:3000/api/v1/subscription-types`)
+    fetch(`${baseUrl}/api/v1/subscription-types`)
       .then((response) => response.json())
       .then((result) => {
         setSubscriptionTypeList(
@@ -299,7 +299,7 @@ function ManageSubscription() {
                                     }}
                                     onDelete={() => {
                                       fetch(
-                                        `http://localhost:3000/api/v1/subscriptions/${item._id}`,
+                                        `${baseUrl}/api/v1/subscriptions/${item._id}`,
                                         {
                                           method: "DELETE",
                                           headers: {
@@ -470,7 +470,7 @@ function ManageSubscription() {
               type="submit"
               onClick={() => {
                 fetch(
-                  `http://localhost:3000/api/v1/subscriptions${
+                  `${baseUrl}/api/v1/subscriptions${
                     modalType === "Add" ? "" : `/${selected._id}`
                   }`,
                   {

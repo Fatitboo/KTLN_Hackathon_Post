@@ -168,7 +168,7 @@ function ProjectDetail() {
           <div className="border-blue-500 border-b-4 w-24">
             <h1 className="text-3xl font-medium mb-2 ">STORY</h1>
           </div>
-          <a href="#update" className=" w-24 ml-10">
+          <a href="#update" className=" w-30 ml-10">
             <h1 className="text-3xl font-medium mb-2 ">UPDATE</h1>
           </a>
         </div>
@@ -348,7 +348,7 @@ function ProjectDetail() {
                                 src={user?.avatar ?? defaultAvt}
                                 alt="User 1"
                               />
-                              <div className="-mt-8 w-full">
+                              <div className=" w-full">
                                 <TextInput
                                   name="comment"
                                   register={register("comment")}
@@ -424,7 +424,7 @@ function ProjectDetail() {
                 </div>
 
                 <div style={{ listStyle: "none", padding: 0 }}>
-                  {teammates.map((teammate, index) => (
+                  {teammates?.map((teammate, index) => (
                     <Link
                       to={`/Seeker-detail/${teammate?._id}/Projects`}
                       key={index}

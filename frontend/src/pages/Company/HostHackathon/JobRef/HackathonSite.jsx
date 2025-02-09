@@ -58,9 +58,7 @@ function JobDes({ formId, formSubmit, config }) {
 
   useEffect(() => {
     console.log(param);
-    fetch(
-      `http://localhost:3000/api/v1/hackathons/component/${param.id}/${formId}`
-    )
+    fetch(`${baseUrl}/api/v1/hackathons/component/${param.id}/${formId}`)
       .then((response) => response.json())
       .then((result) => {
         const { _id, ...rest } = result;

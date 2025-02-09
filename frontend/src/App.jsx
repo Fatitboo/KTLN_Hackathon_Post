@@ -167,7 +167,7 @@ function App() {
           );
         })}
       </Routes>
-      {user && (
+      {user && user.userType?.length === 1 && (
         <div className="fixed bottom-12 right-12 z-10">
           <ChatManageScreen user={user} />
         </div>

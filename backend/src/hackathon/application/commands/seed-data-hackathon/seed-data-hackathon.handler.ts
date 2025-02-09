@@ -29,6 +29,7 @@ import { User, UserType } from 'src/user/domain/entities/user.entity';
 import { ProjectDocument } from 'src/project/infrastructure/database/schemas';
 import { InjectModel } from '@nestjs/mongoose';
 import { InteractionDocument } from 'src/hackathon/infrastructure/database/schemas/interaction.schema';
+import { urlFe } from 'src/main';
 @CommandHandler(SeedDataHackathonCommand)
 export class SeedDataHackathonHandler
   implements ICommandHandler<SeedDataHackathonCommand>
@@ -214,7 +215,7 @@ export class SeedDataHackathonHandler
 
       // Ngày hiện tại
       const today = new Date();
-
+      //$2b$10$EYsbeAwuJQiNhuIpYFdrg.aIKoJfx67m8CknZbC54T3KCgofx0Jy2
       // Hàm tạo ngày ngẫu nhiên để đảm bảo trạng thái "Open"
       const getRandomDateRange = () => {
         // Ngày bắt đầu từ ngày 1/1/2025 đến ngày hôm nay
@@ -245,6 +246,24 @@ export class SeedDataHackathonHandler
           },
         );
       }
+    }
+
+    if (command.props.type === 'updatePassword') {
+      //$2b$10$EYsbeAwuJQiNhuIpYFdrg.aIKoJfx67m8CknZbC54T3KCgofx0Jy2
+      await this.userModel.updateMany(
+        {
+          $or: [
+            { isUserSystem: false }, // isUserSystem = false
+            { isUserSystem: { $exists: false } }, // isUserSystem không tồn tại
+          ],
+        },
+        {
+          $set: {
+            password:
+              '$2b$10$EYsbeAwuJQiNhuIpYFdrg.aIKoJfx67m8CknZbC54T3KCgofx0Jy2',
+          },
+        },
+      );
     }
     return 'ok';
   }
@@ -539,7 +558,7 @@ export class SeedDataHackathonHandler
       communityChatLink: 'https://discord.gg/aRThqngB',
       tasks: getRandomObjectList(),
       subjectMailTitle: 'Your hackathon harvest is here!🌾',
-      contentMailRegister: `<table width="100%" border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; color: rgb(0, 0, 0); font-family: Arial, Helvetica, sans-serif; font-size: small; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 254, 254); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;" id="isPasted"><tbody style="box-sizing: border-box;"><tr style="box-sizing: border-box;"><td style="margin: 0px; box-sizing: border-box; padding-left: 15px; padding-top: 10px; text-align: center; width: 565px;"><h1 style='box-sizing: border-box; margin: 0px; color: rgb(51, 51, 51); direction: ltr; font-family: Arial, "Helvetica Neue", Helvetica, sans-serif; font-size: 18px; font-weight: 700; letter-spacing: normal; line-height: 21.6px; text-align: left;'><span style="box-sizing: border-box; word-break: break-word;">We're back with a fresh crop of opportunities for you to grow, learn, and win!</span></h1></td></tr></tbody></table><table width="100%" border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; color: rgb(0, 0, 0); font-family: Arial, Helvetica, sans-serif; font-size: small; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 254, 254); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; word-break: break-word;"><tbody style="box-sizing: border-box;"><tr style="box-sizing: border-box;"><td style="margin: 0px; box-sizing: border-box; padding-left: 15px; padding-right: 15px; padding-top: 15px;"><div style='box-sizing: border-box; color: rgb(51, 51, 51); direction: ltr; font-family: Arial, "Helvetica Neue", Helvetica, sans-serif; font-size: 15px; font-weight: 400; letter-spacing: 0px; line-height: 22.5px; text-align: left;'><p style="box-sizing: border-box; line-height: inherit; margin: 0px 0px 15px;">We rounded up some of the most exciting competitions happening right now — don't miss your chance to make your mark and win big.<img alt="🤩" draggable="false" src="blob:http://localhost:5173/afe8db9f-55b1-4426-957e-874ce5c4ca0c" style="height: 1.2em; width: 1.2em; box-sizing: border-box;" class="fr-fil fr-dib"></p><p style="box-sizing: border-box; line-height: inherit; margin: 0px 0px 15px;">Check out brand new hackathons from Atlassian, Google, Determined AI, and more.<img alt="👇" draggable="false" src="blob:http://localhost:5173/19509fe3-4239-4928-ae82-d040dbc1f8a9" style="height: 1.2em; width: 1.2em; box-sizing: border-box;" class="fr-fil fr-dib"></p><p style="box-sizing: border-box; line-height: inherit; margin: 0px 0px 15px;">Happy coding!</p><p style="box-sizing: border-box; line-height: inherit; margin: 0px;">-Devpost Team&nbsp;</p></div></td></tr></tbody></table>`,
+      contentMailRegister: `<table width="100%" border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; color: rgb(0, 0, 0); font-family: Arial, Helvetica, sans-serif; font-size: small; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 254, 254); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;" id="isPasted"><tbody style="box-sizing: border-box;"><tr style="box-sizing: border-box;"><td style="margin: 0px; box-sizing: border-box; padding-left: 15px; padding-top: 10px; text-align: center; width: 565px;"><h1 style='box-sizing: border-box; margin: 0px; color: rgb(51, 51, 51); direction: ltr; font-family: Arial, "Helvetica Neue", Helvetica, sans-serif; font-size: 18px; font-weight: 700; letter-spacing: normal; line-height: 21.6px; text-align: left;'><span style="box-sizing: border-box; word-break: break-word;">We're back with a fresh crop of opportunities for you to grow, learn, and win!</span></h1></td></tr></tbody></table><table width="100%" border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; color: rgb(0, 0, 0); font-family: Arial, Helvetica, sans-serif; font-size: small; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 254, 254); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; word-break: break-word;"><tbody style="box-sizing: border-box;"><tr style="box-sizing: border-box;"><td style="margin: 0px; box-sizing: border-box; padding-left: 15px; padding-right: 15px; padding-top: 15px;"><div style='box-sizing: border-box; color: rgb(51, 51, 51); direction: ltr; font-family: Arial, "Helvetica Neue", Helvetica, sans-serif; font-size: 15px; font-weight: 400; letter-spacing: 0px; line-height: 22.5px; text-align: left;'><p style="box-sizing: border-box; line-height: inherit; margin: 0px 0px 15px;">We rounded up some of the most exciting competitions happening right now — don't miss your chance to make your mark and win big.<img alt="🤩" draggable="false" src="blob:${urlFe}/afe8db9f-55b1-4426-957e-874ce5c4ca0c" style="height: 1.2em; width: 1.2em; box-sizing: border-box;" class="fr-fil fr-dib"></p><p style="box-sizing: border-box; line-height: inherit; margin: 0px 0px 15px;">Check out brand new hackathons from Atlassian, Google, Determined AI, and more.<img alt="👇" draggable="false" src="blob:${urlFe}/19509fe3-4239-4928-ae82-d040dbc1f8a9" style="height: 1.2em; width: 1.2em; box-sizing: border-box;" class="fr-fil fr-dib"></p><p style="box-sizing: border-box; line-height: inherit; margin: 0px 0px 15px;">Happy coding!</p><p style="box-sizing: border-box; line-height: inherit; margin: 0px;">-Devpost Team&nbsp;</p></div></td></tr></tbody></table>`,
       submissions: {
         start: new Date(row['start_date']) as any,
         deadline: new Date(row['end_date']) as any,

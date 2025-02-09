@@ -210,7 +210,7 @@ function HackathonCorDetail() {
 
   useEffect(() => {
     if (type == "project-gallery" || type == "teams") {
-      fetch(`http://localhost:3000/api/v1/hackathons/${id}/${type}`)
+      fetch(`${baseUrl}/api/v1/hackathons/${id}/${type}`)
         .then((response) => response.json())
         .then((result) => {
           console.log(result);
@@ -228,9 +228,7 @@ function HackathonCorDetail() {
         )
       );
     } else {
-      fetch(
-        `http://localhost:3000/api/v1/projects/get-members/${project.id}/members`
-      )
+      fetch(`${baseUrl}/api/v1/projects/get-members/${project.id}/members`)
         .then((response) => response.json())
         .then((result) => {
           setProjectGallery(
@@ -258,18 +256,15 @@ function HackathonCorDetail() {
       confirmButtonColor: "#3085d6",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(
-          `http://localhost:3000/api/v1/projects/block-project/${project?.id}/block`,
-          {
-            method: "POST", // Chỉ định phương thức là POST
-            headers: {
-              "Content-Type": "application/json", // Đặt header để báo server biết dữ liệu là JSON
-            },
-            body: JSON.stringify({
-              block: !project?.block, // Thay thế bằng dữ liệu bạn muốn gửi
-            }),
-          }
-        )
+        fetch(`${baseUrl}/api/v1/projects/block-project/${project?.id}/block`, {
+          method: "POST", // Chỉ định phương thức là POST
+          headers: {
+            "Content-Type": "application/json", // Đặt header để báo server biết dữ liệu là JSON
+          },
+          body: JSON.stringify({
+            block: !project?.block, // Thay thế bằng dữ liệu bạn muốn gửi
+          }),
+        })
           .then((response) => response.json())
           .then(() => {
             setProjectGallery(
@@ -310,7 +305,7 @@ function HackathonCorDetail() {
         };
       else return { ...item };
     });
-    fetch(`http://localhost:3000/api/v1/hackathons/awarding/${id}`, {
+    fetch(`${baseUrl}/api/v1/hackathons/awarding/${id}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

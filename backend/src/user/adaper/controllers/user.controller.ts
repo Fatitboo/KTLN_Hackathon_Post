@@ -4,13 +4,11 @@ import {
   Body,
   Get,
   Param,
-  Res,
   UseGuards,
   Query,
   Inject,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { Response } from 'express';
 import { JwtAuthGuard } from 'src/user/domain/common/guards/jwtAuth.guard';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import {
@@ -52,12 +50,10 @@ export class UserController {
 
   @Get()
   async getAllUsers(@Query('page') page: number) {
-    console.log('dppppppppppppppppppppppp');
     return await this.queryBus.execute(new GetUsersQuery(page));
   }
 
   @Post('/register-hackathon/:userId')
-  // @UseGuards(JwtAuthGuard)
   async registerHackathon(
     @Param('userId') userId: string,
     @Body() body: { hackathonId: string; additionalInfo: any },
@@ -71,7 +67,6 @@ export class UserController {
     );
   }
   @Get('/search')
-  // @UseGuards(JwtAuthGuard)
   async searchUsers(
     @Query('hackathonId') hackathonId: string,
     @Query('searchTerm') searchTerm: string,

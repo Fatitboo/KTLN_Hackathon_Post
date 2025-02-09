@@ -1,11 +1,12 @@
 import { InjectModel } from '@nestjs/mongoose';
 import { ProjectDocument } from '../schemas';
 import { Model, Types } from 'mongoose';
-import { NotFoundException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { UserDocument } from 'src/user/infrastructure/database/schemas';
 import { ProjectRepository } from 'src/project/domain/repositories/project.repository';
 import { Project } from 'src/project/domain/entities/project.entity';
 import { HackathonDocument } from 'src/hackathon/infrastructure/database/schemas';
+import { TeamDocument } from 'src/hackathon/infrastructure/database/schemas/team.schema';
 
 export class MongooseProjectRepository implements ProjectRepository {
   constructor(
@@ -17,6 +18,9 @@ export class MongooseProjectRepository implements ProjectRepository {
 
     @InjectModel(UserDocument.name)
     private readonly userModel: Model<UserDocument>,
+
+    @InjectModel(TeamDocument.name)
+    private readonly teamModel: Model<TeamDocument>,
   ) {}
   async findMembersProject(projectId: string): Promise<any> {
     const project = await this.projectModel.findById(projectId).populate({
@@ -35,15 +39,21 @@ export class MongooseProjectRepository implements ProjectRepository {
     userId: string,
     hackathonId: string,
   ): Promise<any[]> {
+    const team = await this.teamModel.findOne({
+      hackathonId: hackathonId,
+      members: { $in: [new Types.ObjectId(userId)] },
+      status: 'active',
+    });
+    if (!team) throw new BadRequestException();
     const projects = await this.projectModel
       .find({
-        createdBy: new Types.ObjectId(userId),
-        registeredToHackathon: new Types.ObjectId(hackathonId),
+        _id: { $in: team.projects },
       })
       .exec();
     return projects;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async findAll(page: number): Promise<ProjectDocument[]> {
     const projects = await this.projectModel.find().lean().exec();
     if (!projects) return [];
@@ -153,7 +163,10 @@ export class MongooseProjectRepository implements ProjectRepository {
     if (!existingProject) {
       throw new NotFoundException(`Project with ID ${id} not found.`);
     }
-
+    await this.userModel.updateMany(
+      { _id: { $in: existingProject.createdBy } },
+      { $pull: { projects: existingProject._id } },
+    );
     await this.projectModel.findByIdAndDelete(id);
 
     return 'Delete successfully';

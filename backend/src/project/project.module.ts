@@ -29,6 +29,14 @@ import {
   InterationSchema,
 } from 'src/hackathon/infrastructure/database/schemas/interaction.schema';
 import { GetMembersProjectHandler } from './application/queries/get-member-project/get-member-project.handler';
+import {
+  NotificationDocument,
+  NotificationSchema,
+} from 'src/hackathon/infrastructure/database/schemas/notification.schema';
+import {
+  TeamDocument,
+  TeamSchema,
+} from 'src/hackathon/infrastructure/database/schemas/team.schema';
 
 @Module({
   imports: [
@@ -39,6 +47,8 @@ import { GetMembersProjectHandler } from './application/queries/get-member-proje
       { name: HackathonDocument.name, schema: HackathonSchema },
       { name: UserDocument.name, schema: UserSchema },
       { name: InteractionDocument.name, schema: InterationSchema },
+      { name: NotificationDocument.name, schema: NotificationSchema },
+      { name: TeamDocument.name, schema: TeamSchema },
     ]),
   ],
   controllers: [ProjectController],

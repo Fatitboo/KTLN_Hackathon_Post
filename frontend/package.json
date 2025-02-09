@@ -27,6 +27,7 @@
     "classnames": "^2.3.2",
     "cookie-utils": "^1.0.0",
     "dompurify": "^3.0.6",
+    "dotenv": "^16.4.7",
     "font-awesome": "^4.7.0",
     "framer-motion": "^10.16.11",
     "froala-editor": "^4.1.3",

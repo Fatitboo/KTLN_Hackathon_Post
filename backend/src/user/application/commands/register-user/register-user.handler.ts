@@ -14,7 +14,7 @@ import { UserDocument } from 'src/user/infrastructure/database/schemas';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { InteractionDocument } from 'src/hackathon/infrastructure/database/schemas/interaction.schema';
-import axios from 'axios';
+import { urlFe } from 'src/main';
 
 @CommandHandler(RegisterUserCommand)
 export class RegisterUserHandler
@@ -73,7 +73,7 @@ export class RegisterUserHandler
       user.email,
       templateHTML(
         'verify',
-        `http://localhost:5173/user-auth/verify-account/${token}`,
+        `${urlFe}/user-auth/verify-account/${token}`,
         user.fullname,
       ),
       'Verify your email',

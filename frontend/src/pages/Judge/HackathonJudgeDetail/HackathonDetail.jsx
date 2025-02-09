@@ -211,7 +211,7 @@ function HackathonJudgeDetail() {
 
   useEffect(() => {
     if (type == "project-gallery" || type == "judge") {
-      fetch(`http://localhost:3000/api/v1/hackathons/${id}/${type}`)
+      fetch(`${baseUrl}/api/v1/hackathons/${id}/${type}`)
         .then((response) => response.json())
         .then((result) => {
           console.log(result);
@@ -234,7 +234,7 @@ function HackathonJudgeDetail() {
         };
       else return { ...item };
     });
-    fetch(`http://localhost:3000/api/v1/hackathons/awarding/${id}`, {
+    fetch(`${baseUrl}/api/v1/hackathons/awarding/${id}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

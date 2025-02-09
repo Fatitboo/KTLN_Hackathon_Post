@@ -160,9 +160,7 @@ function HackathonJudging({ formSubmit, formId }) {
   }
 
   useEffect(() => {
-    fetch(
-      `http://localhost:3000/api/v1/hackathons/component/${param.id}/${formId}`
-    )
+    fetch(`${baseUrl}/api/v1/hackathons/component/${param.id}/${formId}`)
       .then((response) => response.json())
       .then((result) => {
         const { _id, ...rest } = result;
@@ -670,16 +668,13 @@ function HackathonJudging({ formSubmit, formId }) {
               type="submit"
               onClick={() => {
                 console.log(inviteMail);
-                fetch(
-                  `http://localhost:3000/api/v1/hackathons/invite-judge/${param.id}`,
-                  {
-                    method: "POST",
-                    headers: {
-                      "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(inviteMail),
-                  }
-                )
+                fetch(`${baseUrl}/api/v1/hackathons/invite-judge/${param.id}`, {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify(inviteMail),
+                })
                   .then((response) => response.json())
                   .then((aydy) => {
                     Swal.fire({

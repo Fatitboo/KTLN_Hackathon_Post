@@ -8,7 +8,7 @@ import {
 } from "../config/ChatLogics";
 // import { ChatState } from "../Context/ChatProvider";
 
-const ScrollableChat = ({ messages, user }) => {
+const ScrollableChat = ({ messages, user, selectedChat }) => {
   return (
     <ScrollableFeed>
       {messages &&
@@ -23,13 +23,19 @@ const ScrollableChat = ({ messages, user }) => {
                   <div className="relative group">
                     <img
                       className="rounded-full "
-                      src={m.sender.avatar}
-                      alt={`${m.sender.fullname}'s avatar`}
+                      src={
+                        m.sender._id === selectedChat?.orgSender?.id
+                          ? selectedChat?.orgSender?.avatar
+                          : m.sender.avatar
+                      }
+                      alt={`user avatar`}
                     />
                     {/* Tooltip */}
 
                     <div className="text-left z-20 absolute top-5 left-0 w-max bg-gray-800 text-white text-sm rounded-lg px-2 py-1 opacity-0 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-150">
-                      {m.sender.fullname}
+                      {m.sender._id === selectedChat?.orgSender?.id
+                        ? selectedChat?.orgSender?.name
+                        : m.sender.fullname}
                     </div>
                   </div>
                 )}

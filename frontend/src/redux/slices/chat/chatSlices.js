@@ -51,6 +51,30 @@ export const accessChat = createAsyncThunk(
   }
 );
 
+export const accessChatHackathon = createAsyncThunk(
+  "chats/accessChatHackathon",
+  async (payload, { rejectWithValue, getState, dispatch }) => {
+    try {
+      const { data } = await axios.post(
+        `${baseUrl}/${apiPrefixChat}/hackathon`,
+        { hackathonId: payload.hackathonId },
+        {
+          withCredentials: true,
+        }
+      );
+      if (payload.handleClose) {
+        payload.handleClose();
+      }
+      return data;
+    } catch (error) {
+      if (!error?.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
 const chatSlices = createSlice({
   name: "chats",
   initialState: {
@@ -92,6 +116,22 @@ const chatSlices = createSlice({
         state.appErr = null;
       }),
       builder.addCase(accessChat.rejected, (state, action) => {
+        state.loading = false;
+        state.appErr = action?.payload?.message;
+      });
+    builder.addCase(accessChatHackathon.pending, (state, action) => {
+      state.loading = true;
+    }),
+      builder.addCase(accessChatHackathon.fulfilled, (state, action) => {
+        state.loading = false;
+        const newChat = action.payload;
+        if (!state.chats.find((c) => c._id === newChat._id)) {
+          state.chats.unshift(newChat); // Thêm chat mới vào đầu danh sách
+        }
+        state.selectedChat = newChat;
+        state.appErr = null;
+      }),
+      builder.addCase(accessChatHackathon.rejected, (state, action) => {
         state.loading = false;
         state.appErr = action?.payload?.message;
       });

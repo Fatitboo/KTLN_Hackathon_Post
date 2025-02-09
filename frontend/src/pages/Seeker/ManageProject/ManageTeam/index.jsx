@@ -499,7 +499,7 @@ function ManageTeam() {
               members.
             </div>
             <div style={{ listStyle: "none", padding: 0 }}>
-              {teammates.map((teammate, index) => (
+              {teammates?.map((teammate, index) => (
                 <div
                   key={index}
                   style={{

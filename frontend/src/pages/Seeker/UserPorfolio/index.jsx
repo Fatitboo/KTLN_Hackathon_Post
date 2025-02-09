@@ -19,6 +19,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getUserProfileAction } from "../../../redux/slices/users/usersSlices";
 import HackathonItem from "../../../components/Seeker/HackathonItem";
 import { AskToAddProject } from "../../../components/Modal/AskToAddProject";
+import { accessChat, resetValue } from "@/redux/slices/chat/chatSlices";
 const achievements = [a1, a2, a3, a4, a5, a6, a7, a8];
 function UserPorfolio() {
   const { id, type } = useParams();
@@ -44,7 +45,8 @@ function UserPorfolio() {
     return shuffled.slice(0, randomCount);
   }
   const storeData = useSelector((store) => store?.users);
-  const { userProfile, loading, appErr, isSuccess, isSuccessUpd } = storeData;
+  const { userProfile, loading, appErr, isSuccess, isSuccessUpd, userAuth } =
+    storeData;
   useEffect(() => {
     setUProfile({ ...userProfile });
     console.log("🚀 ~ useEffect ~ userProfile:", userProfile);
@@ -70,6 +72,17 @@ function UserPorfolio() {
   const handleEditProject = (id) => {
     navigate(`/Seeker/project/manage-project/${id}/manage-team`);
   };
+  const handleClose = () => {
+    dispatch(resetValue({ key: "popInner", value: true }));
+  };
+  const handleChat = () => {
+    dispatch(
+      accessChat({
+        userId: id,
+        handleClose,
+      })
+    );
+  };
   return (
     <div>
       {/* Header */}
@@ -84,20 +97,30 @@ function UserPorfolio() {
               className="w-32 rounded-full border-4 border-white"
             />
             <div className="flex items-center justify-center">
-              <CustomButton
-                onClick={() => {
-                  navigate("/Seeker/my-profile");
-                }}
-                title="Edit info & Setting"
-                containerStyles="bg-blue-600 w-fit font-medium text-white py-1 px-2 focus:outline-none hover:bg-blue-500 rounded-sm text-sm border border-blue-600"
-              />
+              {userAuth.user.id === id && (
+                <CustomButton
+                  onClick={() => {
+                    navigate("/Seeker/my-profile");
+                  }}
+                  title="Edit info & Setting"
+                  containerStyles="bg-blue-600 w-fit font-medium text-white py-1 px-2 focus:outline-none hover:bg-blue-500 rounded-sm text-sm border border-blue-600"
+                />
+              )}
             </div>
             <div className="flex items-center justify-center">
-              <CustomButton
-                onClick={() => setOpenAskToAddProject(true)}
-                title="Add a new project"
-                containerStyles="bg-[#0b8510] w-fit font-medium text-white py-1 px-2 focus:outline-none hover:bg-blue-500 rounded-sm text-sm border border-blue-600"
-              />
+              {userAuth.user.id === id ? (
+                <CustomButton
+                  onClick={() => setOpenAskToAddProject(true)}
+                  title="Add a new project"
+                  containerStyles="bg-[#0b8510] w-fit font-medium text-white py-1 px-2 focus:outline-none hover:bg-blue-500 rounded-sm text-sm border border-blue-600"
+                />
+              ) : (
+                <CustomButton
+                  onClick={() => handleChat()}
+                  title="Chat"
+                  containerStyles="bg-[#0b8510] w-fit font-medium text-white py-1 px-2 focus:outline-none hover:bg-blue-500 rounded-sm text-sm border border-blue-600"
+                />
+              )}
             </div>
           </div>
           <div className="mt-2 mx-10 col-span-4">

@@ -21,6 +21,14 @@ const SubNavbarHackathon = ({ id, type }) => {
           MyProject
         </Link>
         <Link
+          to={`/Hackathon-detail/${id}/teams`}
+          className={`py-4 px-4 hover:underline ${
+            type === "teams" ? "text-black opacity-100 bg-white" : ""
+          }`}
+        >
+          Teams
+        </Link>
+        <Link
           to={`/Hackathon-detail/${id}/participants`}
           className={`py-4 px-4 hover:underline ${
             type === "participants" ? "text-black opacity-100 bg-white" : ""

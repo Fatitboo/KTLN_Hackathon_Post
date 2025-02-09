@@ -37,6 +37,16 @@ import {
   InteractionDocument,
   InterationSchema,
 } from 'src/hackathon/infrastructure/database/schemas/interaction.schema';
+import { ChatDocument, ChatSchema } from 'src/chat/schema/chat.schema';
+import {
+  NotificationDocument,
+  NotificationSchema,
+} from 'src/hackathon/infrastructure/database/schemas/notification.schema';
+import { NotificationController } from './adaper/controllers/noti.controller';
+import {
+  TeamDocument,
+  TeamSchema,
+} from 'src/hackathon/infrastructure/database/schemas/team.schema';
 @Module({
   imports: [
     CqrsModule,
@@ -48,9 +58,12 @@ import {
       { name: UserDocument.name, schema: UserSchema },
       { name: ProjectDocument.name, schema: ProjectSchema },
       { name: InteractionDocument.name, schema: InterationSchema },
+      { name: ChatDocument.name, schema: ChatSchema },
+      { name: NotificationDocument.name, schema: NotificationSchema },
+      { name: TeamDocument.name, schema: TeamSchema },
     ]),
   ],
-  controllers: [UserController, AuthController],
+  controllers: [UserController, AuthController, NotificationController],
   providers: [
     { provide: HACKATHON_REPOSITORY, useClass: MongooseHackathonRepository },
     { provide: USER_REPOSITORY, useClass: MongooseUserRepository },

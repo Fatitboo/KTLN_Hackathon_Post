@@ -10,6 +10,10 @@ import {
 } from 'src/hackathon/infrastructure/database/schemas';
 import { ProjectDocument } from 'src/project/infrastructure/database/schemas';
 import { InteractionDocument } from 'src/hackathon/infrastructure/database/schemas/interaction.schema';
+import { templateConfirmRegisterHTML } from '../../constants/template-email-confirm-register';
+import { sendEmail } from 'src/user/domain/services/email.service';
+import { NotificationDocument } from 'src/hackathon/infrastructure/database/schemas/notification.schema';
+import { urlFe } from 'src/main';
 
 @Injectable()
 export class MongooseUserRepository implements UserRepository {
@@ -22,8 +26,11 @@ export class MongooseUserRepository implements UserRepository {
     private readonly hackathonModel: Model<HackathonDocument>,
     @InjectModel(InteractionDocument.name)
     private readonly interactionModel: Model<InteractionDocument>,
+    @InjectModel(NotificationDocument.name)
+    private readonly notificationModel: Model<NotificationDocument>,
   ) {}
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async findAll(page: number): Promise<any> {
     const users = await this.userModel.find().lean().exec();
     if (!users) return [];
@@ -103,8 +110,6 @@ export class MongooseUserRepository implements UserRepository {
     if (!existingHackathon) {
       throw new NotFoundException(`Hackathon with ID ${userId} not found.`);
     }
-    console.log(existingHackathon._id);
-    console.log(existingHackathon.registerUsers.map((item) => item.userId));
     const userExists = existingHackathon.registerUsers.find((user) => {
       console.log(user.userId.toString(), userId);
       return user.userId.toString() === userId;
@@ -147,14 +152,48 @@ export class MongooseUserRepository implements UserRepository {
         interaction_type: 'join',
       });
     }
-    await existingUser.save();
     await existingHackathon.save();
+    const noti = await this.notificationModel.create({
+      type: 'participation_confirmation',
+      sender: {
+        id: existingHackathon._id,
+        avatar: existingHackathon.thumbnail,
+        type: 'hackathon',
+        name: existingHackathon.hackathonName,
+      },
+      content: `Your registration for ${existingHackathon.hackathonName} has been confirmed!`,
+      title: 'Registration Confirmed for Hackathon',
+      additionalData: {
+        hackathonName: existingHackathon.hackathonName,
+        hackathonTime: `${existingHackathon.submissions.start} - ${existingHackathon.submissions.deadline}`,
+        hackathonLocation: existingHackathon.location,
+        linkDetails: `/Hackathon-detail/${hackathonId}/overview`,
+      },
+    });
+    if (existingUser.notifications) existingUser.notifications.push(noti._id);
+    else existingUser.notifications = [noti._id];
+    await existingUser.save();
+
+    await sendEmail(
+      existingUser.email,
+      templateConfirmRegisterHTML(
+        `${urlFe}/Hackathon-detail/${hackathonId}/overview`,
+        existingUser.fullname,
+        existingHackathon.hackathonName,
+        `${existingHackathon.submissions.start} - ${existingHackathon.submissions.deadline}`,
+        existingHackathon.location,
+        existingHackathon.hackathonTypes.join(','),
+      ),
+      'Confirmation register Hackathon',
+      'Send mail successfull',
+    );
     return {
       projectId,
       teamStatus: isHadTeam,
       hackathonId,
     };
   }
+
   async updateById(id: string, updateData: object): Promise<User | null> {
     const user = await this.userModel.findByIdAndUpdate(id, {
       ...updateData,

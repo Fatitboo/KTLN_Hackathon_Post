@@ -1,25 +1,20 @@
 import { useParams, Link } from "react-router-dom";
-import { CustomButton, Modal } from "../../../../components";
+import { CustomButton } from "../../../../components";
 import HackathonInfo from "../../../../components/Seeker/HackathonInfo";
-import CardProject from "../../../../components/Seeker/CardProject";
-import SearchInput from "../../../../components/Seeker/SearchInput";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { singleHackathon } from "../../../../redux/slices/hackathons/hackathonsSlices";
-import { backgroundSearch, defaultAvt } from "../../../../assets/images";
+import { backgroundSearch } from "../../../../assets/images";
 import BrowerParticipants from "../../../Seeker/BrowerParticipants";
 import { LiaEyeSlash, LiaEyeSolid } from "react-icons/lia";
 import { CgLock, CgUnblock } from "react-icons/cg";
-import ParticipantItem from "../../../../components/Seeker/ParticipantItem";
 import TeamProjectItem from "./TeamProject/TeamProject";
 import Swal from "sweetalert2";
-import { IoClose } from "react-icons/io5";
-import TeamProjectSmall from "./TeamProjectSmall/TeamProjectSmall";
 import Discussion from "../Discussion";
 import Updates from "../Updates";
 import ManageJudges from "./ManageJudges";
-import { CiViewBoard } from "react-icons/ci";
 import ManageProjects from "./ManageProjects";
+import baseUrl from "@/utils/baseUrl";
 
 function HackathonCorDetail() {
   const { id, type } = useParams();
@@ -209,7 +204,7 @@ function HackathonCorDetail() {
 
   useEffect(() => {
     if (type == "project-gallery" || type == "teams" || type == "judges") {
-      fetch(`http://localhost:3000/api/v1/hackathons/${id}/${type}`)
+      fetch(`${baseUrl}/api/v1/hackathons/${id}/${type}`)
         .then((response) => response.json())
         .then((result) => {
           console.log("haha", result);
@@ -227,9 +222,7 @@ function HackathonCorDetail() {
         )
       );
     } else {
-      fetch(
-        `http://localhost:3000/api/v1/projects/get-members/${project.id}/members`
-      )
+      fetch(`${baseUrl}/api/v1/projects/get-members/${project.id}/members`)
         .then((response) => response.json())
         .then((result) => {
           setProjectGallery(
@@ -257,18 +250,15 @@ function HackathonCorDetail() {
       confirmButtonColor: "#3085d6",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(
-          `http://localhost:3000/api/v1/projects/block-project/${project?.id}/block`,
-          {
-            method: "POST", // Chỉ định phương thức là POST
-            headers: {
-              "Content-Type": "application/json", // Đặt header để báo server biết dữ liệu là JSON
-            },
-            body: JSON.stringify({
-              block: !project?.block, // Thay thế bằng dữ liệu bạn muốn gửi
-            }),
-          }
-        )
+        fetch(`${baseUrl}/api/v1/projects/block-project/${project?.id}/block`, {
+          method: "POST", // Chỉ định phương thức là POST
+          headers: {
+            "Content-Type": "application/json", // Đặt header để báo server biết dữ liệu là JSON
+          },
+          body: JSON.stringify({
+            block: !project?.block, // Thay thế bằng dữ liệu bạn muốn gửi
+          }),
+        })
           .then((response) => response.json())
           .then(() => {
             setProjectGallery(

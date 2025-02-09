@@ -35,7 +35,7 @@ function UserMng() {
   }, []);
 
   const getall = () => {
-    fetch("http://localhost:3000/api/v1/users")
+    fetch("${baseUrl}/api/v1/users")
       .then((response) => response.json())
       .then((result) => {
         setOrganizerList(result);

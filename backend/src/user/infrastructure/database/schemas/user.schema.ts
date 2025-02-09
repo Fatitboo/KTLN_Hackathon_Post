@@ -89,6 +89,9 @@ export class UserDocument {
   @Prop({ type: [{ type: Types.ObjectId, ref: 'HackathonDocument' }] })
   registerHackathons: Types.ObjectId[];
 
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'NotificationDocument' }] })
+  notifications: Types.ObjectId[];
+
   @Prop()
   tokenVerify: string;
 

@@ -8,7 +8,6 @@ import Lottie from "react-lottie";
 var socket, selectedChatCompare;
 import { toast, ToastContainer } from "react-toastify";
 
-const ENDPOINT = "http://localhost:3000"; // "https://talk-a-tive.herokuapp.com"; -> After deployment
 import animationData from "./animations/typing.json";
 import ScrollableChat from "./ScrollableChat";
 import axios from "axios";
@@ -102,7 +101,7 @@ const ChatWindow = () => {
   };
 
   useEffect(() => {
-    socket = io(ENDPOINT);
+    socket = io(baseUrl);
     socket.emit("setup", user);
     socket.on("connected", () => setSocketConnected(true));
     socket.on("typing", () => setIsTyping(true));
@@ -189,7 +188,7 @@ const ChatWindow = () => {
           selectedChat ? "flex" : "hidden"
         } md:flex flex-col w-2/3 p-4 items-center bg-white rounded-lg border border-gray-200`}
         style={{
-          width: selectedChat ? "100%" : "68%", // Kích thước linh hoạt cho base và md
+          width: "80%",
         }}
       >
         <>
@@ -209,9 +208,10 @@ const ChatWindow = () => {
                       >
                         <img
                           src={
-                            !selectedChat.isGroupChat
+                            selectedChat.avatarGroupChat ??
+                            (!selectedChat.isGroupChat
                               ? getSenderAvatar(user, selectedChat.users)
-                              : groupChat
+                              : groupChat)
                           }
                           alt="avatar"
                           style={{
@@ -269,7 +269,11 @@ const ChatWindow = () => {
                   </div>
                 ) : (
                   <div className="w-full overflow-auto">
-                    <ScrollableChat messages={messages} user={user} />
+                    <ScrollableChat
+                      selectedChat={selectedChat}
+                      messages={messages}
+                      user={user}
+                    />
                     <div ref={messagesEndRef} />
                   </div>
                 )}

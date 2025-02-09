@@ -76,6 +76,9 @@ import ManageSubscriptionType from "../pages/Admin/SubscriptionType/ManageSubscr
 import AutoRegisterJudge from "../pages/Auth/AutoRegisJudge";
 import HackathonJudgeDetail from "../pages/Judge/HackathonJudgeDetail/HackathonDetail";
 import ManageJudgeHackathon from "../pages/Judge/ManageHackathon";
+import ChatManageScreenOrganizer from "@/components/Chat/ChatManageScreenOrganizer";
+import ManageNotificationUser from "@/pages/Seeker/Setting/Notification";
+import HackathonTeams from "@/pages/Seeker/Hackathon/Team/TeamHackathons";
 
 const publicRoutes = [
   // User Layout
@@ -185,6 +188,10 @@ const publicRoutes = [
         element: Discussion,
       },
       {
+        path: "teams",
+        element: HackathonTeams,
+      },
+      {
         path: "register",
         element: RegisterToHackathon,
       },
@@ -221,6 +228,11 @@ const seekerRoutes = [
   {
     path: "/Seeker/manage-reports",
     component: ManageReportUser,
+    layout: LayoutHasSidebar,
+  },
+  {
+    path: "/Seeker/manage-notification",
+    component: ManageNotificationUser,
     layout: LayoutHasSidebar,
   },
   {
@@ -298,6 +310,11 @@ const corRoutes = [
   {
     path: "/Organizer/blog-management/edit-blog/:id",
     component: UpdateBlogOr,
+    layout: LayoutHasSidebar,
+  },
+  {
+    path: "/Organizer/chat",
+    component: ChatManageScreenOrganizer,
     layout: LayoutHasSidebar,
   },
   {

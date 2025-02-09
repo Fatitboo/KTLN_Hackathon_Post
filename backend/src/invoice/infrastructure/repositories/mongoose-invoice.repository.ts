@@ -6,6 +6,7 @@ import * as crypto from 'crypto';
 import * as https from 'https';
 import { Invoice } from 'src/invoice/domain/entities/invoice.entity';
 import { UserDocument } from 'src/user/infrastructure/database/schemas';
+import { urlFe } from 'src/main';
 
 export class MongooseInvoiceRepository implements InvoiceRepository {
   constructor(
@@ -37,7 +38,7 @@ export class MongooseInvoiceRepository implements InvoiceRepository {
     const requestId = partnerCode + new Date().getTime();
     const orderId = requestId;
     const orderInfo = 'pay with MoMo';
-    const redirectUrl = 'http://localhost:5173/Seeker/payment/success';
+    const redirectUrl = `${urlFe}/Seeker/payment/success`;
     const ipnUrl =
       'https://ktln-hackathon-post.onrender.com/api/v1/invoices/create-invoice?' +
       this.convertJsonToParams(createInvoiceDTO);

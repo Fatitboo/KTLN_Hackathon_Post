@@ -17,6 +17,7 @@ import FroalaEditor from "react-froala-wysiwyg";
 import TextInput from "../InputField/TextInput";
 import OptimizeContentPopup from "../../../../components/Organizer/OptimizeContentPopup";
 import { useParams } from "react-router-dom";
+import baseUrl from "@/utils/baseUrl";
 
 function JobDes({ formId, formSubmit, config }) {
   const editor = useRef();
@@ -58,9 +59,7 @@ function JobDes({ formId, formSubmit, config }) {
 
   useEffect(() => {
     console.log(param);
-    fetch(
-      `http://localhost:3000/api/v1/hackathons/component/${param.id}/${formId}`
-    )
+    fetch(`${baseUrl}/api/v1/hackathons/component/${param.id}/${formId}`)
       .then((response) => response.json())
       .then((result) => {
         const { _id, ...rest } = result;

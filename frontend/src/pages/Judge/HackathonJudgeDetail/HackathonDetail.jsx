@@ -2,15 +2,12 @@ import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { LiaEyeSlash, LiaEyeSolid } from "react-icons/lia";
-import { CgLock, CgUnblock } from "react-icons/cg";
 import Swal from "sweetalert2";
 import { IoClose } from "react-icons/io5";
 import { StarIcon } from "@heroicons/react/20/solid";
 import HackathonInfo from "../../../components/Seeker/HackathonInfo";
 import Discussion from "../../Company/ManageHackathon/Discussion";
 import Updates from "../../Company/ManageHackathon/Updates";
-import TeamProjectItem from "../../Company/ManageHackathon/HackathonDetail/TeamProject/TeamProject";
 import SearchInput from "../../../components/Seeker/SearchInput";
 import { CustomButton, Modal } from "../../../components";
 import CardProject from "../../../components/Seeker/CardProject";
@@ -19,6 +16,7 @@ import { singleHackathon } from "../../../redux/slices/hackathons/hackathonsSlic
 import BrowerParticipants from "@/pages/Seeker/BrowerParticipants";
 import JudgeProjects from "./JudgeProject";
 import TeamProjectSmall from "./TeamProjectSmall/TeamProjectSmall";
+import baseUrl from "@/utils/baseUrl";
 
 function HackathonJudgeDetail() {
   const { id, type } = useParams();
@@ -211,7 +209,7 @@ function HackathonJudgeDetail() {
 
   useEffect(() => {
     if (type == "project-gallery" || type == "judge") {
-      fetch(`http://localhost:3000/api/v1/hackathons/${id}/${type}`)
+      fetch(`${baseUrl}/api/v1/hackathons/${id}/${type}`)
         .then((response) => response.json())
         .then((result) => {
           console.log(result);
@@ -220,10 +218,6 @@ function HackathonJudgeDetail() {
         .catch((error) => console.log("error", error));
     }
   }, [type]);
-
-  const handleAward = () => {
-    setModal(!modal);
-  };
 
   const handleSaveWinner = () => {
     const updateHackathon = currentHackathon.prizes.map((item) => {
@@ -234,7 +228,7 @@ function HackathonJudgeDetail() {
         };
       else return { ...item };
     });
-    fetch(`http://localhost:3000/api/v1/hackathons/awarding/${id}`, {
+    fetch(`${baseUrl}/api/v1/hackathons/awarding/${id}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -47,7 +47,7 @@ export const loginUserAction = createAsyncThunk(
         config
       );
       if (data?.user?.isActive) {
-        Cookies.set("userInfo", JSON.stringify(userInfo), {
+        Cookies.set("userInfo", JSON.stringify(data), {
           expires: 7,
           path: "/",
         });
@@ -80,7 +80,7 @@ export const oAuthWithGoogleAction = createAsyncThunk(
       );
 
       if (data?.user?.isActive) {
-        Cookies.set("userInfo", JSON.stringify(userInfo), {
+        Cookies.set("userInfo", JSON.stringify(data), {
           expires: 7,
           path: "/",
         });
@@ -114,7 +114,7 @@ export const oAuthWithGithubAction = createAsyncThunk(
       console.log("🚀 ~ data:", data);
 
       if (data?.user?.isActive) {
-        Cookies.set("userInfo", JSON.stringify(userInfo), {
+        Cookies.set("userInfo", JSON.stringify(data), {
           expires: 7,
           path: "/",
         });

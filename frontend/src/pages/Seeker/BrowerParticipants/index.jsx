@@ -19,7 +19,7 @@ import MultiSelectDropdown from "../../../components/Seeker/MultiSelectDropdown"
 import baseUrl from "@/utils/baseUrl";
 import axios from "axios";
 
-function BrowerParticipants({ hackathonId }) {
+function BrowerParticipants({ hackathonId, ownerId }) {
   const { id } = useParams();
 
   const [selectedSpecialties, setSelectedSpecialties] = useState([]);
@@ -143,13 +143,15 @@ function BrowerParticipants({ hackathonId }) {
         <div className="grid grid-cols-12 max-xl:grid-cols-1 max-xl:mt-1 gap-4 w-full h-full max-xl:px-4 px-60">
           <div className="col-span-3 max-xl:col-span-1 max-xl:mt-1 mt-36 pr-10 max-xl:pr-1">
             <div className="flex items-center">
-              {user?.userType?.includes("organizer") ?? (
+              {user?.id === ownerId ? (
                 <div
                   className="text-blue-600 cursor-pointer bg-gray-200 p-2"
                   onClick={downloadExcel}
                 >
                   Export file Excel
                 </div>
+              ) : (
+                <></>
               )}
             </div>
             <div className="mt-5 text-sm text-gray-600 font-normal">

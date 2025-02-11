@@ -18,6 +18,7 @@ import { StarIcon } from "@heroicons/react/20/solid";
 import TeamProjectSmall from "./TeamProjectSmall/TeamProjectSmall";
 import Discussion from "../Discussion";
 import Updates from "../Updates";
+import baseUrl from "@/utils/baseUrl";
 
 function HackathonCorDetail() {
   const { id, type } = useParams();
@@ -631,7 +632,12 @@ function HackathonCorDetail() {
             </div>
           </>
         )}
-        {type === "participants" && <BrowerParticipants hackathonId={id} />}
+        {type === "participants" && (
+          <BrowerParticipants
+            hackathonId={id}
+            ownerId={currentHackathon?.user}
+          />
+        )}
         <div className="px-60 max-lg:px-2 py-5 ">
           <div className="grid grid-cols-3 max-lg:grid-cols-1 gap-10">
             <div className="col-span-2 text-gray-600 " id="generated-script">

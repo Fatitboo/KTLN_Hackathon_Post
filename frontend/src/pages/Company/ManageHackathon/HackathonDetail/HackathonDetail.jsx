@@ -437,14 +437,14 @@ function HackathonCorDetail() {
           <>
             <div className="px-60 max-lg:px-2 py-5 ">
               <div className="col-span-2">
-                <h2 className="font-semibold mt-5 mb-5">Manage teams</h2>
+                <h2 className="font-semibold mt-5 mb-5">Manage projects</h2>
                 <div>
                   <div className="gap-2">
                     <table className="relative w-full overflow-y-hidden overflow-x-hidden rounded-md mb-1 bg-white border-0">
                       <thead className="bg-[#f5f7fc] color-white border-transparent border-0 w-full">
                         <tr className="w-full">
                           <th className="relative text-[#3a60bf] font-medium py-6 text-base text-left w-4/12 pl-5 ">
-                            Team name
+                            Team projects
                           </th>
                           <th className="relative text-[#3a60bf] font-medium py-6 text-base text-left w-2/12">
                             Project
@@ -555,7 +555,12 @@ function HackathonCorDetail() {
             setSelectTeam={setSelectTeam}
           />
         )}
-        {type === "participants" && <BrowerParticipants hackathonId={id} />}
+        {type === "participants" && (
+          <BrowerParticipants
+            hackathonId={id}
+            ownerId={currentHackathon?.user}
+          />
+        )}
         {type === "judges" && (
           <ManageJudges
             judges={currentHackathon?.judges}

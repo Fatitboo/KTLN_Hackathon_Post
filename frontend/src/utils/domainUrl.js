@@ -1,2 +1,3 @@
-const domainUrl = process.env.DOMAIN_URL || "http://localhost:5173";
+const domainUrl =
+  process.env.DOMAIN_URL || "https://ktln-hackathon-post-eta.vercel.app";
 export default domainUrl;

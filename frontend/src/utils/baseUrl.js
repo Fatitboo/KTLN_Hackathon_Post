@@ -1,3 +1,4 @@
-const baseUrl = process.env.BACKEND_URL || "http://localhost:3000";
+const baseUrl =
+  process.env.BACKEND_URL || "https://ktln-hackathon-post.onrender.com";
 // const baseUrl = 'https://afraid-quilt-production.up.railway.app';
 export default baseUrl;

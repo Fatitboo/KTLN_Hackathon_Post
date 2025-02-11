@@ -108,7 +108,7 @@ function UserPorfolio() {
               )}
             </div>
             <div className="flex items-center justify-center">
-              {userAuth.user.id === id ? (
+              {userAuth.id === id ? (
                 <CustomButton
                   onClick={() => setOpenAskToAddProject(true)}
                   title="Add a new project"
@@ -222,7 +222,7 @@ function UserPorfolio() {
                             description={card?.tagline}
                             image={card?.thumnailImage ?? imgDefaultProject}
                             imgUser={defaultAvt}
-                            isWinner={true}
+                            isWinner={false}
                             votes={card.votes}
                             comments={card.comments}
                           />

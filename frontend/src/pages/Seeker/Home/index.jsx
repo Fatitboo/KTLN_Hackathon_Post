@@ -19,6 +19,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import baseUrl from "../../../utils/baseUrl";
+import baseAIAPIUrl from "@/utils/baseUrlAIBackend";
 
 function Home() {
   const storeData = useSelector((store) => store.users);
@@ -32,7 +33,7 @@ function Home() {
   const getRecommend = async () => {
     axios
       .get(
-        `http://localhost:5001/recommend-cb?user_id=${
+        `${baseAIAPIUrl}/recommend-cb?user_id=${
           user?.id || "671b64262b605334688d5f77"
         }&byModel=hd`
       )

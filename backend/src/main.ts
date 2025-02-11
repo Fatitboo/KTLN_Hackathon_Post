@@ -5,7 +5,8 @@ import { ValidationPipe } from '@nestjs/common';
 import { LoggerService } from './shared/infrastructure/logger/logger.service';
 import { AllExceptionFilter } from './shared/infrastructure/common/filter/exception.filter';
 import { LoggingInterceptor } from './shared/infrastructure/common/interceptors/logging.interceptor';
-export const urlFe = process.env.URL_FE || 'http://localhost:5173';
+export const urlFe =
+  process.env.URL_FE || 'https://ktln-hackathon-post-eta.vercel.app';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

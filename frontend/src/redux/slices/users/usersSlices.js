@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import customeAxios from "../../configAxios";
 import baseUrl from "../../../utils/baseUrl";
 import axios from "axios";
+import Cookies from "js-cookie";
 const apiPrefixUsers = "api/v1/users";
 const apiPrefixAuth = "api/v1/auth";
 // register user
@@ -46,7 +47,11 @@ export const loginUserAction = createAsyncThunk(
         config
       );
       if (data?.user?.isActive) {
-        sessionStorage.setItem("userInfo", JSON.stringify(data));
+        Cookies.set("userInfo", JSON.stringify(userInfo), {
+          expires: 7,
+          path: "/",
+        });
+        // sessionStorage.setItem("userInfo", JSON.stringify(data));
       }
       return data;
     } catch (error) {
@@ -75,7 +80,11 @@ export const oAuthWithGoogleAction = createAsyncThunk(
       );
 
       if (data?.user?.isActive) {
-        sessionStorage.setItem("userInfo", JSON.stringify(data));
+        Cookies.set("userInfo", JSON.stringify(userInfo), {
+          expires: 7,
+          path: "/",
+        });
+        // sessionStorage.setItem("userInfo", JSON.stringify(data));
       }
       return data;
     } catch (error) {
@@ -105,7 +114,11 @@ export const oAuthWithGithubAction = createAsyncThunk(
       console.log("🚀 ~ data:", data);
 
       if (data?.user?.isActive) {
-        sessionStorage.setItem("userInfo", JSON.stringify(data));
+        Cookies.set("userInfo", JSON.stringify(userInfo), {
+          expires: 7,
+          path: "/",
+        });
+        // sessionStorage.setItem("userInfo", JSON.stringify(data));
       }
       return data;
     } catch (error) {
@@ -162,9 +175,9 @@ export const getUserProfileAction = createAsyncThunk(
         config
       );
 
-      var getUserAuth = JSON.parse(sessionStorage.getItem("userInfo"));
+      // var getUserAuth = JSON.parse(sessionStorage.getItem("userInfo"));
 
-      console.log(data);
+      // console.log(data);
       // getUserAuth.user.fullname = data.userProfile.fullname;
       // sessionStorage.setItem("userInfo", JSON.stringify(getUserAuth));
 
@@ -188,7 +201,7 @@ export const updateUserAction = createAsyncThunk(
         `${apiPrefixUsers}/update-user/${userAuth?.user?.id}`,
         info
       );
-      var getUserAuth = JSON.parse(sessionStorage.getItem("userInfo"));
+      var getUserAuth = JSON.parse(Cookies.get("userInfo"));
       if (info.getType === "setting_recommend") {
         getUserAuth.user.isSetPersionalSetting = data.isSetPersionalSetting;
       }
@@ -198,7 +211,11 @@ export const updateUserAction = createAsyncThunk(
       if (info.getType === "avatar") {
         getUserAuth.user.avatar = data.avatar;
       }
-      sessionStorage.setItem("userInfo", JSON.stringify(getUserAuth));
+      Cookies.set("userInfo", JSON.stringify(userInfo), {
+        expires: 7,
+        path: "/",
+      });
+      // sessionStorage.setItem("userInfo", JSON.stringify(getUserAuth));
       return data;
     } catch (error) {
       if (!error?.response) {
@@ -790,8 +807,8 @@ export const resetUserAuthAction = createAsyncThunk(
   }
 );
 // get userAuth from local storage
-const getUserAuth = sessionStorage.getItem("userInfo")
-  ? JSON.parse(sessionStorage.getItem("userInfo"))
+const getUserAuth = Cookies.get("userInfo")
+  ? JSON.parse(Cookies.get("userInfo"))
   : null;
 
 // Slice

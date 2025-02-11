@@ -27,6 +27,7 @@ import { toast } from "react-toastify";
 import { MdCardMembership } from "react-icons/md";
 import { UserIcon } from "@/assets/icons";
 import { LuMailCheck } from "react-icons/lu";
+import baseUrl from "@/utils/baseUrl";
 
 const ManageJudges = ({ judges, projects, hackathon, setHackathon }) => {
   const params = useParams();
@@ -163,48 +164,77 @@ const ManageJudges = ({ judges, projects, hackathon, setHackathon }) => {
   };
 
   const sendInvitation = (judgeId, email, name) => {
-    const queryParams = {
-      judgeId: judgeId,
-      email: email,
-      receiver: name,
-    };
-
-    // Manually construct the query string
-    const queryString = Object.keys(queryParams)
-      .map(
-        (key) =>
-          `${encodeURIComponent(key)}=${encodeURIComponent(queryParams[key])}`
-      )
-      .join("&");
-
     fetch(
-      `http://localhost:3000/api/v1/hackathons/invite-judge/${params.id}?${queryString}`,
+      `http://localhost:3000/api/v1/hackathons/check-valid-email/${params.id}`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+        body: JSON.stringify({
+          email: email,
+          judgeId: judgeId,
+        }),
       }
     )
-      .then((aydy) => {
-        Swal.fire({
-          title: "Success!",
-          text: "Invitation mail has been send.",
-          icon: "success",
-          confirmButtonText: "OK",
-          allowOutsideClick: false,
-          confirmButtonColor: "#3085d6",
-        }).then((result) => {
-          if (result.isConfirmed) {
-            setJudgeList([
-              ...judgeList.map((i) =>
-                i.id === judgeId ? { ...i, invited: true } : { ...i }
-              ),
-            ]);
-          }
-        });
-      })
-      .catch((error) => console.log("error", error));
+      .then((response) => response.json())
+      .then((result) => {
+        if (result) {
+          const queryParams = {
+            judgeId: judgeId,
+            email: email,
+            receiver: name,
+          };
+
+          // Manually construct the query string
+          const queryString = Object.keys(queryParams)
+            .map(
+              (key) =>
+                `${encodeURIComponent(key)}=${encodeURIComponent(
+                  queryParams[key]
+                )}`
+            )
+            .join("&");
+
+          fetch(
+            `http://localhost:3000/api/v1/hackathons/invite-judge/${params.id}?${queryString}`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          )
+            .then((aydy) => {
+              Swal.fire({
+                title: "Success!",
+                text: "Invitation mail has been send.",
+                icon: "success",
+                confirmButtonText: "OK",
+                allowOutsideClick: false,
+                confirmButtonColor: "#3085d6",
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  setJudgeList([
+                    ...judgeList.map((i) =>
+                      i.id === judgeId ? { ...i, invited: true } : { ...i }
+                    ),
+                  ]);
+                }
+              });
+            })
+            .catch((error) => console.log("error", error));
+        } else {
+          Swal.fire({
+            title: "Warning",
+            text: "This email has been used in this hackathon",
+            icon: "warning",
+            confirmButtonText: "OK",
+            allowOutsideClick: false,
+            confirmButtonColor: "#3085d6",
+          });
+        }
+      });
   };
 
   const handleImageChange = (type, id, e) => {
@@ -216,25 +246,43 @@ const ManageJudges = ({ judges, projects, hackathon, setHackathon }) => {
   };
 
   const handleSaveJudges = async () => {
+    const { data } = await axios.post(
+      `${baseUrl}/api/v1/hackathons/check-valid-email/${params.id}`,
+      {
+        email: inputValues.email,
+        judgeId: inputValues.id,
+      }
+    );
+    if (!data) {
+      Swal.fire({
+        title: "Warning!",
+        text: "This email has been used in this hackathon.",
+        icon: "warning",
+        confirmButtonText: "OK",
+        allowOutsideClick: false,
+        confirmButtonColor: "#3085d6",
+      });
+      return;
+    }
     const uploadedJudge = await handleUpload(inputValues);
     const judgeExit = judgeList?.find((item) => item.id === inputValues.id);
     console.log(judges, judgeExit, uploadedJudge);
-    let data = [];
+    let mainData = [];
     if (judgeExit) {
-      data = judgeList.map((item) =>
+      mainData = judgeList.map((item) =>
         item.id === uploadedJudge.id ? { ...uploadedJudge } : { ...item }
       );
     } else {
-      data = [...judgeList];
-      data.push(uploadedJudge);
+      mainData = [...judgeList];
+      mainData.push(uploadedJudge);
     }
 
-    temp.current = data;
+    temp.current = mainData;
     if (params.id) {
       dispatch(
         updateHackathonComponent({
           id: params.id,
-          hackathon: { judges: data },
+          hackathon: { judges: mainData },
         })
       );
     }

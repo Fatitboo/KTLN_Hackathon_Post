@@ -18,17 +18,46 @@ import TextInput from "../InputField/TextInput";
 import OptimizeContentPopup from "../../../../components/Organizer/OptimizeContentPopup";
 import { useParams } from "react-router-dom";
 import baseUrl from "@/utils/baseUrl";
+import axios from "axios";
 
 function JobDes({ formId, formSubmit, config }) {
   const editor = useRef();
   const param = useParams();
+  const [key, setKey] = useState(0);
 
   let [errors] = useState({});
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    formSubmit(inputValues);
+    const data = await handleUpload();
+    console.log(data);
+    formSubmit(data);
   }
+
+  const handleUpload = async () => {
+    const updatedInputsValues = { ...inputValues }; // Giữ lại giá trị cũ
+
+    for (const [key, file] of Object.entries(updatedInputsValues)) {
+      if (!file || typeof file == "string") continue;
+
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", "nhanle");
+
+      try {
+        const response = await axios.post(
+          `https://api.cloudinary.com/v1_1/dcdjan0oo/video/upload`,
+          formData
+        );
+        updatedInputsValues[key] = response.data.secure_url; // Lưu URL vào inputsValues
+        console.log(`${key} uploaded successfully:`, response.data.secure_url);
+      } catch (error) {
+        console.error(`Error uploading ${key}:`, error);
+      }
+    }
+
+    return updatedInputsValues; // Cập nhật state với URL đã upload
+  };
 
   const [inputValues, setInputValues] = useState({
     mainDescription: `<h4 style='color: rgb(0, 0, 0); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif; font-size: medium; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;' id="isPasted"><strong><span style="font-size: 18px;">About the challenge</span></strong></h4><h4 style='color: rgb(0, 0, 0); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif; font-size: medium; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;'><strong><span style="font-size: 18px;">Get started</span></strong></h4>`,
@@ -53,12 +82,21 @@ function JobDes({ formId, formSubmit, config }) {
     );
   };
 
+  const handleVideoChange = (e) => {
+    const { name, files } = e.target;
+    if (!files[0]) return;
+    setKey((prev) => prev + 1);
+    setInputValues((prevValues) => ({
+      ...prevValues,
+      [name]: files[0],
+    }));
+  };
+
   function handleChange(e, model) {
     setInputValues({ ...inputValues, [model]: e });
   }
 
   useEffect(() => {
-    console.log(param);
     fetch(`${baseUrl}/api/v1/hackathons/component/${param.id}/${formId}`)
       .then((response) => response.json())
       .then((result) => {
@@ -191,18 +229,35 @@ function JobDes({ formId, formSubmit, config }) {
             </div>
           </div>
 
-          <TextInput
-            label="Video"
-            description="Do you have a promotional or explainer video for your hackathon? If so, include a YouTube or Vimeo link here. Make sure embedding is enabled."
-            required
-            type="text"
-            value={inputValues.videoDescription}
-            onChange={(e) => {
-              handleChange(e.target.value, "videoDescription");
-            }}
-            rules="requiredText"
+          {TitleDescription(
+            "Video",
+            "Do you have a promotional or explainer video for your hackathon? If so, include a YouTube or Vimeo link here. Make sure embedding is enabled."
+          )}
+          {typeof inputValues.videoDescription == "string" ? (
+            <iframe
+              height="400"
+              className="bg-[#f2f2f2] rounded-sm"
+              src={inputValues.videoDescription}
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              title="YouTube video"
+            ></iframe>
+          ) : (
+            <video key={key} height={400} controls>
+              <source
+                src={URL.createObjectURL(inputValues.videoDescription)}
+                type="video/mp4"
+              />
+              Your browser does not support the video tag.
+            </video>
+          )}
+          <input
+            type="file"
+            name="videoDescription"
+            accept="video/mp4,video/avi,video/mov"
+            onChange={handleVideoChange}
           />
-
           <div>
             {TitleDescription(
               "Rules",

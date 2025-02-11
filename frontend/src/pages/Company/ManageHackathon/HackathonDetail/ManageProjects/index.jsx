@@ -44,7 +44,7 @@ const ManageProjects = ({
         };
       else return { ...item };
     });
-    fetch(`http://localhost:3000/api/v1/hackathons/awarding/${id}`, {
+    fetch(`http://localhost:3000/api/v1/hackathons/awarding/${params.id}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

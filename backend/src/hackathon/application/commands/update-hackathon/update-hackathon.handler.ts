@@ -26,6 +26,9 @@ export class UpdateHackathonHandler
     }
 
     // Cập nhật các thuộc tính mới từ command
+    console.log(hackathon);
+    console.log(hackathon.judgingPeriod);
+    console.log(hackathon.judgingPeriod);
     const updatedHackathon = {
       id: id,
       hackathonName: hackathon.hackathonName ?? existingHackathon.hackathonName,
@@ -78,11 +81,13 @@ export class UpdateHackathonHandler
           }
         : existingHackathon.judgingPeriod,
       judges:
-        hackathon.judges.map((item) => {
-          if (item.userId)
-            return { ...item, userId: new Types.ObjectId(item.userId) };
-          else return { ...item };
-        }) ?? existingHackathon.judges,
+        (hackathon.judges
+          ? hackathon.judges.map((item) => {
+              if (item.userId)
+                return { ...item, userId: new Types.ObjectId(item.userId) };
+              else return { ...item };
+            })
+          : null) ?? existingHackathon.judges,
       criteria: hackathon.criteria ?? existingHackathon.criteria,
       criteriaScore: hackathon.criteriaScore ?? existingHackathon.criteriaScore,
       winnersAnnounced: hackathon.winnersAnnounced

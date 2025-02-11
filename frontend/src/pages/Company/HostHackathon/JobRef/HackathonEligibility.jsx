@@ -6,6 +6,7 @@ import RadioButton from "../InputField/RadioButton";
 import CheckBox from "../InputField/CheckBox";
 import CustomeCbbAddress from "../../../../components/Organizer/CustomeCbbAddress";
 import { useParams } from "react-router-dom";
+import baseUrl from "@/utils/baseUrl";
 
 function HackathonEligibility({ formId, formSubmit, config }) {
   const param = useParams();

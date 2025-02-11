@@ -2,6 +2,7 @@ import { JobBenefitImage } from "../../../../assets/images";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import baseUrl from "@/utils/baseUrl";
 
 function HackathonDesign({ formId, formSubmit }) {
   const param = useParams();

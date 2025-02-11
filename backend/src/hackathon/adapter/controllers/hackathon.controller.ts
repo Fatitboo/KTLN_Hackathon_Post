@@ -39,6 +39,7 @@ import { urlFe } from 'src/main';
 import { templateHackathonUpdateHTML } from 'src/user/infrastructure/constants/template-email-confirm-register copy';
 import { NotificationDocument } from 'src/hackathon/infrastructure/database/schemas/notification.schema';
 import { InteractionDocument } from 'src/hackathon/infrastructure/database/schemas/interaction.schema';
+import { fa } from '@faker-js/faker/.';
 
 @Controller('hackathons')
 export class HackathonController {
@@ -136,6 +137,42 @@ export class HackathonController {
     return judgeProject;
   }
 
+  @Post('check-valid-email/:id')
+  async checkValidExitEmail(
+    @Param('id') id: string,
+    @Body('email') email: string,
+    @Body('judgeId') judgeId: string,
+  ) {
+    console.log(email, judgeId);
+    const existUser = await this.userModel.findOne({ email });
+    if (!existUser) return true;
+
+    const hackathon = await this.hackathonModel.findById(id);
+    if (!hackathon) return false;
+
+    if (hackathon.user.toString() === existUser.id.toString()) return false;
+
+    const registerUsers = await this.hackathonModel.findOne(
+      { _id: id, 'registerUsers.userId': existUser.id },
+      { 'registerUsers.$': 1 },
+    );
+
+    if (registerUsers) return false;
+
+    const emailHak = await this.hackathonModel.findOne({
+      _id: id,
+      judges: {
+        $elemMatch: {
+          email: email,
+          id: { $ne: judgeId },
+        },
+      },
+    });
+    if (emailHak) return false;
+
+    return true;
+  }
+
   @Get(':id/:type')
   async getAllProjectHackathon(
     @Param('id') id: string,
@@ -210,6 +247,7 @@ export class HackathonController {
     @Query('email') email: string,
     @Query('receiver') receiverName: string,
   ) {
+    console.log(id, judgeId, email, receiverName);
     const hackathon = await this.hackathonModel
       .findById(id)
       .populate('user')

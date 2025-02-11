@@ -295,89 +295,89 @@ export class MongooseHackathonRepository implements HackathonRepository {
       )
       .exec();
 
-    if (!updatedHackathon) {
-      throw new NotFoundException(`Hackathon with ID ${id} not found.`);
-    }
-    const isChat = await this.chatModel.findOne({
-      isGroupChat: true,
-      orgHackathon: updatedHackathon._id.toString(),
-    });
+    // if (!updatedHackathon) {
+    //   throw new NotFoundException(`Hackathon with ID ${id} not found.`);
+    // }
+    // const isChat = await this.chatModel.findOne({
+    //   isGroupChat: true,
+    //   orgHackathon: updatedHackathon._id.toString(),
+    // });
 
-    if (!isChat) {
-      await this.chatModel.create({
-        chatName: `Group chat ${updatedHackathon.hackathonName}`,
-        users: [updatedHackathon.user],
-        isGroupChat: true,
-        avatarGroupChat: updatedHackathon.thumbnail,
-        orgHackathon: updatedHackathon._id.toString(),
-        orgSender: {
-          avatar: updatedHackathon.thumbnail,
-          name: `Admin hackathon ${updatedHackathon.hackathonName}`,
-        },
-        groupAdmins: [updatedHackathon.user],
-      });
-    }
+    // if (!isChat) {
+    //   await this.chatModel.create({
+    //     chatName: `Group chat ${updatedHackathon.hackathonName}`,
+    //     users: [updatedHackathon.user],
+    //     isGroupChat: true,
+    //     avatarGroupChat: updatedHackathon.thumbnail,
+    //     orgHackathon: updatedHackathon._id.toString(),
+    //     orgSender: {
+    //       avatar: updatedHackathon.thumbnail,
+    //       name: `Admin hackathon ${updatedHackathon.hackathonName}`,
+    //     },
+    //     groupAdmins: [updatedHackathon.user],
+    //   });
+    // }
 
-    const noti = await this.notificationModel.create({
-      type: 'hackathon_update',
-      sender: {
-        id: updatedHackathon._id,
-        avatar: updatedHackathon.thumbnail,
-        type: 'hackathon',
-        name: updatedHackathon.hackathonName,
-      },
-      content: `We have an important update regarding the ${updatedHackathon.hackathonName}. The information have been changed. Please ensure you mark your calendars and plan accordingly. For further updates or queries, visit the link below.!`,
-      title: 'Important Update: Hackathon Details Changed',
-      additionalData: {
-        hackathonName: updatedHackathon.hackathonName,
-        hackathonTime: `${updatedHackathon.submissions.start} - ${updatedHackathon.submissions.deadline}`,
-        hackathonLocation: updatedHackathon.location,
-        linkDetails: `/Hackathon-detail/${updatedHackathon._id.toString()}/overview`,
-      },
-    });
+    // const noti = await this.notificationModel.create({
+    //   type: 'hackathon_update',
+    //   sender: {
+    //     id: updatedHackathon._id,
+    //     avatar: updatedHackathon.thumbnail,
+    //     type: 'hackathon',
+    //     name: updatedHackathon.hackathonName,
+    //   },
+    //   content: `We have an important update regarding the ${updatedHackathon.hackathonName}. The information have been changed. Please ensure you mark your calendars and plan accordingly. For further updates or queries, visit the link below.!`,
+    //   title: 'Important Update: Hackathon Details Changed',
+    //   additionalData: {
+    //     hackathonName: updatedHackathon.hackathonName,
+    //     hackathonTime: `${updatedHackathon.submissions.start} - ${updatedHackathon.submissions.deadline}`,
+    //     hackathonLocation: updatedHackathon.location,
+    //     linkDetails: `/Hackathon-detail/${updatedHackathon._id.toString()}/overview`,
+    //   },
+    // });
 
-    const registerUsers = await this.interactionModel
-      .find({
-        hackathon: updatedHackathon._id,
-        interaction_type: 'join',
-      })
-      .populate({
-        path: 'user_id',
-        model: 'UserDocument',
-        select: '_id email isUserSystem',
-      });
-    await Promise.all(
-      registerUsers.map(async (interaction) => {
-        const user = interaction.user_id as any;
-        if (user?._id) {
-          await this.userModel.findByIdAndUpdate(user?._id, {
-            $push: { notifications: noti._id },
-          });
-        }
-      }),
-    );
-    const emails = registerUsers.map((interaction) => {
-      const user = interaction.user_id as any;
-      if (user?.email && user?.isUserSystem) {
-        return sendEmail(
-          user.email,
-          templateHackathonUpdateHTML(
-            `${urlFe}/Hackathon-detail/${updatedHackathon._id.toString()}/overview`,
-            user.fullname || 'Participant',
-            updatedHackathon.hackathonName,
-            `${updatedHackathon.submissions.start} - ${updatedHackathon.submissions.deadline}`,
-            updatedHackathon.location,
-          ),
-          'Hackathon Update',
-          'Update Details Sent',
-        ).catch((err) => {
-          console.error(`Failed to send email to ${user.email}:`, err.message);
-        });
-      }
-    });
+    // const registerUsers = await this.interactionModel
+    //   .find({
+    //     hackathon: updatedHackathon._id,
+    //     interaction_type: 'join',
+    //   })
+    //   .populate({
+    //     path: 'user_id',
+    //     model: 'UserDocument',
+    //     select: '_id email isUserSystem',
+    //   });
+    // await Promise.all(
+    //   registerUsers.map(async (interaction) => {
+    //     const user = interaction.user_id as any;
+    //     if (user?._id) {
+    //       await this.userModel.findByIdAndUpdate(user?._id, {
+    //         $push: { notifications: noti._id },
+    //       });
+    //     }
+    //   }),
+    // );
+    // const emails = registerUsers.map((interaction) => {
+    //   const user = interaction.user_id as any;
+    //   if (user?.email && user?.isUserSystem) {
+    //     return sendEmail(
+    //       user.email,
+    //       templateHackathonUpdateHTML(
+    //         `${urlFe}/Hackathon-detail/${updatedHackathon._id.toString()}/overview`,
+    //         user.fullname || 'Participant',
+    //         updatedHackathon.hackathonName,
+    //         `${updatedHackathon.submissions.start} - ${updatedHackathon.submissions.deadline}`,
+    //         updatedHackathon.location,
+    //       ),
+    //       'Hackathon Update',
+    //       'Update Details Sent',
+    //     ).catch((err) => {
+    //       console.error(`Failed to send email to ${user.email}:`, err.message);
+    //     });
+    //   }
+    // });
 
-    // Không chờ việc gửi email hoàn thành, trả về ngay
-    Promise.allSettled(emails);
+    // // Không chờ việc gửi email hoàn thành, trả về ngay
+    // Promise.allSettled(emails);
     return updatedHackathon;
   }
 

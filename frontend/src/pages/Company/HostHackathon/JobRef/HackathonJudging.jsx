@@ -9,6 +9,7 @@ import { IoClose } from "react-icons/io5";
 import Swal from "sweetalert2";
 import FroalaEditor from "react-froala-wysiwyg";
 import { Modal } from "../../../../components";
+import baseUrl from "@/utils/baseUrl";
 
 function HackathonJudging({ formSubmit, formId }) {
   const param = useParams();

@@ -48,7 +48,7 @@ function HostHackathon() {
 
   useEffect(() => {
     if (isSuccessUD) {
-      notify("success", "Update hackathon successfully!");
+      if (isUpdate) notify("success", "Update hackathon successfully!");
       dispatch(resetValue({ key: "isSuccessUD", value: false }));
       if (!isUpdate) nextJobRef();
     }

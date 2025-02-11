@@ -16,12 +16,14 @@ export async function sendEmail(
     html: html,
   };
   let message: string;
+
   await sgMail
     .send(msg)
     .then(() => {
       message = messageSuccess;
     })
-    .catch(() => {
+    .catch((e) => {
+      console.log(e);
       throw new BadRequestException('Error when sending email');
     });
   return { message };

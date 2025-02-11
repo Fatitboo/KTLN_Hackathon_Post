@@ -16,6 +16,8 @@ import { Link, useParams } from "react-router-dom";
 import { hackathonTypes, specialties } from "../Setting/SettingRecommend";
 import { getAllTags } from "../../../redux/slices/projects/projectsSlices";
 import MultiSelectDropdown from "../../../components/Seeker/MultiSelectDropdown";
+import baseUrl from "@/utils/baseUrl";
+import axios from "axios";
 
 function BrowerParticipants({ hackathonId }) {
   const { id } = useParams();
@@ -34,6 +36,8 @@ function BrowerParticipants({ hackathonId }) {
   let { loading, registerUsers, isSuccess } = useSelector(
     (state) => state.hackathons
   );
+  const storeData = useSelector((store) => store.users);
+  const user = storeData?.userAuth?.user;
   const [searchTerm, setSearchTerm] = useState("");
   const [showMoreTags, setShowMoreTags] = useState(false);
   const toggleShowMore = () => {
@@ -102,12 +106,35 @@ function BrowerParticipants({ hackathonId }) {
       dispatch(resetValue({ key: "isSuccess", value: false }));
     }
   }, [isSuccess]);
-  const clearFilters = () => {
-    setSearchTerm("");
-    setPage(1);
-    setSelectedSort("newest");
-    window.location.reload();
+  const downloadExcel = async () => {
+    try {
+      const response = await axios.post(
+        `${baseUrl}/api/v1/hackathons/register-users/${hackathonId}/download-register-users`,
+        {},
+        {
+          responseType: "blob",
+        }
+      );
+      const now = new Date();
+      const formatted = now
+        .toLocaleString("sv-SE")
+        .replaceAll(" ", "_")
+        .replaceAll(":", "_");
+      const a = window.document.createElement("a");
+      const blob = new Blob([response.data], {
+        type: response.headers["content-type"],
+      });
+      const url = URL.createObjectURL(blob);
+      a.setAttribute("href", url);
+      a.setAttribute("download", `register_users_${formatted}.xlsx`);
+      a.click();
+
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error("Lỗi khi tải Excel:", error);
+    }
   };
+
   return (
     <>
       {loading && <LoadingComponent />}
@@ -116,12 +143,14 @@ function BrowerParticipants({ hackathonId }) {
         <div className="grid grid-cols-12 max-xl:grid-cols-1 max-xl:mt-1 gap-4 w-full h-full max-xl:px-4 px-60">
           <div className="col-span-3 max-xl:col-span-1 max-xl:mt-1 mt-36 pr-10 max-xl:pr-1">
             <div className="flex items-center">
-              <div
-                className="text-blue-600 cursor-pointer"
-                onClick={clearFilters}
-              >
-                Clear filters
-              </div>
+              {user?.userType?.includes("organizer") ?? (
+                <div
+                  className="text-blue-600 cursor-pointer bg-gray-200 p-2"
+                  onClick={downloadExcel}
+                >
+                  Export file Excel
+                </div>
+              )}
             </div>
             <div className="mt-5 text-sm text-gray-600 font-normal">
               <div className="mb-4 ">

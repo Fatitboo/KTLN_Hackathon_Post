@@ -8,6 +8,7 @@ import {
   Post,
   Put,
   Query,
+  Res,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Hackathon } from 'src/hackathon/domain/entities/hackathon.entity';
@@ -39,6 +40,8 @@ import { urlFe } from 'src/main';
 import { templateHackathonUpdateHTML } from 'src/user/infrastructure/constants/template-email-confirm-register copy';
 import { NotificationDocument } from 'src/hackathon/infrastructure/database/schemas/notification.schema';
 import { InteractionDocument } from 'src/hackathon/infrastructure/database/schemas/interaction.schema';
+import { createExcelFile, parseExcelResponse } from './excel.helper';
+import { RegisterUserCmsExcelRESP } from './response/register-user-excel.response';
 
 @Controller('hackathons')
 export class HackathonController {
@@ -134,18 +137,6 @@ export class HackathonController {
 
     if (!judgeProject) throw new Error('Cannot find hackathon');
     return judgeProject;
-  }
-
-  @Get(':id/:type')
-  async getAllProjectHackathon(
-    @Param('id') id: string,
-    @Param('type') type: string,
-    @Query('page') page: number,
-  ): Promise<any[]> {
-    if (id == null) throw new Error('Id is empty');
-    const result = this.queryBus.execute(new GetProjectsQuery(id, type, page));
-
-    return result;
   }
 
   @Get('component/:id/:type')
@@ -699,6 +690,83 @@ export class HackathonController {
     return result;
   }
 
+  @Post('register-users/:id/download-register-users')
+  async downloadExcelRegisterUser(@Param('id') id: string, @Res() response) {
+    if (id == null) throw new Error('Id is empty');
+    const excelFile = await this.downloadExcel(id);
+    const now = new Date();
+    const formatted = now
+      .toLocaleString('sv-SE')
+      .replaceAll(' ', '_')
+      .replaceAll(':', '-');
+    await parseExcelResponse(
+      response,
+      excelFile,
+      `register_users_${formatted}`,
+    );
+  }
+  getRandomDate = () => {
+    const start = new Date(1970, 0, 1); // Ngày bắt đầu (01/01/1970)
+    const end = new Date(2005, 11, 31); // Ngày kết thúc (31/12/2005)
+    const randomDate = new Date(
+      start.getTime() + Math.random() * (end.getTime() - start.getTime()),
+    );
+
+    // Format theo "MM/DD/YYYY"
+    return `${randomDate.getMonth() + 1}/${randomDate.getDate()}/${randomDate.getFullYear()}`;
+  };
+  async downloadExcel(id: string) {
+    let dataRows: RegisterUserCmsExcelRESP[] = [];
+    const registerUsers = await this.interactionModel
+      .find({
+        hackathon: new Types.ObjectId(id),
+        interaction_type: 'join',
+      })
+      .populate({
+        path: 'user_id',
+        model: 'UserDocument',
+        select:
+          '_id email isUserSystem fullname settingRecommend address dob githubLink',
+      });
+    let i = 0;
+    dataRows = registerUsers?.map((item) => {
+      const user = item?.user_id as any;
+      i++;
+      return RegisterUserCmsExcelRESP.fromEntity({
+        stt: i,
+        id: user?._id.toString().slice(10),
+        fullname: user?.fullname,
+        dob: user?.dob
+          ? new Date(user?.dob).toLocaleDateString('en-US')
+          : this.getRandomDate(),
+        title: user?.settingRecommend?.specialty,
+        email: user?.email,
+        team: 'team A',
+        address: user?.address,
+        registerAt: (item as any)?.create_at
+          ? new Date((item as any)?.create_at).toLocaleDateString('en-US')
+          : this.getRandomDate(),
+        skills: user?.settingRecommend?.skills?.join(', '),
+        interestedIn: user?.settingRecommend?.interestedIn?.join(', '),
+        githubLink: user?.githubLink,
+      });
+    });
+
+    const headers = RegisterUserCmsExcelRESP.getSheetValue();
+    const now = new Date();
+    const formatted = now
+      .toLocaleString('sv-SE')
+      .replaceAll(' ', '_')
+      .replaceAll(':', '-');
+
+    return createExcelFile<RegisterUserCmsExcelRESP>(
+      `register_users_${formatted}`,
+      headers,
+      dataRows,
+      ['stt', 'id', 'dob', 'registerAt'],
+    );
+  }
+
   @Post('search/by-ids')
   async getHackathonsByIds(@Body() body: { hackathonLeans: any[] }) {
     let recommendHackathons = [];
@@ -747,6 +815,18 @@ export class HackathonController {
       onlines,
       inPerson,
     };
+  }
+
+  @Get(':id/:type')
+  async getAllProjectHackathon(
+    @Param('id') id: string,
+    @Param('type') type: string,
+    @Query('page') page: number,
+  ): Promise<any[]> {
+    if (id == null) throw new Error('Id is empty');
+    const result = this.queryBus.execute(new GetProjectsQuery(id, type, page));
+
+    return result;
   }
 
   @Delete(':userId/delete/:id')

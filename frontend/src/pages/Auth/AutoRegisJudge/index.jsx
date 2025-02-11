@@ -60,7 +60,7 @@ function AutoRegisterJudge() {
             confirmButtonColor: "#3085d6",
           }).then((result) => {
             if (result.isConfirmed) {
-              localStorage.removeItem("registerInfo");
+              sessionStorage.removeItem("registerInfo");
 
               navigate(`/Seeker/brower-hackathons`);
             }
@@ -78,7 +78,7 @@ function AutoRegisterJudge() {
             confirmButtonColor: "#3085d6",
           }).then((result) => {
             if (result.isConfirmed) {
-              localStorage.removeItem("registerInfo");
+              sessionStorage.removeItem("registerInfo");
 
               navigate(`/Seeker/brower-hackathons`);
             }

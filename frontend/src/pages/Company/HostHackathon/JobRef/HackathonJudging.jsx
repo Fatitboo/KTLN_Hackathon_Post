@@ -186,7 +186,7 @@ function HackathonJudging({ formSubmit, formId }) {
       .join("&");
 
     fetch(
-      `http://localhost:3000/api/v1/hackathons/invite-judge/${param.id}?${queryString}`,
+      `${baseUrl}/api/v1/hackathons/invite-judge/${param.id}?${queryString}`,
       {
         method: "POST",
         headers: {

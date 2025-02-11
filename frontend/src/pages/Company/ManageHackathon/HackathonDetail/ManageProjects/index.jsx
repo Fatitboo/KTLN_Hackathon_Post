@@ -10,6 +10,7 @@ import SearchInput from "@/components/Seeker/SearchInput";
 import CardProject from "@/components/Seeker/CardProject";
 import { StarIcon } from "@heroicons/react/20/solid";
 import InfoPopup from "@/components/Judge/InfoPopup";
+import baseUrl from "@/utils/baseUrl";
 
 const ManageProjects = ({
   judges,
@@ -44,7 +45,7 @@ const ManageProjects = ({
         };
       else return { ...item };
     });
-    fetch(`http://localhost:3000/api/v1/hackathons/awarding/${params.id}`, {
+    fetch(`${baseUrl}/api/v1/hackathons/awarding/${params.id}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

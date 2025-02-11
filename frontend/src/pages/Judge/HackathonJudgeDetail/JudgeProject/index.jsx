@@ -8,6 +8,7 @@ import { CustomButton, TextInput } from "@/components";
 import { BiInfoCircle } from "react-icons/bi";
 import InfoPopup from "@/components/Judge/InfoPopup";
 import Swal from "sweetalert2";
+import baseUrl from "@/utils/baseUrl";
 
 const JudgeProjects = ({ props, projectGallery, hackathon }) => {
   const params = useParams();
@@ -24,7 +25,7 @@ const JudgeProjects = ({ props, projectGallery, hackathon }) => {
 
   const getSelectedProject = (id) => {
     fetch(
-      `http://localhost:3000/api/v1/hackathons/judges-project/${params.id}?judgeId=${id}`,
+      `${baseUrl}/api/v1/hackathons/judges-project/${params.id}?judgeId=${id}`,
       {
         method: "GET",
       }
@@ -63,18 +64,15 @@ const JudgeProjects = ({ props, projectGallery, hackathon }) => {
   };
 
   const handleSave = () => {
-    fetch(
-      `http://localhost:3000/api/v1/hackathons/update-view-judge/${params.id}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          judgeId: userAuth.user.id,
-        }),
-      }
-    )
+    fetch(`${baseUrl}/api/v1/hackathons/update-view-judge/${params.id}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        judgeId: userAuth.user.id,
+      }),
+    })
       .then((result) => {
         Swal.fire({
           title: "Success",
@@ -102,19 +100,16 @@ const JudgeProjects = ({ props, projectGallery, hackathon }) => {
         comment: item.comment,
       };
     });
-    fetch(
-      `http://localhost:3000/api/v1/hackathons/rate-project-judge/${params.id}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          judgeId: userAuth.user.id,
-          ratingObj: saveRating,
-        }),
-      }
-    )
+    fetch(`${baseUrl}/api/v1/hackathons/rate-project-judge/${params.id}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        judgeId: userAuth.user.id,
+        ratingObj: saveRating,
+      }),
+    })
       .then((response) => response.json())
       .then((result) => {
         Swal.fire({

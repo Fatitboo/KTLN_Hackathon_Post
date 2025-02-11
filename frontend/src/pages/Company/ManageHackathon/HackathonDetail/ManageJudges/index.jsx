@@ -48,19 +48,16 @@ const ManageJudges = ({ judges, projects, hackathon, setHackathon }) => {
   }, [judges]);
 
   const handleAssignTeams = async (judgeId, projects) => {
-    fetch(
-      `http://localhost:3000/api/v1/hackathons/assign-project-judges/${params.id}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          judgeId: judgeId,
-          projects: projects.map((item) => ({ projectId: item.id })),
-        }),
-      }
-    )
+    fetch(`${baseUrl}/api/v1/hackathons/assign-project-judges/${params.id}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        judgeId: judgeId,
+        projects: projects.map((item) => ({ projectId: item.id })),
+      }),
+    })
       .then((response) => response.json())
       .then((endResult) => {
         Swal.fire({
@@ -82,7 +79,7 @@ const ManageJudges = ({ judges, projects, hackathon, setHackathon }) => {
 
   const getSelectedProject = (item) => {
     fetch(
-      `http://localhost:3000/api/v1/hackathons/judges-project/${params.id}?judgeId=${item.userId}`,
+      `${baseUrl}/api/v1/hackathons/judges-project/${params.id}?judgeId=${item.userId}`,
       {
         method: "GET",
       }
@@ -117,7 +114,7 @@ const ManageJudges = ({ judges, projects, hackathon, setHackathon }) => {
 
   const getMarkList = (item) => {
     fetch(
-      `http://localhost:3000/api/v1/hackathons/judges-project/${params.id}?judgeId=${item.userId}`,
+      `${baseUrl}/api/v1/hackathons/judges-project/${params.id}?judgeId=${item.userId}`,
       {
         method: "GET",
       }
@@ -164,19 +161,16 @@ const ManageJudges = ({ judges, projects, hackathon, setHackathon }) => {
   };
 
   const sendInvitation = (judgeId, email, name) => {
-    fetch(
-      `http://localhost:3000/api/v1/hackathons/check-valid-email/${params.id}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: email,
-          judgeId: judgeId,
-        }),
-      }
-    )
+    fetch(`${baseUrl}/api/v1/hackathons/check-valid-email/${params.id}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: email,
+        judgeId: judgeId,
+      }),
+    })
       .then((response) => response.json())
       .then((result) => {
         if (result) {
@@ -197,7 +191,7 @@ const ManageJudges = ({ judges, projects, hackathon, setHackathon }) => {
             .join("&");
 
           fetch(
-            `http://localhost:3000/api/v1/hackathons/invite-judge/${params.id}?${queryString}`,
+            `${baseUrl}/api/v1/hackathons/invite-judge/${params.id}?${queryString}`,
             {
               method: "POST",
               headers: {

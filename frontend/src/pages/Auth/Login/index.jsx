@@ -55,15 +55,21 @@ function Login() {
   useEffect(() => {
     if (userAuth) {
       if (type === "judge") {
-        var getUserAuth = JSON.parse(sessionStorage.getItem("userInfo"));
+        // var getUserAuth = JSON.parse(sessionStorage.getItem("userInfo"));
+        var getUserAuth = JSON.parse(Cookies.get("userInfo"));
         getUserAuth.user.userType = ["judge"];
-        sessionStorage.setItem("userInfo", JSON.stringify(getUserAuth));
+        Cookies.set("userInfo", JSON.stringify(getUserAuth), {
+          expires: 7,
+          path: "/",
+        });
+        // sessionStorage.setItem("userInfo", JSON.stringify(getUserAuth));
         window.location.href = "/Judge/manage-hackathons";
         return;
       }
       if (userAuth?.user?.isActive) {
         if (userAuth?.user?.userType.includes("seeker")) {
-          var registerInfo = JSON.parse(sessionStorage.getItem("registerInfo"));
+          // var registerInfo = JSON.parse(sessionStorage.getItem("registerInfo"));
+          var registerInfo = JSON.parse(Cookies.get("registerInfo"));
           console.log("🚀 ~ useEffect ~ token:", registerInfo);
           if (registerInfo) {
             if (registerInfo.email === userAuth?.user?.email) {

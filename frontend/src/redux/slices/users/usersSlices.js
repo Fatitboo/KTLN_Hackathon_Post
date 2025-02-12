@@ -140,7 +140,8 @@ export const logoutUserAction = createAsyncThunk(
         withCredentials: true,
       });
       if (navigator) {
-        sessionStorage.removeItem("userInfo");
+        Cookies.remove("userInfo", { path: "/" });
+        // sessionStorage.removeItem("userInfo");
         navigator("/user-auth/login");
       }
     } catch (error) {
@@ -211,7 +212,7 @@ export const updateUserAction = createAsyncThunk(
       if (info.getType === "avatar") {
         getUserAuth.user.avatar = data.avatar;
       }
-      Cookies.set("userInfo", JSON.stringify(userInfo), {
+      Cookies.set("userInfo", JSON.stringify(getUserAuth), {
         expires: 7,
         path: "/",
       });

@@ -6,7 +6,7 @@ import { LoggerService } from './shared/infrastructure/logger/logger.service';
 import { AllExceptionFilter } from './shared/infrastructure/common/filter/exception.filter';
 import { LoggingInterceptor } from './shared/infrastructure/common/interceptors/logging.interceptor';
 export const urlFe =
-  process.env.URL_FE || 'https://ktln-hackathon-post-eta.vercel.app';
+  process.env.URL_FE || 'https://master.dhcgsb2cebcyh.amplifyapp.com';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -34,7 +34,7 @@ async function bootstrap() {
     origin: [
       urlFe,
       'http://localhost:5173',
-      'https://master.dhcgsb2cebcyh.amplifyapp.com',
+      // 'https://master.dhcgsb2cebcyh.amplifyapp.com',
     ], // Frontend origin
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,

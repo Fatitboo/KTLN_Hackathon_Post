@@ -1,3 +1,3 @@
 const domainUrl =
-  process.env.DOMAIN_URL || "https://ktln-hackathon-post-eta.vercel.app";
+  process.env.DOMAIN_URL || "https://master.dhcgsb2cebcyh.amplifyapp.com";
 export default domainUrl;

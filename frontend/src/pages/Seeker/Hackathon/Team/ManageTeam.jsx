@@ -408,6 +408,7 @@ const ManageTeams = ({ hackathon, user }) => {
                   {team?.members?.map((teammate, index) => (
                     <div
                       key={index}
+                      className=""
                       style={{
                         display: "flex",
                         alignItems: "center",
@@ -417,8 +418,8 @@ const ManageTeams = ({ hackathon, user }) => {
                         width: "100%",
                       }}
                     >
-                      <div className="flex justify-between items-center w-full">
-                        <div className="flex items-center">
+                      <div className="grid grid-cols-3 items-center w-full">
+                        <div className="col-span-1 flex items-center">
                           <img
                             src={teammate?.avatar ?? defaultAvt}
                             alt="avatar"
@@ -444,11 +445,11 @@ const ManageTeams = ({ hackathon, user }) => {
                             </p>
                           </div>
                         </div>
-                        <div className="mx-3">
+                        <div className="ml-20 col-span-1">
                           | {teammate?.settingRecommend?.specialty} |
                         </div>
 
-                        <div className="flex ">
+                        <div className="flex col-span-1 justify-end">
                           {user.id === team.leaderId?._id &&
                           user.id !== teammate._id ? (
                             <button
@@ -595,7 +596,7 @@ const ManageTeams = ({ hackathon, user }) => {
       {team && (
         <div className="mt-4">
           <div className="flex justify-between items-center">
-            <h3 className="font-semibold">Team's hackathon projects</h3>
+            <h3 className="text-xl font-semibold">Team's hackathon projects</h3>
 
             {user.id === team.leaderId?._id && (
               <CustomButton

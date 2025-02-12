@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
+import { Model } from 'mongoose';
 import { ChatDocument } from './schema/chat.schema';
 import { UserDocument } from 'src/user/infrastructure/database/schemas';
 import { HackathonDocument } from 'src/hackathon/infrastructure/database/schemas';
@@ -150,7 +150,7 @@ export class ChatService {
 
   // Tạo phòng nhóm mới
   async createGroupChat({ name, users }, currentUserId: any) {
-    if (users.length < 2) {
+    if (users.length <= 2) {
       throw new NotFoundException(
         'More than 2 users are required to form a group chat',
       );

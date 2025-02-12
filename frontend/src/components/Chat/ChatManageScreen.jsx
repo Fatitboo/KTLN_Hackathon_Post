@@ -37,7 +37,7 @@ const ChatManageScreen = () => {
   return (
     <div
       className={`flex h-fit flex-col items-center bg-blue-200  justify-start rounded-md self-center overflow-hidden transition-all duration-400 ease-out
-          ${popInner && "self-start p-5 shadow-md"}`}
+          ${popInner && "self-start p-2 shadow-md"}`}
       ref={popupRef}
       data-view-setting
     >

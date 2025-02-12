@@ -4,6 +4,7 @@ import { AiFillExclamationCircle, AiOutlineSearch } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { TransactionItem } from "./TransactionItem";
+import baseUrl from "@/utils/baseUrl";
 function HistoryTransaction() {
   // define state
   const [historyList, setHistoryList] = useState([]);

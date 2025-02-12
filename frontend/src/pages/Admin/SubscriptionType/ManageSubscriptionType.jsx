@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import { IoClose } from "react-icons/io5";
 import Swal from "sweetalert2";
 import { SubscriptionTypeItem } from "./SubscriptionTypeItem";
+import baseUrl from "@/utils/baseUrl";
 function ManageSubscriptionType() {
   // define state
   const [subscriptionList, setSubscriptionList] = useState([]);

@@ -124,7 +124,15 @@ function UserPorfolio() {
             </div>
           </div>
           <div className="mt-2 mx-10 col-span-4">
-            <div className="text-3xl font-medium">{uProfile?.fullname}</div>
+            <div className="flex flex-row items-center gap-2">
+              <div className="text-3xl font-medium">{uProfile?.fullname}</div>
+              <div
+                onClick={() => navigate(`/Seeker/payment`)}
+                className="px-3 py-1 bg-sky-400 rounded-lg cursor-pointer font-semibold text-white"
+              >
+                Upgrade
+              </div>
+            </div>
             <p className="text-gray-500 text-base mt-5">
               Student at the University of Waterloo
             </p>
@@ -157,7 +165,7 @@ function UserPorfolio() {
               </div>
 
               <div className="flex items-start mt-2 ">
-                <div className=" font-medium mr-2">Interests</div>
+                <div className="font-medium mr-2">Interests</div>
                 <div className="flex flex-wrap gap-2">
                   {[...(uProfile?.settingRecommend?.interestedIn ?? [])].map(
                     (interest) => (

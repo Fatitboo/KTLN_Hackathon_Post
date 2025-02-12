@@ -1,4 +1,6 @@
+import baseUrl from "@/utils/baseUrl";
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 export const Payment = () => {
   const list = [
@@ -76,7 +78,9 @@ export const Payment = () => {
     },
   ];
   const [subscriptions, setSubscriptions] = useState(list);
-
+  const storeData = useSelector((store) => store.users);
+  const userAuth = storeData?.userAuth?.user;
+  console.log(userAuth);
   const subscriptionList = [
     { id: "month", name: "Month" },
     { id: "year", name: "Year" },
@@ -94,9 +98,9 @@ export const Payment = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        userId: "671a5d4ce7e9496444c1697a",
+        userId: userAuth?.id ?? "671a5d4ce7e9496444c1697a",
         subscriptionId: "6779065634bd989a5b22046c",
-        price: String(price * 1000),
+        price: String(price * 23000),
         payType: "pay with momo",
       }),
     })
@@ -137,7 +141,7 @@ export const Payment = () => {
           {subscriptionList.map((item) => {
             return (
               <button
-                className={`px-4 py-2 w-20 font-semibold ${
+                className={`px-4 py-2 w-22 font-semibold ${
                   item.id === mode
                     ? "bg-black text-white"
                     : "bg-white text-gray-700"

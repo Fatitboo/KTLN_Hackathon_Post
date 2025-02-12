@@ -26,7 +26,7 @@ export class AuthenticationService {
     const secret = this.jwtConfig.getJwtSecret();
     const expiresIn = this.jwtConfig.getJwtExpirationTime() + 's';
     const token = this.jwtService.sign(payload, { secret, expiresIn });
-    return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${this.jwtConfig.getJwtExpirationTime()};`;
+    return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${this.jwtConfig.getJwtExpirationTime()}; SameSite=None; Secure;`;
   }
 
   public async getCookieWithJwtRefreshToken(email: string, userId: string) {
@@ -37,7 +37,7 @@ export class AuthenticationService {
     await this.userRepository.updateById(userId, {
       hashRefreshToken: await bcrypt.hash(token, 10),
     });
-    const cookie = `Refresh=${token}; HttpOnly; Path=/; Max-Age=${this.jwtConfig.getJwtRefreshExpirationTime()};`;
+    const cookie = `Refresh=${token}; HttpOnly; Path=/; Max-Age=${this.jwtConfig.getJwtRefreshExpirationTime()}; SameSite=None; Secure;`;
     return cookie;
   }
 
@@ -46,8 +46,8 @@ export class AuthenticationService {
       hashRefreshToken: undefined,
     });
     return [
-      `Authentication=; HttpOnly; Path=/; Max-Age=0`,
-      `Refresh=; HttpOnly; Path=/; Max-Age=0`,
+      `Authentication=; HttpOnly; Path=/; Max-Age=0; SameSite=None; Secure;`,
+      `Refresh=; HttpOnly; Path=/; Max-Age=0; SameSite=None; Secure;`,
     ];
   }
 }

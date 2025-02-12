@@ -37,7 +37,7 @@ export const UpdateItem = ({
             <div className="flex flex-row  items-center justify-between mt-2 text-blue-800">
               <h3 className="text-3xl">{item?.title}</h3>
             </div>
-            <div className="mt-3 overflow-hidden w-full min-h-[60px]">
+            <div className="mt-3 overflow-hidden w-full min-h-[60px]  min-w-96">
               <p
                 className={`bg-transparent w-[96%] ${
                   moreDetail ? "" : "limitline5"

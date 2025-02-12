@@ -331,7 +331,7 @@ export const DiscussionItem = ({
                       src={user?.avatar ?? defaultAvt}
                       alt="User 1"
                     />
-                    <div className="-mt-8 w-full">
+                    <div className="w-full">
                       <TextInput
                         name="comment"
                         register={register("comment")}

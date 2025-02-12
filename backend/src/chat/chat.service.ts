@@ -150,12 +150,6 @@ export class ChatService {
 
   // Tạo phòng nhóm mới
   async createGroupChat({ name, users }, currentUserId: any) {
-    if (users.length <= 2) {
-      throw new NotFoundException(
-        'More than 2 users are required to form a group chat',
-      );
-    }
-
     await Promise.all(
       users.map(async (userId) => {
         const u = await this.userModel.findById(userId);

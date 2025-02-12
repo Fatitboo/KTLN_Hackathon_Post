@@ -1,13 +1,4 @@
-import {
-  Controller,
-  Post,
-  Body,
-  Get,
-  Param,
-  UseGuards,
-  Query,
-  Request,
-} from '@nestjs/common';
+import { Controller, Get, UseGuards, Query, Request } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { JwtAuthGuard } from 'src/user/domain/common/guards/jwtAuth.guard';
@@ -28,8 +19,8 @@ export class NotificationController {
       path: 'notifications',
       model: 'NotificationDocument',
     });
-    if (typeof isRead !== 'string') {
-      return u.notifications ?? [];
+    if (isRead === '') {
+      return u.notifications?.reverse() ?? [];
     } else {
       const isReadBoolean = isRead === 'true';
       return ((u.notifications as any[]) ?? [])?.filter(

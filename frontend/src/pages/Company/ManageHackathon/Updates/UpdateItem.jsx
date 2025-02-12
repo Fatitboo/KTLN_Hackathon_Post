@@ -130,7 +130,7 @@ export const UpdateItem = ({
                 </div>
               }
             </div>
-            <div className="mt-3 overflow-hidden w-full min-h-[60px]">
+            <div className="mt-3 overflow-hidden w-full min-h-[60px] min-w-96">
               <p
                 className={`bg-transparent w-[96%] ${
                   moreDetail ? "" : "limitline5"

@@ -25,21 +25,21 @@ function MenuList({ user, onClick }) {
     // window.location.href = "/user-auth/login";
   };
   const handleSwitchRole = () => {
-    var getUserAuth = JSON.parse(sessionStorage.getItem("userInfo"));
+    var getUserAuth = JSON.parse(localStorage.getItem("userInfo"));
     if (getUserAuth.user.userType.includes("judge")) {
       getUserAuth.user.userType = ["judge"];
     } else {
       getUserAuth.user.userType = [];
     }
     getUserAuth.user.userType.push("organizer");
-    sessionStorage.setItem("userInfo", JSON.stringify(getUserAuth));
+    localStorage.setItem("userInfo", JSON.stringify(getUserAuth));
     window.location.href = "/Organizer/dashboard";
   };
 
   const handleSwitchJudgeRole = () => {
-    var getUserAuth = JSON.parse(sessionStorage.getItem("userInfo"));
+    var getUserAuth = JSON.parse(localStorage.getItem("userInfo"));
     getUserAuth.user.userType = ["judge"];
-    sessionStorage.setItem("userInfo", JSON.stringify(getUserAuth));
+    localStorage.setItem("userInfo", JSON.stringify(getUserAuth));
     window.location.href = "/Judge/manage-hackathons";
   };
 
@@ -92,7 +92,7 @@ function MenuList({ user, onClick }) {
                 )}
               </Menu.Item>
               {JSON.parse(
-                sessionStorage.getItem("userInfo")
+                localStorage.getItem("userInfo")
               )?.user?.userType?.includes("seeker") && (
                 <Menu.Item>
                   {({ active }) => (
@@ -109,7 +109,7 @@ function MenuList({ user, onClick }) {
               )}
 
               {JSON.parse(
-                sessionStorage.getItem("userInfo")
+                localStorage.getItem("userInfo")
               )?.user?.userType?.includes("judge") && (
                 <Menu.Item>
                   {({ active }) => (

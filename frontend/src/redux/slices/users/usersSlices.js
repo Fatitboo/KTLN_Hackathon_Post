@@ -47,7 +47,7 @@ export const loginUserAction = createAsyncThunk(
         config
       );
       if (data?.user?.isActive) {
-        sessionStorage.setItem("userInfo", JSON.stringify(data));
+        localStorage.setItem("userInfo", JSON.stringify(data));
       }
       return data;
     } catch (error) {
@@ -76,7 +76,7 @@ export const oAuthWithGoogleAction = createAsyncThunk(
       );
 
       if (data?.user?.isActive) {
-        sessionStorage.setItem("userInfo", JSON.stringify(data));
+        localStorage.setItem("userInfo", JSON.stringify(data));
       }
       return data;
     } catch (error) {
@@ -106,7 +106,7 @@ export const oAuthWithGithubAction = createAsyncThunk(
       console.log("🚀 ~ data:", data);
 
       if (data?.user?.isActive) {
-        sessionStorage.setItem("userInfo", JSON.stringify(data));
+        localStorage.setItem("userInfo", JSON.stringify(data));
       }
       return data;
     } catch (error) {
@@ -128,7 +128,7 @@ export const logoutUserAction = createAsyncThunk(
         withCredentials: true,
       });
       if (navigator) {
-        sessionStorage.removeItem("userInfo");
+        localStorage.removeItem("userInfo");
         navigator("/user-auth/login");
       }
     } catch (error) {
@@ -163,11 +163,11 @@ export const getUserProfileAction = createAsyncThunk(
         config
       );
 
-      var getUserAuth = JSON.parse(sessionStorage.getItem("userInfo"));
+      var getUserAuth = JSON.parse(localStorage.getItem("userInfo"));
 
       // console.log(data);
       // getUserAuth.user.fullname = data.userProfile.fullname;
-      // sessionStorage.setItem("userInfo", JSON.stringify(getUserAuth));
+      // localStorage.setItem("userInfo", JSON.stringify(getUserAuth));
 
       return data;
     } catch (error) {
@@ -189,7 +189,7 @@ export const updateUserAction = createAsyncThunk(
         `${apiPrefixUsers}/update-user/${userAuth?.user?.id}`,
         info
       );
-      var getUserAuth = JSON.parse(sessionStorage.getItem("userInfo"));
+      var getUserAuth = JSON.parse(localStorage.getItem("userInfo"));
       if (info.getType === "setting_recommend") {
         getUserAuth.user.isSetPersionalSetting = data.isSetPersionalSetting;
       }
@@ -199,7 +199,7 @@ export const updateUserAction = createAsyncThunk(
       if (info.getType === "avatar") {
         getUserAuth.user.avatar = data.avatar;
       }
-      sessionStorage.setItem("userInfo", JSON.stringify(getUserAuth));
+      localStorage.setItem("userInfo", JSON.stringify(getUserAuth));
       return data;
     } catch (error) {
       if (!error?.response) {
@@ -791,8 +791,8 @@ export const resetUserAuthAction = createAsyncThunk(
   }
 );
 // get userAuth from local storage
-const getUserAuth = sessionStorage.getItem("userInfo")
-  ? JSON.parse(sessionStorage.getItem("userInfo"))
+const getUserAuth = localStorage.getItem("userInfo")
+  ? JSON.parse(localStorage.getItem("userInfo"))
   : null;
 
 // Slice

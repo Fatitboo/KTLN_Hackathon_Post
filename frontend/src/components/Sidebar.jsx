@@ -39,14 +39,14 @@ function Sidebar({ user }) {
     // window.location.href = "/user-auth/login";
   };
   const handleSwitchToSeeker = () => {
-    var getUserAuth = JSON.parse(sessionStorage.getItem("userInfo"));
+    var getUserAuth = JSON.parse(localStorage.getItem("userInfo"));
     if (getUserAuth.user.userType.includes("judge")) {
       getUserAuth.user.userType = ["judge"];
     } else {
       getUserAuth.user.userType = [];
     }
     getUserAuth.user.userType.push("seeker");
-    sessionStorage.setItem("userInfo", JSON.stringify(getUserAuth));
+    localStorage.setItem("userInfo", JSON.stringify(getUserAuth));
     window.location.href = "/Seeker-detail/my-porfolio/Projects";
   };
   useEffect(() => {

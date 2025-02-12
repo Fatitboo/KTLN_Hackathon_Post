@@ -39,7 +39,7 @@ function AutoRegisterToHackathon() {
           confirmButtonColor: "#3085d6",
         }).then((result) => {
           if (result.isConfirmed) {
-            sessionStorage.removeItem("registerInfo");
+            localStorage.removeItem("registerInfo");
 
             navigate(`/Hackathon-detail/${data.hackathonId}/my-project`);
           }
@@ -59,7 +59,7 @@ function AutoRegisterToHackathon() {
             confirmButtonColor: "#3085d6",
           }).then((result) => {
             if (result.isConfirmed) {
-              sessionStorage.removeItem("registerInfo");
+              localStorage.removeItem("registerInfo");
 
               navigate(`/Seeker/brower-hackathons`);
             }
@@ -77,7 +77,7 @@ function AutoRegisterToHackathon() {
             confirmButtonColor: "#3085d6",
           }).then((result) => {
             if (result.isConfirmed) {
-              sessionStorage.removeItem("registerInfo");
+              localStorage.removeItem("registerInfo");
 
               navigate(`/Seeker/brower-hackathons`);
             }
@@ -110,7 +110,7 @@ function AutoRegisterToHackathon() {
         hackathonId: id,
       };
       console.log("🚀 ~ useEffect ~ registerInfo:", registerInfo);
-      sessionStorage.setItem("registerInfo", JSON.stringify(registerInfo));
+      localStorage.setItem("registerInfo", JSON.stringify(registerInfo));
       Swal.fire({
         title: "Your dont log in!",
         text: "Please login to auto register to this hackathon. After login let click on the link again!",

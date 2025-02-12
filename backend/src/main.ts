@@ -31,7 +31,11 @@ async function bootstrap() {
   app.useGlobalInterceptors(new LoggingInterceptor(new LoggerService()));
   // app.useGlobalInterceptors(new ResponseInterceptor());
   app.enableCors({
-    origin: [urlFe, 'http://localhost:5173'], // Frontend origin
+    origin: [
+      urlFe,
+      'http://localhost:5173',
+      'https://master.dhcgsb2cebcyh.amplifyapp.com',
+    ], // Frontend origin
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });

@@ -209,7 +209,7 @@ function HackathonJudgeDetail() {
 
   useEffect(() => {
     if (type == "project-gallery" || type == "judge") {
-      fetch(`${baseUrl}/api/v1/hackathons/${id}/${type}`)
+      fetch(`${baseUrl}/api/v1/hackathons/project-submit-hackathon/${id}`)
         .then((response) => response.json())
         .then((result) => {
           console.log(result);

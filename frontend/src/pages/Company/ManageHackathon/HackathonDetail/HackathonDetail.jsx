@@ -116,6 +116,37 @@ function HackathonCorDetail() {
       &lt;/div&gt;
       &lt;/div&gt;
       `,
+    challenge_description: `
+      &lt;div class=&quot;section-title bold&quot;&gt;
+      &lt;h3 class=&quot;subheader section-title-left&quot;&gt;
+              Descriptions
+            &lt;/h3&gt;
+      &lt;span class=&quot;section-title-line&quot;&gt;&lt;/span&gt;
+      &lt;/div&gt;
+      &lt;div&gt;
+      &lt;h4&gt;About the challenges&lt;/h4&gt;
+      &lt;p&gt;The goal for this miniapp challenge is to create new, fun ways to share with your friends on Seam.&lt;/p&gt;
+      &lt;p&gt;Miniapps make posts. Users play with miniapps to create new art, music, or games, which then can be experienced by your friends. Miniapps live inside Seam, the super app, which acts as a constant contact book and platform for the feeds and groupchats that miniapps live inside of. Miniapps are creative tools that render their end product to a feed.&lt;/p&gt;
+      &lt;p&gt;A miniapp fundamentally has two steps. They start with the singleplayer mode, where someone enters their data, plays the game, or interacts with the app. The second mode is how it shows up in a feed, which is a typically the finished product of the creative process: the finished song, GIF, or highscore. Some quick examples:&lt;/p&gt;
+      &lt;ul&gt;
+      &lt;li&gt;Artistic miniapps first allow artists to draw on a canvas, and then post their watercolor. Yes, Microsoft Paint is basically a miniapp.&lt;/li&gt;
+      &lt;li&gt;Commerce miniapps first allow a seller to decide what to sell and how to make the post look, and then allows users to buy with one tap.&lt;/li&gt;
+      &lt;li&gt;Game miniapps first allow friends to play the game, and then allows them to compete by posting their highscores.&lt;/li&gt;
+      &lt;li&gt;Utility miniapps take the most arcane 3D image filetypes, and then render them properly in the feed.&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;The options for miniapps are endless — see the examples that already exist on &lt;a href=&quot;http://seam.so&quot;&gt;seam.so&lt;/a&gt;.&lt;/p&gt;
+      &lt;h4&gt;How to Submit&lt;/h4&gt;
+      &lt;p&gt;To be considered a submission for the challenge, the code for the miniapp must be submitted as a &lt;a href=&quot;https://github.com/seam-xyz/Miniapp-Builder&quot;&gt;Pull Request in the Github repository for Seam’s miniapps&lt;/a&gt; by the end of the submission period.&lt;/p&gt;
+      &lt;p&gt;Additionally, submissions are encouraged on Devpost to add more detail as well as to be added to the project gallery.&lt;/p&gt;
+      &lt;p&gt;For a successful submission, the miniapp should:&lt;/p&gt;
+      &lt;p&gt;&lt;/p&gt;
+      &lt;ul&gt;
+      &lt;li&gt;Compile and run within the Seam miniapp builder environment without errors or crashes&lt;/li&gt;
+      &lt;li&gt;Run performantly without excessive lagging or glitching&lt;/li&gt;
+      &lt;li&gt;Allow a user to make a post and successfully render in the feed&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;/div&gt;
+      `,
     challenge_requirements: `
       &lt;div class=&quot;section-title bold&quot;&gt;
       &lt;h3 class=&quot;subheader section-title-left&quot;&gt;
@@ -204,10 +235,9 @@ function HackathonCorDetail() {
 
   useEffect(() => {
     if (type == "project-gallery" || type == "teams" || type == "judges") {
-      fetch(`${baseUrl}/api/v1/hackathons/${id}/${type}`)
+      fetch(`${baseUrl}/api/v1/hackathons/project-submit-hackathon/${id}`)
         .then((response) => response.json())
         .then((result) => {
-          console.log("haha", result);
           setProjectGallery(result);
         })
         .catch((error) => console.log("error", error));
@@ -580,6 +610,16 @@ function HackathonCorDetail() {
                       __html: decodeHTML(item?.description),
                     }}
                   ></div>
+                  <div>
+                    {hackathon?.videoDescription && (
+                      <video controls autoplay name="media">
+                        <source
+                          src={hackathon?.videoDescription}
+                          type="video/mp4"
+                        />
+                      </video>
+                    )}
+                  </div>
                   <div
                     className="mb-6"
                     dangerouslySetInnerHTML={{

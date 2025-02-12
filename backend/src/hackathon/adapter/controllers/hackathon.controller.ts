@@ -43,6 +43,8 @@ import { InteractionDocument } from 'src/hackathon/infrastructure/database/schem
 import { fa } from '@faker-js/faker/.';
 import { createExcelFile, parseExcelResponse } from './excel.helper';
 import { RegisterUserCmsExcelRESP } from './response/register-user-excel.response';
+import { TeamDocument } from 'src/hackathon/infrastructure/database/schemas/team.schema';
+import { ProjectDocument } from 'src/project/infrastructure/database/schemas';
 
 @Controller('hackathons')
 export class HackathonController {
@@ -59,6 +61,10 @@ export class HackathonController {
     private readonly notificationModel: Model<NotificationDocument>,
     @InjectModel(InteractionDocument.name)
     private readonly interactionModel: Model<InteractionDocument>,
+    @InjectModel(TeamDocument.name)
+    private readonly teamModel: Model<TeamDocument>,
+    @InjectModel(ProjectDocument.name)
+    private readonly projectModel: Model<ProjectDocument>,
   ) {}
 
   @Get()
@@ -227,7 +233,6 @@ export class HackathonController {
     const result = this.commandBus.execute(
       new AwardHackathonCommand({ hackathonId: id, hackathon: hackathon }),
     );
-
     return result;
   }
 
@@ -853,6 +858,46 @@ export class HackathonController {
       onlines,
       inPerson,
     };
+  }
+
+  @Get('project-submit-hackathon/:id')
+  async getAllProjectSubmitHackathon(@Param('id') id: string): Promise<any[]> {
+    console.log('dô');
+    const result = await this.teamModel
+      .find({
+        hackathonId: id,
+        status: 'active',
+        submittedProjectId: { $exists: true },
+      })
+      .exec();
+    if (!result) return;
+    const rs: any[] = [];
+    console.log(result);
+    for (let index = 0; index < result.length; index++) {
+      const element = result[index];
+      console.log(element.submittedProjectId);
+      const pId = element.submittedProjectId;
+      const p = await this.projectModel.findById(pId).populate({
+        path: 'createdBy',
+        model: 'UserDocument',
+        select: '_id fullname avatar',
+      });
+      if (!p) continue;
+      const owner = await this.userModel.findById(p.owner);
+      if (!owner) continue;
+      rs.push({
+        id: p._id,
+        projectTitle: p.projectTitle,
+        thumnailImage: p.thumnailImage,
+        teamName: p.teamName ?? `Team ${p.owner.toString().substring(0, 5)}`,
+        tagline: p.tagline,
+        owner: { uId: owner._id, name: owner.fullname, avatar: owner.avatar },
+        createdByUsername: p.createdByUsername,
+        createdBy: p.createdBy,
+        block: p.block,
+      });
+    }
+    return rs;
   }
 
   @Get(':id/:type')
